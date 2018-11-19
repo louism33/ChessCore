@@ -1,12 +1,10 @@
-package programtests;
-
 import chessprogram.god.Chessboard;
 import chessprogram.god.eDetailedPerftSearching;
 import chessprogram.god.eFenParser;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-class eDetailedPerftSearchingTestSuite {
+class PerftTest {
 
     /*
     Many thanks to:
