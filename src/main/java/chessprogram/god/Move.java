@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class Move {
 
-    public int move;
+    int move;
     // todo, should not be public
-    final public static int
+    final static int
             ENPASSANT_MASK = 0x00002000,
             PROMOTION_MASK = 0x00003000,
             

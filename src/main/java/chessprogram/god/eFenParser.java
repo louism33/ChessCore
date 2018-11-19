@@ -4,6 +4,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class eFenParser {
+
+    
+    
+    
+    
     
     eFenParser(String fenString){
         Chessboard chessboard = parseFenString(fenString);

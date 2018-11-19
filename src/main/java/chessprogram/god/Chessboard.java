@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Chessboard {
 
@@ -11,8 +13,6 @@ public class Chessboard {
     private ZobristHash zobristHash;
     
     private void init(){
-
-        
         this.details = new ChessboardDetails();
         this.zobristHash = new ZobristHash(this);
     }
@@ -21,15 +21,17 @@ public class Chessboard {
         init();
     }
 
-//    public Chessboard chessboardBasedOnFen(String fen) {
-//        this = eFenParser.makeBoardBasedOnFEN(fen);
-//        this.zobristHash = new ZobristHash(this);
-//        return board;
-//    }
-
     // copy constructor
     private Chessboard(Chessboard board) {
         init();
+    }
+    
+    public String getFenRepresentation(){
+        return "not yet";
+    }
+    
+    public void setBoardToFen(String fen){
+        
     }
     
     public List<Move> generateLegalMoves(){
@@ -145,9 +147,8 @@ public class Chessboard {
 
     @Override
     public String toString() {
-        return "Chessboard{" + Art.boardArt(this) +
-                "whiteTurn=" + isWhiteTurn() +
-                '}';
+        String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
+        return Art.boardArt(this) + "\n" + turn;
     }
 
     public boolean isWhiteCanCastleK() {
@@ -277,4 +278,297 @@ public class Chessboard {
     public void setBlackKing(long blackKing) {
         this.details.blackKing = blackKing;
     }
+
+
+
+
+
+
+
+
+
+
+
+    public Chessboard(String fen) {
+        init();
+        makeBoardBasedOnFENSpecific(fen);
+        this.zobristHash = new ZobristHash(this);
+    }
+    
+
+    private void makeBoardBasedOnFENSpecific(String fen){
+//        System.out.println(fen);
+
+        parseFenStringSpecific(fen);
+        
+        this.setWhiteTurn(isItWhitesTurnSpecific(fen));
+
+        boolean[] castlingRights = castlingRightsSpecific(fen);
+        this.setWhiteCanCastleK(castlingRights[0]);
+        this.setWhiteCanCastleQ(castlingRights[1]);
+        this.setBlackCanCastleK(castlingRights[2]);
+        this.setBlackCanCastleQ(castlingRights[3]);
+
+        if (isEPFlagSetSpecific(fen)){
+            epFlagSpecific(fen);
+        }
+    }
+
+
+    private static boolean totalMovesSpecific(String fen){
+        //todo
+        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
+
+        String epFlags = "";
+
+        if (m.find()){
+            epFlags = m.group(3);
+        }
+        if (epFlags.length() == 0){
+            throw new RuntimeException("Could not Parse board rep of fen string");
+        }
+
+        return !epFlags.equals("-");
+    }
+
+
+    private static boolean fiftyMovesSpecific(String fen){
+        //todo
+        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
+
+        String epFlags = "";
+
+        if (m.find()){
+            epFlags = m.group(3);
+        }
+        if (epFlags.length() == 0){
+            throw new RuntimeException("Could not Parse board rep of fen string");
+        }
+
+        return !epFlags.equals("-");
+    }
+
+    private void epFlagSpecific(String fen){
+        String boardPattern = " (.) (\\w+|-) (\\w|-)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
+
+        String epFlags = "";
+
+        if (m.find()){
+            epFlags = m.group(3);
+        }
+        if (epFlags.length() == 0){
+            throw new RuntimeException("Could not Parse board rep of fen string");
+        }
+
+        switch (epFlags) {
+            case "a": {
+                StackMoveData previousMoveForEPPurposes = new StackMoveData
+                        (null, this, 50, 1, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                this.moveStack.push(previousMoveForEPPurposes);
+                break;
+            }
+            case "b": {
+                StackMoveData previousMoveForEPPurposes = new StackMoveData
+                        (null, this, 50, 2, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                this.moveStack.push(previousMoveForEPPurposes);
+                break;
+            }
+            case "c": {
+                StackMoveData previousMoveForEPPurposes = new StackMoveData
+                        (null, this, 50, 3, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                this.moveStack.push(previousMoveForEPPurposes);
+                break;
+            }
+            case "d": {
+                StackMoveData previousMoveForEPPurposes = new StackMoveData
+                        (null, this, 50, 4, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                this.moveStack.push(previousMoveForEPPurposes);
+                break;
+            }
+            case "e": {
+                StackMoveData previousMoveForEPPurposes = new StackMoveData
+                        (null, this, 50, 5, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                this.moveStack.push(previousMoveForEPPurposes);
+                break;
+            }
+            case "f": {
+                StackMoveData previousMoveForEPPurposes = new StackMoveData
+                        (null, this, 50, 6, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                this.moveStack.push(previousMoveForEPPurposes);
+                break;
+            }
+            case "g": {
+                StackMoveData previousMoveForEPPurposes = new StackMoveData
+                        (null, this, 50, 7, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                this.moveStack.push(previousMoveForEPPurposes);
+                break;
+            }
+            case "h": {
+                StackMoveData previousMoveForEPPurposes = new StackMoveData
+                        (null, this, 50, 8, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                this.moveStack.push(previousMoveForEPPurposes);
+                break;
+            }
+            default:
+                System.out.println("problem with EP flag");
+        }
+    }
+
+    private static boolean isEPFlagSetSpecific(String fen){
+        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
+
+        String epFlags = "";
+
+        if (m.find()){
+            epFlags = m.group(3);
+        }
+        if (epFlags.length() == 0){
+            throw new RuntimeException("Could not Parse board rep of fen string");
+        }
+
+        return !epFlags.equals("-");
+    }
+
+    private static boolean[] castlingRightsSpecific(String fen){
+        boolean[] castlingRights = {
+                false, false, false, false,
+        };
+        String boardPattern = " (.) (\\w+|-)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
+        String castleString = "";
+        if (m.find()){
+            castleString = m.group(2);
+        }
+        if (castleString.length() == 0){
+            throw new RuntimeException("Could not Parse board rep of fen string");
+        }
+
+        if (castleString.equals("-")){
+            return castlingRights;
+        }
+
+        if (castleString.contains("K")){
+            castlingRights[0] = true;
+        }
+        if (castleString.contains("Q")){
+            castlingRights[1] = true;
+        }
+        if (castleString.contains("k")){
+            castlingRights[2] = true;
+        }
+        if (castleString.contains("q")){
+            castlingRights[3] = true;
+        }
+
+        return castlingRights;
+    }
+
+    private boolean isItWhitesTurnSpecific(String fen){
+        String boardPattern = " (.)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
+        String player = "";
+        if (m.find()){
+            player = m.group(1);
+        }
+        if (player.length() == 0){
+            throw new RuntimeException("Could not Parse board rep of fen string");
+        }
+        return player.equals("w");
+    }
+
+    private void parseFenStringSpecific (String fen){
+        String boardRepresentation = boardRepSpecific(fen);
+        int length = boardRepresentation.length();
+        int index = -1;
+        int square = 63;
+        while (true){
+            index++;
+            if (index >= length){
+                break;
+            }
+            if (square < 0){
+                break;
+            }
+            String entry = Character.toString(boardRepresentation.charAt(index));
+            if (entry.equals("/")){
+                continue;
+            }
+            try {
+                int i = Integer.parseInt(entry);
+                square -= (i);
+                continue;
+            }
+            catch (NumberFormatException ignored){
+            }
+            long pieceFromFen = bBitManipulations.newPieceOnSquare(square);
+            square--;
+            switch (entry) {
+                case "P":
+                    this.setWhitePawns(this.getWhitePawns() | pieceFromFen);
+                    break;
+                case "N":
+                    this.setWhiteKnights(this.getWhiteKnights() | pieceFromFen);
+                    break;
+                case "B":
+                    this.setWhiteBishops(this.getWhiteBishops() | pieceFromFen);
+                    break;
+                case "R":
+                    this.setWhiteRooks(this.getWhiteRooks() | pieceFromFen);
+                    break;
+                case "Q":
+                    this.setWhiteQueen(this.getWhiteQueen() | pieceFromFen);
+                    break;
+                case "K":
+                    this.setWhiteKing(this.getWhiteKing() | pieceFromFen);
+                    break;
+
+                case "p":
+                    this.setBlackPawns(this.getBlackPawns() | pieceFromFen);
+                    break;
+                case "n":
+                    this.setBlackKnights(this.getBlackKnights() | pieceFromFen);
+                    break;
+                case "b":
+                    this.setBlackBishops(this.getBlackBishops() | pieceFromFen);
+                    break;
+                case "r":
+                    this.setBlackRooks(this.getBlackRooks() | pieceFromFen);
+                    break;
+                case "q":
+                    this.setBlackQueen(this.getBlackQueen() | pieceFromFen);
+                    break;
+                case "k":
+                    this.setBlackKing(this.getBlackKing() | pieceFromFen);
+                    break;
+                default:
+                    System.out.println("I don't know this Piece");
+            }
+        }
+    }
+
+    private static String boardRepSpecific(String fen){
+        String boardPattern = "^[\\w*/]*";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
+        String boardRepresentation = "";
+        if (m.find()){
+            boardRepresentation = m.group();
+        }
+        if (boardRepresentation.length() == 0){
+            throw new RuntimeException("Could not Parse board rep of fen string");
+        }
+
+        return boardRepresentation;
+    }
+
 }
