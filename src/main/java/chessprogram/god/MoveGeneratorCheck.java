@@ -3,13 +3,12 @@ package chessprogram.god;
 import java.util.ArrayList;
 import java.util.List;
 
-import static chessprogram.god.bBitBoardUtils.*;
-import static chessprogram.god.dBitIndexing.UNIVERSE;
-import static chessprogram.god.dBitIndexing.getIndexOfFirstPiece;
+import static chessprogram.god.BitboardResources.*;
+import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 
-class cCheckMoveOrganiser {
+class MoveGeneratorCheck {
 
-    public static List<Move> evadeCheckMovesMaster(Chessboard board, boolean white){
+    static List<Move> evadeCheckMovesMaster(Chessboard board, boolean white){
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         long ignoreThesePieces = PinnedManager.whichPiecesArePinned(board, white, myKing);
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
@@ -31,7 +30,7 @@ class cCheckMoveOrganiser {
             blockingSquaresMask = extractRayFromTwoPieces(board, myKing, slider) & (~slider);
             checkingPieceMask = slider;
         }
-        long PENULTIMATE_RANK = white ? bBitBoardUtils.RANK_SEVEN : bBitBoardUtils.RANK_TWO;
+        long PENULTIMATE_RANK = white ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
         long myPawns = white ? board.getWhitePawns() : board.getBlackPawns();
         long promotablePawns = myPawns & PENULTIMATE_RANK;
         long piecesToIgnoreAndPromotingPawns = ignoreThesePieces | promotablePawns;
@@ -39,7 +38,7 @@ class cCheckMoveOrganiser {
         moves.addAll(MoveGeneratorPseudo.generateAllMovesWithoutKing
                 (board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask));
 
-        moves.addAll(cKingLegalMoves.kingLegalMovesOnly(board, white));
+        moves.addAll(MoveGeneratorKingLegal.kingLegalMovesOnly(board, white));
         
         moves.addAll(MoveGeneratorPromotion.generatePromotionMoves(board, white, ignoreThesePieces, blockingSquaresMask, checkingPieceMask));
 
@@ -63,7 +62,7 @@ class cCheckMoveOrganiser {
         long possibleAnswer = 0;
         
         while (true) {
-            if ((smallPiece & bBitBoardUtils.FILE_A) != 0) {
+            if ((smallPiece & BitboardResources.FILE_A) != 0) {
                 break;
             }
             smallPiece <<= 1;
@@ -99,7 +98,7 @@ class cCheckMoveOrganiser {
         possibleAnswer = 0;
 
         while (true) {
-            if ((smallPiece & bBitBoardUtils.RANK_EIGHT) != 0) {
+            if ((smallPiece & BitboardResources.RANK_EIGHT) != 0) {
                 break;
             }
             smallPiece <<= 8;
@@ -145,7 +144,7 @@ class cCheckMoveOrganiser {
         
         boolean thisOne = false;
         while (true) {
-            if ((smallPiece & bBitBoardUtils.FILE_A) != 0) {
+            if ((smallPiece & BitboardResources.FILE_A) != 0) {
                 if (thisOne) {
                     answer |= possibleAnswer;
                 }
@@ -164,7 +163,7 @@ class cCheckMoveOrganiser {
         
         thisOne = false;
         while (true) {
-            if ((smallPiece & bBitBoardUtils.FILE_H) != 0) {
+            if ((smallPiece & BitboardResources.FILE_H) != 0) {
                 if (thisOne) {
                     answer |= possibleAnswer;
                 }
@@ -221,7 +220,7 @@ class cCheckMoveOrganiser {
         
         thisOne = false;
         while (true) {
-            if ((smallPiece & bBitBoardUtils.RANK_EIGHT) != 0) {
+            if ((smallPiece & BitboardResources.RANK_EIGHT) != 0) {
                 if (thisOne) {
                     answer |= possibleAnswer;
                 }
@@ -240,7 +239,7 @@ class cCheckMoveOrganiser {
         
         thisOne = false;
         while (true) {
-            if ((smallPiece & bBitBoardUtils.RANK_ONE) != 0) {
+            if ((smallPiece & BitboardResources.RANK_ONE) != 0) {
                 if (thisOne) {
                     answer |= possibleAnswer;
                 }

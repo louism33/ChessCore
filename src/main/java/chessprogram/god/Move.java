@@ -4,9 +4,19 @@ import java.util.Objects;
 
 public class Move {
 
+    // todo get rid of eventually
+    public int getMove() {
+        return move;
+    }
+
     int move;
+
+            
+
+    
+    
     // todo, should not be public
-    final static int
+    public final static int
             ENPASSANT_MASK = 0x00002000,
             PROMOTION_MASK = 0x00003000,
             
@@ -16,6 +26,8 @@ public class Move {
             QUEEN_PROMOTION_MASK = 0x0000c000;
 
     final private static int
+            CAPTURE_MOVE_MASK = 0x00010000,
+    
             WHICH_PROMOTION = 0x0000c000,
             SOURCE_OFFSET = 6,
             SOURCE_MASK = 0x00000fc0,
@@ -32,13 +44,20 @@ public class Move {
     }
 
     public Move(int source, int destinationIndex) {
-        makeSourceAndDest(source, destinationIndex);
+        buildMove(source, destinationIndex);
+    }
+
+    public Move(int source, int destinationIndex, boolean capture) {
+        buildMove(source, destinationIndex);
+        if (capture){
+            this.move |= CAPTURE_MOVE_MASK;
+        }
     }
 
     public Move(int source, int destinationIndex, boolean castling, boolean enPassant, boolean promotion,
                 boolean promoteToKnight, boolean promoteToBishop, boolean promoteToRook, boolean promoteToQueen) {
 
-        makeSourceAndDest(source, destinationIndex);
+        buildMove(source, destinationIndex);
 
         if (castling) this.move |= CASTLING_MASK;
         if (enPassant) this.move |= ENPASSANT_MASK;
@@ -50,29 +69,13 @@ public class Move {
         }
     }
 
-    public Move(int source, int destinationIndex, boolean castling, boolean enPassant, boolean promotion,
-                boolean promoteToKnight, boolean promoteToBishop, boolean promoteToRook, boolean promoteToQueen, int hack) {
-
-        makeSourceAndDest(source, destinationIndex);
-
-        if (castling) this.move |= CASTLING_MASK;
-        if (enPassant) this.move |= ENPASSANT_MASK;
-        if (promotion) {
-            this.move |= PROMOTION_MASK;
-            if (promoteToKnight) this.move |= KNIGHT_PROMOTION_MASK;
-            else if (promoteToBishop) this.move |= BISHOP_PROMOTION_MASK;
-            else if (promoteToRook) this.move |= ROOK_PROMOTION_MASK;
-            else if (promoteToQueen) this.move |= QUEEN_PROMOTION_MASK;
-        }
-    }
-
-
-    private void makeSourceAndDest(int s, int d) {
+    private void buildMove(int s, int d) {
         if (s >= 64 | s < 0 | d >= 64 | d < 0) {
             throw new RuntimeException("Move: False Move " + s + " " + d);
         }
         this.move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
         this.move |= (d & DESTINATION_MASK);
+        
     }
 
     @Override
@@ -101,6 +104,10 @@ public class Move {
         return this.move & DESTINATION_MASK;
     }
 
+    public boolean isCaptureMove(){
+        return (this.move & CAPTURE_MOVE_MASK) != 0;
+    }
+    
     public boolean isSpecialMove (){
         return (this.move & SPECIAL_MOVE_MASK) != 0;
     }

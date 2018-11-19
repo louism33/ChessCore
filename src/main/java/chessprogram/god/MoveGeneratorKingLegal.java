@@ -4,18 +4,20 @@ import org.junit.Assert;
 
 import java.util.List;
 
-class cKingLegalMoves {
+import static chessprogram.god.BitOperations.UNIVERSE;
 
-    public static List<Move> kingLegalMovesOnly(Chessboard board, boolean white){
+class MoveGeneratorKingLegal {
+
+    static List<Move> kingLegalMovesOnly(Chessboard board, boolean white){
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-        int indexOfKing = dBitIndexing.getIndexOfFirstPiece(myKing);
+        int indexOfKing = BitOperations.getIndexOfFirstPiece(myKing);
         return MoveGenerationUtilities.movesFromAttackBoard(kingLegalPushAndCaptureTable(board, white), indexOfKing);
     }
 
     private static long kingLegalPushAndCaptureTable(Chessboard board, boolean white){
         long ans = 0;
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-        long kingSafeSquares = ~cCheckUtilities.kingDangerSquares(board, white);
+        long kingSafeSquares = ~kingDangerSquares(board, white);
         long enemyPieces = (!white) ? board.whitePieces() : board.blackPieces();
         long kingSafeCaptures = enemyPieces & kingSafeSquares;
         long kingSafePushes = (~board.allPieces() & kingSafeSquares);
@@ -26,6 +28,11 @@ class cKingLegalMoves {
         Assert.assertTrue(((kingSafeCaptures & kingSafePushes) == 0));
 
         return ans;
+    }
+
+    private static long kingDangerSquares(Chessboard board, boolean white){
+        Chessboard boardWithoutMyKing = CopierToBeDeleted.copyBoard(board, white, true);
+        return MoveGeneratorPseudo.generatePseudoCaptureTable(boardWithoutMyKing, !white, 0, UNIVERSE, UNIVERSE);
     }
 
 }

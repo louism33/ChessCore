@@ -2,7 +2,7 @@ package chessprogram.god;
 
 import java.util.List;
 
-import static chessprogram.god.dBitExtractor.getAllPieces;
+import static chessprogram.god.BitOperations.getAllPieces;
 
 class PieceMoveKing {
 
@@ -17,9 +17,9 @@ class PieceMoveKing {
     private static long singleKingAllMoves(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
         if (piece == 0) return 0;
         long table = 0;
-        int index = dBitIndexing.getIndexOfFirstPiece(piece);
+        int index = BitOperations.getIndexOfFirstPiece(piece);
 
-        long l1 = bKing.KING_MOVE_TABLE[index];
+        long l1 = KingTable.KING_MOVE_TABLE[index];
         table |= l1;
        
         return table & (legalPushes | legalCaptures);

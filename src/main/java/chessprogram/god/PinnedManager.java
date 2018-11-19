@@ -1,6 +1,6 @@
 package chessprogram.god;
 
-import static chessprogram.god.bBitBoardUtils.*;
+import static chessprogram.god.BitboardResources.*;
 
 class PinnedManager {
 

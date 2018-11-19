@@ -6,9 +6,10 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Stack;
 
-import static chessprogram.god.bBitBoardUtils.BLACK_KING;
-import static chessprogram.god.bBitBoardUtils.WHITE_KING;
-import static chessprogram.god.bBitManipulations.newPieceOnSquare;
+import static chessprogram.god.BitboardResources.INITIAL_BLACK_KING;
+import static chessprogram.god.BitboardResources.INITIAL_WHITE_KING;
+import static chessprogram.god.BitOperations.newPieceOnSquare;
+import static chessprogram.god.BitboardResources.boardWithoutEdges;
 import static chessprogram.god.MoveOrganiser.whichPieceOnSquare;
 import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 
@@ -21,7 +22,7 @@ class ZobristHash {
     static final long zobristHashColourBlack = initColourHash();
     private long boardHash;
 
-    public ZobristHash(Chessboard board) {
+    ZobristHash(Chessboard board) {
         this.boardHash = boardToHash(board);
     }
 
@@ -145,7 +146,7 @@ class ZobristHash {
             if (move.isCastlingMove()) {
                 int originalRookIndex = 0;
                 int newRookIndex = 0;
-                if ((sourcePiece & WHITE_KING) != 0){
+                if ((sourcePiece & INITIAL_WHITE_KING) != 0){
                     if (move.getDestinationIndex() == 1){
                         originalRookIndex = 0;
                         newRookIndex = move.getDestinationIndex() + 1;
@@ -156,7 +157,7 @@ class ZobristHash {
                     }
                 }
 
-                else if ((sourcePiece & BLACK_KING) != 0){
+                else if ((sourcePiece & INITIAL_BLACK_KING) != 0){
                     if (move.getDestinationIndex() == 57){
                         originalRookIndex = 56;
                         newRookIndex = move.getDestinationIndex() + 1;
@@ -180,7 +181,7 @@ class ZobristHash {
             else if (move.isEnPassantMove()){
                 if ((sourcePiece & board.getWhitePawns()) != 0){
                     long victimPawn = destinationPiece >>> 8;
-                    int indexOfVictimPawn = dBitIndexing.getIndexOfFirstPiece(victimPawn);
+                    int indexOfVictimPawn = BitOperations.getIndexOfFirstPiece(victimPawn);
                     int pieceToKill = whichPieceOnSquare(board, victimPawn) - 1;
                     long victimPawnZH = zobristHashPieces[indexOfVictimPawn][pieceToKill];
                     boardHash ^= victimPawnZH;
@@ -188,7 +189,7 @@ class ZobristHash {
 
                 else if  ((sourcePiece & board.getBlackPawns()) != 0){
                     long victimPawn = destinationPiece << 8;
-                    int indexOfVictimPawn = dBitIndexing.getIndexOfFirstPiece(victimPawn);
+                    int indexOfVictimPawn = BitOperations.getIndexOfFirstPiece(victimPawn);
                     int pieceToKill = whichPieceOnSquare(board, victimPawn) - 1;
                     long victimPawnZH = zobristHashPieces[indexOfVictimPawn][pieceToKill];
                     boardHash ^= victimPawnZH;
@@ -223,9 +224,10 @@ class ZobristHash {
                     else if (move.isPromotionToBishop()){
                         whichPromotingPiece = 9;
                     }
-                    else if (move.isPromotionToKnight()){
+                    else if (move.isPromotionToRook()){
                         whichPromotingPiece = 10;
                     }
+                    
                     else if (move.isPromotionToQueen()){
                         whichPromotingPiece = 11;
                     }
@@ -236,6 +238,10 @@ class ZobristHash {
                  */
                 boardHash ^= destinationZH;
                 
+                if (whichPromotingPiece == 0){
+                    System.out.println(board);
+                    System.out.println();
+                }
                 long promotionZH = zobristHashPieces[destinationSquareIndex][whichPromotingPiece - 1];
                 boardHash ^= promotionZH;
             }

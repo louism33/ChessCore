@@ -1,12 +1,12 @@
 package chessprogram.god;
 
-import static chessprogram.god.bBitManipulations.newPieceOnSquare;
+import static chessprogram.god.BitOperations.newPieceOnSquare;
 
 class MoveCastling {
 
     static void makeCastlingMove(Chessboard board, Move move){
         long sourcePiece = newPieceOnSquare(move.getSourceIndex());
-        if ((sourcePiece & bBitBoardUtils.WHITE_KING) != 0){
+        if ((sourcePiece & BitboardResources.INITIAL_WHITE_KING) != 0){
             if (move.getDestinationIndex() == 1){
                 long originalRook = newPieceOnSquare(0);
                 long newRook = newPieceOnSquare(move.getDestinationIndex() + 1);
@@ -29,7 +29,7 @@ class MoveCastling {
             }
         }
 
-        else if ((sourcePiece & bBitBoardUtils.BLACK_KING) != 0){
+        else if ((sourcePiece & BitboardResources.INITIAL_BLACK_KING) != 0){
             if (move.getDestinationIndex() == 57){
                 long originalRook = newPieceOnSquare(56);
                 long newRook = newPieceOnSquare(move.getDestinationIndex() + 1);

@@ -1,8 +1,11 @@
 package chessprogram.god;
 
-import static chessprogram.god.bBitBoardUtils.boardWithoutEdges;
+import java.util.ArrayList;
+import java.util.List;
 
-class bBitManipulations {
+import static chessprogram.god.BitboardResources.boardWithoutEdges;
+
+class BitOperations {
 
     public static long newPieceOnSquare (int x){
         return 0x0000000000000001L << x;
@@ -66,6 +69,55 @@ class bBitManipulations {
 //        }
 
                 
+    }
+
+
+    public static final long UNIVERSE = 0xffffffffffffffffL;
+
+    public static int getIndexOfFirstPiece (long pieces) {
+        if (pieces == 0) return -1;
+        long finder = pieces;
+        int i = 0;
+        while (((finder % 2) != 1) && ((finder % 2) != -1)){
+            finder >>>= 1;
+            i++;
+        }
+        return i;
+    }
+
+    public static List<Integer> getIndexOfAllPieces(long pieces){
+        List<Integer> indexes = new ArrayList<>();
+        long temp = pieces;
+        long endSquareMask = 0x0000000000000001L;
+        int i = 0;
+        while (temp != 0){
+            if ((temp & endSquareMask) == endSquareMask) indexes.add(i);
+            temp >>>= 1;
+            i++;
+        }
+        return indexes;
+    }
+
+
+
+    public static int populationCount (long pieces) {
+        return Long.bitCount(pieces);
+    }
+
+
+    public static List<Long> getAllPieces(long pieces, long ignoreThesePieces) {
+        List<Long> indexes = new ArrayList<>();
+        long temp = pieces & (~ignoreThesePieces);
+        while (temp != 0) {
+            long firstPiece = getFirstPiece(temp);
+            indexes.add(firstPiece);
+            temp ^= firstPiece;
+        }
+        return indexes;
+    }
+
+    private static long getFirstPiece(long l) {
+        return Long.highestOneBit(l);
     }
     
 }

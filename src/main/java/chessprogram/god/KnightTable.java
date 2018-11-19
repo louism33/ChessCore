@@ -1,8 +1,8 @@
 package chessprogram.god;
 
-class bKnight {
+class KnightTable {
 
-    public static final long[] KNIGHT_MOVE_TABLE = {
+    static final long[] KNIGHT_MOVE_TABLE = {
             0x20400L,
             0x50800L,
             0xa1100L,

@@ -1,8 +1,8 @@
 package chessprogram.god;
 
-class bPawnCaptures {
+class PawnCaptureTable {
 
-    public static final long[] PAWN_CAPTURE_TABLE_WHITE = {
+    static final long[] PAWN_CAPTURE_TABLE_WHITE = {
             0x200L,
             0x500L,
             0xa00L,
@@ -69,7 +69,7 @@ class bPawnCaptures {
             0x0L,
     };
 
-    public static final long[] PAWN_CAPTURE_TABLE_BLACK = {
+    static final long[] PAWN_CAPTURE_TABLE_BLACK = {
             0x0L,
             0x0L,
             0x0L,

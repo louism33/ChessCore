@@ -1,25 +1,25 @@
 package chessprogram.god;
 
-class bBitBoardUtils {
+class BitboardResources {
 
-    private static final long UNIVERSE = 0xffffffffffffffffL;
+    static final long UNIVERSE = 0xffffffffffffffffL;
 
-    public static final long WHITE_PAWNS = 0x000000000000FF00L;
-    public static final long WHITE_KNIGHTS = 0x0000000000000042L;
-    public static final long WHITE_BISHOPS = 0x0000000000000024L;
-    public static final long WHITE_ROOKS = 0x0000000000000081L;
-    public static final long WHITE_QUEEN = 0x0000000000000010L;
-    public static final long WHITE_KING = 0x0000000000000008L;
+    public static final long INITIAL_WHITE_PAWNS = 0x000000000000FF00L;
+    public static final long INITIAL_WHITE_KNIGHTS = 0x0000000000000042L;
+    public static final long INITIAL_WHITE_BISHOPS = 0x0000000000000024L;
+    public static final long INITIAL_WHITE_ROOKS = 0x0000000000000081L;
+    public static final long INITIAL_WHITE_QUEEN = 0x0000000000000010L;
+    public static final long INITIAL_WHITE_KING = 0x0000000000000008L;
 
-    public static final long BLACK_PAWNS = 0x00FF000000000000L;
-    public static final long BLACK_KNIGHTS = 0x4200000000000000L;
-    public static final long BLACK_BISHOPS = 0x2400000000000000L;
-    public static final long BLACK_ROOKS = 0x8100000000000000L;
-    public static final long BLACK_QUEEN = 0x1000000000000000L;
-    public static final long BLACK_KING = 0x0800000000000000L;
+    public static final long INITIAL_BLACK_PAWNS = 0x00FF000000000000L;
+    public static final long INITIAL_BLACK_KNIGHTS = 0x4200000000000000L;
+    public static final long INITIAL_BLACK_BISHOPS = 0x2400000000000000L;
+    public static final long INITIAL_BLACK_ROOKS = 0x8100000000000000L;
+    public static final long INITIAL_BLACK_QUEEN = 0x1000000000000000L;
+    public static final long INITIAL_BLACK_KING = 0x0800000000000000L;
 
-    public static final long WHITE_SQUARES = 0x5555555555555555L;
-    public static final long BLACK_SQUARES = 0xAAAAAAAAAAAAAAAAL;
+    public static final long WHITE_COLOURED_SQUARES = 0x5555555555555555L;
+    public static final long BLACK_COLOURED_SQUARES = 0xAAAAAAAAAAAAAAAAL;
 
     static long CASTLE_WHITE_KING_SQUARES = 0x0000000000000006L;
     static long CASTLE_WHITE_QUEEN_SQUARES = 0x0000000000000070L;

@@ -1,11 +1,11 @@
 package chessprogram.god;
 
-import static chessprogram.god.bBitManipulations.newPieceOnSquare;
+import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.StackMoveData.SpecialMove.*;
 
 class MoveUnmaker {
 
-    public static void unMakeMoveMaster(Chessboard board) {
+    static void unMakeMoveMaster(Chessboard board) {
         StackMoveData popSMD = board.moveStack.pop();
         int pieceToMoveBack = popSMD.move.getDestinationIndex();
         int squareToMoveBackTo = popSMD.move.getSourceIndex();

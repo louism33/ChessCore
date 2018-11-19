@@ -1,9 +1,9 @@
 package chessprogram.god;
 
 
-class bKing {
+class KingTable {
 
-    public static final long[] KING_MOVE_TABLE = {
+    static final long[] KING_MOVE_TABLE = {
             0x302L,
             0x705L,
             0xe0aL,

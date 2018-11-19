@@ -2,7 +2,7 @@ package chessprogram.god;
 
 import java.util.List;
 
-import static chessprogram.god.dBitExtractor.getAllPieces;
+import static chessprogram.god.BitOperations.getAllPieces;
 
 class PieceMoveKnight {
 
@@ -16,12 +16,12 @@ class PieceMoveKnight {
 
     private static long singleKnightAllMoves(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures) {
         long table = 0;
-        int index = dBitIndexing.getIndexOfFirstPiece(piece);
+        int index = BitOperations.getIndexOfFirstPiece(piece);
 
         if (index == -1){
             return 0;
         }
-        long l = bKnight.KNIGHT_MOVE_TABLE[index];
+        long l = KnightTable.KNIGHT_MOVE_TABLE[index];
         table |= l;
         long emptyOfMyPieces = ~((white) ? board.whitePieces() : board.blackPieces());
 

@@ -14,7 +14,7 @@ class MoveGeneratorMaster {
 
         if (moves.size() == 0) {
             long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-            int numberOfCheckers = cCheckChecker.numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
+            int numberOfCheckers = CheckHelper.numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
             if (numberOfCheckers > 0) {
 //                System.out.println("Checkmate");
                 numberOfCheckMates++;
@@ -29,15 +29,15 @@ class MoveGeneratorMaster {
 
     private static List<Move> generateLegalMovesHelper(Chessboard board, boolean white) {
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-        int numberOfCheckers = cCheckChecker.numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
+        int numberOfCheckers = CheckHelper.numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
 
         if (numberOfCheckers > 1){
             numberOfChecks++;
-            return cKingLegalMoves.kingLegalMovesOnly(board, white);
+            return MoveGeneratorKingLegal.kingLegalMovesOnly(board, white);
         }
         else if (numberOfCheckers == 1){
             numberOfChecks++;
-            return cCheckMoveOrganiser.evadeCheckMovesMaster(board, white);
+            return MoveGeneratorCheck.evadeCheckMovesMaster(board, white);
         }
 
         else {
@@ -54,14 +54,14 @@ class MoveGeneratorMaster {
         long ALL_EMPTY_SQUARES = ~board.allPieces();
         long myKing = (whiteTurn) ? board.getWhiteKing() : board.getBlackKing();
         long pinnedPieces = PinnedManager.whichPiecesArePinned(board, whiteTurn, myKing);
-        long PENULTIMATE_RANK = whiteTurn ? bBitBoardUtils.RANK_SEVEN : bBitBoardUtils.RANK_TWO;
+        long PENULTIMATE_RANK = whiteTurn ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
         long myPawns = whiteTurn ? board.getWhitePawns() : board.getBlackPawns();
         long promotablePawns = myPawns & PENULTIMATE_RANK;
         long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
 
         moves.addAll(MoveGeneratorCastling.generateCastlingMoves(board, whiteTurn));
 
-        moves.addAll(cKingLegalMoves.kingLegalMovesOnly(board, whiteTurn));
+        moves.addAll(MoveGeneratorKingLegal.kingLegalMovesOnly(board, whiteTurn));
 
         if (pinnedPieces == 0){
             List<Move> regularPiecesMoves = MoveGeneratorPseudo.generateAllMovesWithoutKing
@@ -98,7 +98,7 @@ class MoveGeneratorMaster {
     private static List<Move> pinnedMoveManager(Chessboard board, boolean whiteTurn,
                                                long pinnedPieces, long squareWeArePinnedTo){
         List<Move> moves = new ArrayList<>();
-        List<Long> allPinnedPieces = dBitExtractor.getAllPieces(pinnedPieces, 0);
+        List<Long> allPinnedPieces = BitOperations.getAllPieces(pinnedPieces, 0);
 
         long ans = 0, pawns, knights, bishops, rooks, queens;
         if (whiteTurn){
@@ -120,7 +120,7 @@ class MoveGeneratorMaster {
         long ENEMY_PIECES = (whiteTurn) ? board.blackPieces() : board.whitePieces();
 
         for (long pinnedPiece : allPinnedPieces){
-            long infiniteRay = cCheckMoveOrganiser.extractInfiniteRayFromTwoPieces(board, squareWeArePinnedTo, pinnedPiece);
+            long infiniteRay = MoveGeneratorCheck.extractInfiniteRayFromTwoPieces(board, squareWeArePinnedTo, pinnedPiece);
             long pushMask = infiniteRay & ~(board.blackPieces() | board.whitePieces());
             long captureMask = infiniteRay & ENEMY_PIECES;
 
@@ -130,7 +130,7 @@ class MoveGeneratorMaster {
             }
             if ((pinnedPiece & pawns) != 0) {
 
-                long PENULTIMATE_RANK = whiteTurn ? bBitBoardUtils.RANK_SEVEN : bBitBoardUtils.RANK_TWO;
+                long PENULTIMATE_RANK = whiteTurn ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
                 long allButPinnedFriends = FRIENLDY_PIECES & ~pinnedPiece;
                 
                 if ((pinnedPiece & PENULTIMATE_RANK) == 0) {

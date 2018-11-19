@@ -1,13 +1,18 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class eDetailedPerftSearching {
+public class Perft {
     
     private static long nodesForNps = 0;
+
+    public static long perftTest(int d, Chessboard board){
+        String s = Art.boardArt(board);
+        System.out.println(s);
+        return runPerftTestWithBoard(d, board);
+    }
     
-    public static long runPerftTestWithBoard(int d, Chessboard board, long correctAnswer){
+    public static long perftTest(int d, Chessboard board, long correctAnswer){
         String s = Art.boardArt(board);
         System.out.println(s);
         System.out.println("-----------------------------------");
@@ -24,7 +29,7 @@ public class eDetailedPerftSearching {
 
     private static long countFinalNodesAtDepth(Chessboard board, int depth) {
         long t1 = System.currentTimeMillis();
-        long ii = eDetailedPerftSearching.countFinalNodesAtDepthHelper(board, depth);
+        long ii = Perft.countFinalNodesAtDepthHelper(board, depth);
         System.out.println("Final Nodes at Depth " + depth + ": " + ii);
         long t2 = System.currentTimeMillis();
         long t = t2 - t1;
@@ -48,8 +53,7 @@ public class eDetailedPerftSearching {
             return size;
         }
         for (Move move : moves) {
-            MoveOrganiser.makeMoveMaster(board, move);
-            MoveOrganiser.flipTurn(board);
+            board.makeMoveAndFlipTurn(move);
             nodesForNps++;
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;

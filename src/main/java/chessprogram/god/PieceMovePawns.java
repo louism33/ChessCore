@@ -2,32 +2,32 @@ package chessprogram.god;
 
 import java.util.List;
 
-import static chessprogram.god.dBitExtractor.getAllPieces;
+import static chessprogram.god.BitOperations.getAllPieces;
 
 class PieceMovePawns {
 
     static long singlePawnPushes(Chessboard board, long piece, boolean white, long legalPushes) {
         long allPieces = board.whitePieces() | board.blackPieces();
-        long HOME_RANK = (white) ? bBitBoardUtils.RANK_TWO : bBitBoardUtils.RANK_SEVEN;
+        long HOME_RANK = (white) ? BitboardResources.RANK_TWO : BitboardResources.RANK_SEVEN;
         long answer = 0;
         long temp = piece;
 
         // promotion moves are handled elsewhere
         if (white) {
             do {
-                if ((temp & bBitBoardUtils.RANK_EIGHT) != 0) break;
+                if ((temp & BitboardResources.RANK_EIGHT) != 0) break;
                 temp <<= 8;
                 if ((temp & allPieces) != 0) break;
                 answer |= temp;
-            } while (((temp & bBitBoardUtils.RANK_THREE) != 0));
+            } while (((temp & BitboardResources.RANK_THREE) != 0));
         }
         else {
             do {
-                if ((temp & bBitBoardUtils.RANK_ONE) != 0) break;
+                if ((temp & BitboardResources.RANK_ONE) != 0) break;
                 temp >>>= 8;
                 if ((temp & allPieces) != 0) break;
                 answer |= temp;
-            } while (((temp & bBitBoardUtils.RANK_SIX) != 0));
+            } while (((temp & BitboardResources.RANK_SIX) != 0));
         }
         return answer & legalPushes;
     }
@@ -40,14 +40,14 @@ class PieceMovePawns {
             return 0;
         }
         if (white){
-            int index = dBitIndexing.getIndexOfFirstPiece(piece);
-            long l = bPawnCaptures.PAWN_CAPTURE_TABLE_WHITE[index];
+            int index = BitOperations.getIndexOfFirstPiece(piece);
+            long l = PawnCaptureTable.PAWN_CAPTURE_TABLE_WHITE[index];
             answer |= l;
         }
         else{
             long table = 0;
-            int index = dBitIndexing.getIndexOfFirstPiece(piece);
-            long l = bPawnCaptures.PAWN_CAPTURE_TABLE_BLACK[index];
+            int index = BitOperations.getIndexOfFirstPiece(piece);
+            long l = PawnCaptureTable.PAWN_CAPTURE_TABLE_BLACK[index];
             answer |= l;
         }
 

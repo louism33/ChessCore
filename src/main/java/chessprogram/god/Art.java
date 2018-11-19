@@ -1,12 +1,26 @@
 package chessprogram.god;
 
-import static chessprogram.god.bBitManipulations.newPieceOnSquare;
+import static chessprogram.god.BitOperations.newPieceOnSquare;
 
-class Art {
-    
-    public static void main (String[] args){
-        Chessboard board = new Chessboard();
-        System.out.println("hi");
+public class Art {
+
+    static String boardArt (Chessboard board) {
+        StringBuilder s = new StringBuilder();
+        s.append("   a b c d e f g h\n");
+        s.append("  +---------------+\n");
+        for (int y = 7; y >= 0; y--) {
+            s.append(y + 1).append(" |");
+            for (int x = 7; x >= 0; x--) {
+                s.append(pieceByNumberASCII(pieceOnSquare(board, x + y * 8)));
+                if (x>0) s.append(" ");
+            }
+            s.append("| ").append(y + 1);
+            s.append("\n");
+        }
+        s.append("  +---------------+\n");
+        s.append("   a b c d e f g h\n");
+
+        return s.toString();
     }
 
     private static String pieceByNumberASCII(int s){
@@ -26,38 +40,23 @@ class Art {
         else return (".");
     }
 
-    public static String boardArt (Chessboard board) {
-        StringBuilder s = new StringBuilder();
-        s.append("   a b c d e f g h\n");
-        s.append("  +---------------+\n");
-        for (int y = 7; y >= 0; y--) {
-            s.append(y + 1).append(" |");
-            for (int x = 7; x >= 0; x--) {
-                s.append(pieceByNumberASCII(pieceOnSquare(board, x + y * 8)));
-                if (x>0) s.append(" ");
-            }
-            s.append("| ").append(y + 1);
-            s.append("\n");
-        }
-        s.append("  +---------------+\n");
-        s.append("   a b c d e f g h\n");
-
-        return s.toString();
-    }
-
-
-    public static String makeMoveToString (int l){
+      public static String makeMoveToStringTEMP (int l){
         String binaryString = Integer.toBinaryString(l);
-        int numberOfPaddingZeros = 16 - binaryString.length();
+        int numberOfPaddingZeros = 32 - binaryString.length();
         StringBuilder sb = new StringBuilder();
         while (sb.length() < numberOfPaddingZeros){
             sb.append("0");
         }
 
         String temp = sb.toString() + "" + binaryString;
-        return temp.substring(0, 6) +"\n" +
-                temp.substring(6, 12) + "\n" +
-                temp.substring(12, 16);
+        return temp.substring(0, 4) +"\n" +
+                temp.substring(4, 8) + "\n" +
+                temp.substring(8, 12) +"\n" +
+                temp.substring(12, 16) + "\n" +
+                temp.substring(16, 20) +"\n" +
+                temp.substring(20, 24) +"\n" +
+                temp.substring(24, 28) +"\n" +
+                temp.substring(28, 32) +"\n";
     }
 
     public static void printLong(long l){

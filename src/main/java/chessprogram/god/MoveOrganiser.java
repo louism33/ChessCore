@@ -1,20 +1,15 @@
 package chessprogram.god;
 
-import static chessprogram.god.bBitManipulations.newPieceOnSquare;
+import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.StackMoveData.SpecialMove.*;
 
 class MoveOrganiser {
 
-    public static void flipTurn(Chessboard board){
+    static void flipTurn(Chessboard board){
         board.setWhiteTurn(!board.isWhiteTurn());
     }
 
-    public static int captures = 0;
-    public static int promotions = 0;
-    public static int castlings = 0;
-    public static int epNum = 0;
-    
-    public static void makeMoveMaster(Chessboard board, Move move) {
+    static void makeMoveMaster(Chessboard board, Move move) {
 
         if(move== null){
             System.out.println("null move passed to makeMove Master");
@@ -23,7 +18,6 @@ class MoveOrganiser {
         
         if (move.isSpecialMove()){
             if (move.isCastlingMove()) {
-                castlings++;
                 StackMoveData stackMoveData = new StackMoveData(move, board, 50, CASTLING);
                 board.moveStack.push(stackMoveData);
                 MoveCastling.makeCastlingMove(board, move);
@@ -31,7 +25,6 @@ class MoveOrganiser {
             }
 
             else if (move.isEnPassantMove()){
-                epNum++;
                 StackMoveData stackMoveData = new StackMoveData
                         (move, board, 50, ENPASSANTCAPTURE);
                 board.moveStack.push(stackMoveData);
@@ -47,15 +40,12 @@ class MoveOrganiser {
                     long destinationPiece = newPieceOnSquare(move.getDestinationIndex());
                     int takenPiece = whichPieceOnSquare(board, destinationPiece);
 
-                    promotions++;
-                    captures++;
                     StackMoveData stackMoveData = new StackMoveData(move, board, 50, PROMOTION, takenPiece);
                     board.moveStack.push(stackMoveData);
                     MovePromotion.makePromotingMove(board, move);
                     MoveCastling.castleFlagManager(board, move);
                 }
                 else {
-                    promotions++;
                     StackMoveData stackMoveData = new StackMoveData(move, board, 50, PROMOTION);
                     board.moveStack.push(stackMoveData);
                     MovePromotion.makePromotingMove(board, move);
@@ -71,7 +61,6 @@ class MoveOrganiser {
             long destSquare = newPieceOnSquare(destination);
             boolean captureMove = (destSquare & board.allPieces()) != 0;
             if (captureMove) {
-                captures++;
                 long destinationPiece = newPieceOnSquare(move.getDestinationIndex());
                 int takenPiece = whichPieceOnSquare(board, destinationPiece);
                 StackMoveData stackMoveData = new StackMoveData
@@ -117,9 +106,9 @@ class MoveOrganiser {
         // determine if flag should be added to enable EP on next turn
         long sourceSquare = newPieceOnSquare(move.getSourceIndex());
         long destinationSquare = newPieceOnSquare(move.getDestinationIndex());
-        long HOME_RANK = (board.isWhiteTurn()) ? bBitBoardUtils.RANK_TWO : bBitBoardUtils.RANK_SEVEN;
+        long HOME_RANK = (board.isWhiteTurn()) ? BitboardResources.RANK_TWO : BitboardResources.RANK_SEVEN;
         long MY_PAWNS = (board.isWhiteTurn()) ? board.getWhitePawns() : board.getBlackPawns();
-        long enPassantPossibilityRank = (board.isWhiteTurn()) ? bBitBoardUtils.RANK_FOUR : bBitBoardUtils.RANK_FIVE;
+        long enPassantPossibilityRank = (board.isWhiteTurn()) ? BitboardResources.RANK_FOUR : BitboardResources.RANK_FIVE;
 
         if ((sourceSquare & HOME_RANK) == 0){
             return false;

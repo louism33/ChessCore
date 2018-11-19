@@ -3,7 +3,7 @@ package chessprogram.god;
 import java.util.ArrayList;
 import java.util.List;
 
-import static chessprogram.god.dBitExtractor.getAllPieces;
+import static chessprogram.god.BitOperations.getAllPieces;
 
 class MoveGeneratorPawns {
 
@@ -32,14 +32,14 @@ class MoveGeneratorPawns {
         List<Long> allPawns = getAllPieces(pawns, ignoreThesePieces);
         for (Long piece : allPawns){
             long pawnMoves = PieceMovePawns.singlePawnPushes(board, piece, white, legalPushes);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
+            int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
             moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece));
         }
 
         for (Long piece : allPawns){
             long pawnMoves = PieceMovePawns.singlePawnCaptures(board, piece, white, legalCaptures);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece));
+            int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
+            moves.addAll(MoveGenerationUtilities.movesFromAttackBoardCapture(pawnMoves, indexOfPiece, true));
         }
         return moves;
     }

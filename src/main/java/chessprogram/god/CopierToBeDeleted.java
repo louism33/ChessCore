@@ -2,9 +2,9 @@ package chessprogram.god;
 
 import java.util.Stack;
 
-class dCopier {
+class CopierToBeDeleted {
 
-    public static Chessboard copyBoard(Chessboard board, boolean white, boolean ignoreMyKing){
+    static Chessboard copyBoard(Chessboard board, boolean white, boolean ignoreMyKing){
         Chessboard newBoard = new Chessboard();
         
         newBoard.moveStack = (Stack< StackMoveData >) board.moveStack.clone();

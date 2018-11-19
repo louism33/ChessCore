@@ -3,7 +3,7 @@ package chessprogram.god;
 import java.util.ArrayList;
 import java.util.List;
 
-import static chessprogram.god.dBitExtractor.getAllPieces;
+import static chessprogram.god.BitOperations.getAllPieces;
 
 class MoveGeneratorPromotion {
 
@@ -21,14 +21,14 @@ class MoveGeneratorPromotion {
         long legalPieces = ~ignoreThesePieces;
 
         if (white){
-            long PENULTIMATE_RANK = bBitBoardUtils.RANK_SEVEN;
+            long PENULTIMATE_RANK = BitboardResources.RANK_SEVEN;
             long promotablePawns = board.getWhitePawns() & PENULTIMATE_RANK & legalPieces;
             if ((promotablePawns) != 0) {
                 List<Long> allPromotablePawns = getAllPieces(promotablePawns, 0);
                 for (long piece : allPromotablePawns) {
-                    long pawnMoves = PieceMovePawns.singlePawnPushes(board, piece, true, (bBitBoardUtils.RANK_EIGHT & legalPushes));
+                    long pawnMoves = PieceMovePawns.singlePawnPushes(board, piece, true, (BitboardResources.RANK_EIGHT & legalPushes));
                     if (pawnMoves != 0) {
-                        int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
+                        int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
                         Move move = MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece).get(0);
                         move.move |= Move.PROMOTION_MASK;
                         moves.addAll(promotingMovesByPiece(move));
@@ -38,14 +38,14 @@ class MoveGeneratorPromotion {
         }
 
         else {
-            long PENULTIMATE_RANK = bBitBoardUtils.RANK_TWO;
+            long PENULTIMATE_RANK = BitboardResources.RANK_TWO;
             long promotablePawns = board.getBlackPawns() & PENULTIMATE_RANK & legalPieces;
             if ((promotablePawns) != 0) {
                 List<Long> allPromotablePawns = getAllPieces(promotablePawns, 0);
                 for (long piece : allPromotablePawns) {
-                    long pawnMoves = PieceMovePawns.singlePawnPushes(board, piece, false, (bBitBoardUtils.RANK_ONE & legalPushes));
+                    long pawnMoves = PieceMovePawns.singlePawnPushes(board, piece, false, (BitboardResources.RANK_ONE & legalPushes));
                     if (pawnMoves != 0) {
-                        int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
+                        int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
 
                         Move move = MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece).get(0);
                         move.move |= Move.PROMOTION_MASK;
@@ -64,16 +64,16 @@ class MoveGeneratorPromotion {
         long legalPieces = ~ignoreThesePieces;
 
         if (white){
-            long PENULTIMATE_RANK = bBitBoardUtils.RANK_SEVEN;
+            long PENULTIMATE_RANK = BitboardResources.RANK_SEVEN;
             long promotablePawns = board.getWhitePawns() & PENULTIMATE_RANK & legalPieces;
-            long promotionCaptureSquares = bBitBoardUtils.RANK_EIGHT & board.blackPieces();
+            long promotionCaptureSquares = BitboardResources.RANK_EIGHT & board.blackPieces();
             if ((promotablePawns) != 0) {
                 List<Long> allPromotablePawns = getAllPieces(promotablePawns, 0);
                 for (long piece : allPromotablePawns) {
                     long pawnMoves = PieceMovePawns.singlePawnCaptures(board, piece, true, (promotionCaptureSquares & legalCaptures));
                     if (pawnMoves != 0) {
-                        int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-                        List<Move> unflaggedCaptures = MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece);
+                        int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
+                        List<Move> unflaggedCaptures = MoveGenerationUtilities.movesFromAttackBoardCapture(pawnMoves, indexOfPiece, true);
 
                         for (Move move : unflaggedCaptures) {
                             move.move |= Move.PROMOTION_MASK;
@@ -85,16 +85,16 @@ class MoveGeneratorPromotion {
         }
 
         else {
-            long PENULTIMATE_RANK = bBitBoardUtils.RANK_TWO;
+            long PENULTIMATE_RANK = BitboardResources.RANK_TWO;
             long promotablePawns = board.getBlackPawns() & PENULTIMATE_RANK & legalPieces;
-            long promotionCaptureSquares = bBitBoardUtils.RANK_ONE & board.whitePieces();
+            long promotionCaptureSquares = BitboardResources.RANK_ONE & board.whitePieces();
             if ((promotablePawns) != 0) {
                 List<Long> allPromotablePawns = getAllPieces(promotablePawns, 0);
                 for (long piece : allPromotablePawns) {
                     long pawnMoves = PieceMovePawns.singlePawnCaptures(board, piece, false, (promotionCaptureSquares & legalCaptures));
                     if (pawnMoves != 0) {
-                        int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-                        List<Move> unflaggedCaptures = MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece);
+                        int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
+                        List<Move> unflaggedCaptures = MoveGenerationUtilities.movesFromAttackBoardCapture(pawnMoves, indexOfPiece, true);
 
                         for (Move move : unflaggedCaptures) {
                             move.move |= Move.PROMOTION_MASK;

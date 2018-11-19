@@ -14,10 +14,10 @@ class PieceMoveSliding {
 
     private static long singleBishopAllMoves(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
         long ALL_PIECES = board.whitePieces() | board.blackPieces(),
-                NORTH_WEST = bBitBoardUtils.FILE_A | bBitBoardUtils.RANK_EIGHT,
-                NORTH_EAST = bBitBoardUtils.FILE_H | bBitBoardUtils.RANK_EIGHT,
-                SOUTH_WEST = bBitBoardUtils.FILE_A | bBitBoardUtils.RANK_ONE,
-                SOUTH_EAST = bBitBoardUtils.FILE_H | bBitBoardUtils.RANK_ONE;
+                NORTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_EIGHT,
+                NORTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_EIGHT,
+                SOUTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_ONE,
+                SOUTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_ONE;
 
         long answer = 0;
         long temp = piece;
@@ -66,28 +66,28 @@ class PieceMoveSliding {
         long answer = 0;
         long temp = piece;
         while (true) {
-            if ((temp & bBitBoardUtils.FILE_A) != 0) break;
+            if ((temp & BitboardResources.FILE_A) != 0) break;
             temp <<= 1;
             answer |= temp;
             if ((temp & allPieces) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & bBitBoardUtils.FILE_H) != 0) break;
+            if ((temp & BitboardResources.FILE_H) != 0) break;
             temp >>>= 1;
             answer |= temp;
             if ((temp & allPieces) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & bBitBoardUtils.RANK_EIGHT) != 0) break;
+            if ((temp & BitboardResources.RANK_EIGHT) != 0) break;
             temp <<= 8;
             answer |= temp;
             if ((temp & allPieces) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & bBitBoardUtils.RANK_ONE) != 0) break;
+            if ((temp & BitboardResources.RANK_ONE) != 0) break;
             temp >>>= 8;
             answer |= temp;
             if ((temp & allPieces) != 0) break;
@@ -121,19 +121,19 @@ class PieceMoveSliding {
             queens = board.getBlackQueen();
         }
 
-        List<Long> allBishops = dBitExtractor.getAllPieces(bishops, ignoreThesePieces);
+        List<Long> allBishops = BitOperations.getAllPieces(bishops, ignoreThesePieces);
         for (Long piece : allBishops){
             ans |= singleBishopPushes(board, piece, white, legalPushes);
             ans |= singleBishopCaptures(board, piece, white, legalCaptures);
         }
 
-        List<Long> allRooks = dBitExtractor.getAllPieces(rooks, ignoreThesePieces);
+        List<Long> allRooks = BitOperations.getAllPieces(rooks, ignoreThesePieces);
         for (Long piece : allRooks){
             ans |= singleRookPushes(board, piece, white, legalPushes);
             ans |= singleRookCaptures(board, piece, white, legalCaptures);
         }
 
-        List<Long> allQueens = dBitExtractor.getAllPieces(queens, ignoreThesePieces);
+        List<Long> allQueens = BitOperations.getAllPieces(queens, ignoreThesePieces);
         for (Long piece : allQueens){
             ans |= singleQueenPushes(board, piece, white, legalPushes);
             ans |= singleQueenCaptures(board, piece, white, legalCaptures);

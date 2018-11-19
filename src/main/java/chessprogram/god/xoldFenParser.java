@@ -3,19 +3,14 @@ package chessprogram.god;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class eFenParser {
-
+class xoldFenParser {
     
-    
-    
-    
-    
-    eFenParser(String fenString){
+    xoldFenParser(String fenString){
         Chessboard chessboard = parseFenString(fenString);
         String s = Art.boardArt(chessboard);
     }
 
-    public static Chessboard makeBoardBasedOnFEN(String fen){
+    static Chessboard makeBoardBasedOnFEN(String fen){
 //        System.out.println(fen);
         
         Chessboard board = parseFenString(fen);
@@ -206,7 +201,8 @@ public class eFenParser {
     }
 
     private static Chessboard parseFenString (String fen){
-        Chessboard board = eBlankBoard.blankBoard();
+        Chessboard board = new Chessboard(true);
+//        Chessboard board = eBlankBoard.blankBoard();
         String boardRepresentation = boardRep(fen);
         int length = boardRepresentation.length();
         int index = -1;
@@ -230,7 +226,7 @@ public class eFenParser {
             }
             catch (NumberFormatException ignored){
             }
-            long pieceFromFen = bBitManipulations.newPieceOnSquare(square);
+            long pieceFromFen = BitOperations.newPieceOnSquare(square);
             square--;
             switch (entry) {
                 case "P":

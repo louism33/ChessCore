@@ -7,12 +7,20 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static chessprogram.god.MakeMoveAndHashUpdate.*;
+import static chessprogram.god.MakeMoveAndHashUpdate.UnMakeMoveAndHashUpdate;
+
 public class Chessboard {
 
     private ChessboardDetails details;
     private ZobristHash zobristHash;
     
     private void init(){
+        this.details = new ChessboardDetails(true);
+        this.zobristHash = new ZobristHash(this);
+    }
+    
+    Chessboard(boolean blank){
         this.details = new ChessboardDetails();
         this.zobristHash = new ZobristHash(this);
     }
@@ -46,37 +54,46 @@ public class Chessboard {
         return null;
     }
     
+    
     public void makeMove(Move move){
-        MoveOrganiser.makeMoveMaster(this, move);
+        makeMoveAndHashUpdate(this, move, this.zobristHash);
     }
     
     public void makeMoveAndFlipTurn(Move move){
-        MoveOrganiser.makeMoveMaster(this, move);
-        MoveOrganiser.flipTurn(this);
+        makeMoveAndHashUpdate(this, move, this.zobristHash);
+        flipTurn();
     }
     
+    public void makeNullMoveAndFlipTurn(){
+        makeNullMoveAndHashUpdate(this, this.zobristHash);
+        flipTurn();
+    }
+    public void unMakeNullMoveAndFlipTurn(){
+        unMakeNullMove(this, this.zobristHash);
+    }
+
     public void flipTurn(){
         MoveOrganiser.flipTurn(this);
     }
     
     public void unMakeMoveAndFlipTurn(){
-        MoveUnmaker.unMakeMoveMaster(this);
+        UnMakeMoveAndHashUpdate(this, this.zobristHash);
     }
     
     public boolean inCheck(boolean white){
-        return cCheckChecker.boardInCheck(this, white);
+        return CheckHelper.boardInCheck(this, white);
     }
 
     public boolean drawByRepetition (boolean white){
-        return cCheckChecker.isDrawByRepetition(this, this.zobristHash);
+        return CheckHelper.isDrawByRepetition(this, this.zobristHash);
     }
 
     private boolean drawByInsufficientMaterial (boolean white){
-        return cCheckChecker.isDrawByInsufficientMaterial(this);
+        return CheckHelper.isDrawByInsufficientMaterial(this);
     }
 
     private boolean colourHasInsufficientMaterialToMate (boolean white){
-        return cCheckChecker.colourHasInsufficientMaterialToMate(this, white);
+        return CheckHelper.colourHasInsufficientMaterialToMate(this, white);
     }
     
     private void pinnedPieces(boolean white){
@@ -290,7 +307,7 @@ public class Chessboard {
 
 
     public Chessboard(String fen) {
-        init();
+        details = new ChessboardDetails();
         makeBoardBasedOnFENSpecific(fen);
         this.zobristHash = new ZobristHash(this);
     }
@@ -510,7 +527,7 @@ public class Chessboard {
             }
             catch (NumberFormatException ignored){
             }
-            long pieceFromFen = bBitManipulations.newPieceOnSquare(square);
+            long pieceFromFen = BitOperations.newPieceOnSquare(square);
             square--;
             switch (entry) {
                 case "P":
