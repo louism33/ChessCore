@@ -15,7 +15,7 @@ import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 
 class ZobristHash {
     private static final long initHashSeed = 100;
-    final Stack<Long> zobristStack = new Stack<>();
+    Stack<Long> zobristStack = new Stack<>();
     private static final long[][] zobristHashPieces = initPieceHash();
     private static final long[] zobristHashCastlingRights = initCastlingHash();
     private static final long[] zobristHashEPFiles = initEPHash();
@@ -358,8 +358,9 @@ class ZobristHash {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ZobristHash that = (ZobristHash) o;
-        return boardHash == that.boardHash &&
-                Objects.equals(zobristStack, that.zobristStack);
+        return boardHash == that.boardHash
+                && Objects.equals(zobristStack, that.zobristStack)
+        ;
     }
 
     @Override
@@ -376,4 +377,5 @@ class ZobristHash {
     }
 
 
+    
 }

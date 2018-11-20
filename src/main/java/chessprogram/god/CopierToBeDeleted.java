@@ -2,9 +2,9 @@ package chessprogram.god;
 
 import java.util.Stack;
 
-class CopierToBeDeleted {
+public class CopierToBeDeleted {
 
-    static Chessboard copyBoard(Chessboard board, boolean white, boolean ignoreMyKing){
+    public static Chessboard copyBoard(Chessboard board, boolean white, boolean ignoreMyKing){
         Chessboard newBoard = new Chessboard();
         
         newBoard.moveStack = (Stack< StackMoveData >) board.moveStack.clone();
@@ -36,7 +36,12 @@ class CopierToBeDeleted {
         newBoard.setBlackCanCastleQ(board.isBlackCanCastleQ());
 
         newBoard.setWhiteTurn(board.isWhiteTurn());
-
+        
+        
+        
+        newBoard.makeZobrist();
+        newBoard.cloneZobristStack(board.getZobristHash());
+        
         return newBoard;
     }
 

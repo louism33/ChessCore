@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="PerftTest" time="126.85" tests="30" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ChessboardHashTest" time="64.724" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -58,34 +58,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="CastlingPrevented" classname="PerftTest" time="1.155"/>
-  <testcase name="doubleCheck" classname="PerftTest" time="0.061"/>
-  <testcase name="PromoteOutOfCheck" classname="PerftTest" time="2.278"/>
-  <testcase name="underPromoteToCheck" classname="PerftTest" time="0.081"/>
-  <testcase name="test10" classname="PerftTest" time="0.088"/>
-  <testcase name="test11" classname="PerftTest" time="0.044"/>
-  <testcase name="test12" classname="PerftTest" time="0.004"/>
-  <testcase name="test13" classname="PerftTest" time="0.157"/>
-  <testcase name="test14" classname="PerftTest" time="0.018"/>
-  <testcase name="test15" classname="PerftTest" time="42.652"/>
-  <testcase name="regularBoard" classname="PerftTest" time="62.136"/>
-  <testcase name="checkStalemate" classname="PerftTest" time="0.302"/>
-  <testcase name="promoteToCheck" classname="PerftTest" time="0.175"/>
-  <testcase name="longCastlingGivesCheck" classname="PerftTest" time="0.597"/>
-  <testcase name="misc" classname="PerftTest" time="10.45"/>
-  <testcase name="test1" classname="PerftTest" time="0.599"/>
-  <testcase name="test2" classname="PerftTest" time="0.439"/>
-  <testcase name="test3" classname="PerftTest" time="0.666"/>
-  <testcase name="test4" classname="PerftTest" time="0.266"/>
-  <testcase name="test5" classname="PerftTest" time="0.314"/>
-  <testcase name="test6" classname="PerftTest" time="0.194"/>
-  <testcase name="test7" classname="PerftTest" time="0.241"/>
-  <testcase name="test8" classname="PerftTest" time="0.689"/>
-  <testcase name="test9" classname="PerftTest" time="0.125"/>
-  <testcase name="EPCaptureChecksOpponent" classname="PerftTest" time="1.263"/>
-  <testcase name="selfStaleMate" classname="PerftTest" time="0.004"/>
-  <testcase name="shortCastlingGivesCheck" classname="PerftTest" time="0.537"/>
-  <testcase name="discoveredCheck" classname="PerftTest" time="0.38"/>
-  <testcase name="CastlingCRAndDoublePins" classname="PerftTest" time="0.407"/>
-  <testcase name="AvoidIllegalEPCapture" classname="PerftTest" time="0.497"/>
+  <testcase name="tinyDepths" classname="ChessboardHashTest" time="0.07"/>
+  <testcase name="regularBoard" classname="ChessboardHashTest" time="63.904"/>
+  <testcase name="test1" classname="ChessboardHashTest" time="0.75"/>
 </testsuite>

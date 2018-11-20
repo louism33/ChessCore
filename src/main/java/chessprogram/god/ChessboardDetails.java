@@ -1,5 +1,7 @@
 package chessprogram.god;
 
+import java.util.Objects;
+
 class ChessboardDetails {
 
     boolean whiteTurn = true;
@@ -44,5 +46,34 @@ class ChessboardDetails {
         blackRooks = 0x8100000000000000L;
         blackQueen = 0x1000000000000000L;
         blackKing = 0x0800000000000000L;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessboardDetails that = (ChessboardDetails) o;
+        return whiteTurn == that.whiteTurn &&
+                whiteCanCastleK == that.whiteCanCastleK &&
+                whiteCanCastleQ == that.whiteCanCastleQ &&
+                blackCanCastleK == that.blackCanCastleK &&
+                blackCanCastleQ == that.blackCanCastleQ &&
+                whitePawns == that.whitePawns &&
+                whiteKnights == that.whiteKnights &&
+                whiteBishops == that.whiteBishops &&
+                whiteRooks == that.whiteRooks &&
+                whiteQueen == that.whiteQueen &&
+                whiteKing == that.whiteKing &&
+                blackPawns == that.blackPawns &&
+                blackKnights == that.blackKnights &&
+                blackBishops == that.blackBishops &&
+                blackRooks == that.blackRooks &&
+                blackQueen == that.blackQueen &&
+                blackKing == that.blackKing;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(whiteTurn, whiteCanCastleK, whiteCanCastleQ, blackCanCastleK, blackCanCastleQ, whitePawns, whiteKnights, whiteBishops, whiteRooks, whiteQueen, whiteKing, blackPawns, blackKnights, blackBishops, blackRooks, blackQueen, blackKing);
     }
 }

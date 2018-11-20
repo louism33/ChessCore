@@ -14,10 +14,18 @@ public class Chessboard {
 
     private ChessboardDetails details;
     private ZobristHash zobristHash;
+
+    void makeZobrist(){
+        this.zobristHash = new ZobristHash(this);
+    }
+
+    void cloneZobristStack(ZobristHash zobristHash){
+        this.zobristHash.zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
+    }
+    
     
     private void init(){
         this.details = new ChessboardDetails(true);
-        this.zobristHash = new ZobristHash(this);
     }
     
     Chessboard(boolean blank){
@@ -27,11 +35,11 @@ public class Chessboard {
     
     public Chessboard() {
         init();
+        makeZobrist();
     }
 
     // copy constructor
     private Chessboard(Chessboard board) {
-        init();
     }
     
     public String getFenRepresentation(){
@@ -137,35 +145,21 @@ public class Chessboard {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Chessboard that = (Chessboard) o;
-        return isWhiteTurn() == that.isWhiteTurn() &&
-                isWhiteCanCastleK() == that.isWhiteCanCastleK() &&
-                isWhiteCanCastleQ() == that.isWhiteCanCastleQ() &&
-                isBlackCanCastleK() == that.isBlackCanCastleK() &&
-                isBlackCanCastleQ() == that.isBlackCanCastleQ() &&
-                getWhitePawns() == that.getWhitePawns() &&
-                getWhiteKnights() == that.getWhiteKnights() &&
-                getWhiteBishops() == that.getWhiteBishops() &&
-                getWhiteRooks() == that.getWhiteRooks() &&
-                getWhiteQueen() == that.getWhiteQueen() &&
-                getWhiteKing() == that.getWhiteKing() &&
-                getBlackPawns() == that.getBlackPawns() &&
-                getBlackKnights() == that.getBlackKnights() &&
-                getBlackBishops() == that.getBlackBishops() &&
-                getBlackRooks() == that.getBlackRooks() &&
-                getBlackQueen() == that.getBlackQueen() &&
-                getBlackKing() == that.getBlackKing() &&
-                Objects.equals(moveStack, that.moveStack);
+        return Objects.equals(details, that.details)
+                && Objects.equals(zobristHash, that.zobristHash)
+                && Objects.equals(moveStack, that.moveStack)
+                ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moveStack, isWhiteTurn(), isWhiteCanCastleK(), isWhiteCanCastleQ(), isBlackCanCastleK(), isBlackCanCastleQ(), getWhitePawns(), getWhiteKnights(), getWhiteBishops(), getWhiteRooks(), getWhiteQueen(), getWhiteKing(), getBlackPawns(), getBlackKnights(), getBlackBishops(), getBlackRooks(), getBlackQueen(), getBlackKing());
+        return Objects.hash(details, zobristHash, moveStack);
     }
 
     @Override
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
-        return Art.boardArt(this) + "\n" + turn;
+        return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+zobristHash.getBoardHash() +"\n";
     }
 
     public boolean isWhiteCanCastleK() {
@@ -588,4 +582,32 @@ public class Chessboard {
         return boardRepresentation;
     }
 
+    
+    void makeSeriesOfANMoves(String an){
+        
+    }
+
+    public ChessboardDetails getDetails() {
+        return details;
+    }
+
+    public void setDetails(ChessboardDetails details) {
+        this.details = details;
+    }
+
+    public ZobristHash getZobristHash() {
+        return zobristHash;
+    }
+
+    public void setZobristHash(ZobristHash zobristHash) {
+        this.zobristHash = zobristHash;
+    }
+
+    public Stack<StackMoveData> getMoveStack() {
+        return moveStack;
+    }
+
+    public void setMoveStack(Stack<StackMoveData> moveStack) {
+        this.moveStack = moveStack;
+    }
 }
