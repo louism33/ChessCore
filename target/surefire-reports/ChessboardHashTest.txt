@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ChessboardHashTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 64.724 s - in ChessboardHashTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 352.832 s - in ChessboardHashTest

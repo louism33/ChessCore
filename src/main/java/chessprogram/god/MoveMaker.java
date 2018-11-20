@@ -3,7 +3,7 @@ package chessprogram.god;
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.StackMoveData.SpecialMove.*;
 
-class MoveOrganiser {
+class MoveMaker {
 
     static void flipTurn(Chessboard board){
         board.setWhiteTurn(!board.isWhiteTurn());
@@ -20,16 +20,16 @@ class MoveOrganiser {
             if (move.isCastlingMove()) {
                 StackMoveData stackMoveData = new StackMoveData(move, board, 50, CASTLING);
                 board.moveStack.push(stackMoveData);
-                MoveCastling.makeCastlingMove(board, move);
-                MoveCastling.castleFlagManager(board, move);
+                MoveMakingCastling.makeCastlingMove(board, move);
+                MoveMakingCastling.castleFlagManager(board, move);
             }
 
             else if (move.isEnPassantMove()){
                 StackMoveData stackMoveData = new StackMoveData
                         (move, board, 50, ENPASSANTCAPTURE);
                 board.moveStack.push(stackMoveData);
-                MoveEnPassant.makeEnPassantMove(board, move);
-                MoveCastling.castleFlagManager(board, move);
+                MoveMakingEnPassant.makeEnPassantMove(board, move);
+                MoveMakingCastling.castleFlagManager(board, move);
             }
 
             else if (move.isPromotionMove()){
@@ -43,13 +43,13 @@ class MoveOrganiser {
                     StackMoveData stackMoveData = new StackMoveData(move, board, 50, PROMOTION, takenPiece);
                     board.moveStack.push(stackMoveData);
                     MovePromotion.makePromotingMove(board, move);
-                    MoveCastling.castleFlagManager(board, move);
+                    MoveMakingCastling.castleFlagManager(board, move);
                 }
                 else {
                     StackMoveData stackMoveData = new StackMoveData(move, board, 50, PROMOTION);
                     board.moveStack.push(stackMoveData);
                     MovePromotion.makePromotingMove(board, move);
-                    MoveCastling.castleFlagManager(board, move);
+                    MoveMakingCastling.castleFlagManager(board, move);
                 }
 
             }
@@ -67,7 +67,7 @@ class MoveOrganiser {
                         (move, board, 50, BASICCAPTURE, takenPiece);
                 board.moveStack.push(stackMoveData);
                 MoveRegular.makeRegularMove(board, move);
-                MoveCastling.castleFlagManager(board, move);
+                MoveMakingCastling.castleFlagManager(board, move);
             }
             
             else if (enPassantPossibility(board, move)){
@@ -77,7 +77,7 @@ class MoveOrganiser {
                         (move, board, 50, whichFile, ENPASSANTVICTIM);
                 board.moveStack.push(stackMoveData);
                 MoveRegular.makeRegularMove(board, move);
-                MoveCastling.castleFlagManager(board, move);
+                MoveMakingCastling.castleFlagManager(board, move);
             }
 
             else {
@@ -88,7 +88,7 @@ class MoveOrganiser {
                             (move, board, 50, BASICLOUDPUSH);
                     board.moveStack.push(stackMoveData);
                     MoveRegular.makeRegularMove(board, move);
-                    MoveCastling.castleFlagManager(board, move);
+                    MoveMakingCastling.castleFlagManager(board, move);
                 }
                 else {
                     // increment 50 move rule
@@ -96,7 +96,7 @@ class MoveOrganiser {
                             (move, board, 50, BASICQUIETPUSH);
                     board.moveStack.push(stackMoveData);
                     MoveRegular.makeRegularMove(board, move);
-                    MoveCastling.castleFlagManager(board, move);
+                    MoveMakingCastling.castleFlagManager(board, move);
                 }
             }
         }

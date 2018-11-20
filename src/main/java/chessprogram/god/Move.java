@@ -2,41 +2,22 @@ package chessprogram.god;
 
 import java.util.Objects;
 
+import static chessprogram.god.MoveConstants.*;
+
 public class Move {
+    
+    int move;
 
     // todo get rid of eventually
     public int getMove() {
         return move;
     }
 
-    int move;
-
+    
             
 
     
-    
-    // todo, should not be public
-    public final static int
-            ENPASSANT_MASK = 0x00002000,
-            PROMOTION_MASK = 0x00003000,
-            
-            KNIGHT_PROMOTION_MASK = 0x00000000,
-            BISHOP_PROMOTION_MASK = 0x00004000,
-            ROOK_PROMOTION_MASK = 0x00008000,
-            QUEEN_PROMOTION_MASK = 0x0000c000;
-
-    final private static int
-            CAPTURE_MOVE_MASK = 0x00010000,
-    
-            WHICH_PROMOTION = 0x0000c000,
-            SOURCE_OFFSET = 6,
-            SOURCE_MASK = 0x00000fc0,
-            DESTINATION_MASK = 0x0000003f,
-
-            SPECIAL_MOVE_MASK = 0x00003000,
-            CASTLING_MASK = 0x00001000;
-
-
+  
 
     // copy constructor
     public Move (Move move){
@@ -50,6 +31,7 @@ public class Move {
     public Move(int source, int destinationIndex, boolean capture) {
         buildMove(source, destinationIndex);
         if (capture){
+            MoveUtils.makeCapture(this);
             this.move |= CAPTURE_MOVE_MASK;
         }
     }
@@ -75,7 +57,7 @@ public class Move {
         }
         this.move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
         this.move |= (d & DESTINATION_MASK);
-        
+        MoveUtils.buildSource(this);
     }
 
     @Override
@@ -142,6 +124,23 @@ public class Move {
     public boolean isPromotionToQueen (){
         if (!((this.move & SPECIAL_MOVE_MASK) == PROMOTION_MASK)) return false;
         return (this.move & WHICH_PROMOTION) == QUEEN_PROMOTION_MASK;
+    }
+    
+    public Piece getMovingPiece(){
+        final int indexOfSourcePiece = (this.move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
+        final Piece value = Piece.values()[indexOfSourcePiece];
+        System.out.println(value);
+        return value;
+    }
+
+    public Piece getVictimPiece(){
+        if (!isCaptureMove()) {
+            return null;
+        }
+        final int indexOfVictimPiece = (this.move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
+        final Piece value = Piece.values()[indexOfVictimPiece];
+        System.out.println(value);
+        return value;
     }
 
 }

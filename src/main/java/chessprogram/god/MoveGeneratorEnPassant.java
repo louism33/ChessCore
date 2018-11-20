@@ -3,6 +3,7 @@ package chessprogram.god;
 import java.util.ArrayList;
 import java.util.List;
 
+import static chessprogram.god.MoveConstants.*;
 import static chessprogram.god.StackMoveData.SpecialMove;
 
 class MoveGeneratorEnPassant {
@@ -72,9 +73,9 @@ class MoveGeneratorEnPassant {
         List<Move> safeEPMoves = new ArrayList<>();
         // remove moves that would leave us in check
         for (Move move : moves){
-            move.move |= Move.ENPASSANT_MASK;
+            move.move |= ENPASSANT_MASK;
 
-//            MoveOrganiser.makeMoveMaster(board, move);
+//            MoveMaker.makeMoveMaster(board, move);
             board.makeMoveAndFlipTurn(move);
             boolean enPassantWouldLeadToCheck = CheckHelper.boardInCheck(board, white);
 //            MoveUnmaker.unMakeMoveMaster(board);

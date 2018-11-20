@@ -3,7 +3,7 @@ package chessprogram.god;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 
-class MoveEnPassant {
+class MoveMakingEnPassant {
     
     static void makeEnPassantMove(Chessboard board, Move move){
         long sourcePiece = newPieceOnSquare(move.getSourceIndex());

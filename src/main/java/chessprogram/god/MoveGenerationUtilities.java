@@ -5,7 +5,6 @@ import java.util.List;
 
 class MoveGenerationUtilities {
 
-    // todo, what is a capture here
     public static List<Move> movesFromAttackBoard(long attackBoard, int source) {
         List<Move> moves = new ArrayList<>();
         List<Integer> indexOfAllPieces = BitOperations.getIndexOfAllPieces(attackBoard);
@@ -20,7 +19,9 @@ class MoveGenerationUtilities {
         List<Integer> indexOfAllPieces = BitOperations.getIndexOfAllPieces(attackBoard);
         for (int i : indexOfAllPieces) {
             if (capture) {
-                moves.add(new Move(source, i, true));
+                final Move m = new Move(source, i, true);
+                moves.add(m);
+                
             }
             else {
                 moves.add(new Move(source, i));

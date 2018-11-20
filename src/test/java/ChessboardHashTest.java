@@ -112,9 +112,23 @@ public class ChessboardHashTest {
     void bigDepth5() {
         verifyHashToDepth(6, new Chessboard("rnbqkb1r/ppppp1pp/7n/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3"));
     }
+
+    @Test
+    void bigDepth10() {
+        verifyHashToDepth(7, new Chessboard("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -"));
+    }
+
+
+    @Test
+    void bigDepth11() {
+        verifyHashToDepth(8, new Chessboard("8/5p2/8/2k3P1/p3K3/8/1P6/8 b - -"));
+    }
+
+    @Test
+    void bigDepth12() {
+        verifyHashToDepth(5, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
+    }
     
-
-
     private static long verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false);
         
@@ -124,7 +138,8 @@ public class ChessboardHashTest {
         
         long ii = countFinalNodesAtDepthHelper(board, depth);
         Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
-        
+        Assert.assertEquals(board, initial);
+       
         return ii;
     }
 

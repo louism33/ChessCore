@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.getAllPieces;
+import static chessprogram.god.MoveConstants.*;
 
 class MoveGeneratorPromotion {
 
-    public static List<Move> generatePromotionMoves(Chessboard board, boolean white,
+    static List<Move> generatePromotionMoves(Chessboard board, boolean white,
                                                     long ignoreThesePieces, long legalPushes, long legalCaptures){
         List<Move> moves = new ArrayList<>();
         moves.addAll(generatePromotionPushes(board, white, ignoreThesePieces, legalPushes));
@@ -30,7 +31,7 @@ class MoveGeneratorPromotion {
                     if (pawnMoves != 0) {
                         int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
                         Move move = MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece).get(0);
-                        move.move |= Move.PROMOTION_MASK;
+                        move.move |= PROMOTION_MASK;
                         moves.addAll(promotingMovesByPiece(move));
                     }
                 }
@@ -48,7 +49,7 @@ class MoveGeneratorPromotion {
                         int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
 
                         Move move = MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece).get(0);
-                        move.move |= Move.PROMOTION_MASK;
+                        move.move |= PROMOTION_MASK;
                         moves.addAll(promotingMovesByPiece(move));
                     }
                 }
@@ -76,7 +77,7 @@ class MoveGeneratorPromotion {
                         List<Move> unflaggedCaptures = MoveGenerationUtilities.movesFromAttackBoardCapture(pawnMoves, indexOfPiece, true);
 
                         for (Move move : unflaggedCaptures) {
-                            move.move |= Move.PROMOTION_MASK;
+                            move.move |= PROMOTION_MASK;
                             moves.addAll(promotingMovesByPiece(move));
                         }
                     }
@@ -97,7 +98,7 @@ class MoveGeneratorPromotion {
                         List<Move> unflaggedCaptures = MoveGenerationUtilities.movesFromAttackBoardCapture(pawnMoves, indexOfPiece, true);
 
                         for (Move move : unflaggedCaptures) {
-                            move.move |= Move.PROMOTION_MASK;
+                            move.move |= PROMOTION_MASK;
                             moves.addAll(promotingMovesByPiece(move));
                         }
                     }
@@ -115,19 +116,19 @@ class MoveGeneratorPromotion {
         List<Move> moves = new ArrayList<>();
 
         Move moveK = new Move(move);
-        moveK.move |= Move.KNIGHT_PROMOTION_MASK;
+        moveK.move |= KNIGHT_PROMOTION_MASK;
         moves.add(moveK);
 
         Move moveB = new Move(move);
-        moveB.move |= Move.BISHOP_PROMOTION_MASK;
+        moveB.move |= BISHOP_PROMOTION_MASK;
         moves.add(moveB);
 
         Move moveR = new Move(move);
-        moveR.move |= Move.ROOK_PROMOTION_MASK;
+        moveR.move |= ROOK_PROMOTION_MASK;
         moves.add(moveR);
 
         Move moveQ = new Move(move);
-        moveQ.move |= Move.QUEEN_PROMOTION_MASK;
+        moveQ.move |= QUEEN_PROMOTION_MASK;
         moves.add(moveQ);
 
         return moves;

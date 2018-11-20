@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 class eMoveParserFromAN {
 
-    public static int destinationIndex(Chessboard board, String algebraicNotation){
+    static int destinationIndex(Chessboard board, String algebraicNotation){
         return rankAndFile(board, algebraicNotation);
     }
     

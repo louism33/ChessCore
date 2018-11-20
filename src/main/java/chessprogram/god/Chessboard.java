@@ -81,7 +81,7 @@ public class Chessboard {
     }
 
     public void flipTurn(){
-        MoveOrganiser.flipTurn(this);
+        MoveMaker.flipTurn(this);
     }
     
     public void unMakeMoveAndFlipTurn(){

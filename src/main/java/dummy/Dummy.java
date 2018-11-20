@@ -4,6 +4,9 @@ import chessprogram.god.Art;
 import chessprogram.god.Chessboard;
 import chessprogram.god.Move;
 
+import static chessprogram.god.MoveConstants.*;
+
+
 public class Dummy {
     
     public static void main (String[] args){
@@ -32,11 +35,12 @@ public class Dummy {
         Move move = new Move(10, 20);
 
         final String s = Art.makeMoveToStringTEMP(move.getMove());
-        System.out.println(s);
+//        System.out.println(s);
 
-//        final String s1 = Art.makeMoveToStringTEMP(QUEEN_PROMOTION_MASK);
-//        System.out.println(s1);
-//        final String s2 = Art.makeMoveToStringTEMP(1);
-//        System.out.println(s2);
+        final String s1 = Art.makeMoveToStringTEMP(SOURCE_PIECE_MASK);
+        System.out.println(s1);
+        final String s2 = Art.makeMoveToStringTEMP(WHITE_KNIGHT_MASK);
+        System.out.println(s2);
+
     }
 }

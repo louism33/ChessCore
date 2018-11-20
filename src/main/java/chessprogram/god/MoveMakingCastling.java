@@ -2,7 +2,7 @@ package chessprogram.god;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 
-class MoveCastling {
+class MoveMakingCastling {
 
     static void makeCastlingMove(Chessboard board, Move move){
         long sourcePiece = newPieceOnSquare(move.getSourceIndex());

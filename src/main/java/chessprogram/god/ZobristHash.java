@@ -9,8 +9,7 @@ import java.util.Stack;
 import static chessprogram.god.BitboardResources.INITIAL_BLACK_KING;
 import static chessprogram.god.BitboardResources.INITIAL_WHITE_KING;
 import static chessprogram.god.BitOperations.newPieceOnSquare;
-import static chessprogram.god.BitboardResources.boardWithoutEdges;
-import static chessprogram.god.MoveOrganiser.whichPieceOnSquare;
+import static chessprogram.god.MoveMaker.whichPieceOnSquare;
 import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 
 class ZobristHash {

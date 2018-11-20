@@ -19,7 +19,7 @@ class PieceMoveKing {
         long table = 0;
         int index = BitOperations.getIndexOfFirstPiece(piece);
 
-        long l1 = KingTable.KING_MOVE_TABLE[index];
+        long l1 = PieceMoveTableKing.KING_MOVE_TABLE[index];
         table |= l1;
        
         return table & (legalPushes | legalCaptures);

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// todo, change indexes to actual moves if possible. 
+// todo, decide access level
 class eExtendedPositionDescriptionParser {
     
     static EPDObject parseEDPPosition(String edpPosition){

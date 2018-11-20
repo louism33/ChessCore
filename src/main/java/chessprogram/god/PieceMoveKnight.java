@@ -21,7 +21,7 @@ class PieceMoveKnight {
         if (index == -1){
             return 0;
         }
-        long l = KnightTable.KNIGHT_MOVE_TABLE[index];
+        long l = PieceMoveTableKnight.KNIGHT_MOVE_TABLE[index];
         table |= l;
         long emptyOfMyPieces = ~((white) ? board.whitePieces() : board.blackPieces());
 
