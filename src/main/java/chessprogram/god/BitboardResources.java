@@ -1,6 +1,6 @@
 package chessprogram.god;
 
-class BitboardResources {
+public class BitboardResources {
 
     static final long UNIVERSE = 0xffffffffffffffffL;
 
@@ -53,6 +53,17 @@ class BitboardResources {
             0x2020202020202020L,
             0x4040404040404040L,
             0x8080808080808080L,
+    };
+
+    public static final long[] ROWS = new long[]{
+            0x00000000000000FFL,
+            0x000000000000FF00L,
+            0x0000000000FF0000L,
+            0x00000000FF000000L,
+            0x000000FF00000000L,
+            0x0000FF0000000000L,
+            0x00FF000000000000L,
+            0xFF00000000000000L,
     };
 
     public static final long NORTH_WEST = FILE_A | RANK_EIGHT;

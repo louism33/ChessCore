@@ -129,7 +129,6 @@ public class Move {
     public Piece getMovingPiece(){
         final int indexOfSourcePiece = (this.move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
         final Piece value = Piece.values()[indexOfSourcePiece];
-        System.out.println(value);
         return value;
     }
 
@@ -139,7 +138,6 @@ public class Move {
         }
         final int indexOfVictimPiece = (this.move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
         final Piece value = Piece.values()[indexOfVictimPiece];
-        System.out.println(value);
         return value;
     }
 

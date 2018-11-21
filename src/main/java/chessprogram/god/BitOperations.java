@@ -5,7 +5,7 @@ import java.util.List;
 
 import static chessprogram.god.BitboardResources.boardWithoutEdges;
 
-class BitOperations {
+public class BitOperations {
 
     public static long newPieceOnSquare (int x){
         return 0x0000000000000001L << x;

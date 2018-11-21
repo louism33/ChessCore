@@ -56,6 +56,36 @@ public class NullMoveTest {
         verifyHashToDepth(5, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
     }
 
+    @Test
+    void regularBoard() {
+        verifyHashToDepth(5, new Chessboard());
+
+        System.out.println("-----------------------------");
+
+        verifyHashToDepth(6, new Chessboard());
+    }
+
+    @Test
+    void AvoidIllegalEPCapture() {
+        verifyHashToDepth(6, new Chessboard("8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"));
+
+        System.out.println("-----------------------------");
+
+        verifyHashToDepth(6, new Chessboard("8/8/1k6/8/2pP4/8/5BK1/8 b - d3 0 1"));
+    }
+
+
+    @Test
+    void EPCaptureChecksOpponent() {
+        verifyHashToDepth(6, new Chessboard("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"));
+
+        System.out.println("-----------------------------");
+
+        verifyHashToDepth(6, new Chessboard("8/5k2/8/2Pp4/2B5/1K6/8/8 w - d6 0 1"));
+    }
+
+    
+    
     private static long verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false);
         Assert.assertEquals(board, initial);

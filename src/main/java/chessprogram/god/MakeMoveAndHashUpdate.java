@@ -24,7 +24,6 @@ class MakeMoveAndHashUpdate {
         }
 
         MoveMaker.makeMoveMaster(board, null);
-        
         zobristHash.setBoardHash(zobristHash.getBoardHash() ^ ZobristHash.zobristHashColourBlack);
     }
 
