@@ -11,7 +11,7 @@ class MoveMaker {
 
     static void makeMoveMaster(Chessboard board, Move move) {
 
-        if(move== null){
+        if(move == null){
             System.out.println("null move passed to makeMove Master");
             return;
         }
