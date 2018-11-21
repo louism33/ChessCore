@@ -11,6 +11,7 @@ import static chessprogram.god.BitboardResources.INITIAL_WHITE_KING;
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.MoveMaker.whichPieceOnSquare;
 import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
+import static chessprogram.god.StackMoveData.SpecialMove.NULL_MOVE;
 
 class ZobristHash {
     private static final long initHashSeed = 100;
@@ -30,10 +31,29 @@ class ZobristHash {
         long hash = 0;
         StackMoveData peek = board.moveStack.peek();
         if (peek.typeOfSpecialMove == ENPASSANTVICTIM) {
-            // file one = FILE_A
-            hash ^= zobristHashEPFiles[peek.enPassantFile - 1];
+            hash = hashEP(hash, peek);
         }
         
+        if (peek.typeOfSpecialMove == NULL_MOVE && board.moveStack.size() > 1){
+            hash = nullMoveEP(board, hash);
+        }
+        
+        return hash;
+    }
+
+    private long nullMoveEP(Chessboard board, long hash) {
+        StackMoveData pop = board.moveStack.pop();
+        StackMoveData peekSecondElement = board.moveStack.peek();
+        if (peekSecondElement.typeOfSpecialMove == ENPASSANTVICTIM) {
+            // file one = FILE_A
+            hash = hashEP(hash, peekSecondElement);
+        }
+        board.moveStack.add(pop);
+        return hash;
+    }
+
+    private long hashEP(long hash, StackMoveData peek) {
+        hash ^= zobristHashEPFiles[peek.enPassantFile - 1];
         return hash;
     }
 

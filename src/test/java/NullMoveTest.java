@@ -58,18 +58,18 @@ public class NullMoveTest {
 
     private static long verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false);
-
         Assert.assertEquals(board, initial);
-
         System.out.println(board);
         
         board.makeNullMoveAndFlipTurn();
         Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
         board.unMakeNullMoveAndFlipTurn();
-
+        Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+        
+        
         long ii = countFinalNodesAtDepthHelper(board, depth);
-//        Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
-//        Assert.assertEquals(board, initial);
+        Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+        Assert.assertEquals(board, initial);
 
         return ii;
     }
@@ -86,15 +86,21 @@ public class NullMoveTest {
         }
         for (Move move : moves) {
             board.makeMoveAndFlipTurn(move);
+            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+
             board.makeNullMoveAndFlipTurn();
 
-//            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;
             
             board.unMakeNullMoveAndFlipTurn();
+            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+
             board.unMakeMoveAndFlipTurn();
+            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+
         }
         return temp;
     }

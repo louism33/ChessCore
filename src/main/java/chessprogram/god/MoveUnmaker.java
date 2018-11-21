@@ -1,5 +1,7 @@
 package chessprogram.god;
 
+import org.junit.Assert;
+
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.StackMoveData.SpecialMove.*;
 
@@ -7,6 +9,13 @@ class MoveUnmaker {
 
     static void unMakeMoveMaster(Chessboard board) {
         StackMoveData popSMD = board.moveStack.pop();
+        
+        if (popSMD.move == null){
+            Assert.assertSame(popSMD.typeOfSpecialMove, NULL_MOVE);
+            board.setWhiteTurn(popSMD.whiteTurn);
+            return;
+        }
+        
         int pieceToMoveBack = popSMD.move.getDestinationIndex();
         int squareToMoveBackTo = popSMD.move.getSourceIndex();
 

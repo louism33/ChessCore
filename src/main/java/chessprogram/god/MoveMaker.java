@@ -12,7 +12,8 @@ class MoveMaker {
     static void makeMoveMaster(Chessboard board, Move move) {
 
         if(move == null){
-            System.out.println("null move passed to makeMove Master");
+            StackMoveData stackMoveData = new StackMoveData(null, board, 50, NULL_MOVE);
+            board.moveStack.push(stackMoveData);
             return;
         }
         

@@ -37,8 +37,6 @@ public class CopierToBeDeleted {
 
         newBoard.setWhiteTurn(board.isWhiteTurn());
         
-        
-        
         newBoard.makeZobrist();
         newBoard.cloneZobristStack(board.getZobristHash());
         

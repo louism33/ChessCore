@@ -18,14 +18,19 @@ class MakeMoveAndHashUpdate {
 
     static void makeNullMoveAndHashUpdate(Chessboard board, ZobristHash zobristHash){
         zobristHash.zobristStack.push(zobristHash.getBoardHash());
+        
         if (board.moveStack.size() > 0) {
             zobristHash.updateWithEPFlags(board);
         }
+
+        MoveMaker.makeMoveMaster(board, null);
+        
         zobristHash.setBoardHash(zobristHash.getBoardHash() ^ ZobristHash.zobristHashColourBlack);
     }
 
     static void unMakeNullMove(Chessboard board, ZobristHash zobristHash){
         zobristHash.setBoardHash(zobristHash.zobristStack.pop());
+        unMakeMoveMaster(board);
     }
 }
 
