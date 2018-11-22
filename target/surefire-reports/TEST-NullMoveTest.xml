@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ChessboardHashTest" time="417.63" tests="13" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="NullMoveTest" time="235.861" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -58,17 +58,10 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="tinyDepths" classname="ChessboardHashTest" time="0.036"/>
-  <testcase name="regularBoard" classname="ChessboardHashTest" time="61.214"/>
-  <testcase name="bigDepth10" classname="ChessboardHashTest" time="66.545"/>
-  <testcase name="bigDepth11" classname="ChessboardHashTest" time="28.906"/>
-  <testcase name="bigDepth12" classname="ChessboardHashTest" time="10.056"/>
-  <testcase name="longCastlingGivesCheck" classname="ChessboardHashTest" time="0.906"/>
-  <testcase name="test1" classname="ChessboardHashTest" time="0.991"/>
-  <testcase name="bigDepth3" classname="ChessboardHashTest" time="12.636"/>
-  <testcase name="bigDepth4" classname="ChessboardHashTest" time="80.717"/>
-  <testcase name="bigDepth5" classname="ChessboardHashTest" time="153.049"/>
-  <testcase name="EPCaptureChecksOpponent" classname="ChessboardHashTest" time="1.401"/>
-  <testcase name="shortCastlingGivesCheck" classname="ChessboardHashTest" time="0.644"/>
-  <testcase name="AvoidIllegalEPCapture" classname="ChessboardHashTest" time="0.523"/>
+  <testcase name="tinyDepths" classname="NullMoveTest" time="0.138"/>
+  <testcase name="regularBoard" classname="NullMoveTest" time="125.523"/>
+  <testcase name="bigDepth11" classname="NullMoveTest" time="81.448"/>
+  <testcase name="bigDepth12" classname="NullMoveTest" time="16.808"/>
+  <testcase name="EPCaptureChecksOpponent" classname="NullMoveTest" time="11.589"/>
+  <testcase name="AvoidIllegalEPCapture" classname="NullMoveTest" time="0.35"/>
 </testsuite>

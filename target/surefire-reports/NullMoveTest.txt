@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: ChessboardHashTest
+Test set: NullMoveTest
 -------------------------------------------------------------------------------
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 417.63 s - in ChessboardHashTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 235.861 s - in NullMoveTest

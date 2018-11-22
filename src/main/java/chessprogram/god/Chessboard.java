@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import static chessprogram.god.MakeMoveAndHashUpdate.*;
 import static chessprogram.god.MakeMoveAndHashUpdate.UnMakeMoveAndHashUpdate;
 
-public class Chessboard {
+public class Chessboard implements Cloneable{
 
     private ChessboardDetails details;
     private ZobristHash zobristHash;
@@ -23,12 +23,11 @@ public class Chessboard {
         this.zobristHash.zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
     }
     
-    
     private void init(){
         this.details = new ChessboardDetails(true);
     }
     
-    Chessboard(boolean blank){
+    public Chessboard(boolean blank){
         this.details = new ChessboardDetails();
         this.zobristHash = new ZobristHash(this);
     }
