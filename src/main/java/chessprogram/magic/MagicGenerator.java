@@ -2,9 +2,13 @@ package chessprogram.magic;
 
 import chessprogram.god.*;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -53,30 +57,49 @@ The following illustration should give an impression, how magic bitboards work. 
 
     MagicGenerator(){
 
-
-
-//        rookOccupancyBlockerBoard(board, board.getWhiteRooks());
-//        findMagic();
-
-//        calculateUniqueRookBlockers(H8);
-
-//        final long piece = B4.toBitboard();
-//        final List<Long> longs = singleRookAllEffectiveBoards(board, piece, board.isWhiteTurn(), UNIVERSE, 0);
-
-//        final List<List<Long>> lists = calculateUniqueRookBlockers();
-//        final List<List<Long>> correctRookMoves = calculateMovesForTheseBlockersRook(lists);
-//        System.out.println(correctRookMoves);
-//        System.out.println(correctRookMoves.size());
-
-//        final String s = printHelperRook(correctRookMoves);
-//        System.out.println(s);
-        final long[][] rookDatabase = Databases.rookDatabase;
-        for (int i = 0; i < rookDatabase.length; i++){
-//            System.out.println(rookDatabase[i].length);
-        }
-
         final List<List<Long>> lists = forEachSquareCalculateVariations();
+
+        final List<Long> longs = lists.get(0);
+
+        final int size = longs.size();
+        for (int i = 0; i < size; i++) {
+            Long l = longs.get(i);
+//            Art.printLong(l);
+//            System.out.println(l);
+//            System.out.println();
+        }
+        System.out.println(lists.size());
+        System.out.println(size);
+        System.out.println();
+
+//        printToFileSingle(longs);
+        
+        
         printToFile(lists);
+        plop();
+    }
+
+    String url = "/home/louis/IdeaProjects/ChessCore/src/main/java/chessprogram/magic/test.txt";
+    // seems to work
+    private void plop() {
+        try {
+            final List<String> strings = Files.readAllLines(Paths.get(url));
+            final int size = strings.size();
+            int x = 0;
+            for (int i = 0; i < size; i++) {
+                String s = strings.get(i);
+                calculateMagic(s);
+                x++;
+            }
+
+            System.out.println("   total: "+ x);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    void calculateMagic(String s){
+        System.out.println(s);
     }
 
     List<List<Long>> forEachSquareCalculateVariations() {
@@ -88,33 +111,44 @@ The following illustration should give an impression, how magic bitboards work. 
         }
         return allBlockersForAllSquares;
     }
-    
+
     List<Long> rookVariations(Square square){
         return singleRookAllVariations(board, square.toBitboard(), true, UNIVERSE, 0);
+    }
+
+    void printToFileSingle(List<Long> things){
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(url));
+            for (int i = 0; i < things.size(); i++) {
+                Long aLong = things.get(i);
+                String s = "" + aLong + "L\n";
+                writer.write(s);
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
     void printToFile(List<List<Long>> things){
         try {
-            FileWriter writer = new FileWriter("RookVariations.java");
-            StringBuilder s = new StringBuilder("public static long[][] rookDatabase = new long[][]{");
-            for (int i = 0; i < things.size(); i++) {
-                final List<Long> longs = things.get(i);
-                s.append("{");
-                for (Long l : longs) {
-                    s.append(l);
-                    s.append("L, ");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(url));
+            for (List<Long> list : things) {
+                for (int l = 0; l < list.size(); l++) {
+                    final Long aLong = list.get(l);
+                    writer.write(aLong+"L\n");
                 }
-                s.append("},\n");
+                writer.write("\n");
             }
-            s.append("\n};");
-            writer.write(s.toString());
+            writer.close();
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-    
+
+
     String printHelperRook(List<List<Long>> things){
         StringBuilder s = new StringBuilder("public static long[][] rookDatabase = new long[][]{");
         for (int i = 0; i < things.size(); i++) {
