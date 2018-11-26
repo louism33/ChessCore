@@ -5,9 +5,8 @@ import java.util.List;
 
 class MoveGeneratorPseudo {
 
-    public static List<Move> generateAllMovesWithoutKing(Chessboard board, boolean whiteTurn,
-                                                         long ignoreThesePieces, long legalPushes, long legalCaptures){
-        List<Move> moves = new ArrayList<>();
+    public static void addAllMovesWithoutKing(List<Move> moves, Chessboard board, boolean whiteTurn,
+                                              long ignoreThesePieces, long legalPushes, long legalCaptures){
         if (legalCaptures != 0) {
             moves.addAll(generateAllCapturesWithoutKing(board, whiteTurn, ignoreThesePieces, legalCaptures));
         }
@@ -15,8 +14,6 @@ class MoveGeneratorPseudo {
         if (legalPushes != 0) {
             moves.addAll(generateAllPushesWithoutKing(board, whiteTurn, ignoreThesePieces, legalPushes));
         }
-
-        return moves;
     }
 
     private static List<Move> generateAllPushesWithoutKing(Chessboard board, boolean whiteTurn,

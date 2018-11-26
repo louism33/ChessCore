@@ -1,15 +1,11 @@
 package chessprogram.god;
 
-import chessprogram.god.Chessboard;
-import chessprogram.god.PieceMoveKing;
-import chessprogram.god.PieceMoveKnight;
-import chessprogram.god.PieceMovePawns;
-import chessprogram.god.PieceMoveSliding;
-import chessprogram.god.ZobristHash;
-
 import java.util.Stack;
 
 import static chessprogram.god.BitOperations.populationCount;
+import static chessprogram.god.PieceMoveKnight.*;
+import static chessprogram.god.PieceMovePawns.*;
+import static chessprogram.god.PieceMoveSliding.*;
 
 class CheckHelper {
 
@@ -41,37 +37,37 @@ class CheckHelper {
         int numberOfThreats = 0;
 
         if (pawns != 0) {
-            numberOfThreats += populationCount(PieceMovePawns.singlePawnCaptures(board, square, myColour, pawns));
+            numberOfThreats += populationCount(singlePawnCaptures(square, myColour, pawns));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;
         }
         if (knights != 0) {
-            numberOfThreats += populationCount(PieceMoveKnight.singleKnightCaptures(board, square, myColour, knights));
+            numberOfThreats += populationCount(singleKnightTable(square, knights));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;
         }
         if (bishops != 0) {
-            numberOfThreats += populationCount(PieceMoveSliding.singleBishopCaptures(board, square, myColour, bishops));
+            numberOfThreats += populationCount(singleBishopTable(board, board.isWhiteTurn(), square, bishops));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;
         }
         if (rooks != 0) {
-            numberOfThreats += populationCount(PieceMoveSliding.singleRookCaptures(board, square, myColour, rooks));
+            numberOfThreats += populationCount(singleRookTable(board, myColour, square, rooks));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;
         }
         if (queens != 0) {
-            numberOfThreats += populationCount(PieceMoveSliding.singleQueenCaptures(board, square, myColour, queens));
+            numberOfThreats += populationCount(singleQueenTable(board, myColour, square, queens));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;
         }
         if (king != 0) {
-            numberOfThreats += populationCount(PieceMoveKing.singleKingCaptures(board, square, myColour, king));
+            numberOfThreats += populationCount(PieceMoveKing.singleKingTable(square, king));
         }
 
         return numberOfThreats;

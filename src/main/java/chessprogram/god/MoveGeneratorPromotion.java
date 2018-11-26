@@ -8,17 +8,14 @@ import static chessprogram.god.MoveConstants.*;
 
 class MoveGeneratorPromotion {
 
-    static List<Move> generatePromotionMoves(Chessboard board, boolean white,
-                                                    long ignoreThesePieces, long legalPushes, long legalCaptures){
-        List<Move> moves = new ArrayList<>();
-        moves.addAll(generatePromotionPushes(board, white, ignoreThesePieces, legalPushes));
-        moves.addAll(generatePromotionCaptures(board, white, ignoreThesePieces, legalCaptures));
-        return moves;
+    static void addPromotionMoves(List<Move> moves, Chessboard board, boolean white,
+                                  long ignoreThesePieces, long legalPushes, long legalCaptures){
+        generatePromotionPushes(moves, board, white, ignoreThesePieces, legalPushes);
+        generatePromotionCaptures(moves, board, white, ignoreThesePieces, legalCaptures);
     }
 
-    private static List<Move> generatePromotionPushes(Chessboard board, boolean white, 
-                                                     long ignoreThesePieces, long legalPushes){
-        List<Move> moves = new ArrayList<>();
+    private static void generatePromotionPushes(List<Move> moves, Chessboard board, boolean white,
+                                                      long ignoreThesePieces, long legalPushes){
         long legalPieces = ~ignoreThesePieces;
 
         if (white){
@@ -30,7 +27,9 @@ class MoveGeneratorPromotion {
                     long pawnMoves = PieceMovePawns.singlePawnPushes(board, piece, true, (BitboardResources.RANK_EIGHT & legalPushes));
                     if (pawnMoves != 0) {
                         int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-                        Move move = MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece).get(0);
+                        List<Move> todoMoves = new ArrayList<>();
+                        MoveGenerationUtilities.movesFromAttackBoard(todoMoves, pawnMoves, indexOfPiece);
+                        Move move = todoMoves.get(0);
                         move.move |= PROMOTION_MASK;
                         moves.addAll(promotingMovesByPiece(move));
                     }
@@ -48,7 +47,10 @@ class MoveGeneratorPromotion {
                     if (pawnMoves != 0) {
                         int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
 
-                        Move move = MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece).get(0);
+                        List<Move> todoMoves = new ArrayList<>();
+                        MoveGenerationUtilities.movesFromAttackBoard(todoMoves, pawnMoves, indexOfPiece);
+                        Move move = todoMoves.get(0);
+                        
                         move.move |= PROMOTION_MASK;
                         moves.addAll(promotingMovesByPiece(move));
                     }
@@ -56,12 +58,10 @@ class MoveGeneratorPromotion {
             }
         }
 
-        return moves;
     }
 
-    private static List<Move> generatePromotionCaptures(Chessboard board, boolean white,
-                                                       long ignoreThesePieces, long legalCaptures){
-        List<Move> moves = new ArrayList<>();
+    private static void generatePromotionCaptures(List<Move> moves, Chessboard board, boolean white,
+                                                        long ignoreThesePieces, long legalCaptures){
         long legalPieces = ~ignoreThesePieces;
 
         if (white){
@@ -71,10 +71,12 @@ class MoveGeneratorPromotion {
             if ((promotablePawns) != 0) {
                 List<Long> allPromotablePawns = getAllPieces(promotablePawns, 0);
                 for (long piece : allPromotablePawns) {
-                    long pawnMoves = PieceMovePawns.singlePawnCaptures(board, piece, true, (promotionCaptureSquares & legalCaptures));
+                    long pawnMoves = PieceMovePawns.singlePawnCaptures(piece, true, (promotionCaptureSquares & legalCaptures));
                     if (pawnMoves != 0) {
                         int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-                        List<Move> unflaggedCaptures = MoveGenerationUtilities.movesFromAttackBoardCapture(pawnMoves, indexOfPiece, true);
+                        List<Move> unflaggedCaptures = new ArrayList<>();
+                        
+                        MoveGenerationUtilities.movesFromAttackBoardCapture(unflaggedCaptures, pawnMoves, indexOfPiece, true);
 
                         for (Move move : unflaggedCaptures) {
                             move.move |= PROMOTION_MASK;
@@ -92,10 +94,11 @@ class MoveGeneratorPromotion {
             if ((promotablePawns) != 0) {
                 List<Long> allPromotablePawns = getAllPieces(promotablePawns, 0);
                 for (long piece : allPromotablePawns) {
-                    long pawnMoves = PieceMovePawns.singlePawnCaptures(board, piece, false, (promotionCaptureSquares & legalCaptures));
+                    long pawnMoves = PieceMovePawns.singlePawnCaptures(piece, false, (promotionCaptureSquares & legalCaptures));
                     if (pawnMoves != 0) {
                         int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-                        List<Move> unflaggedCaptures = MoveGenerationUtilities.movesFromAttackBoardCapture(pawnMoves, indexOfPiece, true);
+                        List<Move> unflaggedCaptures = new ArrayList<>();
+                        MoveGenerationUtilities.movesFromAttackBoardCapture(unflaggedCaptures, pawnMoves, indexOfPiece, true);
 
                         for (Move move : unflaggedCaptures) {
                             move.move |= PROMOTION_MASK;
@@ -106,7 +109,6 @@ class MoveGeneratorPromotion {
             }
         }
 
-        return moves;
     }
 
 

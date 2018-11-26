@@ -37,10 +37,6 @@ public class Dummy {
         final String s = Art.makeMoveToStringTEMP(move.getMove());
 //        System.out.println(s);
 
-        final String s1 = Art.makeMoveToStringTEMP(SOURCE_PIECE_MASK);
-        System.out.println(s1);
-        final String s2 = Art.makeMoveToStringTEMP(WHITE_KNIGHT_MASK);
-        System.out.println(s2);
 
     }
 }

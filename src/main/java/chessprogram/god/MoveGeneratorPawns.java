@@ -33,13 +33,13 @@ class MoveGeneratorPawns {
         for (Long piece : allPawns){
             long pawnMoves = PieceMovePawns.singlePawnPushes(board, piece, white, legalPushes);
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece));
+            MoveGenerationUtilities.movesFromAttackBoard(moves, pawnMoves, indexOfPiece);
         }
 
         for (Long piece : allPawns){
-            long pawnMoves = PieceMovePawns.singlePawnCaptures(board, piece, white, legalCaptures);
+            long pawnMoves = PieceMovePawns.singlePawnCaptures(piece, white, legalCaptures);
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoardCapture(pawnMoves, indexOfPiece, true));
+            MoveGenerationUtilities.movesFromAttackBoardCapture(moves, pawnMoves, indexOfPiece, true);
         }
         return moves;
     }

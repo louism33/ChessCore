@@ -14,14 +14,18 @@ public class Magic {
     
     private static boolean ready = false;
     
-    public static void init(){
+    private static void init(){
         calculateRookDatabase();
         calculateBishopDatabase();
-        
+
+        System.out.println("get ready");
         ready = true;
     }
 
-    public static long rookMagicMoveTable(Chessboard board, boolean white, long rook){
+    static long singleRookMagicMoves(Chessboard board, boolean white, long rook, long legalMovesMask){
+        if (!ready){
+            init();
+        }
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(rook), 1);
 
@@ -33,12 +37,13 @@ public class Magic {
 
         final long legalMoves = rookDatabase[rookIndex][index];
 
-        long myPieces = white ? board.whitePieces() : board.blackPieces();
-
-        return legalMoves & ~myPieces;
+        return legalMoves & legalMovesMask;
     }
 
-    public static long bishopMagicMoveTable(Chessboard board, boolean white, long bishop){
+    static long singleBishopMagicMoves(Chessboard board, boolean white, long bishop, long legalMovesMask){
+        if (!ready){
+            init();
+        }
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(bishop), 1);
 
@@ -50,9 +55,7 @@ public class Magic {
 
         final long legalMoves = bishopDatabase[bishopIndex][index];
 
-        long myPieces = white ? board.whitePieces() : board.blackPieces();
-
-        return legalMoves & ~myPieces;
+        return legalMoves & legalMovesMask;
     }
 
     private static void calculateRookDatabase(){

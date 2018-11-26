@@ -4,7 +4,8 @@ import static chessprogram.god.BitboardResources.*;
 
 class PinnedManager {
 
-    public static long whichPiecesArePinned(Chessboard board, boolean white, long squareOfInterest){
+    //todo, use magic here
+    static long whichPiecesArePinned(Chessboard board, boolean white, long squareOfInterest){
         if (squareOfInterest == 0) {
             return 0;
         }

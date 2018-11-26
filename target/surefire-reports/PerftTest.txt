@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: PerftTest
 -------------------------------------------------------------------------------
-Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 131.367 s - in PerftTest
+Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 137.125 s - in PerftTest

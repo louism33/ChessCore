@@ -2,9 +2,8 @@ package chessprogram.god;
 
 public class MoveConstants {
 
-
     // todo, should not be public
-    public final static int  
+    final static int  
             SOURCE_PIECE_MASK = 0x000f0000,
             SOURCE_PIECE_OFFSET = 16,
     

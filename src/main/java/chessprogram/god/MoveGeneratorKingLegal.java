@@ -8,10 +8,10 @@ import static chessprogram.god.BitOperations.UNIVERSE;
 
 class MoveGeneratorKingLegal {
 
-    static List<Move> kingLegalMovesOnly(Chessboard board, boolean white){
+    static void addKingLegalMovesOnly(List<Move> moves, Chessboard board, boolean white){
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         int indexOfKing = BitOperations.getIndexOfFirstPiece(myKing);
-        return MoveGenerationUtilities.movesFromAttackBoard(kingLegalPushAndCaptureTable(board, white), indexOfKing);
+        MoveGenerationUtilities.movesFromAttackBoard(moves, kingLegalPushAndCaptureTable(board, white), indexOfKing);
     }
 
     private static long kingLegalPushAndCaptureTable(Chessboard board, boolean white){
@@ -22,8 +22,7 @@ class MoveGeneratorKingLegal {
         long kingSafeCaptures = enemyPieces & kingSafeSquares;
         long kingSafePushes = (~board.allPieces() & kingSafeSquares);
         
-        ans |= PieceMoveKing.singleKingPushes(board, myKing, white, kingSafePushes);
-        ans |= PieceMoveKing.singleKingCaptures(board, myKing, white, kingSafeCaptures);
+        ans |= PieceMoveKing.singleKingTable(myKing, kingSafePushes | kingSafeCaptures);
 
         Assert.assertTrue(((kingSafeCaptures & kingSafePushes) == 0));
 

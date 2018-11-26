@@ -2,13 +2,14 @@ package chessprogram.god;
 
 import java.util.List;
 
+import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.BitOperations.getAllPieces;
+import static chessprogram.god.MoveConstantsPawnCapture.*;
 
 class PieceMovePawns {
 
     static long singlePawnPushes(Chessboard board, long piece, boolean white, long legalPushes) {
         long allPieces = board.whitePieces() | board.blackPieces();
-        long HOME_RANK = (white) ? BitboardResources.RANK_TWO : BitboardResources.RANK_SEVEN;
         long answer = 0;
         long temp = piece;
 
@@ -32,29 +33,27 @@ class PieceMovePawns {
         return answer & legalPushes;
     }
 
-    public static long singlePawnCaptures(Chessboard board, long piece, boolean white, long legalCaptures) {
-        long allPieces = board.whitePieces() | board.blackPieces();
+    static long singlePawnCaptures(long piece, boolean white, long legalCaptures) {
         long answer = 0;
 
         if (piece == 0) {
             return 0;
         }
         if (white){
-            int index = BitOperations.getIndexOfFirstPiece(piece);
-            long l = PawnCaptureTable.PAWN_CAPTURE_TABLE_WHITE[index];
+            int index = getIndexOfFirstPiece(piece);
+            long l = PAWN_CAPTURE_TABLE_WHITE[index];
             answer |= l;
         }
         else{
-            long table = 0;
-            int index = BitOperations.getIndexOfFirstPiece(piece);
-            long l = PawnCaptureTable.PAWN_CAPTURE_TABLE_BLACK[index];
+            int index = getIndexOfFirstPiece(piece);
+            long l = PAWN_CAPTURE_TABLE_BLACK[index];
             answer |= l;
         }
 
         return answer & legalCaptures;
     }
 
-    public static long masterPawnCapturesTable(Chessboard board, boolean white,
+    static long masterPawnCapturesTable(Chessboard board, boolean white,
                                                long ignoreThesePieces, long legalCaptures){
         long ans = 0, pawns;
         if (white){
@@ -65,7 +64,7 @@ class PieceMovePawns {
         }
         List<Long> allPawns = getAllPieces(pawns, ignoreThesePieces);
         for (Long piece : allPawns){
-            ans |= singlePawnCaptures(board, piece, white, legalCaptures);
+            ans |= singlePawnCaptures(piece, white, legalCaptures);
         }
         return ans;
     }

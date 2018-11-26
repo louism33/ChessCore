@@ -8,8 +8,7 @@ import java.util.List;
 class MoveGeneratorCastling {
 
     // checking if we are in check happens elsewhere
-    static List<Move> generateCastlingMoves(Chessboard board, boolean white){
-        List<Move> moves = new ArrayList<>();
+    static void addCastlingMoves(List<Move> moves, Chessboard board, boolean white){
 
         if (white){
             if(board.isWhiteCanCastleK()){
@@ -72,7 +71,6 @@ class MoveGeneratorCastling {
             }
         }
 
-        return moves;
     }
 
 

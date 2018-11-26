@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="PerftTest" time="131.367" tests="30" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="PerftTest" time="137.125" tests="30" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
     <property name="java.specification.version" value="11"/>
     <property name="sun.cpu.isalist" value=""/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.class.path" value="/home/louis/IdeaProjects/ChessCore/target/test-classes:/home/louis/IdeaProjects/ChessCore/target/classes:/home/louis/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/louis/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/louis/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.3.1/junit-jupiter-api-5.3.1.jar:/home/louis/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar:/home/louis/.m2/repository/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar:/home/louis/.m2/repository/org/junit/platform/junit-platform-commons/1.3.1/junit-platform-commons-1.3.1.jar:"/>
+    <property name="java.class.path" value="/home/louis/IdeaProjects/ChessCore/target/test-classes:/home/louis/IdeaProjects/ChessCore/target/classes:/home/louis/.m2/repository/junit/junit/4.13-beta-1/junit-4.13-beta-1.jar:/home/louis/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/louis/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.3.2/junit-jupiter-api-5.3.2.jar:/home/louis/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar:/home/louis/.m2/repository/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar:/home/louis/.m2/repository/org/junit/platform/junit-platform-commons/1.3.2/junit-platform-commons-1.3.2.jar:"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.vendor.url" value="http://java.oracle.com/"/>
@@ -16,9 +16,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/jdk-11.0.1/lib"/>
-    <property name="sun.java.command" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter7457141138214517482.jar /home/louis/IdeaProjects/ChessCore/target/surefire 2018-11-24T17-32-45_779-jvmRun1 surefire4475310159688701512tmp surefire_010424417950928292952tmp"/>
+    <property name="sun.java.command" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter2382467088854108384.jar /home/louis/IdeaProjects/ChessCore/target/surefire 2018-11-26T20-12-59_323-jvmRun1 surefire11372506282576801245tmp surefire_015490940047415034557tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="/home/louis/IdeaProjects/ChessCore/target/test-classes:/home/louis/IdeaProjects/ChessCore/target/classes:/home/louis/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/louis/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/louis/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.3.1/junit-jupiter-api-5.3.1.jar:/home/louis/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar:/home/louis/.m2/repository/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar:/home/louis/.m2/repository/org/junit/platform/junit-platform-commons/1.3.1/junit-platform-commons-1.3.1.jar:"/>
+    <property name="surefire.test.class.path" value="/home/louis/IdeaProjects/ChessCore/target/test-classes:/home/louis/IdeaProjects/ChessCore/target/classes:/home/louis/.m2/repository/junit/junit/4.13-beta-1/junit-4.13-beta-1.jar:/home/louis/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/louis/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.3.2/junit-jupiter-api-5.3.2.jar:/home/louis/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar:/home/louis/.m2/repository/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar:/home/louis/.m2/repository/org/junit/platform/junit-platform-commons/1.3.2/junit-platform-commons-1.3.2.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/home/louis"/>
     <property name="user.language" value="en"/>
@@ -32,7 +32,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter7457141138214517482.jar"/>
+    <property name="surefire.real.class.path" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter2382467088854108384.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="11.0.1+13-LTS"/>
     <property name="user.name" value="louis"/>
@@ -58,34 +58,34 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="CastlingPrevented" classname="PerftTest" time="1.323"/>
-  <testcase name="doubleCheck" classname="PerftTest" time="0.08"/>
-  <testcase name="PromoteOutOfCheck" classname="PerftTest" time="2.993"/>
-  <testcase name="underPromoteToCheck" classname="PerftTest" time="0.149"/>
-  <testcase name="test10" classname="PerftTest" time="0.133"/>
-  <testcase name="test11" classname="PerftTest" time="0.08"/>
-  <testcase name="test12" classname="PerftTest" time="0.007"/>
-  <testcase name="test13" classname="PerftTest" time="0.337"/>
-  <testcase name="test14" classname="PerftTest" time="0.019"/>
-  <testcase name="test15" classname="PerftTest" time="47.61"/>
-  <testcase name="regularBoard" classname="PerftTest" time="61.848"/>
-  <testcase name="checkStalemate" classname="PerftTest" time="0.235"/>
-  <testcase name="promoteToCheck" classname="PerftTest" time="0.157"/>
-  <testcase name="longCastlingGivesCheck" classname="PerftTest" time="0.515"/>
-  <testcase name="misc" classname="PerftTest" time="10.091"/>
-  <testcase name="test1" classname="PerftTest" time="0.57"/>
-  <testcase name="test2" classname="PerftTest" time="0.395"/>
-  <testcase name="test3" classname="PerftTest" time="0.515"/>
-  <testcase name="test4" classname="PerftTest" time="0.244"/>
-  <testcase name="test5" classname="PerftTest" time="0.282"/>
-  <testcase name="test6" classname="PerftTest" time="0.192"/>
-  <testcase name="test7" classname="PerftTest" time="0.224"/>
-  <testcase name="test8" classname="PerftTest" time="0.68"/>
-  <testcase name="test9" classname="PerftTest" time="0.122"/>
-  <testcase name="EPCaptureChecksOpponent" classname="PerftTest" time="1.065"/>
-  <testcase name="selfStaleMate" classname="PerftTest" time="0.004"/>
-  <testcase name="shortCastlingGivesCheck" classname="PerftTest" time="0.458"/>
-  <testcase name="discoveredCheck" classname="PerftTest" time="0.254"/>
-  <testcase name="CastlingCRAndDoublePins" classname="PerftTest" time="0.323"/>
-  <testcase name="AvoidIllegalEPCapture" classname="PerftTest" time="0.433"/>
+  <testcase name="CastlingPrevented" classname="PerftTest" time="1.571"/>
+  <testcase name="doubleCheck" classname="PerftTest" time="0.077"/>
+  <testcase name="PromoteOutOfCheck" classname="PerftTest" time="3.28"/>
+  <testcase name="underPromoteToCheck" classname="PerftTest" time="0.168"/>
+  <testcase name="test10" classname="PerftTest" time="0.186"/>
+  <testcase name="test11" classname="PerftTest" time="0.082"/>
+  <testcase name="test12" classname="PerftTest" time="0.005"/>
+  <testcase name="test13" classname="PerftTest" time="0.257"/>
+  <testcase name="test14" classname="PerftTest" time="0.024"/>
+  <testcase name="test15" classname="PerftTest" time="46.828"/>
+  <testcase name="regularBoard" classname="PerftTest" time="66.124"/>
+  <testcase name="checkStalemate" classname="PerftTest" time="0.25"/>
+  <testcase name="promoteToCheck" classname="PerftTest" time="0.174"/>
+  <testcase name="longCastlingGivesCheck" classname="PerftTest" time="0.56"/>
+  <testcase name="misc" classname="PerftTest" time="10.547"/>
+  <testcase name="test1" classname="PerftTest" time="0.69"/>
+  <testcase name="test2" classname="PerftTest" time="0.47"/>
+  <testcase name="test3" classname="PerftTest" time="0.772"/>
+  <testcase name="test4" classname="PerftTest" time="0.3"/>
+  <testcase name="test5" classname="PerftTest" time="0.334"/>
+  <testcase name="test6" classname="PerftTest" time="0.279"/>
+  <testcase name="test7" classname="PerftTest" time="0.315"/>
+  <testcase name="test8" classname="PerftTest" time="0.7"/>
+  <testcase name="test9" classname="PerftTest" time="0.142"/>
+  <testcase name="EPCaptureChecksOpponent" classname="PerftTest" time="1.349"/>
+  <testcase name="selfStaleMate" classname="PerftTest" time="0.005"/>
+  <testcase name="shortCastlingGivesCheck" classname="PerftTest" time="0.504"/>
+  <testcase name="discoveredCheck" classname="PerftTest" time="0.273"/>
+  <testcase name="CastlingCRAndDoublePins" classname="PerftTest" time="0.4"/>
+  <testcase name="AvoidIllegalEPCapture" classname="PerftTest" time="0.44"/>
 </testsuite>

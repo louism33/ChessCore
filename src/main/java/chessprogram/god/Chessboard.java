@@ -89,8 +89,8 @@ public class Chessboard implements Cloneable{
         UnMakeMoveAndHashUpdate(this, this.zobristHash);
     }
     
-    public boolean inCheck(boolean white){
-        return CheckHelper.boardInCheck(this, white);
+    public boolean inCheck(){
+        return CheckHelper.boardInCheck(this, isWhiteTurn());
     }
 
     public boolean drawByRepetition (boolean white){
@@ -162,7 +162,27 @@ public class Chessboard implements Cloneable{
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+zobristHash.getBoardHash() +"\n";
     }
+    
+    public boolean inCheckmate(){
+        if (!this.inCheck()){
+            return false;
+        }
+        if (this.generateLegalMoves().size() == 0){
+            return true;
+        }
+        return false;
+    }
 
+    public boolean inStalemate(){
+        if (this.inCheck()){
+            return false;
+        }
+        if (this.generateLegalMoves().size() == 0){
+            return true;
+        }
+        return false;
+    }
+    
     public boolean isWhiteCanCastleK() {
         return this.details.whiteCanCastleK;
     }

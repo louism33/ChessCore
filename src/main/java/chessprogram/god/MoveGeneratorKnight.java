@@ -20,9 +20,9 @@ class MoveGeneratorKnight {
 
         List<Long> allKnights = getAllPieces(knights, ignoreThesePieces);
         for (Long piece : allKnights){
-            long jumpingMoves = PieceMoveKnight.singleKnightCaptures(board, piece, white, legalCaptures);
+            long jumpingMoves = PieceMoveKnight.singleKnightTable(piece, legalCaptures);
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoardCapture(jumpingMoves, indexOfPiece, true));
+            MoveGenerationUtilities.movesFromAttackBoardCapture(moves, jumpingMoves, indexOfPiece, true);
         }
 
         return moves;
@@ -41,9 +41,9 @@ class MoveGeneratorKnight {
 
         List<Long> allUnpinnedKnights = getAllPieces(knights, ignoreThesePieces);
         for (Long piece : allUnpinnedKnights){
-            long jumpingMoves = PieceMoveKnight.singleKnightPushes(board, piece, white, legalPushes);
+            long jumpingMoves = PieceMoveKnight.singleKnightTable(piece, legalPushes);
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(jumpingMoves, indexOfPiece));
+            MoveGenerationUtilities.movesFromAttackBoard(moves, jumpingMoves, indexOfPiece);
         }
         return moves;
     }

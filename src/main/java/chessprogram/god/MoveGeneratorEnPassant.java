@@ -8,9 +8,9 @@ import static chessprogram.god.StackMoveData.SpecialMove;
 
 class MoveGeneratorEnPassant {
 
-    public static List<Move> generateEnPassantMoves(Chessboard board, boolean white,
-                                                    long ignoreThesePieces, long legalPushes, long legalCaptures) {
-        List<Move> moves = new ArrayList<>();
+    static void addEnPassantMoves(List<Move> moves, Chessboard board, boolean white,
+                                  long ignoreThesePieces, long legalPushes, long legalCaptures) {
+        List<Move> temp = new ArrayList<>();
 
         long myPawns = white ? board.getWhitePawns() : board.getBlackPawns();
         long enemyPawns = white ? board.getBlackPawns() : board.getWhitePawns();
@@ -18,21 +18,21 @@ class MoveGeneratorEnPassant {
 
         long myPawnsInPosition = myPawns & enPassantTakingRank;
         if (myPawnsInPosition == 0) {
-            return new ArrayList<>();
+            return;
         }
 
         long enemyPawnsInPosition = enemyPawns & enPassantTakingRank;
         if (enemyPawnsInPosition == 0) {
-            return new ArrayList<>();
+            return;
         }
 
         if (board.moveStack.size() < 1){
-            return new ArrayList<>();
+            return;
         }
 
         StackMoveData previousMove = board.moveStack.peek();
         if (previousMove.typeOfSpecialMove != SpecialMove.ENPASSANTVICTIM){
-            return new ArrayList<>();
+            return;
         }
 
 
@@ -58,21 +58,22 @@ class MoveGeneratorEnPassant {
 
 
         if (enemyTakingSpots == 0){
-            return new ArrayList<>();
+            return;
         }
 
         List<Long> allMyPawnsInPosition = BitOperations.getAllPieces(myPawnsInPosition, ignoreThesePieces);
 
         for (Long myPawn : allMyPawnsInPosition){
             int indexOfFirstPiece = BitOperations.getIndexOfFirstPiece(myPawn);
-            long pawnEnPassantCapture = PieceMovePawns.singlePawnCaptures(board, myPawn, white, enemyTakingSpots);
-            List<Move> epMoves = MoveGenerationUtilities.movesFromAttackBoardCapture(pawnEnPassantCapture, indexOfFirstPiece, true);
-            moves.addAll(epMoves);
+            long pawnEnPassantCapture = PieceMovePawns.singlePawnCaptures(myPawn, white, enemyTakingSpots);
+            List<Move> epMoves = new ArrayList<>();
+            MoveGenerationUtilities.movesFromAttackBoardCapture(epMoves, pawnEnPassantCapture, indexOfFirstPiece, true);
+            temp.addAll(epMoves);
         }
 
         List<Move> safeEPMoves = new ArrayList<>();
         // remove moves that would leave us in check
-        for (Move move : moves){
+        for (Move move : temp){
             move.move |= ENPASSANT_MASK;
 
 //            MoveMaker.makeMoveMaster(board, move);
@@ -86,7 +87,7 @@ class MoveGeneratorEnPassant {
             }
             safeEPMoves.add(move);
         }
-        return safeEPMoves;
+        moves.addAll(safeEPMoves);
     }
 
 

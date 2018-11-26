@@ -1,6 +1,6 @@
 package chessprogram.god;
 
-class PawnCaptureTable {
+class MoveConstantsPawnCapture {
 
     static final long[] PAWN_CAPTURE_TABLE_WHITE = {
             0x200L,

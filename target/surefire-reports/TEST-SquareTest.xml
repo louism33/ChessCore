@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ChessboardHashTest" time="421.52" tests="13" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="SquareTest" time="0.03" tests="11" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -58,17 +58,15 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="tinyDepths" classname="ChessboardHashTest" time="0.094"/>
-  <testcase name="regularBoard" classname="ChessboardHashTest" time="71.487"/>
-  <testcase name="bigDepth10" classname="ChessboardHashTest" time="63.178"/>
-  <testcase name="bigDepth11" classname="ChessboardHashTest" time="28.614"/>
-  <testcase name="bigDepth12" classname="ChessboardHashTest" time="7.983"/>
-  <testcase name="longCastlingGivesCheck" classname="ChessboardHashTest" time="0.939"/>
-  <testcase name="test1" classname="ChessboardHashTest" time="1.059"/>
-  <testcase name="bigDepth3" classname="ChessboardHashTest" time="12.133"/>
-  <testcase name="bigDepth4" classname="ChessboardHashTest" time="77.289"/>
-  <testcase name="bigDepth5" classname="ChessboardHashTest" time="156.05"/>
-  <testcase name="EPCaptureChecksOpponent" classname="ChessboardHashTest" time="1.49"/>
-  <testcase name="shortCastlingGivesCheck" classname="ChessboardHashTest" time="0.643"/>
-  <testcase name="AvoidIllegalEPCapture" classname="ChessboardHashTest" time="0.55"/>
+  <testcase name="getPiecesOnSquare" classname="SquareTest" time="0.014"/>
+  <testcase name="getRow" classname="SquareTest" time="0"/>
+  <testcase name="longFromSquare" classname="SquareTest" time="0"/>
+  <testcase name="getFile" classname="SquareTest" time="0.001"/>
+  <testcase name="test" classname="SquareTest" time="0"/>
+  <testcase name="getRowNumber" classname="SquareTest" time="0"/>
+  <testcase name="toBitboard" classname="SquareTest" time="0"/>
+  <testcase name="getFileNumber" classname="SquareTest" time="0.001"/>
+  <testcase name="getPieceOnSquare" classname="SquareTest" time="0.001"/>
+  <testcase name="squareFromSingleBitboard" classname="SquareTest" time="0.006"/>
+  <testcase name="squaresFromBitboard" classname="SquareTest" time="0"/>
 </testsuite>

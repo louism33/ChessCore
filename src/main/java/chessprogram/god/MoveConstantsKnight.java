@@ -1,6 +1,6 @@
 package chessprogram.god;
 
-class PieceMoveTableKnight {
+class MoveConstantsKnight {
 
     static final long[] KNIGHT_MOVE_TABLE = {
             0x20400L,

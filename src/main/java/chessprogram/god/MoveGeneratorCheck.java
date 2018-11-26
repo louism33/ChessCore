@@ -1,23 +1,27 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static chessprogram.god.BitboardResources.*;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
+import static chessprogram.god.MoveGeneratorEnPassant.*;
+import static chessprogram.god.MoveGeneratorKingLegal.*;
+import static chessprogram.god.MoveGeneratorPromotion.*;
+import static chessprogram.god.MoveGeneratorPseudo.*;
+import static chessprogram.god.PieceMoveKnight.*;
+import static chessprogram.god.PieceMovePawns.*;
 
 class MoveGeneratorCheck {
 
-    static List<Move> evadeCheckMovesMaster(Chessboard board, boolean white){
+    static void addCheckEvasionMoves(List<Move> moves, Chessboard board, boolean white){
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         long ignoreThesePieces = PinnedManager.whichPiecesArePinned(board, white, myKing);
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
-        return allLegalCheckEscapeMoves(board, white, ignoreThesePieces);
+        allLegalCheckEscapeMoves(moves, board, white, ignoreThesePieces);
     }
 
 
-    private static List<Move> allLegalCheckEscapeMoves(Chessboard board, boolean white, long ignoreThesePieces) {
-        List<Move> moves = new ArrayList<>();
+    private static void allLegalCheckEscapeMoves(List<Move> moves, Chessboard board, boolean white, long ignoreThesePieces) {
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         long blockingSquaresMask, checkingPieceMask;
         long jumper = inCheckByAJumper(board, white);
@@ -35,18 +39,18 @@ class MoveGeneratorCheck {
         long promotablePawns = myPawns & PENULTIMATE_RANK;
         long piecesToIgnoreAndPromotingPawns = ignoreThesePieces | promotablePawns;
         
-        moves.addAll(MoveGeneratorPseudo.generateAllMovesWithoutKing
-                (board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask));
-
-        moves.addAll(MoveGeneratorKingLegal.kingLegalMovesOnly(board, white));
+        addPromotionMoves(moves, board, white, ignoreThesePieces, blockingSquaresMask, checkingPieceMask);
         
-        moves.addAll(MoveGeneratorPromotion.generatePromotionMoves(board, white, ignoreThesePieces, blockingSquaresMask, checkingPieceMask));
+        addAllMovesWithoutKing
+                (moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask);
 
-        moves.addAll(MoveGeneratorEnPassant.generateEnPassantMoves(board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask));
+        addKingLegalMovesOnly(moves, board, white);
+        
+        addEnPassantMoves(moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask);
 
-        return moves;
     }
 
+    // todo magic
     private static long extractRayFromTwoPieces(Chessboard board, long pieceOne, long pieceTwo){
         if (pieceOne == pieceTwo) return 0;
         long ALL_PIECES_TO_AVOID = board.whitePieces() | board.blackPieces();
@@ -294,7 +298,7 @@ class MoveGeneratorCheck {
 
 
     private static long inCheckByAJumper(Chessboard board, boolean white){
-        long ans = 0, pawns, knights;
+        long pawns, knights;
         if (!white){
             pawns = board.getWhitePawns();
             knights = board.getWhiteKnights();
@@ -305,11 +309,11 @@ class MoveGeneratorCheck {
         }
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
 
-        long possiblePawn = PieceMovePawns.singlePawnCaptures(board, myKing, white, pawns);
+        long possiblePawn = singlePawnCaptures(myKing, white, pawns);
         if (possiblePawn != 0) {
             return possiblePawn;
         }
-        long possibleKnight = PieceMoveKnight.singleKnightCaptures(board, myKing, white, UNIVERSE) & knights;
+        long possibleKnight = singleKnightTable(myKing, UNIVERSE) & knights;
         if (possibleKnight != 0) {
             return possibleKnight;
         }
@@ -331,15 +335,16 @@ class MoveGeneratorCheck {
         }
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
 
-        long possibleBishop = PieceMoveSliding.singleBishopCaptures(board, myKing, white, bishops);
+//        long possibleBishop = PieceMoveSliding.singleBishopTable(board, myKing, white, bishops);
+        long possibleBishop = PieceMoveSliding.singleBishopTable(board, white, myKing, bishops);
         if (possibleBishop != 0) {
             return possibleBishop;
         }
-        long possibleRook = PieceMoveSliding.singleRookCaptures(board, myKing, white, rooks);
+        long possibleRook = PieceMoveSliding.singleRookTable(board, white, myKing, rooks);
         if (possibleRook != 0){
             return possibleRook;
         }
-        long possibleQueen = PieceMoveSliding.singleQueenCaptures(board, myKing, white, queens);
+        long possibleQueen = PieceMoveSliding.singleQueenTable(board, white, myKing, queens);
         if (possibleQueen != 0){
             return possibleQueen;
         }
