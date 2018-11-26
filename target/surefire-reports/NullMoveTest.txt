@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: NullMoveTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 235.861 s - in NullMoveTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 230.631 s - in NullMoveTest

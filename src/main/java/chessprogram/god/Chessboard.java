@@ -12,6 +12,8 @@ import static chessprogram.god.MakeMoveAndHashUpdate.UnMakeMoveAndHashUpdate;
 
 public class Chessboard implements Cloneable{
 
+    // todo, consider shift to 8 bbs
+    
     private ChessboardDetails details;
     private ZobristHash zobristHash;
 

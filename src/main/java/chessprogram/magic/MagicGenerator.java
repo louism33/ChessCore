@@ -7,26 +7,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.Square.*;
+import static chessprogram.magic.MagicConstants.*;
 import static chessprogram.magic.Utils.*;
 
 public class MagicGenerator {
 
 
     // h1, g1 ... a7
-    private static long[] rooksBlankFull = new long[]{
-            72340172838076926L, 144680345676153597L, 289360691352306939L, 578721382704613623L, 1157442765409226991L, 2314885530818453727L, 4629771061636907199L, -9187201950435737473L, 72340172838141441L, 144680345676217602L, 289360691352369924L, 578721382704674568L, 1157442765409283856L, 2314885530818502432L, 4629771061636939584L, -9187201950435737728L, 72340172854657281L, 144680345692602882L, 289360691368494084L, 578721382720276488L, 1157442765423841296L, 2314885530830970912L, 4629771061645230144L, -9187201950435803008L, 72340177082712321L, 144680349887234562L, 289360695496279044L, 578721386714368008L, 1157442769150545936L, 2314885534022901792L, 4629771063767613504L, -9187201950452514688L, 72341259464802561L, 144681423712944642L, 289361752209228804L, 578722409201797128L, 1157443723186933776L, 2314886351157207072L, 4629771607097753664L, -9187201954730704768L, 72618349279904001L, 144956323094725122L, 289632270724367364L, 578984165983651848L, 1157687956502220816L, 2315095537539358752L, 4629910699613634624L, -9187203049947365248L, 143553341945872641L, 215330564830528002L, 358885010599838724L, 645993902138460168L, 1220211685215703056L, 2368647251370188832L, 4665518383679160384L, -9187483425412448128L, -143832609275707135L, -215607624513486334L, -359157654989044732L, -646257715940161528L, -1220457837842395120L, -2368858081646862304L, -4665658569255796672L, 9187484529235886208L
-    };
-
-    private long[] bishopsBlankFull = new long[]{
-            -9205322385119247872L, 36099303471056128L, 141012904249856L, 550848566272L, 6480472064L, 1108177604608L, 283691315142656L, 72624976668147712L, 4620710844295151618L, -9205322385119182843L, 36099303487963146L, 141017232965652L, 1659000848424L, 283693466779728L, 72624976676520096L, 145249953336262720L, 2310355422147510788L, 4620710844311799048L, -9205322380790986223L, 36100411639206946L, 424704217196612L, 72625527495610504L, 145249955479592976L, 290499906664153120L, 1155177711057110024L, 2310355426409252880L, 4620711952330133792L, -9205038694072573375L, 108724279602332802L, 145390965166737412L, 290500455356698632L, 580999811184992272L, 577588851267340304L, 1155178802063085600L, 2310639079102947392L, 4693335752243822976L, -9060072569221905919L, 326598935265674242L, 581140276476643332L, 1161999073681608712L, 288793334762704928L, 577868148797087808L, 1227793891648880768L, 2455587783297826816L, 4911175566595588352L, -8624392940535152127L, 1197958188344280066L, 2323857683139004420L, 144117404414255168L, 360293502378066048L, 720587009051099136L, 1441174018118909952L, 2882348036221108224L, 5764696068147249408L, -6917353036926680575L, 4611756524879479810L, 567382630219904L, 1416240237150208L, 2833579985862656L, 5667164249915392L, 11334324221640704L, 22667548931719168L, 45053622886727936L, 18049651735527937L
-    };
 
     // attack boards
     public static long[] rooksBlankClever = new long[]{
@@ -36,71 +28,369 @@ public class MagicGenerator {
     public static long[] bishopBlankClever = new long[]{
             18049651735527936L, 70506452091904L, 275415828992L, 1075975168L, 38021120L, 8657588224L, 2216338399232L, 567382630219776L, 9024825867763712L, 18049651735527424L, 70506452221952L, 275449643008L, 9733406720L, 2216342585344L, 567382630203392L, 1134765260406784L, 4512412933816832L, 9024825867633664L, 18049651768822272L, 70515108615168L, 2491752130560L, 567383701868544L, 1134765256220672L, 2269530512441344L, 2256206450263040L, 4512412900526080L, 9024834391117824L, 18051867805491712L, 637888545440768L, 1135039602493440L, 2269529440784384L, 4539058881568768L, 1128098963916800L, 2256197927833600L, 4514594912477184L, 9592139778506752L, 19184279556981248L, 2339762086609920L, 4538784537380864L, 9077569074761728L, 562958610993152L, 1125917221986304L, 2814792987328512L, 5629586008178688L, 11259172008099840L, 22518341868716544L, 9007336962655232L, 18014673925310464L, 2216338399232L, 4432676798464L, 11064376819712L, 22137335185408L, 44272556441600L, 87995357200384L, 35253226045952L, 70506452091904L, 567382630219776L, 1134765260406784L, 2832480465846272L, 5667157807464448L, 11333774449049600L, 22526811443298304L, 9024825867763712L, 18049651735527936L
     };
-    
-    /*
-     magic move-bitboard generation technique consists of four key steps:
-
-Mask the relevant occupancy bits to form a key. For example if you had a rook on a1, the relevant occupancy bits will be from a2-a7 and b1-g1.
-Multiply the key by a "magic number" to obtain an index mapping. This magic number can be generated by brute-force trial and error quite easily although it isn't 100% certain that the magic number is the best possible (see step 3).
-Right shift the index mapping by 64-n bits to create an index, where n is the number of bits in the index. A better magic number will have less bits required in the index.
-Use the index to reference a preinitialized move database.
-The following illustration should give an impression, how magic bitboards work. All masked relevant occupied bits are perfectly hashed to the consecutive occupied state to index the pre-calculated attack-sets. Constructive collisions, where different occupancies map same attack-sets - since different bits are outer redundant bits "behind" the first blocker, are desired and even necessary to apply a perfect hashing with N bits.
-
-((attack-bitboards-for-rooks[a1] AND occupancy) * magic-number[a1]) >> (64 - bits-required[a1])
-     */
 
     public static void main (String[] args){
-        new MagicGenerator();
+//        new MagicGenerator();
+        
+        for (int i = 63; i >= 0; i--){
+            Square square = Square.values()[i];
+            System.out.println("SQUARE: "+ square);
+            calculateMagicNoWrite(square);
+        }
+
+        for (int i = 0; i < 64; i++){
+            System.out.print(bishopMagics[i]+"L,");
+            if (i % 8 == 7){
+                System.out.println();
+            }
+        }
     }
 
-    final Chessboard board = new Chessboard(true);
+    static final Chessboard board = new Chessboard(true);
 
     MagicGenerator(){
 
         final List<List<Long>> lists = forEachSquareCalculateVariations();
 
-        final List<Long> longs = lists.get(0);
+        for (int i = 0; i < lists.size(); i++) {
+            List<Long> list = lists.get(i);
+            String rank = "" + (8 - (i / 8));
+            String file = ""+ (char) ('A' + ((i % 8)));
+            String square = file+""+rank;
+            String url = String.format("/home/louis/IdeaProjects/ChessCore/src/main/java/chessprogram/rookvar/rookVariations%s.txt", square);
 
-        final int size = longs.size();
-        for (int i = 0; i < size; i++) {
-            Long l = longs.get(i);
-//            Art.printLong(l);
-//            System.out.println(l);
-//            System.out.println();
+//            printToFileSingle(list, url);
         }
-        System.out.println(lists.size());
-        System.out.println(size);
-        System.out.println();
 
-//        printToFileSingle(longs);
-        
-        
-        printToFile(lists);
-        plop();
+
+        // A8 - B8 ---- A7 ------- H1
+        for (int i = 0; i < lists.size(); i++) {
+            List<Long> list = lists.get(i);
+
+//            String url = "/home/louis/IdeaProjects/ChessCore/src/main/java/chessprogram/magic/H1.txt";
+
+            String rank = "" + (8 - (i / 8));
+            String file = ""+ (char) ('A' + ((i % 8)));
+            String square = file+""+rank;
+
+            String readFromHere = String.format("/home/louis/IdeaProjects/ChessCore/src/main/java/chessprogram/rookvar/rookVariations%s.txt", square);
+
+//            String recordHere = String.format("/home/louis/IdeaProjects/ChessCore/src/main/java/chessprogram/rookdb/RookDatabase%s.java", square);
+
+            String recordHere = String.format("/home/louis/IdeaProjects/ChessCore/src/main/java/chessprogram/rookdb/RookDatabaseMaster.java");
+
+            String className = "RookDatabase"+square;
+            int lengthOfArray = populationCount(list.get(0));
+
+//            System.out.println("XXXXXXXXXXx");
+//            System.out.println(readFromHere);
+//            System.out.println(recordHere);
+//            System.out.println("square : "+square);
+//            Art.printLong(list.get(0));
+
+//            initDatabaseMaster(recordHere, lengthOfArray);
+//            initDatabase(recordHere, className, square, lengthOfArray);
+
+            plop(readFromHere, recordHere, className, square, lengthOfArray);
+
+//            writeMagic(rookMagics);
+//            writeDB(rookMoves, recordHere);
+        }
     }
 
-    String url = "/home/louis/IdeaProjects/ChessCore/src/main/java/chessprogram/magic/test.txt";
-    // seems to work
-    private void plop() {
+    void writeDB(long[][] db, String url){
         try {
-            final List<String> strings = Files.readAllLines(Paths.get(url));
-            final int size = strings.size();
-            int x = 0;
-            for (int i = 0; i < size; i++) {
-                String s = strings.get(i);
-                calculateMagic(s);
-                x++;
+            BufferedWriter writer = new BufferedWriter(new FileWriter(url));
+
+            writer.write("package chessprogram.rookdb;\n"+
+                    "\n" +
+                    "public class RookDatabaseMaster {\n" +
+                    "    \n" +
+                    "    public static long[][] rookMovesDatabase = new long[][]{" +
+                    "");
+
+            for (int i = 0; i < db.length; i++) {
+                String s = "{";
+                for (int j = 0; j < db[i].length; j++){
+                    final long l = db[i][j];
+                    s += ""+l+"L, ";
+                }
+                writer.write(s+"\n}");
             }
 
-            System.out.println("   total: "+ x);
+            writer.write("};\n}");
+
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-    void calculateMagic(String s){
-        System.out.println(s);
+
+    private static long[] rookMagics = new long[64];
+    private static long[] bishopMagics = new long[64];
+    private static long[][] rookMoves = new long[64][];
+
+    void calculateMagic(List<String> s, String urlUrl, String className, String square, int length) {
+
+        long[] db = new long[(int) Math.pow(2, length)];
+
+        final List<Long> variations = s.stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+        int total = 0;
+        boolean success = false;
+        int stopAt = 1_000_000_000;
+        List<Integer> successRecorder = new ArrayList<>();
+
+        final Square sqqq = Square.valueOf(square);
+
+        final int ordinal = sqqq.ordinal();
+
+//        System.out.println("square :" +square);
+//        System.out.println("sqqq: " + sqqq);
+//        System.out.println("to bit: ");
+//        Art.printLong(sqqq.toBitboard());
+//        System.out.println("ordinal: "+ ordinal);
+
+//        long sq = sqqq.toBitboard();
+        long sq = sqqq.toBitboard();
+
+//        System.out.println("sq: ");
+//        System.out.println();
+//        Art.printLong(sq);
+
+        long correctMagic = 0;
+
+        newMagic:
+        while (total < stopAt) {
+            Random r = new Random(total);
+            long magicNum = r.nextLong() & r.nextLong() & r.nextLong();
+
+            db = new long[(int) Math.pow(2, length)];
+
+            int successes = 0;
+            for (Long variation : variations) {
+
+                long correctRookMovesResultBitboard = Utils.singleRookAllMovesFromOcc(variation, sq);
+
+                long mult = (magicNum * variation);
+                int index = (int) (mult >>> (64 - length));
+                long indexEntry = db[index];
+
+                if (indexEntry == 0){
+                    successes++;
+                    db[index] = correctRookMovesResultBitboard;
+                }
+
+                else if ((indexEntry == correctRookMovesResultBitboard)) {
+                    successes++;
+                }
+                else {
+                    //clash
+                    successRecorder.add(successes);
+                    total++;
+                    continue newMagic;
+                }
+
+                correctMagic = magicNum;
+                success = true;
+            }
+//            System.out.println("break");
+
+
+            break;
+        }
+        if (success) {
+
+            System.out.println("success on square : " + square);
+            System.out.println("number of magics tried: " + (total+1));
+            System.out.println(urlUrl);
+
+
+            recordDatabase(db, urlUrl, className, square, length);
+
+            // careful of ordinal
+            rookMagics[ordinal] = correctMagic;
+        }
+        else {
+            System.out.println("failure");
+            System.out.println("number of vars: " + variations.size());
+            System.out.println("number of magics tried: " + successRecorder.size());
+        }
     }
+
+
+    static void calculateMagicNoWrite(Square square) {
+
+        int length = bishopShiftAmounts[square.ordinal()];
+        boolean success = false;
+        long[] db;
+        int stopAt = 1000000;
+        long correctMagic = 0;
+        int total = 0;
+
+        List<Long> bishopVariations = bishopVariations(square);
+        
+        newMagic:
+        while (total < stopAt) {
+            Random r = new Random(total);
+            long magicNum = r.nextLong() & r.nextLong() & r.nextLong();
+
+            db = new long[(int) Math.pow(2, length)];
+
+
+            long sq = square.toBitboard();
+
+            for (Long variation : bishopVariations) {
+                long correctBishopMovesResultBitboard = Utils.singleBishopAllMovesFromOcc(variation, sq);
+                long mult = (magicNum * variation);
+                int index = (int) (mult >>> (64 - length));
+
+                long indexEntry = db[index];
+                if (indexEntry == 0) {
+                    db[index] = correctBishopMovesResultBitboard;
+                    success = true;
+                }
+                else if (indexEntry == correctBishopMovesResultBitboard) {
+                    success = true;
+                }
+                else {
+                    total++;
+                    success = false;
+//                    System.out.println("clash");
+                    continue newMagic;
+                }
+            }
+            
+            if (success){
+                correctMagic = magicNum;
+            }
+            
+            break;
+        }
+
+        if (success) {
+            System.out.println("success on square : " + square);
+            System.out.println("number of magics tried: " + (total + 1));
+            bishopMagics[square.ordinal()] = correctMagic;
+        }
+        else {
+            return;
+        }
+    }
+
+
+    void writeMagic(long[] magics){
+        String url = String.format("/home/louis/IdeaProjects/ChessCore/src/main/java/chessprogram/magic/RookMagics.java");
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(url));
+
+            writer.write("package chessprogram.magic;\n" +
+                    "\n" +
+                    "public class RookMagics {\n" +
+                    "    \n" +
+                    "    public static long[] rookMagicNumbers = new long[]{\n");
+
+            for (int i = 0; i < magics.length; i++) {
+                Long aLong = magics[i];
+                String s = "" + aLong + "L,\n";
+                writer.write(s);
+            }
+
+            writer.write("};\n}");
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void initDatabaseMaster(String urlUrl, int length){
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(urlUrl));
+
+            length = (int) Math.pow(2, length);
+
+            writer.write(getDBStringMaster(urlUrl)+""+64+"][];\n}");
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static String getDBStringMaster(String urlUrl){
+        return ("package chessprogram.rookdb;\n" +
+                "public class RookDatabaseMaster {\n" +
+                "public static long[][] rookMovesDatabase = new long[");
+    }
+
+    void recordDatabaseMaster(long[] correctDB, String urlUrl, String className, String square, int length){
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(urlUrl));
+            writer.write(getDBStringMaster(urlUrl)+"]{\n");
+            for (int i = 0; i < correctDB.length; i++) {
+                Long aLong = correctDB[i];
+                String s = "" + aLong + "L,\n";
+                writer.write(s);
+            }
+            writer.append("};\n}");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void initDatabase(String urlUrl, String className, String square, int length){
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(urlUrl));
+
+            length = (int) Math.pow(2, length);
+
+            writer.write(getDBString(urlUrl, className, square)+""+length+"];\n}");
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static String getDBString(String urlUrl, String className, String square){
+        return ("package chessprogram.rookdb;\n" +
+                "public class "+className+" {\n" +
+                "public static long[] rook"+square+" = new long[");
+        //+length+"];\n}");
+    }
+
+    void recordDatabase(long[] correctDB, String urlUrl, String className, String square, int length){
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(urlUrl));
+            writer.write(getDBString(urlUrl, className, square)+"]{\n");
+            for (int i = 0; i < correctDB.length; i++) {
+                Long aLong = correctDB[i];
+                String s = "" + aLong + "L,\n";
+                writer.write(s);
+            }
+            writer.append("};\n}");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    private void plop(String readFromHere, String writeToHere, String className, String square, int lengthOfArray) {
+        try {
+            final List<String> strings = Files.readAllLines(Paths.get(readFromHere));
+            calculateMagic(strings, writeToHere, className, square, lengthOfArray);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     List<List<Long>> forEachSquareCalculateVariations() {
         List<List<Long>> allBlockersForAllSquares = new ArrayList<>();
@@ -116,12 +406,16 @@ The following illustration should give an impression, how magic bitboards work. 
         return singleRookAllVariations(board, square.toBitboard(), true, UNIVERSE, 0);
     }
 
-    void printToFileSingle(List<Long> things){
+    static List<Long> bishopVariations(Square square){
+        return singleBishopAllVariations(board, square.toBitboard(), true, UNIVERSE, 0);
+    }
+
+    void printToFileSingle(List<Long> things, String url){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(url));
             for (int i = 0; i < things.size(); i++) {
                 Long aLong = things.get(i);
-                String s = "" + aLong + "L\n";
+                String s = "" + aLong + "\n";
                 writer.write(s);
             }
             writer.close();
@@ -131,7 +425,7 @@ The following illustration should give an impression, how magic bitboards work. 
     }
 
 
-    void printToFile(List<List<Long>> things){
+    void printToFile(List<List<Long>> things, String url){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(url));
             for (List<Long> list : things) {
@@ -142,7 +436,7 @@ The following illustration should give an impression, how magic bitboards work. 
                 writer.write("\n");
             }
             writer.close();
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -209,14 +503,6 @@ The following illustration should give an impression, how magic bitboards work. 
 
     }
 
-    //todo
-    public static long[] rookSlidingMovesByIndex = new long[]{
-
-    };
-
-
-
-
     List<Long> findMagic(){
         Random r = new Random(1000);
         List<Long> answers = new ArrayList<>();
@@ -236,7 +522,6 @@ The following illustration should give an impression, how magic bitboards work. 
         List<Long> variations = new ArrayList<>();
         final long baseSquare = rank & file;
 
-//        Art.printLong(baseSquare);
         final double num = Math.pow(2, 7);
 
         int i = 0;
@@ -247,8 +532,6 @@ The following illustration should give an impression, how magic bitboards work. 
             }
         }
 
-
-        System.out.println(i);
 
         return variations;
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ChessboardHashTest" time="417.63" tests="13" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ChessboardHashTest" time="372.804" tests="13" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/jdk-11.0.1/lib"/>
-    <property name="sun.java.command" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter4000168705701414376.jar /home/louis/IdeaProjects/ChessCore/target/surefire 2018-11-22T11-34-41_843-jvmRun1 surefire3461203873686583254tmp surefire_011632909373628270526tmp"/>
+    <property name="sun.java.command" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter7457141138214517482.jar /home/louis/IdeaProjects/ChessCore/target/surefire 2018-11-24T17-32-45_779-jvmRun1 surefire4475310159688701512tmp surefire_010424417950928292952tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/louis/IdeaProjects/ChessCore/target/test-classes:/home/louis/IdeaProjects/ChessCore/target/classes:/home/louis/.m2/repository/junit/junit/4.12/junit-4.12.jar:/home/louis/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/louis/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.3.1/junit-jupiter-api-5.3.1.jar:/home/louis/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar:/home/louis/.m2/repository/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar:/home/louis/.m2/repository/org/junit/platform/junit-platform-commons/1.3.1/junit-platform-commons-1.3.1.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -32,7 +32,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter4000168705701414376.jar"/>
+    <property name="surefire.real.class.path" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter7457141138214517482.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="11.0.1+13-LTS"/>
     <property name="user.name" value="louis"/>
@@ -58,17 +58,17 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="tinyDepths" classname="ChessboardHashTest" time="0.036"/>
-  <testcase name="regularBoard" classname="ChessboardHashTest" time="61.214"/>
-  <testcase name="bigDepth10" classname="ChessboardHashTest" time="66.545"/>
-  <testcase name="bigDepth11" classname="ChessboardHashTest" time="28.906"/>
-  <testcase name="bigDepth12" classname="ChessboardHashTest" time="10.056"/>
-  <testcase name="longCastlingGivesCheck" classname="ChessboardHashTest" time="0.906"/>
-  <testcase name="test1" classname="ChessboardHashTest" time="0.991"/>
-  <testcase name="bigDepth3" classname="ChessboardHashTest" time="12.636"/>
-  <testcase name="bigDepth4" classname="ChessboardHashTest" time="80.717"/>
-  <testcase name="bigDepth5" classname="ChessboardHashTest" time="153.049"/>
-  <testcase name="EPCaptureChecksOpponent" classname="ChessboardHashTest" time="1.401"/>
-  <testcase name="shortCastlingGivesCheck" classname="ChessboardHashTest" time="0.644"/>
-  <testcase name="AvoidIllegalEPCapture" classname="ChessboardHashTest" time="0.523"/>
+  <testcase name="tinyDepths" classname="ChessboardHashTest" time="0.106"/>
+  <testcase name="regularBoard" classname="ChessboardHashTest" time="65.258"/>
+  <testcase name="bigDepth10" classname="ChessboardHashTest" time="57.695"/>
+  <testcase name="bigDepth11" classname="ChessboardHashTest" time="28.598"/>
+  <testcase name="bigDepth12" classname="ChessboardHashTest" time="8.733"/>
+  <testcase name="longCastlingGivesCheck" classname="ChessboardHashTest" time="0.877"/>
+  <testcase name="test1" classname="ChessboardHashTest" time="0.918"/>
+  <testcase name="bigDepth3" classname="ChessboardHashTest" time="12.112"/>
+  <testcase name="bigDepth4" classname="ChessboardHashTest" time="69.298"/>
+  <testcase name="bigDepth5" classname="ChessboardHashTest" time="126.844"/>
+  <testcase name="EPCaptureChecksOpponent" classname="ChessboardHashTest" time="1.292"/>
+  <testcase name="shortCastlingGivesCheck" classname="ChessboardHashTest" time="0.58"/>
+  <testcase name="AvoidIllegalEPCapture" classname="ChessboardHashTest" time="0.486"/>
 </testsuite>
