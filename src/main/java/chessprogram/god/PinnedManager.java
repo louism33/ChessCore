@@ -1,5 +1,7 @@
 package chessprogram.god;
 
+import org.junit.Assert;
+
 import static chessprogram.god.BitboardResources.*;
 
 class PinnedManager {
@@ -9,10 +11,29 @@ class PinnedManager {
         if (squareOfInterest == 0) {
             return 0;
         }
+
+        if (false) {
+            System.out.println("Testing Diagonal pin");
+
+            final long l = diagonalPins(board, white, squareOfInterest);
+            final long l1 = diagonalPinsMagic(board, white, squareOfInterest);
+            if (l != l1) {
+                Art.printLong(l);
+                Art.printLong(l1);
+            }
+            Assert.assertEquals(l, l1);
+        }
+
+        
+        
         long pinnedPieces = 0;
         pinnedPieces |= diagonalPins(board, white, squareOfInterest);
         pinnedPieces |= cardinalPins(board, white, squareOfInterest);
         return pinnedPieces;
+    }
+
+    private static long diagonalPinsMagic(Chessboard board, boolean white, long squareOfInterest) {
+        return 0;
     }
 
     private static long diagonalPins(Chessboard board, boolean white, long squareOfInterest) {
@@ -138,6 +159,39 @@ class PinnedManager {
         }
 
         return diagonalPinnedPieces;
+    }
+
+    // todo: combine and use queen magic ?
+    private static long cardinalPinsMagicToSquare(Chessboard board, boolean white, Square squareOfInterest) {
+        return cardinalPinsMagicToSquare(board, white, squareOfInterest.toBitboard());
+    }
+    
+    private static long cardinalPinsMagicToSquare(Chessboard board, boolean white, long squareOfInterest) {
+        long myPieces, enemyRooks, enemyQueens, allPieces = board.allPieces();
+        
+        if (white){
+            myPieces = board.whitePieces();
+            enemyQueens = board.getBlackQueen();
+            enemyRooks = board.getBlackRooks();
+        } else {
+            myPieces = board.blackPieces();
+            enemyQueens = board.getWhiteQueen();
+            enemyRooks = board.getWhiteRooks();
+        }
+        
+        long pinnedPieces = 0;
+        
+        long pinners = PieceMoveSliding.xrayRookAttacks(allPieces, myPieces, squareOfInterest);
+        long pinningPieces = pinners & (enemyRooks | enemyQueens);
+        
+        while (pinningPieces != 0){
+            final int indexOfPinningPiece = BitOperations.getIndexOfFirstPiece(pinningPieces);
+            final long ray = Magic.extractRayFromTwoPieces(indexOfPinningPiece, BitOperations.getIndexOfFirstPiece(squareOfInterest));
+            pinnedPieces |= (ray & myPieces);
+            pinningPieces &= pinningPieces - 1;
+        }
+        
+        return pinnedPieces;
     }
 
     private static long cardinalPins(Chessboard board, boolean white, long squareOfInterest) {

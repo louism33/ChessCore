@@ -31,7 +31,7 @@ class MoveGeneratorCheck {
         }
         else {
             long slider = inCheckByASlider(board, white);
-            blockingSquaresMask = extractRayFromTwoPieces(board, myKing, slider) & (~slider);
+            blockingSquaresMask = Magic.extractRayFromTwoPiecesBitboard(myKing, slider) & (~slider);
             checkingPieceMask = slider;
         }
         long PENULTIMATE_RANK = white ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
@@ -41,261 +41,13 @@ class MoveGeneratorCheck {
         
         addPromotionMoves(moves, board, white, ignoreThesePieces, blockingSquaresMask, checkingPieceMask);
         
-        addAllMovesWithoutKing
-                (moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask);
+        addAllMovesWithoutKing (moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask);
 
         addKingLegalMovesOnly(moves, board, white);
         
         addEnPassantMoves(moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask);
 
     }
-
-    // todo magic
-    private static long extractRayFromTwoPieces(Chessboard board, long pieceOne, long pieceTwo){
-        if (pieceOne == pieceTwo) return 0;
-        long ALL_PIECES_TO_AVOID = board.whitePieces() | board.blackPieces();
-
-        ALL_PIECES_TO_AVOID ^= pieceTwo;
-        ALL_PIECES_TO_AVOID ^= pieceOne;
-        
-        // necessary as java offers signed ints, which get confused if talking about square 63
-        int indexOfPieceOne = getIndexOfFirstPiece(pieceOne);
-        int indexOfPieceTwo = getIndexOfFirstPiece(pieceTwo);
-        long bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        long smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        long possibleAnswer = 0;
-        
-        while (true) {
-            if ((smallPiece & BitboardResources.FILE_A) != 0) {
-                break;
-            }
-            smallPiece <<= 1;
-            if ((smallPiece & ALL_PIECES_TO_AVOID) != 0) {
-                break;
-            }
-            if ((smallPiece & bigPiece) != 0) {
-                return possibleAnswer;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-        
-        while (true) {
-            if ((smallPiece & NORTH_WEST) != 0) {
-                break;
-            }
-            smallPiece <<= 9;
-            if ((smallPiece & ALL_PIECES_TO_AVOID) != 0) {
-                break;
-            }
-            if ((smallPiece & bigPiece) != 0) {
-                return possibleAnswer;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-
-        while (true) {
-            if ((smallPiece & BitboardResources.RANK_EIGHT) != 0) {
-                break;
-            }
-            smallPiece <<= 8;
-            if ((smallPiece & ALL_PIECES_TO_AVOID) != 0) {
-                break;
-            }
-            if ((smallPiece & bigPiece) != 0) {
-                return possibleAnswer;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-
-        while (true) {
-            if ((smallPiece & NORTH_EAST) != 0) {
-                break;
-            }
-            smallPiece <<= 7;
-            if ((smallPiece & ALL_PIECES_TO_AVOID) != 0) {
-                break;
-            }
-            if ((smallPiece & bigPiece) != 0) {
-                return possibleAnswer;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        return 0;
-    }
-
-    public static long extractInfiniteRayFromTwoPieces(Chessboard board, long pieceOne, long pieceTwo){
-        if (pieceOne == pieceTwo) return 0;
-
-        int indexOfPieceOne = getIndexOfFirstPiece(pieceOne);
-        int indexOfPieceTwo = getIndexOfFirstPiece(pieceTwo);
-        long bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        long smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        long possibleAnswer = 0;
-        long answer = 0;
-        
-        boolean thisOne = false;
-        while (true) {
-            if ((smallPiece & BitboardResources.FILE_A) != 0) {
-                if (thisOne) {
-                    answer |= possibleAnswer;
-                }
-                break;
-            }
-            smallPiece <<= 1;
-            if ((smallPiece & bigPiece) != 0) {
-                thisOne = true;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = !(indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = !(indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-        
-        thisOne = false;
-        while (true) {
-            if ((smallPiece & BitboardResources.FILE_H) != 0) {
-                if (thisOne) {
-                    answer |= possibleAnswer;
-                }
-                break;
-            }
-            smallPiece >>>= 1;
-            if ((smallPiece & bigPiece) != 0) {
-                thisOne = true;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-        
-        thisOne = false;
-        while (true) {
-            if ((smallPiece & NORTH_WEST) != 0) {
-                if (thisOne) {
-                    answer |= possibleAnswer;
-                }
-                break;
-            }
-            smallPiece <<= 9;
-            if ((smallPiece & bigPiece) != 0) {
-                thisOne = true;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = !(indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = !(indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-        
-        thisOne = false;
-        while (true) {
-            if ((smallPiece & SOUTH_EAST) != 0) {
-                if (thisOne) {
-                    answer |= possibleAnswer;
-                }
-                break;
-            }
-            smallPiece >>>= 9;
-            if ((smallPiece & bigPiece) != 0) {
-                thisOne = true;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-        
-        thisOne = false;
-        while (true) {
-            if ((smallPiece & BitboardResources.RANK_EIGHT) != 0) {
-                if (thisOne) {
-                    answer |= possibleAnswer;
-                }
-                break;
-            }
-            smallPiece <<= 8;
-            if ((smallPiece & bigPiece) != 0) {
-                thisOne = true;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = !(indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = !(indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-        
-        thisOne = false;
-        while (true) {
-            if ((smallPiece & BitboardResources.RANK_ONE) != 0) {
-                if (thisOne) {
-                    answer |= possibleAnswer;
-                }
-                break;
-            }
-            smallPiece >>>= 8;
-            if ((smallPiece & bigPiece) != 0) {
-                thisOne = true;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-        
-        thisOne = false;
-        while (true) {
-            if ((smallPiece & NORTH_EAST) != 0) {
-                if (thisOne) {
-                    answer |= possibleAnswer;
-                }
-                break;
-            }
-            smallPiece <<= 7;
-            if ((smallPiece & bigPiece) != 0) {
-                thisOne = true;
-            }
-            possibleAnswer |= smallPiece;
-        }
-
-        bigPiece = !(indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
-        smallPiece = !(indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
-        possibleAnswer = 0;
-        
-        thisOne = false;
-        while (true) {
-            if ((smallPiece & SOUTH_WEST) != 0) {
-                if (thisOne) {
-                    answer |= possibleAnswer;
-                }
-                break;
-            }
-            smallPiece >>>= 7;
-            if ((smallPiece & bigPiece) != 0) {
-                thisOne = true;
-            }
-            possibleAnswer |= smallPiece;
-        }
-        return answer;
-    }
-
 
     private static long inCheckByAJumper(Chessboard board, boolean white){
         long pawns, knights;
@@ -322,7 +74,7 @@ class MoveGeneratorCheck {
     }
 
     private static long inCheckByASlider(Chessboard board, boolean white){
-        long ans = 0, bishops, rooks, queens;
+        long bishops, rooks, queens, allPieces = board.allPieces();
         if (!white){
             bishops = board.getWhiteBishops();
             rooks = board.getWhiteRooks();
@@ -335,16 +87,15 @@ class MoveGeneratorCheck {
         }
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
 
-//        long possibleBishop = PieceMoveSliding.singleBishopTable(board, myKing, white, bishops);
-        long possibleBishop = PieceMoveSliding.singleBishopTable(board, white, myKing, bishops);
+        long possibleBishop = PieceMoveSliding.singleBishopTable(allPieces, white, myKing, bishops);
         if (possibleBishop != 0) {
             return possibleBishop;
         }
-        long possibleRook = PieceMoveSliding.singleRookTable(board, white, myKing, rooks);
+        long possibleRook = PieceMoveSliding.singleRookTable(allPieces, white, myKing, rooks);
         if (possibleRook != 0){
             return possibleRook;
         }
-        long possibleQueen = PieceMoveSliding.singleQueenTable(board, white, myKing, queens);
+        long possibleQueen = PieceMoveSliding.singleQueenTable(allPieces, white, myKing, queens);
         if (possibleQueen != 0){
             return possibleQueen;
         }

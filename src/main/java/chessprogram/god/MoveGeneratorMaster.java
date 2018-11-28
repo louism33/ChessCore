@@ -82,7 +82,7 @@ class MoveGeneratorMaster {
                                              long pinnedPieces, long squareWeArePinnedTo){
         List<Long> allPinnedPieces = getAllPieces(pinnedPieces, 0);
 
-        long pawns, knights, bishops, rooks, queens;
+        long pawns, knights, bishops, rooks, queens, allPieces = board.allPieces();
         if (whiteTurn){
             pawns = board.getWhitePawns();
             knights = board.getWhiteKnights();
@@ -102,9 +102,10 @@ class MoveGeneratorMaster {
         long ENEMY_PIECES = (whiteTurn) ? board.blackPieces() : board.whitePieces();
 
         for (long pinnedPiece : allPinnedPieces){
-            long infiniteRay = extractInfiniteRayFromTwoPieces(board, squareWeArePinnedTo, pinnedPiece);
-            long pushMask = infiniteRay & ~(board.blackPieces() | board.whitePieces());
-            long captureMask = infiniteRay & ENEMY_PIECES;
+            long xray = PieceMoveSliding.xrayQueenAttacks(allPieces, pinnedPiece, squareWeArePinnedTo);
+            long pinningPiece = xray & ENEMY_PIECES;
+            long infiniteRay = Magic.extractRayFromTwoPiecesBitboardInclusive(squareWeArePinnedTo, pinningPiece);
+            long pushMask = infiniteRay ^ (pinningPiece | squareWeArePinnedTo);
 
             if ((pinnedPiece & knights) != 0) {
                 // knights cannot move cardinally or diagonally, and so cannot move while pinned
@@ -120,34 +121,34 @@ class MoveGeneratorMaster {
                     long singlePawnAllPushes = singlePawnPushes(board, pinnedPiece, whiteTurn, pushMask);
                     addMovesFromAttackBoardLong(moves, singlePawnAllPushes, pinnedPiece);
 
-                    long singlePawnAllCaptures = singlePawnCaptures(pinnedPiece, whiteTurn, captureMask);
+                    long singlePawnAllCaptures = singlePawnCaptures(pinnedPiece, whiteTurn, pinningPiece);
                     addMovesFromAttackBoardLong(moves, singlePawnAllCaptures, pinnedPiece);
 
                     // a pinned pawn may still EP
-                    addEnPassantMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, captureMask);
+                    addEnPassantMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, pinningPiece);
                 }
                 else {
                     // a pinned pawn may still promote, through a capture of the pinner
-                    addPromotionMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, captureMask);
+                    addPromotionMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, pinningPiece);
                 }
                 continue;
             }
             if ((pinnedPiece & bishops) != 0) {
-                long pinnedBishopAllMoves = singleBishopTable(board, whiteTurn, pinnedPiece, UNIVERSE);
+                long pinnedBishopAllMoves = singleBishopTable(allPieces, whiteTurn, pinnedPiece, UNIVERSE);
                 addMovesFromAttackBoardLong(moves, pinnedBishopAllMoves & pushMask, pinnedPiece);
-                addMovesFromAttackBoardLong(moves, pinnedBishopAllMoves & captureMask, pinnedPiece);
+                addMovesFromAttackBoardLong(moves, pinnedBishopAllMoves & pinningPiece, pinnedPiece);
                 continue;
             }
             if ((pinnedPiece & rooks) != 0) {
-                long singleRookAllMoves = singleRookTable(board, whiteTurn, pinnedPiece, UNIVERSE);
+                long singleRookAllMoves = singleRookTable(allPieces, whiteTurn, pinnedPiece, UNIVERSE);
                 addMovesFromAttackBoardLong(moves, singleRookAllMoves & pushMask, pinnedPiece);
-                addMovesFromAttackBoardLong(moves, singleRookAllMoves & captureMask, pinnedPiece);
+                addMovesFromAttackBoardLong(moves, singleRookAllMoves & pinningPiece, pinnedPiece);
                 continue;
             }
             if ((pinnedPiece & queens) != 0) {
-                long singleQueenAllMoves = singleQueenTable(board, whiteTurn, pinnedPiece, UNIVERSE);
+                long singleQueenAllMoves = singleQueenTable(allPieces, whiteTurn, pinnedPiece, UNIVERSE);
                 addMovesFromAttackBoardLong(moves, singleQueenAllMoves & pushMask, pinnedPiece);
-                addMovesFromAttackBoardLong(moves, singleQueenAllMoves & captureMask, pinnedPiece);
+                addMovesFromAttackBoardLong(moves, singleQueenAllMoves & pinningPiece, pinnedPiece);
             }
         }
     }

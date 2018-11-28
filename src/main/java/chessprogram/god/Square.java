@@ -51,9 +51,12 @@ public enum Square {
         return values()[index];
     }
 
-    // todo
     public long toBitboard (){
         return newPieceOnSquare(this.ordinal());
+    }
+    
+    public static long toBitboard (Square square){
+        return newPieceOnSquare(square.ordinal());
     }
 
     public int getRowNumber(){

@@ -3,9 +3,12 @@ package chessprogram.god;
 import chessprogram.magic.Utils;
 import org.junit.Assert;
 
+import java.awt.image.BufferedImageOp;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.*;
+import static chessprogram.god.BitboardResources.NORTH_EAST;
+import static chessprogram.god.BitboardResources.NORTH_WEST;
 import static chessprogram.god.MagicConstants.*;
 import static chessprogram.magic.Utils.singleBishopAllVariations;
 import static chessprogram.magic.Utils.singleRookAllVariations;
@@ -14,15 +17,38 @@ public class Magic {
     
     private static boolean ready = false;
     
-    private static void init(){
+    public static void init(){
         calculateRookDatabase();
         calculateBishopDatabase();
+        
+        calculateInBetweenSquares();
 
         System.out.println("get ready");
         ready = true;
     }
 
-    static long singleRookMagicMoves(Chessboard board, boolean white, long rook, long legalMovesMask){
+    static long extractRayFromTwoPieces(Piece pieceOne, Piece pieceTwo){
+        return extractRayFromTwoPieces(pieceOne.ordinal(), pieceTwo.ordinal());
+    }
+
+    static long extractRayFromTwoPiecesBitboard(long pieceOne, long pieceTwo){
+        return extractRayFromTwoPieces(getIndexOfFirstPiece(pieceOne), getIndexOfFirstPiece(pieceTwo));
+    }
+
+    static long extractRayFromTwoPiecesBitboardInclusive(long pieceOne, long pieceTwo){
+        return extractRayFromTwoPieces(getIndexOfFirstPiece(pieceOne), getIndexOfFirstPiece(pieceTwo)) 
+                | pieceOne | pieceTwo;
+    }
+
+    static long extractRayFromTwoPieces(int pieceOneIndex, int pieceTwoIndex){
+        if (!ready){
+            init();
+        }
+        return BitboardResources.inBetweenSquares[pieceOneIndex][pieceTwoIndex] 
+                ^ (BitOperations.newPieceOnSquare(pieceOneIndex) | BitOperations.newPieceOnSquare(pieceTwoIndex));
+    }
+    
+    static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
         if (!ready){
             init();
         }
@@ -32,7 +58,7 @@ public class Magic {
         final int rookIndex = getIndexOfFirstPiece(rook);
         final long rookMagicNumber = MagicConstants.rookMagicNumbers[rookIndex];
 
-        final int index = (int) (((board.allPieces() & rookBlankBoardAttackMasks[rookIndex]) * rookMagicNumber)
+        final int index = (int) (((occupancy & rookBlankBoardAttackMasks[rookIndex]) * rookMagicNumber)
                 >>> (64 - (rookShiftAmounts[rookIndex])));
 
         final long legalMoves = rookDatabase[rookIndex][index];
@@ -40,7 +66,7 @@ public class Magic {
         return legalMoves & legalMovesMask;
     }
 
-    static long singleBishopMagicMoves(Chessboard board, boolean white, long bishop, long legalMovesMask){
+    static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
         if (!ready){
             init();
         }
@@ -50,7 +76,7 @@ public class Magic {
         final int bishopIndex = getIndexOfFirstPiece(bishop);
         final long bishopMagicNumber = MagicConstants.bishopMagicNumbers[bishopIndex];
 
-        final int index = (int) (((board.allPieces() & bishopBlankBoardAttackMasks[bishopIndex]) * bishopMagicNumber)
+        final int index = (int) (((allPieces & bishopBlankBoardAttackMasks[bishopIndex]) * bishopMagicNumber)
                 >>> (64 - (bishopShiftAmounts[bishopIndex])));
 
         final long legalMoves = bishopDatabase[bishopIndex][index];
@@ -110,6 +136,88 @@ public class Magic {
             db[index] = correctRookMovesResultBitboard;
         }
         return db;
+    }
+
+    public static void calculateInBetweenSquares(){
+        final int length = BitboardResources.inBetweenSquares.length;
+        for (int i = 0; i < length; i++){
+            long pieceOne = BitOperations.newPieceOnSquare(i);
+            for (int j = 0; j < 64; j++){
+                long pieceTwo = BitOperations.newPieceOnSquare(j);
+                BitboardResources.inBetweenSquares[i][j] = extractRayFromTwoPieces(pieceOne, pieceTwo);
+            }
+        }
+    }
+
+    private static long extractRayFromTwoPieces(long pieceOne, long pieceTwo){
+        if (pieceOne == pieceTwo) return 0;
+
+        long originalPieces = pieceOne | pieceTwo;
+        
+        // necessary as java offers signed ints, which get confused if talking about square 63
+        int indexOfPieceOne = getIndexOfFirstPiece(pieceOne);
+        int indexOfPieceTwo = getIndexOfFirstPiece(pieceTwo);
+        long bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
+        long smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
+        long possibleAnswer = 0;
+
+        while (true) {
+            if ((smallPiece & BitboardResources.FILE_A) != 0) {
+                break;
+            }
+            smallPiece <<= 1;
+            if ((smallPiece & bigPiece) != 0) {
+                return possibleAnswer | originalPieces;
+            }
+            possibleAnswer |= smallPiece;
+        }
+
+        bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
+        smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
+        possibleAnswer = 0;
+
+        while (true) {
+            if ((smallPiece & NORTH_WEST) != 0) {
+                break;
+            }
+            smallPiece <<= 9;
+            if ((smallPiece & bigPiece) != 0) {
+                return possibleAnswer | originalPieces;
+            }
+            possibleAnswer |= smallPiece;
+        }
+
+        bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
+        smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
+        possibleAnswer = 0;
+
+        while (true) {
+            if ((smallPiece & BitboardResources.RANK_EIGHT) != 0) {
+                break;
+            }
+            smallPiece <<= 8;
+            if ((smallPiece & bigPiece) != 0) {
+                return possibleAnswer | originalPieces;
+            }
+            possibleAnswer |= smallPiece;
+        }
+
+        bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
+        smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
+        possibleAnswer = 0;
+
+        while (true) {
+            if ((smallPiece & NORTH_EAST) != 0) {
+                break;
+            }
+            smallPiece <<= 7;
+            if ((smallPiece & bigPiece) != 0) {
+                return possibleAnswer | originalPieces;
+            }
+            possibleAnswer |= smallPiece;
+        }
+
+        return 0;
     }
 
 }

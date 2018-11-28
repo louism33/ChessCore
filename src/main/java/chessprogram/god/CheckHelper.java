@@ -16,7 +16,7 @@ class CheckHelper {
     }
 
     static int numberOfPiecesThatLegalThreatenSquare(Chessboard board, boolean myColour, long square){
-        long pawns, knights, bishops, rooks, queens, king;
+        long pawns, knights, bishops, rooks, queens, king, allPieces = board.allPieces();
         if (!myColour){
             pawns = board.getWhitePawns();
             knights = board.getWhiteKnights();
@@ -49,19 +49,19 @@ class CheckHelper {
             return numberOfThreats;
         }
         if (bishops != 0) {
-            numberOfThreats += populationCount(singleBishopTable(board, board.isWhiteTurn(), square, bishops));
+            numberOfThreats += populationCount(singleBishopTable(allPieces, board.isWhiteTurn(), square, bishops));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;
         }
         if (rooks != 0) {
-            numberOfThreats += populationCount(singleRookTable(board, myColour, square, rooks));
+            numberOfThreats += populationCount(singleRookTable(allPieces, myColour, square, rooks));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;
         }
         if (queens != 0) {
-            numberOfThreats += populationCount(singleQueenTable(board, myColour, square, queens));
+            numberOfThreats += populationCount(singleQueenTable(allPieces, myColour, square, queens));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;

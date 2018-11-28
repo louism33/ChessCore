@@ -21,10 +21,8 @@ chessprogram/god/MoveMaker.class
 chessprogram/god/MoveGeneratorSliding.class
 chessprogram/god/Move.class
 chessprogram/god/MoveUnmaker.class
-chessprogram/god/PieceMoveTableKnight.class
 chessprogram/god/xoldFenParser.class
 chessprogram/god/MoveGeneratorKnight.class
-chessprogram/god/PawnCaptureTable.class
 chessprogram/god/Chessboard.class
 chessprogram/god/MoveMakingUtilities.class
 chessprogram/god/MovePromotion.class
@@ -39,7 +37,6 @@ chessprogram/god/MoveMakingCastling.class
 chessprogram/god/MovePrettifier.class
 chessprogram/god/PieceMovePawns.class
 chessprogram/god/eMoveParserFromAN$Piece.class
-chessprogram/god/PieceMoveTableKing.class
 chessprogram/god/MoveGenerationUtilities.class
 chessprogram/god/MoveGeneratorMaster.class
 chessprogram/god/MakeMoveAndHashUpdate.class
