@@ -13,20 +13,15 @@ class PieceMoveKnight {
     }
 
     static long masterAttackTableKnights(Chessboard board, boolean white,
-                                                long ignoreThesePieces, long legalPushes, long legalCaptures){
-        long ans = 0, knights;
-        if (white){
-            knights = board.getWhiteKnights();
+                                         long ignoreThesePieces, long legalPushes, long legalCaptures){
+        long ans = 0, knights = white ? board.getWhiteKnights() : board.getBlackKnights();
+        while (knights != 0) {
+            final long knight = BitOperations.getFirstPiece(knights);
+            if ((knight & ignoreThesePieces) == 0) {
+                ans |= singleKnightTable(knight, legalPushes | legalCaptures);
+            }
+            knights &= knights - 1;
         }
-        else {
-            knights = board.getBlackKnights();
-        }
-
-        List<Long> allKnights = getAllPieces(knights, ignoreThesePieces);
-        for (Long piece : allKnights){
-            ans |= singleKnightTable(piece, legalPushes | legalCaptures);
-        }
-
         return ans;
     }
 

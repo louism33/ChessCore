@@ -38,9 +38,10 @@ public enum Square {
 
     public static List<Square> squaresFromBitboard(long bitboard){
         List<Square> squares = new ArrayList<>();
-        final List<Long> allPieces = BitOperations.getAllPieces(bitboard, 0);
-        for (Long piece : allPieces){
+        while (bitboard != 0){
+            final long piece = BitOperations.getFirstPiece(bitboard);
             squares.add(squareFromSingleBitboard(piece));
+            bitboard &= bitboard - 1;
         }
         return squares;
     }

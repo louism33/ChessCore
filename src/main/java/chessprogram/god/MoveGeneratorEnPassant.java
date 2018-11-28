@@ -63,13 +63,37 @@ class MoveGeneratorEnPassant {
 
         List<Long> allMyPawnsInPosition = BitOperations.getAllPieces(myPawnsInPosition, ignoreThesePieces);
 
-        for (Long myPawn : allMyPawnsInPosition){
-            int indexOfFirstPiece = BitOperations.getIndexOfFirstPiece(myPawn);
-            long pawnEnPassantCapture = PieceMovePawns.singlePawnCaptures(myPawn, white, enemyTakingSpots);
-            List<Move> epMoves = new ArrayList<>();
-            MoveGenerationUtilities.movesFromAttackBoardCapture(epMoves, pawnEnPassantCapture, indexOfFirstPiece, true);
-            temp.addAll(epMoves);
+//        for (Long myPawn : allMyPawnsInPosition){
+//            int indexOfFirstPiece = BitOperations.getIndexOfFirstPiece(myPawn);
+//            long pawnEnPassantCapture = PieceMovePawns.singlePawnCaptures(myPawn, white, enemyTakingSpots);
+//            List<Move> epMoves = new ArrayList<>();
+//            MoveGenerationUtilities.movesFromAttackBoardCapture(epMoves, pawnEnPassantCapture, indexOfFirstPiece, true);
+//            temp.addAll(epMoves);
+//        }
+
+        while (myPawnsInPosition != 0){
+            final long pawn = BitOperations.getFirstPiece(myPawnsInPosition);
+            if ((pawn & ignoreThesePieces) == 0) {
+                int indexOfFirstPiece = BitOperations.getIndexOfFirstPiece(pawn);
+
+                long pawnEnPassantCapture = PieceMovePawns.singlePawnCaptures(pawn, white, enemyTakingSpots);
+
+                List<Move> epMoves = new ArrayList<>();
+                MoveGenerationUtilities.movesFromAttackBoardCapture(epMoves, pawnEnPassantCapture, indexOfFirstPiece, true);
+                temp.addAll(epMoves);
+            }
+            myPawnsInPosition &= myPawnsInPosition - 1;
         }
+        
+        /*
+        while (pawns != 0){
+            final long pawn = BitOperations.getFirstPiece(pawns);
+            if ((pawn & ignoreThesePieces) == 0) {
+                ans |= singlePawnCaptures(pawn, white, legalCaptures);
+            }
+            pawns &= pawns - 1;
+        }
+         */
 
         List<Move> safeEPMoves = new ArrayList<>();
         // remove moves that would leave us in check

@@ -21,7 +21,7 @@ class PieceMoveSliding {
     }
 
     static long masterAttackTableSliding(Chessboard board, boolean white,
-                                                long ignoreThesePieces, long legalPushes, long legalCaptures){
+                                         long ignoreThesePieces, long legalPushes, long legalCaptures){
         long mask = legalPushes | legalCaptures;
         long ans = 0, bishops, rooks, queens, allPieces = board.allPieces();
         if (white){
@@ -35,27 +35,37 @@ class PieceMoveSliding {
             queens = board.getBlackQueen();
         }
 
-        List<Long> allBishops = getAllPieces(bishops, ignoreThesePieces);
-        for (Long piece : allBishops){
-            ans |= singleBishopTable(allPieces, white, piece, mask);
+        while (bishops != 0){
+            final long bishop = BitOperations.getFirstPiece(bishops);
+            if ((bishop & ignoreThesePieces) == 0) {
+                ans |= singleBishopTable(allPieces, white, getFirstPiece(bishops), mask);
+            }
+            bishops &= bishops - 1;
         }
 
-        List<Long> allRooks = getAllPieces(rooks, ignoreThesePieces);
-        for (Long piece : allRooks){
-            ans |= singleRookTable(allPieces, white, piece, mask);
+        while (rooks != 0){
+            final long rook = BitOperations.getFirstPiece(rooks);
+            if ((rook & ignoreThesePieces) == 0) {
+                ans |= singleRookTable(allPieces, white, getFirstPiece(rooks), mask);
+            }
+            rooks &= rooks - 1;
         }
 
-        List<Long> allQueens = getAllPieces(queens, ignoreThesePieces);
-        for (Long piece : allQueens){
-            ans |= singleQueenTable(allPieces, white, piece, mask);
+        while (queens != 0){
+            final long queen = BitOperations.getFirstPiece(queens);
+            if ((queen & ignoreThesePieces) == 0) {
+                ans |= singleQueenTable(allPieces, white, getFirstPiece(queens), mask);
+            }
+            queens &= queens - 1;
         }
+
         return ans;
     }
 
     static long xrayQueenAttacks(long allPieces, long blockers, long queen){
         return xrayRookAttacks(allPieces, blockers, queen) | xrayBishopAttacks(allPieces, blockers, queen);
     }
-    
+
     static long xrayRookAttacks(long allPieces, long blockers, long rook){
         final long rookMoves = singleRookTable(allPieces, true, rook, UNIVERSE);
         blockers &= rookMoves;

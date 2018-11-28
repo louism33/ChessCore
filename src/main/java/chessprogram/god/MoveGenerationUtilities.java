@@ -1,6 +1,5 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class MoveGenerationUtilities {

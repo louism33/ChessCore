@@ -14,20 +14,16 @@ class PieceMoveKing {
 
     static long masterAttackTableKing(Chessboard board, boolean white,
                                              long ignoreThesePieces, long legalPushes, long legalCaptures){
-        long ans = 0, king;
-        if (white){
-            king = board.getWhiteKing();
-        }
-        else {
-            king = board.getBlackKing();
-        }
 
-        List<Long> allKings = getAllPieces(king, ignoreThesePieces);
-        for (Long piece : allKings){
-            ans |= singleKingTable(piece, legalPushes | legalCaptures);
+        long ans = 0, kings = white ? board.getWhiteKing() : board.getBlackKing();
+        while (kings != 0) {
+            final long king = BitOperations.getFirstPiece(kings);
+            if ((king & ignoreThesePieces) == 0) {
+                ans |= singleKingTable(king, legalPushes | legalCaptures);
+            }
+            kings &= kings - 1;
         }
         return ans;
     }
-
 
 }

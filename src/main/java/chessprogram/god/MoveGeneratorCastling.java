@@ -70,18 +70,16 @@ class MoveGeneratorCastling {
                 }
             }
         }
-
     }
 
-
-
     private static boolean areTheseSquaresUnthreatened(Chessboard board, boolean white, long squares){
-        List<Long> squaresThatShouldBeUnthreatened = BitOperations.getAllPieces(squares, 0);
-        for (long square : squaresThatShouldBeUnthreatened) {
-            int numberOfThreats = CheckHelper.numberOfPiecesThatLegalThreatenSquare(board, white, square); 
+        while (squares != 0){
+            final long square = BitOperations.getFirstPiece(squares);
+            int numberOfThreats = CheckHelper.numberOfPiecesThatLegalThreatenSquare(board, white, square);
             if (numberOfThreats > 0){
                 return false;
             }
+            squares &= squares - 1;
         }
         return true;
     }
