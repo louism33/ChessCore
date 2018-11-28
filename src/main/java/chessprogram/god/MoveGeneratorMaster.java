@@ -42,7 +42,6 @@ class MoveGeneratorMaster {
         long ALL_EMPTY_SQUARES = ~board.allPieces();
         long myKing = (whiteTurn) ? board.getWhiteKing() : board.getBlackKing();
         
-        //todo
         long pinnedPieces = whichPiecesArePinned(board, whiteTurn, myKing);
         
         long PENULTIMATE_RANK = whiteTurn ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;

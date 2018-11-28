@@ -33,7 +33,7 @@ class MoveGeneratorPawns {
         for (Long piece : allPawns){
             long pawnMoves = PieceMovePawns.singlePawnPushes(board, piece, white, legalPushes);
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-            MoveGenerationUtilities.movesFromAttackBoard(moves, pawnMoves, indexOfPiece);
+            MoveGenerationUtilities.addMovesFromAttackBoard(moves, pawnMoves, indexOfPiece);
         }
 
         for (Long piece : allPawns){

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.getAllPieces;
-import static chessprogram.god.Magic.*;
 
 class MoveGeneratorSliding {
 
@@ -27,22 +26,20 @@ class MoveGeneratorSliding {
         for (Long piece : allBishops){
             long slidingMoves = PieceMoveSliding.singleBishopTable(allPieces, white, piece, legalPushes);
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-            MoveGenerationUtilities.movesFromAttackBoard(moves, slidingMoves, indexOfPiece);
+            MoveGenerationUtilities.addMovesFromAttackBoard(moves, slidingMoves, indexOfPiece);
         }
         List<Long> allRooks = getAllPieces(rooks, ignoreThesePieces);
         for (Long piece : allRooks){
             long slidingMoves = PieceMoveSliding.singleRookTable(allPieces, white, piece, legalPushes);
             PieceMoveSliding.singleRookTable(allPieces, white, piece, legalPushes);
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-            MoveGenerationUtilities.movesFromAttackBoard(moves, slidingMoves, indexOfPiece);
+            MoveGenerationUtilities.addMovesFromAttackBoard(moves, slidingMoves, indexOfPiece);
         }
         List<Long> allQueens = getAllPieces(queens, ignoreThesePieces);
         for (Long piece : allQueens){
-//            long slidingMoves = PieceMoveSliding.singleRookTable(allPieces, white, piece, legalPushes)
-//                    |  PieceMoveSliding.singleBishopTable(allPieces, white, piece, legalPushes);
             long slidingMoves = PieceMoveSliding.singleQueenTable(allPieces, white, piece, legalPushes);
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-            MoveGenerationUtilities.movesFromAttackBoard(moves, slidingMoves, indexOfPiece);
+            MoveGenerationUtilities.addMovesFromAttackBoard(moves, slidingMoves, indexOfPiece);
         }
         return moves;
     }
@@ -106,7 +103,7 @@ class MoveGeneratorSliding {
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
 
             long slidingPushes = PieceMoveSliding.singleBishopTable(allPieces, white, piece, legalPushes);
-            MoveGenerationUtilities.movesFromAttackBoard(moves, slidingPushes, indexOfPiece);
+            MoveGenerationUtilities.addMovesFromAttackBoard(moves, slidingPushes, indexOfPiece);
 
 //            long slidingCaptures = PieceMoveSliding.singleBishopTable(board, piece, white, legalCaptures);
             long slidingCaptures = PieceMoveSliding.singleBishopTable(allPieces, white, piece, legalCaptures);
@@ -118,7 +115,7 @@ class MoveGeneratorSliding {
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
 
             long rookPushes = PieceMoveSliding.singleRookTable(allPieces, white, piece, legalPushes);
-            MoveGenerationUtilities.movesFromAttackBoard(moves, rookPushes, indexOfPiece);
+            MoveGenerationUtilities.addMovesFromAttackBoard(moves, rookPushes, indexOfPiece);
 
             long rookCaptures = PieceMoveSliding.singleRookTable(allPieces, white, piece, legalCaptures);
             MoveGenerationUtilities.movesFromAttackBoardCapture(moves, rookCaptures, indexOfPiece, true);
@@ -129,7 +126,7 @@ class MoveGeneratorSliding {
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
 
             long queenPushes = PieceMoveSliding.singleQueenTable(allPieces, white, piece, legalPushes);
-            MoveGenerationUtilities.movesFromAttackBoard(moves, queenPushes, indexOfPiece);
+            MoveGenerationUtilities.addMovesFromAttackBoard(moves, queenPushes, indexOfPiece);
 
             long queenCaptures = PieceMoveSliding.singleQueenTable(allPieces, white, piece, legalCaptures);
             MoveGenerationUtilities.movesFromAttackBoardCapture(moves, queenCaptures, indexOfPiece, true);

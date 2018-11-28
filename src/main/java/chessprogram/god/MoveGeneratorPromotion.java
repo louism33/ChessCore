@@ -28,7 +28,7 @@ class MoveGeneratorPromotion {
                     if (pawnMoves != 0) {
                         int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
                         List<Move> todoMoves = new ArrayList<>();
-                        MoveGenerationUtilities.movesFromAttackBoard(todoMoves, pawnMoves, indexOfPiece);
+                        MoveGenerationUtilities.addMovesFromAttackBoard(todoMoves, pawnMoves, indexOfPiece);
                         Move move = todoMoves.get(0);
                         move.move |= PROMOTION_MASK;
                         moves.addAll(promotingMovesByPiece(move));
@@ -48,7 +48,7 @@ class MoveGeneratorPromotion {
                         int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
 
                         List<Move> todoMoves = new ArrayList<>();
-                        MoveGenerationUtilities.movesFromAttackBoard(todoMoves, pawnMoves, indexOfPiece);
+                        MoveGenerationUtilities.addMovesFromAttackBoard(todoMoves, pawnMoves, indexOfPiece);
                         Move move = todoMoves.get(0);
                         
                         move.move |= PROMOTION_MASK;

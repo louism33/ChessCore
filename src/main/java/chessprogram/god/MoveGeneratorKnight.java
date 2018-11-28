@@ -43,7 +43,7 @@ class MoveGeneratorKnight {
         for (Long piece : allUnpinnedKnights){
             long jumpingMoves = PieceMoveKnight.singleKnightTable(piece, legalPushes);
             int indexOfPiece = BitOperations.getIndexOfFirstPiece(piece);
-            MoveGenerationUtilities.movesFromAttackBoard(moves, jumpingMoves, indexOfPiece);
+            MoveGenerationUtilities.addMovesFromAttackBoard(moves, jumpingMoves, indexOfPiece);
         }
         return moves;
     }
