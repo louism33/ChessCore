@@ -8,6 +8,24 @@ import static chessprogram.god.MoveConstantsPawnCapture.*;
 
 class PieceMovePawns {
 
+    static long multiPawnPushes(Chessboard board, long pawns, boolean white, long legalPushes) {
+        long allPieces = board.whitePieces() | board.blackPieces();
+        final long possiblePawnSquares = white ? pawns << 8 : pawns >>> 8;
+        final long promotingRank = white ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
+        return possiblePawnSquares & legalPushes & ~allPieces & ~promotingRank;
+    }
+
+    static long multiDoublePawnPushes(Chessboard board, long pawns, boolean white, long legalPushes) {
+        long allPieces = board.whitePieces() | board.blackPieces();
+        final long possiblePawnSquares = white ? pawns << 16 : pawns >>> 16;
+        final long startingRank = white ? BitboardResources.RANK_TWO : BitboardResources.RANK_SEVEN;
+//        return possiblePawnSquares & legalPushes & ~allPieces & startingRank;
+    
+        // todo, is it possible to bulk these ?
+        throw new RuntimeException();
+    }
+
+    // todo
     static long singlePawnPushes(Chessboard board, long piece, boolean white, long legalPushes) {
         long allPieces = board.whitePieces() | board.blackPieces();
         long answer = 0;
@@ -54,7 +72,7 @@ class PieceMovePawns {
     }
 
     static long masterPawnCapturesTable(Chessboard board, boolean white,
-                                               long ignoreThesePieces, long legalCaptures){
+                                        long ignoreThesePieces, long legalCaptures){
         long ans = 0, pawns;
         if (white){
             pawns = board.getWhitePawns();

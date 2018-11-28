@@ -13,6 +13,7 @@ class MoveGeneratorKingLegal {
         long enemies = (white) ? board.blackPieces() : board.whitePieces();
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         int indexOfKing = BitOperations.getIndexOfFirstPiece(myKing);
+        
         addMovesFromAttackTableMaster(moves, kingLegalPushAndCaptureTable(board, white), indexOfKing, enemies);
     }
 

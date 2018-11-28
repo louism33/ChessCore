@@ -1,39 +1,19 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static chessprogram.god.MoveGeneratorKnight.addKnightMoves;
+import static chessprogram.god.MoveGeneratorPawns.addPawnPushes;
+import static chessprogram.god.MoveGeneratorSliding.addSlidingMoves;
 
 class MoveGeneratorPseudo {
 
     public static void addAllMovesWithoutKing(List<Move> moves, Chessboard board, boolean whiteTurn,
                                               long ignoreThesePieces, long legalPushes, long legalCaptures){
-        if (legalCaptures != 0) {
-            moves.addAll(generateAllCapturesWithoutKing(board, whiteTurn, ignoreThesePieces, legalCaptures));
-        }
         
-        if (legalPushes != 0) {
-            moves.addAll(generateAllPushesWithoutKing(board, whiteTurn, ignoreThesePieces, legalPushes));
-        }
-    }
-
-    private static List<Move> generateAllPushesWithoutKing(Chessboard board, boolean whiteTurn,
-                                                          long ignoreThesePieces, long legalPushes){
-        List<Move> moves = new ArrayList<>();
-        moves.addAll(MoveGeneratorKnight.masterKnightPushes(board, whiteTurn, ignoreThesePieces, legalPushes));
-        moves.addAll(MoveGeneratorSliding.masterSlidingPushes(board, whiteTurn, ignoreThesePieces, legalPushes));
-        moves.addAll(MoveGeneratorPawns.masterPawnPushes(board, whiteTurn, ignoreThesePieces, legalPushes));
-
-        return moves;
-    }
-
-    private static List<Move> generateAllCapturesWithoutKing(Chessboard board, boolean whiteTurn,
-                                                             long ignoreThesePieces, long legalCaptures){
-        List<Move> moves = new ArrayList<>();
-        moves.addAll(MoveGeneratorKnight.masterKnightCaptures(board, whiteTurn, ignoreThesePieces, legalCaptures));
-        moves.addAll(MoveGeneratorSliding.masterSlidingCaptures(board, whiteTurn, ignoreThesePieces, legalCaptures));
-        moves.addAll(MoveGeneratorPawns.masterPawnCaptures(board, whiteTurn, ignoreThesePieces, legalCaptures));
-
-        return moves;
+        addKnightMoves(moves, board, whiteTurn, ignoreThesePieces, (legalPushes | legalCaptures));
+        addSlidingMoves(moves, board, whiteTurn, ignoreThesePieces, (legalPushes | legalCaptures));
+        addPawnPushes(moves, board, whiteTurn, ignoreThesePieces, legalCaptures, legalPushes);
     }
 
     public static long generatePseudoCaptureTable(Chessboard board, boolean whiteTurn,

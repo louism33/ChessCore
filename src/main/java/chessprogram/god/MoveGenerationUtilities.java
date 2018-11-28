@@ -5,6 +5,10 @@ import java.util.List;
 
 class MoveGenerationUtilities {
 
+    public static void addMovesFromAttackTableMaster(List<Move> moves, long attackBoard, int source, Chessboard board) {
+        addMovesFromAttackTableMaster(moves, attackBoard, source, board.isWhiteTurn() ? board.blackPieces() : board.whitePieces());
+    }
+
     public static void addMovesFromAttackTableMaster(List<Move> moves, long attackBoard, int source, long enemyPieces) {
         while (attackBoard != 0){
             final long destination = BitOperations.getFirstPiece(attackBoard);
