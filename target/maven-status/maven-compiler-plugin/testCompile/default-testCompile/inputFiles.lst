@@ -2,6 +2,7 @@
 /home/louis/IdeaProjects/ChessCore/src/test/java/PerftTestsBigDepths.java
 /home/louis/IdeaProjects/ChessCore/src/test/java/NullMoveTest.java
 /home/louis/IdeaProjects/ChessCore/src/test/java/ChessboardHashTest.java
+/home/louis/IdeaProjects/ChessCore/src/test/java/RayPinnedTest.java
 /home/louis/IdeaProjects/ChessCore/src/test/java/PerftTestTinyDepths.java
 /home/louis/IdeaProjects/ChessCore/src/test/java/PerftTestDetail.java
 /home/louis/IdeaProjects/ChessCore/src/test/java/SquareTest.java

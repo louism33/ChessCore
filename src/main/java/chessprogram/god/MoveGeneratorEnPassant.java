@@ -3,7 +3,9 @@ package chessprogram.god;
 import java.util.ArrayList;
 import java.util.List;
 
+import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.MoveConstants.*;
+import static chessprogram.god.MoveGenerationUtilities.*;
 import static chessprogram.god.StackMoveData.SpecialMove;
 
 class MoveGeneratorEnPassant {
@@ -35,11 +37,9 @@ class MoveGeneratorEnPassant {
             return;
         }
 
-
-
         long FILE = extractFileFromInt(previousMove.enPassantFile);
 
-        List<Long> allEnemyPawnsInPosition = BitOperations.getAllPieces(enemyPawnsInPosition, ignoreThesePieces);
+        List<Long> allEnemyPawnsInPosition = getAllPieces(enemyPawnsInPosition, ignoreThesePieces);
 
         long enemyTakingSpots = 0;
         for (Long enemyPawn : allEnemyPawnsInPosition){
@@ -49,61 +49,35 @@ class MoveGeneratorEnPassant {
             if ((potentialTakingSpot & board.allPieces()) != 0){
                 continue;
             }
-            
+
             if (((enemyPawn & legalCaptures) == 0) && ((potentialTakingSpot & legalPushes) == 0)) {
                 continue;
             }
             enemyTakingSpots |= potentialTakingSpot;
         }
-
-
+        
         if (enemyTakingSpots == 0){
             return;
         }
 
-        List<Long> allMyPawnsInPosition = BitOperations.getAllPieces(myPawnsInPosition, ignoreThesePieces);
-
-//        for (Long myPawn : allMyPawnsInPosition){
-//            int indexOfFirstPiece = BitOperations.getIndexOfFirstPiece(myPawn);
-//            long pawnEnPassantCapture = PieceMovePawns.singlePawnCaptures(myPawn, white, enemyTakingSpots);
-//            List<Move> epMoves = new ArrayList<>();
-//            MoveGenerationUtilities.movesFromAttackBoardCapture(epMoves, pawnEnPassantCapture, indexOfFirstPiece, true);
-//            temp.addAll(epMoves);
-//        }
-
         while (myPawnsInPosition != 0){
-            final long pawn = BitOperations.getFirstPiece(myPawnsInPosition);
+            final long pawn = getFirstPiece(myPawnsInPosition);
             if ((pawn & ignoreThesePieces) == 0) {
-                int indexOfFirstPiece = BitOperations.getIndexOfFirstPiece(pawn);
-
                 long pawnEnPassantCapture = PieceMovePawns.singlePawnCaptures(pawn, white, enemyTakingSpots);
-
                 List<Move> epMoves = new ArrayList<>();
-                MoveGenerationUtilities.movesFromAttackBoardCapture(epMoves, pawnEnPassantCapture, indexOfFirstPiece, true);
+                addMovesFromAttackTableMaster(epMoves, pawnEnPassantCapture, getIndexOfFirstPiece(pawn), board);
                 temp.addAll(epMoves);
             }
             myPawnsInPosition &= myPawnsInPosition - 1;
         }
-        
-        /*
-        while (pawns != 0){
-            final long pawn = BitOperations.getFirstPiece(pawns);
-            if ((pawn & ignoreThesePieces) == 0) {
-                ans |= singlePawnCaptures(pawn, white, legalCaptures);
-            }
-            pawns &= pawns - 1;
-        }
-         */
+
 
         List<Move> safeEPMoves = new ArrayList<>();
         // remove moves that would leave us in check
         for (Move move : temp){
             move.move |= ENPASSANT_MASK;
-
-//            MoveMaker.makeMoveMaster(board, move);
             board.makeMoveAndFlipTurn(move);
             boolean enPassantWouldLeadToCheck = CheckHelper.boardInCheck(board, white);
-//            MoveUnmaker.unMakeMoveMaster(board);
             board.unMakeMoveAndFlipTurn();
             
             if (enPassantWouldLeadToCheck){

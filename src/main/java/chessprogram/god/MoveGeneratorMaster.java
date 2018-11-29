@@ -77,6 +77,16 @@ class MoveGeneratorMaster {
         }
     }
     
+            /*
+        while (pawns != 0){
+            final long pawn = BitOperations.getFirstPiece(pawns);
+            if ((pawn & ignoreThesePieces) == 0) {
+                ans |= singlePawnCaptures(pawn, white, legalCaptures);
+            }
+            pawns &= pawns - 1;
+        }
+         */
+    
     private static void addPinnedPiecesMoves(List<Move> moves, Chessboard board, boolean whiteTurn,
                                              long pinnedPieces, long squareWeArePinnedTo){
         List<Long> allPinnedPieces = getAllPieces(pinnedPieces, 0);
