@@ -1,6 +1,5 @@
 package chessprogram.god;
 
-import chessprogram.magic.Utils;
 import org.junit.Assert;
 
 import java.util.List;
@@ -9,8 +8,8 @@ import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.BitboardResources.NORTH_EAST;
 import static chessprogram.god.BitboardResources.NORTH_WEST;
 import static chessprogram.god.MagicConstants.*;
-import static chessprogram.magic.Utils.singleBishopAllVariations;
-import static chessprogram.magic.Utils.singleRookAllVariations;
+import static chessprogram.god.MagicUtils.singleBishopAllVariations;
+import static chessprogram.god.MagicUtils.singleRookAllVariations;
 
 public class Magic {
     
@@ -108,7 +107,7 @@ public class Magic {
         long[] db = new long[(int) Math.pow(2, length)];
 
         for (Long variation : bishopVariations) {
-            long correctBishopMovesResultBitboard = Utils.singleBishopAllMovesFromOcc(variation, sq);
+            long correctBishopMovesResultBitboard = MagicUtils.singleBishopAllMovesFromOcc(variation, sq);
             long mult = (magic * variation);
             int index = (int) (mult >>> (64 - length));
             db[index] = correctBishopMovesResultBitboard;
@@ -129,7 +128,7 @@ public class Magic {
         long[] db = new long[(int) Math.pow(2, length)];
 
         for (Long variation : rookVariations) {
-            long correctRookMovesResultBitboard = Utils.singleRookAllMovesFromOcc(variation, sq);
+            long correctRookMovesResultBitboard = MagicUtils.singleRookAllMovesFromOcc(variation, sq);
             long mult = (magic * variation);
             int index = (int) (mult >>> (64 - length));
             db[index] = correctRookMovesResultBitboard;

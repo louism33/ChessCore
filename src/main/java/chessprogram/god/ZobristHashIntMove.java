@@ -9,7 +9,7 @@ import java.util.Stack;
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.BitboardResources.INITIAL_BLACK_KING;
 import static chessprogram.god.BitboardResources.INITIAL_WHITE_KING;
-import static chessprogram.god.MoveMakerIntMove.whichPieceOnSquare;
+import static chessprogram.god.MoveMaker.whichPieceOnSquare;
 import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 import static chessprogram.god.StackMoveData.SpecialMove.NULL_MOVE;
 
@@ -126,8 +126,8 @@ class ZobristHashIntMove {
 
 
     void updateHashPreMove(Chessboard board, int move){
-        int sourceSquare = MoveParserIntMove.getSourceIndex(move);
-        int destinationSquareIndex = MoveParserIntMove.getDestinationIndex(move);
+        int sourceSquare = MoveParser.getSourceIndex(move);
+        int destinationSquareIndex = MoveParser.getDestinationIndex(move);
 
         long sourcePiece = newPieceOnSquare(sourceSquare);
         int sourcePieceIdentifier = whichPieceOnSquare(board, sourcePiece) - 1;
@@ -159,31 +159,31 @@ class ZobristHashIntMove {
             boardHash ^= updateWithEPFlags(board);
         }
 
-        long destinationPiece = newPieceOnSquare(MoveParserIntMove.getDestinationIndex(move));
+        long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
-        if (MoveParserIntMove.isSpecialMove(move)){
-            if (MoveParserIntMove.isCastlingMove(move)) {
+        if (MoveParser.isSpecialMove(move)){
+            if (MoveParser.isCastlingMove(move)) {
                 int originalRookIndex = 0;
                 int newRookIndex = 0;
                 if ((sourcePiece & INITIAL_WHITE_KING) != 0){
-                    if (MoveParserIntMove.getDestinationIndex(move) == 1){
+                    if (MoveParser.getDestinationIndex(move) == 1){
                         originalRookIndex = 0;
-                        newRookIndex = MoveParserIntMove.getDestinationIndex(move) + 1;
+                        newRookIndex = MoveParser.getDestinationIndex(move) + 1;
                     }
-                    else if (MoveParserIntMove.getDestinationIndex(move) == 5){
+                    else if (MoveParser.getDestinationIndex(move) == 5){
                         originalRookIndex = 7;
-                        newRookIndex = MoveParserIntMove.getDestinationIndex(move) - 1;
+                        newRookIndex = MoveParser.getDestinationIndex(move) - 1;
                     }
                 }
 
                 else if ((sourcePiece & INITIAL_BLACK_KING) != 0){
-                    if (MoveParserIntMove.getDestinationIndex(move) == 57){
+                    if (MoveParser.getDestinationIndex(move) == 57){
                         originalRookIndex = 56;
-                        newRookIndex = MoveParserIntMove.getDestinationIndex(move) + 1;
+                        newRookIndex = MoveParser.getDestinationIndex(move) + 1;
                     }
-                    else if (MoveParserIntMove.getDestinationIndex(move) == 61){
+                    else if (MoveParser.getDestinationIndex(move) == 61){
                         originalRookIndex = 63;
-                        newRookIndex = MoveParserIntMove.getDestinationIndex(move) - 1;
+                        newRookIndex = MoveParser.getDestinationIndex(move) - 1;
                     }
                 }
                 else {
@@ -197,7 +197,7 @@ class ZobristHashIntMove {
                 boardHash ^= newRookZH;
             }
 
-            else if (MoveParserIntMove.isEnPassantMove(move)){
+            else if (MoveParser.isEnPassantMove(move)){
                 if ((sourcePiece & board.getWhitePawns()) != 0){
                     long victimPawn = destinationPiece >>> 8;
                     int indexOfVictimPawn = BitOperations.getIndexOfFirstPiece(victimPawn);
@@ -219,35 +219,35 @@ class ZobristHashIntMove {
 
             }
 
-            else if (MoveParserIntMove.isPromotionMove(move)){
+            else if (MoveParser.isPromotionMove(move)){
                 int whichPromotingPiece = 0;
                 if ((sourcePiece & board.getWhitePawns()) != 0){
-                    if (MoveParserIntMove.isPromotionToKnight(move)){
+                    if (MoveParser.isPromotionToKnight(move)){
                         whichPromotingPiece = 2;
                     }
-                    else if (MoveParserIntMove.isPromotionToBishop(move)){
+                    else if (MoveParser.isPromotionToBishop(move)){
                         whichPromotingPiece = 3;
                     }
-                    else if (MoveParserIntMove.isPromotionToRook(move)){
+                    else if (MoveParser.isPromotionToRook(move)){
                         whichPromotingPiece = 4;
                     }
-                    else if (MoveParserIntMove.isPromotionToQueen(move)){
+                    else if (MoveParser.isPromotionToQueen(move)){
                         whichPromotingPiece = 5;
                     }
                 }
 
                 else if ((sourcePiece & board.getBlackPawns()) != 0){
-                    if (MoveParserIntMove.isPromotionToKnight(move)){
+                    if (MoveParser.isPromotionToKnight(move)){
                         whichPromotingPiece = 8;
                     }
-                    else if (MoveParserIntMove.isPromotionToBishop(move)){
+                    else if (MoveParser.isPromotionToBishop(move)){
                         whichPromotingPiece = 9;
                     }
-                    else if (MoveParserIntMove.isPromotionToRook(move)){
+                    else if (MoveParser.isPromotionToRook(move)){
                         whichPromotingPiece = 10;
                     }
                     
-                    else if (MoveParserIntMove.isPromotionToQueen(move)){
+                    else if (MoveParser.isPromotionToQueen(move)){
                         whichPromotingPiece = 11;
                     }
                 }

@@ -5,6 +5,9 @@ import java.util.List;
 import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
+import static chessprogram.god.PieceMoveSliding.singleBishopTable;
+import static chessprogram.god.PieceMoveSliding.singleQueenTable;
+import static chessprogram.god.PieceMoveSliding.singleRookTable;
 
 class MoveGeneratorSlidingIntMove {
 
@@ -25,7 +28,7 @@ class MoveGeneratorSlidingIntMove {
         while (bishops != 0){
             long bishop = getFirstPiece(bishops);
             if ((bishop & ignoreThesePieces) == 0) {
-                long slides = PieceMoveSliding.singleBishopTable(allPieces, white, bishop, mask);
+                long slides = singleBishopTable(allPieces, white, bishop, mask);
                 addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(bishop), board);
             }
             bishops &= (bishops - 1);
@@ -33,7 +36,7 @@ class MoveGeneratorSlidingIntMove {
         while (rooks != 0){
             long rook = getFirstPiece(rooks);
             if ((rook & ignoreThesePieces) == 0) {
-                long slides = PieceMoveSliding.singleRookTable(allPieces, white, rook, mask);
+                long slides = singleRookTable(allPieces, white, rook, mask);
                 addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(rook), board);
             }
             rooks &= (rooks - 1);
@@ -41,7 +44,7 @@ class MoveGeneratorSlidingIntMove {
         while (queens != 0){
             long queen = getFirstPiece(queens);
             if ((queen & ignoreThesePieces) == 0) {
-                long slides = PieceMoveSliding.singleQueenTable(allPieces, white, queen, mask);
+                long slides = singleQueenTable(allPieces, white, queen, mask);
                 addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(queen), board);
             }
             queens &= (queens - 1);

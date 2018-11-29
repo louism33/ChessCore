@@ -7,8 +7,8 @@ import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
 class MoveMakingEnPassantIntMove {
     
     static void makeEnPassantMove(Chessboard board, int move){
-        long sourcePiece = newPieceOnSquare(MoveParserIntMove.getSourceIndex(move));
-        long destinationPiece = newPieceOnSquare(MoveParserIntMove.getDestinationIndex(move));
+        long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
+        long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
         
         if ((destinationPiece & board.allPieces()) != 0) {
             throw new RuntimeException("EP move Problem");

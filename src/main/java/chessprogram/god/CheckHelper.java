@@ -3,19 +3,29 @@ package chessprogram.god;
 import java.util.Stack;
 
 import static chessprogram.god.BitOperations.populationCount;
+import static chessprogram.god.PieceMoveKingIntMove.singleKingTable;
 import static chessprogram.god.PieceMoveKnight.singleKnightTable;
 import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
 import static chessprogram.god.PieceMoveSliding.*;
 
 class CheckHelper {
 
-    static boolean boardInCheck(Chessboard board, boolean white){
-        long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
+    static boolean boardInCheck(Chessboard board, boolean white,
+                                long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
+                                long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
+                                long enemies){
+        
+        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(board, white, myKing,
+                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                enemies);
         return numberOfCheckers > 0;
     }
 
-    static int numberOfPiecesThatLegalThreatenSquare(Chessboard board, boolean myColour, long square){
+    static int numberOfPiecesThatLegalThreatenSquare(Chessboard board, boolean myColour, long square,
+                                                     long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
+                                                     long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
+                                                     long enemies){
         long pawns, knights, bishops, rooks, queens, king, allPieces = board.allPieces();
         if (!myColour){
             pawns = board.getWhitePawns();
@@ -67,7 +77,7 @@ class CheckHelper {
             return numberOfThreats;
         }
         if (king != 0) {
-            numberOfThreats += populationCount(PieceMoveKing.singleKingTable(square, king));
+            numberOfThreats += populationCount(singleKingTable(square, king));
         }
 
         return numberOfThreats;

@@ -18,21 +18,22 @@ class MoveUnmakerIntMove {
             return;
         }
         
-        int pieceToMoveBack = MoveParserIntMove.getDestinationIndex(popSMD.move);
-        int squareToMoveBackTo = MoveParserIntMove.getSourceIndex(popSMD.move);
+        int pieceToMoveBack = MoveParser.getDestinationIndex(popSMD.move);
+        int squareToMoveBackTo = MoveParser.getSourceIndex(popSMD.move);
 
         if (popSMD.typeOfSpecialMove == SpecialMove.BASICQUIETPUSH){
-            Move basicReversedMove = new Move(pieceToMoveBack, squareToMoveBackTo);
+//            int basicReversedMove = new Move(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
         
         else if (popSMD.typeOfSpecialMove == BASICLOUDPUSH){
-            Move basicReversedMove = new Move(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
         else if (popSMD.typeOfSpecialMove == BASICCAPTURE){
-            Move basicReversedMove = new Move(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
             int takenPiece = popSMD.takenPiece;
             if (takenPiece != 0){
@@ -42,12 +43,12 @@ class MoveUnmakerIntMove {
 
         //double pawn push
         else if (popSMD.typeOfSpecialMove == ENPASSANTVICTIM){
-            Move basicReversedMove = new Move(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
         else if (popSMD.typeOfSpecialMove == ENPASSANTCAPTURE){
-            Move basicReversedMove = new Move(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
             int takenPiece = popSMD.takenPiece;
             
@@ -60,7 +61,7 @@ class MoveUnmakerIntMove {
         }
         
         else if (popSMD.typeOfSpecialMove == CASTLING){
-            Move basicReversedMove = new Move(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
 
             if (pieceToMoveBack == 1){
                 long originalKing = newPieceOnSquare(squareToMoveBackTo);
@@ -179,9 +180,9 @@ class MoveUnmakerIntMove {
     }
 
 
-    private static void makeRegularMove(Chessboard board, Move move){
-        long sourcePiece = newPieceOnSquare(move.getSourceIndex());
-        long destinationPiece = newPieceOnSquare(move.getDestinationIndex());
+    private static void makeRegularMove(Chessboard board, int move){
+        long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
+        long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
         if ((sourcePiece & board.getWhitePawns()) != 0){
             removePieces(board, sourcePiece, destinationPiece);

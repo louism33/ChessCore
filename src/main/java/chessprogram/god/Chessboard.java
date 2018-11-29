@@ -52,17 +52,8 @@ public class Chessboard implements Cloneable{
     }
     
     public List<Integer> generateLegalMoves(){
-        return MoveGeneratorMasterIntMove.generateLegalMoves(this, isWhiteTurn());
+        return MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn());
     }
-
-    private List<Move> generateCaptureMoves(){
-        return null;
-    }
-
-    private List<Move> generateQuietMoves(){
-        return null;
-    }
-    
     
     public void makeMove(int move){
         makeMoveAndHashUpdate(this, move, this.zobristHash);
@@ -82,7 +73,7 @@ public class Chessboard implements Cloneable{
     }
 
     public void flipTurn(){
-        MoveMakerIntMove.flipTurn(this);
+        MoveMaker.flipTurn(this);
     }
     
     public void unMakeMoveAndFlipTurn(){
@@ -90,7 +81,10 @@ public class Chessboard implements Cloneable{
     }
     
     public boolean inCheck(){
-        return boardInCheck(this, isWhiteTurn());
+        return boardInCheck(this, isWhiteTurn(), 
+                getWhitePawns(), getWhiteKnights(), getWhiteBishops(), getWhiteRooks(), getWhiteQueen(), getWhiteKing(),
+                getBlackPawns(), getBlackKnights(), getBlackBishops(), getBlackRooks(), getBlackQueen(), getBlackKing(),
+                (isWhiteTurn() ? blackPieces() : whitePieces()));
     }
 
     public boolean drawByRepetition (boolean white){
@@ -329,8 +323,6 @@ public class Chessboard implements Cloneable{
     
 
     private void makeBoardBasedOnFENSpecific(String fen){
-//        System.out.println(fen);
-
         parseFenStringSpecific(fen);
         
         this.setWhiteTurn(isItWhitesTurnSpecific(fen));

@@ -2,8 +2,8 @@ package chessprogram.god;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
-import static chessprogram.god.MoveParserIntMove.getDestinationIndex;
-import static chessprogram.god.MoveParserIntMove.getSourceIndex;
+import static chessprogram.god.MoveParser.getDestinationIndex;
+import static chessprogram.god.MoveParser.getSourceIndex;
 
 class MoveRegularIntMove {
 

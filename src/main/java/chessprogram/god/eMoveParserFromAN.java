@@ -9,7 +9,7 @@ class eMoveParserFromAN {
         return rankAndFile(board, algebraicNotation);
     }
     
-    private static Move makeMoveBasedOnAlgNotation(Chessboard board, String algebraicNotation){
+    private static int makeMoveBasedOnAlgNotation(Chessboard board, String algebraicNotation){
         System.out.println(algebraicNotation);
         System.out.println();
 
@@ -25,46 +25,8 @@ class eMoveParserFromAN {
         Art.printLong(whichPieceCouldBeMoving);
         Art.printLong(destinationSquare);
 
-        return null;
+        return 0;
     }
-    enum Piece {
-        WHITE_PAWN, WHITE_KNIGHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING,
-        BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING
-    }
-
-//    private static long findOriginalPiece(Piece piece, long whichPieceCouldBeMoving, long destinationSquare){
-//        switch (piece) {
-//            case WHITE_PAWN: {
-//                return boa;
-//            }
-//            case WHITE_KNIGHT: {
-//                return 6;
-//            }
-//            case "c": {
-//                return 5;
-//            }
-//            case "d": {
-//                return 4;
-//            }
-//            case "e": {
-//                return 3;
-//            }
-//            case "f": {
-//                return 2;
-//            }
-//            case "g": {
-//                return 1;
-//            }
-//            case "h": {
-//                return 0;
-//            }
-//            default:
-//                System.out.println("problem with Piece identifier");
-//                return 0;
-//        }
-//    }
-    
-    
     
     
     private static Piece extractRealPieceFromLong(Chessboard board, long whichPieceCouldBeMoving, long destinationSquare){

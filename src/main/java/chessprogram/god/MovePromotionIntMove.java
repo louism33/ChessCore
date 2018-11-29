@@ -2,7 +2,7 @@ package chessprogram.god;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
-import static chessprogram.god.MoveParserIntMove.*;
+import static chessprogram.god.MoveParser.*;
 
 class MovePromotionIntMove {
 

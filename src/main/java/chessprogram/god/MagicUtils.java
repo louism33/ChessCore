@@ -1,16 +1,12 @@
-package chessprogram.magic;
-
-import chessprogram.god.BitOperations;
-import chessprogram.god.BitboardResources;
-import chessprogram.god.Chessboard;
-import chessprogram.god.Square;
+package chessprogram.god;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.getAllPieces;
+import static chessprogram.god.MagicConstants.rookBlankBoardAttackMasks;
 
-public class Utils {
+public class MagicUtils {
 
     private Chessboard board = new Chessboard(true);
 
@@ -583,7 +579,7 @@ public class Utils {
             for (int file = 0; file < 8; file++) {
                 final long FILE = BitboardResources.FILES[file];
                 final long pieceOnSquare = ROW & FILE;
-                final long l = Utils.singleBishopAllMovesCleverer(board, pieceOnSquare, true, 0xffffffffffffffffL, 0xffffffffffffffffL);
+                final long l = MagicUtils.singleBishopAllMovesCleverer(board, pieceOnSquare, true, 0xffffffffffffffffL, 0xffffffffffffffffL);
                 blankBoardAttacks.add(l);
             }
         }
@@ -597,7 +593,7 @@ public class Utils {
             for (int file = 0; file < 8; file++) {
                 final long FILE = BitboardResources.FILES[file];
                 final long pieceOnSquare = ROW & FILE;
-//                final long l = Utils.singleRookAllMovesCleverer(board, pieceOnSquare, true, 0xffffffffffffffffL, 0xffffffffffffffffL);
+//                final long l = MagicUtils.singleRookAllMovesCleverer(board, pieceOnSquare, true, 0xffffffffffffffffL, 0xffffffffffffffffL);
 //                blankBoardAttacks.add(l);
             }
         }
@@ -607,7 +603,7 @@ public class Utils {
 
     static int num (Square sq){
         int x = 63-sq.ordinal();
-        double xx = Math.pow(2, BitOperations.populationCount(MagicGenerator.rooksBlankClever[x]));
+        double xx = Math.pow(2, BitOperations.populationCount(rookBlankBoardAttackMasks[x]));
         return (int) xx;
     }
     

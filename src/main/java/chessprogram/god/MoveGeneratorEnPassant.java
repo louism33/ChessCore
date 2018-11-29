@@ -7,16 +7,19 @@ import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.CheckHelper.boardInCheck;
 import static chessprogram.god.MoveConstants.ENPASSANT_MASK;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
+import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
 import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 
-class MoveGeneratorEnPassantIntMove {
+class MoveGeneratorEnPassant {
 
     static void addEnPassantMoves(List<Integer> moves, Chessboard board, boolean white,
-                                  long ignoreThesePieces, long legalPushes, long legalCaptures) {
+                                  long ignoreThesePieces, long legalPushes, long legalCaptures,
+                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
+                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
+                                  long enemies) {
+        
         List<Integer> temp = new ArrayList<>();
 
-        long myPawns = white ? board.getWhitePawns() : board.getBlackPawns();
-        long enemyPawns = white ? board.getBlackPawns() : board.getWhitePawns();
         long enPassantTakingRank = white ? BitboardResources.RANK_FIVE : BitboardResources.RANK_FOUR;
 
         long myPawnsInPosition = myPawns & enPassantTakingRank;
@@ -64,7 +67,7 @@ class MoveGeneratorEnPassantIntMove {
         while (myPawnsInPosition != 0){
             final long pawn = getFirstPiece(myPawnsInPosition);
             if ((pawn & ignoreThesePieces) == 0) {
-                long pawnEnPassantCapture = PieceMovePawns.singlePawnCaptures(pawn, white, enemyTakingSpots);
+                long pawnEnPassantCapture = singlePawnCaptures(pawn, white, enemyTakingSpots);
                 List<Integer> epMoves = new ArrayList<>();
                 addMovesFromAttackTableMaster(epMoves, pawnEnPassantCapture, getIndexOfFirstPiece(pawn), board);
                 temp.addAll(epMoves);
@@ -78,7 +81,12 @@ class MoveGeneratorEnPassantIntMove {
         for (int move : temp){
             move |= ENPASSANT_MASK;
             board.makeMoveAndFlipTurn(move);
-            boolean enPassantWouldLeadToCheck = boardInCheck(board, white);
+            
+            boolean enPassantWouldLeadToCheck = boardInCheck(board, white,
+                    myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                    enemies);
+            
             board.unMakeMoveAndFlipTurn();
             
             if (enPassantWouldLeadToCheck){

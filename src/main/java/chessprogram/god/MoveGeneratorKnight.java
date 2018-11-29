@@ -2,9 +2,11 @@ package chessprogram.god;
 
 import java.util.List;
 
+import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
+import static chessprogram.god.PieceMoveKnight.singleKnightTable;
 
-class MoveGeneratorKnightIntMove {
+class MoveGeneratorKnight {
 
     static void addKnightMoves(List<Integer> moves, Chessboard board, boolean white,
                                long ignoreThesePieces, long mask){
@@ -17,10 +19,10 @@ class MoveGeneratorKnightIntMove {
         }
 
         while (knights != 0){
-            final long knight = BitOperations.getFirstPiece(knights);
+            final long knight = getFirstPiece(knights);
             if ((knight & ignoreThesePieces) == 0) {
-                long jumps = PieceMoveKnight.singleKnightTable(knight, mask);
-                addMovesFromAttackTableMaster(moves, jumps, BitOperations.getIndexOfFirstPiece(knight), board);
+                long jumps = singleKnightTable(knight, mask);
+                addMovesFromAttackTableMaster(moves, jumps, getIndexOfFirstPiece(knight), board);
             }
             knights &= (knights - 1);
         }

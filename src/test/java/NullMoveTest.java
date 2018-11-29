@@ -1,6 +1,5 @@
 import chessprogram.god.Chessboard;
 import chessprogram.god.CopierToBeDeleted;
-import chessprogram.god.Move;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 

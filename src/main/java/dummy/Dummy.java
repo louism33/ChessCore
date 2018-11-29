@@ -2,7 +2,6 @@ package dummy;
 
 import chessprogram.god.Art;
 import chessprogram.god.Chessboard;
-import chessprogram.god.Move;
 
 
 public class Dummy {
@@ -30,9 +29,6 @@ public class Dummy {
     }
 
     static void moveVisible(){
-        Move move = new Move(10, 20);
-
-        final String s = Art.makeMoveToStringTEMP(move.getMove());
 //        System.out.println(s);
 
 

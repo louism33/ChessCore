@@ -5,8 +5,8 @@ import java.util.List;
 import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
-import static chessprogram.god.PieceMovePawnsIntMove.singlePawnCaptures;
-import static chessprogram.god.PieceMovePawnsIntMove.singlePawnPushes;
+import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
+import static chessprogram.god.PieceMovePawns.singlePawnPushes;
 
 class MoveGeneratorPawnsIntMove {
 

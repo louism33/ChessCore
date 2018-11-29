@@ -1,6 +1,6 @@
 package chessprogram.god;
 
-import static chessprogram.god.MoveMakerIntMove.makeMoveMaster;
+import static chessprogram.god.MoveMaker.makeMoveMaster;
 import static chessprogram.god.MoveUnmakerIntMove.unMakeMoveMaster;
 
 class MakeMoveAndHashUpdate {

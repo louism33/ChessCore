@@ -8,13 +8,16 @@ import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.BitboardResources.*;
 import static chessprogram.god.MoveConstants.*;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
-import static chessprogram.god.PieceMovePawnsIntMove.singlePawnCaptures;
-import static chessprogram.god.PieceMovePawnsIntMove.singlePawnPushes;
+import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
+import static chessprogram.god.PieceMovePawns.singlePawnPushes;
 
 class MoveGeneratorPromotionIntMove {
 
     static void addPromotionMoves(List<Integer> moves, Chessboard board, boolean white,
-                                  long ignoreThesePieces, long legalPushes, long legalCaptures){
+                                  long ignoreThesePieces, long legalPushes, long legalCaptures,
+                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
+                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
+                                  long enemies){
         long legalPieces = ~ignoreThesePieces;
         long PENULTIMATE_RANK;
         long FINAL_RANK;

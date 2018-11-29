@@ -3,69 +3,34 @@ package chessprogram.god;
 class MovePrettifier {
 
     static String prettyMoveInt(int move){
-        int sourceAsPiece = MoveParserIntMove.getSourceIndex(move);
+        int sourceAsPiece = MoveParser.getSourceIndex(move);
         String file = getFile(sourceAsPiece);
         String rank = getRank(sourceAsPiece);
-        int destination = MoveParserIntMove.getDestinationIndex(move);
+        int destination = MoveParser.getDestinationIndex(move);
         String destinationFile = getFile(destination);
         String destinationRank = getRank(destination);
         String m = ""+file+ rank+destinationFile+ destinationRank;
 
-        if (MoveParserIntMove.isCastlingMove(move)){
+        if (MoveParser.isCastlingMove(move)){
             m += "";
         }
-        else if (MoveParserIntMove.isEnPassantMove(move)){
+        else if (MoveParser.isEnPassantMove(move)){
             m += "";
         }
 
-        else if (MoveParserIntMove.isPromotionMove(move)){
+        else if (MoveParser.isPromotionMove(move)){
             m += "";
 
-            if (MoveParserIntMove.isPromotionToKnight(move)){
+            if (MoveParser.isPromotionToKnight(move)){
                 m += "N";
             }
-            else if (MoveParserIntMove.isPromotionToBishop(move)){
+            else if (MoveParser.isPromotionToBishop(move)){
                 m += "B";
             }
-            else if (MoveParserIntMove.isPromotionToRook(move)){
+            else if (MoveParser.isPromotionToRook(move)){
                 m += "R";
             }
-            else if (MoveParserIntMove.isPromotionToQueen(move)){
-                m += "Q";
-            }
-        }
-        return m;
-    }
-    
-    static String prettyMove(Move move){
-        int sourceAsPiece = move.getSourceIndex();
-        String file = getFile(sourceAsPiece);
-        String rank = getRank(sourceAsPiece);
-        int destination = move.getDestinationIndex();
-        String destinationFile = getFile(destination);
-        String destinationRank = getRank(destination);
-        String m = ""+file+ rank+destinationFile+ destinationRank;
-
-        if (move.isCastlingMove()){
-            m += "";
-        }
-        else if (move.isEnPassantMove()){
-            m += "";
-        }
-
-        else if (move.isPromotionMove()){
-            m += "";
-
-            if (move.isPromotionToKnight()){
-                m += "N";
-            }
-            else if (move.isPromotionToBishop()){
-                m += "B";
-            }
-            else if (move.isPromotionToRook()){
-                m += "R";
-            }
-            else if (move.isPromotionToQueen()){
+            else if (MoveParser.isPromotionToQueen(move)){
                 m += "Q";
             }
         }
@@ -75,7 +40,6 @@ class MovePrettifier {
     private static String getRank(int square){
         return (square / 8 + 1) + "";
     }
-
 
     private static String getFile(int square){
         int i = square % 8;

@@ -9,29 +9,28 @@ import static chessprogram.god.MoveRegularIntMove.makeRegularMove;
 import static chessprogram.god.StackMoveData.SpecialMove;
 import static chessprogram.god.StackMoveData.SpecialMove.*;
 
-class MoveMakerIntMove {
+class MoveMaker {
 
     static void flipTurn(Chessboard board){
         board.setWhiteTurn(!board.isWhiteTurn());
     }
 
     static void makeMoveMaster(Chessboard board, int move) {
-
         if(move == 0){
             StackMoveData stackMoveData = new StackMoveData(0, board, 50, SpecialMove.NULL_MOVE);
             board.moveStack.push(stackMoveData);
             return;
         }
         
-        if (MoveParserIntMove.isSpecialMove(move)){
-            if (MoveParserIntMove.isCastlingMove(move)) {
+        if (MoveParser.isSpecialMove(move)){
+            if (MoveParser.isCastlingMove(move)) {
                 StackMoveData stackMoveData = new StackMoveData(move, board, 50, CASTLING);
                 board.moveStack.push(stackMoveData);
                 makeCastlingMove(board, move);
                 castleFlagManager(board, move);
             }
 
-            else if (MoveParserIntMove.isEnPassantMove(move)){
+            else if (MoveParser.isEnPassantMove(move)){
                 StackMoveData stackMoveData = new StackMoveData
                         (move, board, 50, ENPASSANTCAPTURE);
                 board.moveStack.push(stackMoveData);
@@ -39,12 +38,12 @@ class MoveMakerIntMove {
                 castleFlagManager(board, move);
             }
 
-            else if (MoveParserIntMove.isPromotionMove(move)){
-                int destination = MoveParserIntMove.getDestinationIndex(move);
+            else if (MoveParser.isPromotionMove(move)){
+                int destination = MoveParser.getDestinationIndex(move);
                 long destSquare = newPieceOnSquare(destination);
                 boolean capturePromotion = (destSquare & board.allPieces()) != 0;
                 if (capturePromotion) {
-                    long destinationPiece = newPieceOnSquare(MoveParserIntMove.getDestinationIndex(move));
+                    long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
                     int takenPiece = whichPieceOnSquare(board, destinationPiece);
 
                     StackMoveData stackMoveData = new StackMoveData(move, board, 50, PROMOTION, takenPiece);
@@ -64,11 +63,11 @@ class MoveMakerIntMove {
 
 
         else {
-            int destination = MoveParserIntMove.getDestinationIndex(move);
+            int destination = MoveParser.getDestinationIndex(move);
             long destSquare = newPieceOnSquare(destination);
             boolean captureMove = (destSquare & board.allPieces()) != 0;
             if (captureMove) {
-                long destinationPiece = newPieceOnSquare(MoveParserIntMove.getDestinationIndex(move));
+                long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
                 int takenPiece = whichPieceOnSquare(board, destinationPiece);
                 StackMoveData stackMoveData = new StackMoveData
                         (move, board, 50, BASICCAPTURE, takenPiece);
@@ -78,7 +77,7 @@ class MoveMakerIntMove {
             }
             
             else if (enPassantPossibility(board, move)){
-                int sourceAsPiece = MoveParserIntMove.getSourceIndex(move);
+                int sourceAsPiece = MoveParser.getSourceIndex(move);
                 int whichFile = 8 - sourceAsPiece % 8;
                 StackMoveData stackMoveData = new StackMoveData
                         (move, board, 50, whichFile, ENPASSANTVICTIM);
@@ -88,7 +87,7 @@ class MoveMakerIntMove {
             }
 
             else {
-                long destinationPiece = newPieceOnSquare(MoveParserIntMove.getSourceIndex(move));
+                long destinationPiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
                 int movingPiece = whichPieceOnSquare(board, destinationPiece);
                 if (movingPiece == 1 || movingPiece == 7){
                     StackMoveData stackMoveData = new StackMoveData
@@ -111,8 +110,8 @@ class MoveMakerIntMove {
 
     private static boolean enPassantPossibility(Chessboard board, int move){
         // determine if flag should be added to enable EP on next turn
-        long sourceSquare = newPieceOnSquare(MoveParserIntMove.getSourceIndex(move));
-        long destinationSquare = newPieceOnSquare(MoveParserIntMove.getDestinationIndex(move));
+        long sourceSquare = newPieceOnSquare(MoveParser.getSourceIndex(move));
+        long destinationSquare = newPieceOnSquare(MoveParser.getDestinationIndex(move));
         long HOME_RANK = (board.isWhiteTurn()) ? BitboardResources.RANK_TWO : BitboardResources.RANK_SEVEN;
         long MY_PAWNS = (board.isWhiteTurn()) ? board.getWhitePawns() : board.getBlackPawns();
         long enPassantPossibilityRank = (board.isWhiteTurn()) ? BitboardResources.RANK_FOUR : BitboardResources.RANK_FIVE;

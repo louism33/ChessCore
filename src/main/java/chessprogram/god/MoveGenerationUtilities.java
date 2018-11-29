@@ -12,7 +12,7 @@ class MoveGenerationUtilities {
         while (attackBoard != 0){
             final long destination = BitOperations.getFirstPiece(attackBoard);
             
-            moves.add(MoveParserIntMove.moveFromSourceDestinationCapture(source, BitOperations.getIndexOfFirstPiece(destination),
+            moves.add(MoveParser.moveFromSourceDestinationCapture(source, BitOperations.getIndexOfFirstPiece(destination),
                     ((destination & enemyPieces) != 0)));
             
             attackBoard &= attackBoard - 1;
@@ -24,7 +24,7 @@ class MoveGenerationUtilities {
         int source = BitOperations.getIndexOfFirstPiece(longSource);
         List<Integer> indexOfAllPieces = BitOperations.getIndexOfAllPieces(attackBoard);
         for (int i : indexOfAllPieces) {
-            moves.add(MoveParserIntMove.moveFromSourceDestination(source, i));
+            moves.add(MoveParser.moveFromSourceDestination(source, i));
         }
     }
 

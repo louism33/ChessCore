@@ -1,5 +1,8 @@
 package chessprogram.god;
 
+import static chessprogram.god.PieceMoveSliding.xrayBishopAttacks;
+import static chessprogram.god.PieceMoveSliding.xrayRookAttacks;
+
 class PinnedManager {
 
     static long whichPiecesArePinned(Chessboard board, boolean white, long squareOfInterest){
@@ -30,7 +33,7 @@ class PinnedManager {
 
         long pinnedPieces = 0;
 
-        long pinners = PieceMoveSliding.xrayBishopAttacks(allPieces, myPieces, squareOfInterest);
+        long pinners = xrayBishopAttacks(allPieces, myPieces, squareOfInterest);
         long pinningPieces = pinners & (enemyBishops | enemyQueens);
 
         while (pinningPieces != 0){
@@ -40,7 +43,7 @@ class PinnedManager {
             pinningPieces &= pinningPieces - 1;
         }
 
-        pinners = PieceMoveSliding.xrayRookAttacks(allPieces, myPieces, squareOfInterest);
+        pinners = xrayRookAttacks(allPieces, myPieces, squareOfInterest);
         pinningPieces = pinners & (enemyRooks | enemyQueens);
 
         while (pinningPieces != 0){

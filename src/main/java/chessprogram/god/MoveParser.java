@@ -1,8 +1,9 @@
 package chessprogram.god;
 
 import static chessprogram.god.MoveConstants.*;
+import static chessprogram.god.MovePrettifier.*;
 
-public class MoveParserIntMove {
+public class MoveParser {
 
     public static int copyMove(int move){
         return move;
@@ -19,6 +20,9 @@ public class MoveParserIntMove {
         return move;
     }
 
+    public static String toString(int move){
+        return prettyMoveInt(move);
+    }
 
     public static int moveFromSourceDestination(int source, int destinationIndex) {
         return buildMove(source, destinationIndex);
@@ -42,10 +46,6 @@ public class MoveParserIntMove {
             else if (promoteToQueen) move |= QUEEN_PROMOTION_MASK;
         }
         return move;
-    }
-
-    public static String toString(int move) {
-        return MovePrettifier.prettyMoveInt(move);
     }
 
     public static int getSourceIndex(int move) {

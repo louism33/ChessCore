@@ -2,11 +2,11 @@ package chessprogram.god;
 
 public class MoveUtils {
     
-    static void makeCapture(Move move){
+    static void makeCapture(int move){
         // todo, maybe
     }
     
-    static void buildSourcePiece(Move move){
+    static void buildSourcePiece(int move){
         // todo, maybe
     }
     
