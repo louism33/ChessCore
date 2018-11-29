@@ -5,24 +5,26 @@ import java.util.List;
 
 import static chessprogram.god.BitOperations.UNIVERSE;
 import static chessprogram.god.BitOperations.getAllPieces;
-import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackBoardLong;
-import static chessprogram.god.MoveGeneratorCastling.addCastlingMoves;
-import static chessprogram.god.MoveGeneratorCheck.addCheckEvasionMoves;
-import static chessprogram.god.MoveGeneratorEnPassant.addEnPassantMoves;
-import static chessprogram.god.MoveGeneratorKingLegal.addKingLegalMovesOnly;
-import static chessprogram.god.MoveGeneratorPromotion.addPromotionMoves;
-import static chessprogram.god.MoveGeneratorPseudo.addAllMovesWithoutKing;
-import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
-import static chessprogram.god.PieceMovePawns.singlePawnPushes;
-import static chessprogram.god.PieceMoveSliding.*;
-import static chessprogram.god.PinnedManager.whichPiecesArePinned;
+import static chessprogram.god.CheckHelperIntMove.numberOfPiecesThatLegalThreatenSquare;
+import static chessprogram.god.MoveGenerationUtilitiesIntMove.addMovesFromAttackBoardLong;
+import static chessprogram.god.MoveGeneratorCheckIntMove.addCheckEvasionMoves;
+import static chessprogram.god.MoveGeneratorEnPassantIntMove.addEnPassantMoves;
+import static chessprogram.god.MoveGeneratorKingLegalIntMove.addKingLegalMovesOnly;
+import static chessprogram.god.MoveGeneratorPromotionIntMove.addPromotionMoves;
+import static chessprogram.god.MoveGeneratorPseudoIntMove.addAllMovesWithoutKing;
+import static chessprogram.god.PieceMovePawnsIntMove.singlePawnCaptures;
+import static chessprogram.god.PieceMovePawnsIntMove.singlePawnPushes;
+import static chessprogram.god.PieceMoveSlidingIntMove.singleBishopTable;
+import static chessprogram.god.PieceMoveSlidingIntMove.singleQueenTable;
+import static chessprogram.god.PieceMoveSlidingIntMove.singleRookTable;
+import static chessprogram.god.PinnedManagerIntMove.whichPiecesArePinned;
 
-class MoveGeneratorMaster {
+class MoveGeneratorMasterIntMove {
 
-    static List<Move> generateLegalMoves(Chessboard board, boolean white) {
-        List<Move> moves = new ArrayList<>();
+    static List<Integer> generateLegalMoves(ChessboardIntMove board, boolean white) {
+        List<Integer> moves = new ArrayList<>();
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-        int numberOfCheckers = CheckHelper.numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
+        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
 
         if (numberOfCheckers > 1){
             addKingLegalMovesOnly(moves, board, white);
@@ -39,7 +41,7 @@ class MoveGeneratorMaster {
     }
 
 
-    private static void addNotInCheckMoves(List<Move> moves, Chessboard board, boolean whiteTurn){
+    private static void addNotInCheckMoves(List<Integer> moves, ChessboardIntMove board, boolean whiteTurn){
         long ENEMY_PIECES = (whiteTurn) ? board.blackPieces() : board.whitePieces();
         long ALL_EMPTY_SQUARES = ~board.allPieces();
         long myKing = (whiteTurn) ? board.getWhiteKing() : board.getBlackKing();
@@ -51,7 +53,7 @@ class MoveGeneratorMaster {
         long promotablePawns = myPawns & PENULTIMATE_RANK;
         long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
 
-        addCastlingMoves(moves, board, whiteTurn);
+        MoveGeneratorCastlingIntMoves.addCastlingMoves(moves, board, whiteTurn);
 
         addKingLegalMovesOnly(moves, board, whiteTurn);
 
@@ -89,7 +91,7 @@ class MoveGeneratorMaster {
         }
          */
     
-    private static void addPinnedPiecesMoves(List<Move> moves, Chessboard board, boolean whiteTurn,
+    private static void addPinnedPiecesMoves(List<Integer> moves, ChessboardIntMove board, boolean whiteTurn,
                                              long pinnedPieces, long squareWeArePinnedTo){
         List<Long> allPinnedPieces = getAllPieces(pinnedPieces, 0);
 

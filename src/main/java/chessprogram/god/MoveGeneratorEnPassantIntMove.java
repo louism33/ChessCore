@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.*;
+import static chessprogram.god.CheckHelperIntMove.boardInCheck;
 import static chessprogram.god.MoveConstants.ENPASSANT_MASK;
-import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
-import static chessprogram.god.StackMoveData.SpecialMove;
+import static chessprogram.god.MoveGenerationUtilitiesIntMove.addMovesFromAttackTableMaster;
+import static chessprogram.god.StackMoveDataIntMove.SpecialMove.ENPASSANTVICTIM;
 
-class MoveGeneratorEnPassant {
+class MoveGeneratorEnPassantIntMove {
 
-    static void addEnPassantMoves(List<Move> moves, Chessboard board, boolean white,
+    static void addEnPassantMoves(List<Integer> moves, ChessboardIntMove board, boolean white,
                                   long ignoreThesePieces, long legalPushes, long legalCaptures) {
-        List<Move> temp = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
 
         long myPawns = white ? board.getWhitePawns() : board.getBlackPawns();
         long enemyPawns = white ? board.getBlackPawns() : board.getWhitePawns();
@@ -32,8 +33,8 @@ class MoveGeneratorEnPassant {
             return;
         }
 
-        StackMoveData previousMove = board.moveStack.peek();
-        if (previousMove.typeOfSpecialMove != SpecialMove.ENPASSANTVICTIM){
+        StackMoveDataIntMove previousMove = board.moveStack.peek();
+        if (previousMove.typeOfSpecialMove != ENPASSANTVICTIM){
             return;
         }
 
@@ -64,7 +65,7 @@ class MoveGeneratorEnPassant {
             final long pawn = getFirstPiece(myPawnsInPosition);
             if ((pawn & ignoreThesePieces) == 0) {
                 long pawnEnPassantCapture = PieceMovePawns.singlePawnCaptures(pawn, white, enemyTakingSpots);
-                List<Move> epMoves = new ArrayList<>();
+                List<Integer> epMoves = new ArrayList<>();
                 addMovesFromAttackTableMaster(epMoves, pawnEnPassantCapture, getIndexOfFirstPiece(pawn), board);
                 temp.addAll(epMoves);
             }
@@ -72,12 +73,12 @@ class MoveGeneratorEnPassant {
         }
 
 
-        List<Move> safeEPMoves = new ArrayList<>();
+        List<Integer> safeEPMoves = new ArrayList<>();
         // remove moves that would leave us in check
-        for (Move move : temp){
-            move.move |= ENPASSANT_MASK;
+        for (int move : temp){
+            move |= ENPASSANT_MASK;
             board.makeMoveAndFlipTurn(move);
-            boolean enPassantWouldLeadToCheck = CheckHelper.boardInCheck(board, white);
+            boolean enPassantWouldLeadToCheck = boardInCheck(board, white);
             board.unMakeMoveAndFlipTurn();
             
             if (enPassantWouldLeadToCheck){

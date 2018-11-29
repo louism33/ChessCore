@@ -57,7 +57,7 @@ public class Move {
         }
         this.move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
         this.move |= (d & DESTINATION_MASK);
-        MoveUtils.buildSource(this);
+        MoveUtils.buildSourcePiece(this);
     }
 
     @Override

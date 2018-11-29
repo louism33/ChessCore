@@ -3,24 +3,23 @@ package chessprogram.god;
 import java.util.List;
 
 import static chessprogram.god.BitboardResources.UNIVERSE;
-import static chessprogram.god.MoveGeneratorEnPassant.addEnPassantMoves;
-import static chessprogram.god.MoveGeneratorKingLegal.addKingLegalMovesOnly;
-import static chessprogram.god.MoveGeneratorPromotion.addPromotionMoves;
-import static chessprogram.god.MoveGeneratorPseudo.addAllMovesWithoutKing;
-import static chessprogram.god.PieceMoveKnight.singleKnightTable;
-import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
+import static chessprogram.god.MoveGeneratorEnPassantIntMove.addEnPassantMoves;
+import static chessprogram.god.MoveGeneratorKingLegalIntMove.addKingLegalMovesOnly;
+import static chessprogram.god.MoveGeneratorPromotionIntMove.addPromotionMoves;
+import static chessprogram.god.MoveGeneratorPseudoIntMove.addAllMovesWithoutKing;
+import static chessprogram.god.PinnedManagerIntMove.whichPiecesArePinned;
 
-class MoveGeneratorCheck {
+class MoveGeneratorCheckIntMove {
 
-    static void addCheckEvasionMoves(List<Move> moves, Chessboard board, boolean white){
+    static void addCheckEvasionMoves(List<Integer> moves, ChessboardIntMove board, boolean white){
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-        long ignoreThesePieces = PinnedManager.whichPiecesArePinned(board, white, myKing);
+        long ignoreThesePieces = whichPiecesArePinned(board, white, myKing);
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
         allLegalCheckEscapeMoves(moves, board, white, ignoreThesePieces);
     }
 
 
-    private static void allLegalCheckEscapeMoves(List<Move> moves, Chessboard board, boolean white, long ignoreThesePieces) {
+    private static void allLegalCheckEscapeMoves(List<Integer> moves, ChessboardIntMove board, boolean white, long ignoreThesePieces) {
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         long blockingSquaresMask, checkingPieceMask;
         long jumper = inCheckByAJumper(board, white);
@@ -48,7 +47,7 @@ class MoveGeneratorCheck {
 
     }
 
-    private static long inCheckByAJumper(Chessboard board, boolean white){
+    private static long inCheckByAJumper(ChessboardIntMove board, boolean white){
         long pawns, knights;
         if (!white){
             pawns = board.getWhitePawns();
@@ -60,11 +59,11 @@ class MoveGeneratorCheck {
         }
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
 
-        long possiblePawn = singlePawnCaptures(myKing, white, pawns);
+        long possiblePawn = PieceMovePawnsIntMove.singlePawnCaptures(myKing, white, pawns);
         if (possiblePawn != 0) {
             return possiblePawn;
         }
-        long possibleKnight = singleKnightTable(myKing, UNIVERSE) & knights;
+        long possibleKnight = PieceMoveKnight.singleKnightTable(myKing, UNIVERSE) & knights;
         if (possibleKnight != 0) {
             return possibleKnight;
         }
@@ -72,7 +71,7 @@ class MoveGeneratorCheck {
         return 0;
     }
 
-    private static long inCheckByASlider(Chessboard board, boolean white){
+    private static long inCheckByASlider(ChessboardIntMove board, boolean white){
         long bishops, rooks, queens, allPieces = board.allPieces();
         if (!white){
             bishops = board.getWhiteBishops();

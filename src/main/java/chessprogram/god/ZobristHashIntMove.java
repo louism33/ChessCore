@@ -9,11 +9,11 @@ import java.util.Stack;
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.BitboardResources.INITIAL_BLACK_KING;
 import static chessprogram.god.BitboardResources.INITIAL_WHITE_KING;
-import static chessprogram.god.MoveMaker.whichPieceOnSquare;
-import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
-import static chessprogram.god.StackMoveData.SpecialMove.NULL_MOVE;
+import static chessprogram.god.MoveMakerIntMove.whichPieceOnSquare;
+import static chessprogram.god.StackMoveDataIntMove.SpecialMove.ENPASSANTVICTIM;
+import static chessprogram.god.StackMoveDataIntMove.SpecialMove.NULL_MOVE;
 
-class ZobristHash {
+class ZobristHashIntMove {
     private static final long initHashSeed = 100;
     Stack<Long> zobristStack = new Stack<>();
     private static final long[][] zobristHashPieces = initPieceHash();
@@ -22,14 +22,14 @@ class ZobristHash {
     static final long zobristHashColourBlack = initColourHash();
     private long boardHash;
 
-    ZobristHash(Chessboard board) {
+    ZobristHashIntMove(ChessboardIntMove board) {
         this.boardHash = boardToHash(board);
     }
 
-    long updateWithEPFlags(Chessboard board){
+    long updateWithEPFlags(ChessboardIntMove board){
         Assert.assertTrue(board.moveStack.size() > 0);
         long hash = 0;
-        StackMoveData peek = board.moveStack.peek();
+        StackMoveDataIntMove peek = board.moveStack.peek();
         if (peek.typeOfSpecialMove == ENPASSANTVICTIM) {
             hash = hashEP(hash, peek);
         }
@@ -41,9 +41,9 @@ class ZobristHash {
         return hash;
     }
 
-    private long nullMoveEP(Chessboard board, long hash) {
-        StackMoveData pop = board.moveStack.pop();
-        StackMoveData peekSecondElement = board.moveStack.peek();
+    private long nullMoveEP(ChessboardIntMove board, long hash) {
+        StackMoveDataIntMove pop = board.moveStack.pop();
+        StackMoveDataIntMove peekSecondElement = board.moveStack.peek();
         if (peekSecondElement.typeOfSpecialMove == ENPASSANTVICTIM) {
             // file one = FILE_A
             hash = hashEP(hash, peekSecondElement);
@@ -52,12 +52,12 @@ class ZobristHash {
         return hash;
     }
 
-    private long hashEP(long hash, StackMoveData peek) {
+    private long hashEP(long hash, StackMoveDataIntMove peek) {
         hash ^= zobristHashEPFiles[peek.enPassantFile - 1];
         return hash;
     }
 
-    void updateHashPostMove(Chessboard board, Move move){
+    void updateHashPostMove(ChessboardIntMove board, int move){
         /*
         invert colour
         */
@@ -77,9 +77,9 @@ class ZobristHash {
 
     }
 
-    private long postMoveCastlingRights(Chessboard board){
+    private long postMoveCastlingRights(ChessboardIntMove board){
         long updatedHashValue = 0;
-        StackMoveData peek = board.moveStack.peek();
+        StackMoveDataIntMove peek = board.moveStack.peek();
         /*
         undo previous castling rights
         */
@@ -125,9 +125,9 @@ class ZobristHash {
     }
 
 
-    void updateHashPreMove(Chessboard board, Move move){
-        int sourceSquare = move.getSourceIndex();
-        int destinationSquareIndex = move.getDestinationIndex();
+    void updateHashPreMove(ChessboardIntMove board, int move){
+        int sourceSquare = MoveParserIntMove.getSourceIndex(move);
+        int destinationSquareIndex = MoveParserIntMove.getDestinationIndex(move);
 
         long sourcePiece = newPieceOnSquare(sourceSquare);
         int sourcePieceIdentifier = whichPieceOnSquare(board, sourcePiece) - 1;
@@ -154,36 +154,36 @@ class ZobristHash {
         /* 
         "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
         */
-        Stack<StackMoveData> moveStack = board.moveStack;
+        Stack<StackMoveDataIntMove> moveStack = board.moveStack;
         if (moveStack.size() > 0){
             boardHash ^= updateWithEPFlags(board);
         }
 
-        long destinationPiece = newPieceOnSquare(move.getDestinationIndex());
+        long destinationPiece = newPieceOnSquare(MoveParserIntMove.getDestinationIndex(move));
 
-        if (move.isSpecialMove()){
-            if (move.isCastlingMove()) {
+        if (MoveParserIntMove.isSpecialMove(move)){
+            if (MoveParserIntMove.isCastlingMove(move)) {
                 int originalRookIndex = 0;
                 int newRookIndex = 0;
                 if ((sourcePiece & INITIAL_WHITE_KING) != 0){
-                    if (move.getDestinationIndex() == 1){
+                    if (MoveParserIntMove.getDestinationIndex(move) == 1){
                         originalRookIndex = 0;
-                        newRookIndex = move.getDestinationIndex() + 1;
+                        newRookIndex = MoveParserIntMove.getDestinationIndex(move) + 1;
                     }
-                    else if (move.getDestinationIndex() == 5){
+                    else if (MoveParserIntMove.getDestinationIndex(move) == 5){
                         originalRookIndex = 7;
-                        newRookIndex = move.getDestinationIndex() - 1;
+                        newRookIndex = MoveParserIntMove.getDestinationIndex(move) - 1;
                     }
                 }
 
                 else if ((sourcePiece & INITIAL_BLACK_KING) != 0){
-                    if (move.getDestinationIndex() == 57){
+                    if (MoveParserIntMove.getDestinationIndex(move) == 57){
                         originalRookIndex = 56;
-                        newRookIndex = move.getDestinationIndex() + 1;
+                        newRookIndex = MoveParserIntMove.getDestinationIndex(move) + 1;
                     }
-                    else if (move.getDestinationIndex() == 61){
+                    else if (MoveParserIntMove.getDestinationIndex(move) == 61){
                         originalRookIndex = 63;
-                        newRookIndex = move.getDestinationIndex() - 1;
+                        newRookIndex = MoveParserIntMove.getDestinationIndex(move) - 1;
                     }
                 }
                 else {
@@ -197,7 +197,7 @@ class ZobristHash {
                 boardHash ^= newRookZH;
             }
 
-            else if (move.isEnPassantMove()){
+            else if (MoveParserIntMove.isEnPassantMove(move)){
                 if ((sourcePiece & board.getWhitePawns()) != 0){
                     long victimPawn = destinationPiece >>> 8;
                     int indexOfVictimPawn = BitOperations.getIndexOfFirstPiece(victimPawn);
@@ -219,35 +219,35 @@ class ZobristHash {
 
             }
 
-            else if (move.isPromotionMove()){
+            else if (MoveParserIntMove.isPromotionMove(move)){
                 int whichPromotingPiece = 0;
                 if ((sourcePiece & board.getWhitePawns()) != 0){
-                    if (move.isPromotionToKnight()){
+                    if (MoveParserIntMove.isPromotionToKnight(move)){
                         whichPromotingPiece = 2;
                     }
-                    else if (move.isPromotionToBishop()){
+                    else if (MoveParserIntMove.isPromotionToBishop(move)){
                         whichPromotingPiece = 3;
                     }
-                    else if (move.isPromotionToRook()){
+                    else if (MoveParserIntMove.isPromotionToRook(move)){
                         whichPromotingPiece = 4;
                     }
-                    else if (move.isPromotionToQueen()){
+                    else if (MoveParserIntMove.isPromotionToQueen(move)){
                         whichPromotingPiece = 5;
                     }
                 }
 
                 else if ((sourcePiece & board.getBlackPawns()) != 0){
-                    if (move.isPromotionToKnight()){
+                    if (MoveParserIntMove.isPromotionToKnight(move)){
                         whichPromotingPiece = 8;
                     }
-                    else if (move.isPromotionToBishop()){
+                    else if (MoveParserIntMove.isPromotionToBishop(move)){
                         whichPromotingPiece = 9;
                     }
-                    else if (move.isPromotionToRook()){
+                    else if (MoveParserIntMove.isPromotionToRook(move)){
                         whichPromotingPiece = 10;
                     }
                     
-                    else if (move.isPromotionToQueen()){
+                    else if (MoveParserIntMove.isPromotionToQueen(move)){
                         whichPromotingPiece = 11;
                     }
                 }
@@ -270,7 +270,7 @@ class ZobristHash {
     /*
     create almost unique long to identify current board
      */
-    private long boardToHash(Chessboard board){
+    private long boardToHash(ChessboardIntMove board){
         long hash = 0;
         for (int sq = 0; sq < 64; sq++) {
             long pieceOnSquare = newPieceOnSquare(sq);
@@ -293,7 +293,7 @@ class ZobristHash {
         return hash;
     }
 
-    private long castlingRightsToHash(Chessboard board){
+    private long castlingRightsToHash(ChessboardIntMove board){
         int numTo15 = 0;
         if (board.isWhiteCanCastleK()){
             numTo15 += 1;
@@ -376,7 +376,7 @@ class ZobristHash {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ZobristHash that = (ZobristHash) o;
+        ZobristHashIntMove that = (ZobristHashIntMove) o;
         return boardHash == that.boardHash
                 && Objects.equals(zobristStack, that.zobristStack)
         ;

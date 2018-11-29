@@ -5,19 +5,20 @@ import org.junit.Assert;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.UNIVERSE;
-import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
+import static chessprogram.god.CopierToBeDeletedIntMove.copyBoard;
+import static chessprogram.god.MoveGeneratorPseudoIntMove.generatePseudoCaptureTable;
 
-class MoveGeneratorKingLegal {
+class MoveGeneratorKingLegalIntMove {
 
-    static void addKingLegalMovesOnly(List<Move> moves, Chessboard board, boolean white){
+    static void addKingLegalMovesOnly(List<Integer> moves, ChessboardIntMove board, boolean white){
         long enemies = (white) ? board.blackPieces() : board.whitePieces();
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         int indexOfKing = BitOperations.getIndexOfFirstPiece(myKing);
         
-        addMovesFromAttackTableMaster(moves, kingLegalPushAndCaptureTable(board, white), indexOfKing, enemies);
+        MoveGenerationUtilitiesIntMove.addMovesFromAttackTableMaster(moves, kingLegalPushAndCaptureTable(board, white), indexOfKing, enemies);
     }
 
-    private static long kingLegalPushAndCaptureTable(Chessboard board, boolean white){
+    private static long kingLegalPushAndCaptureTable(ChessboardIntMove board, boolean white){
         long ans = 0;
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         long kingSafeSquares = ~kingDangerSquares(board, white);
@@ -32,9 +33,9 @@ class MoveGeneratorKingLegal {
         return ans;
     }
 
-    private static long kingDangerSquares(Chessboard board, boolean white){
-        Chessboard boardWithoutMyKing = CopierToBeDeleted.copyBoard(board, white, true);
-        return MoveGeneratorPseudo.generatePseudoCaptureTable(boardWithoutMyKing, !white, 0, UNIVERSE, UNIVERSE);
+    private static long kingDangerSquares(ChessboardIntMove board, boolean white){
+        ChessboardIntMove boardWithoutMyKing = copyBoard(board, white, true);
+        return generatePseudoCaptureTable(boardWithoutMyKing, !white, 0, UNIVERSE, UNIVERSE);
     }
 
 }

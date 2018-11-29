@@ -2,6 +2,41 @@ package chessprogram.god;
 
 class MovePrettifier {
 
+    static String prettyMoveInt(int move){
+        int sourceAsPiece = MoveParserIntMove.getSourceIndex(move);
+        String file = getFile(sourceAsPiece);
+        String rank = getRank(sourceAsPiece);
+        int destination = MoveParserIntMove.getDestinationIndex(move);
+        String destinationFile = getFile(destination);
+        String destinationRank = getRank(destination);
+        String m = ""+file+ rank+destinationFile+ destinationRank;
+
+        if (MoveParserIntMove.isCastlingMove(move)){
+            m += "";
+        }
+        else if (MoveParserIntMove.isEnPassantMove(move)){
+            m += "";
+        }
+
+        else if (MoveParserIntMove.isPromotionMove(move)){
+            m += "";
+
+            if (MoveParserIntMove.isPromotionToKnight(move)){
+                m += "N";
+            }
+            else if (MoveParserIntMove.isPromotionToBishop(move)){
+                m += "B";
+            }
+            else if (MoveParserIntMove.isPromotionToRook(move)){
+                m += "R";
+            }
+            else if (MoveParserIntMove.isPromotionToQueen(move)){
+                m += "Q";
+            }
+        }
+        return m;
+    }
+    
     static String prettyMove(Move move){
         int sourceAsPiece = move.getSourceIndex();
         String file = getFile(sourceAsPiece);

@@ -1,11 +1,14 @@
 package chessprogram.magic;
 
-import chessprogram.god.*;
+import chessprogram.god.BitOperations;
+import chessprogram.god.BitboardResources;
+import chessprogram.god.Chessboard;
+import chessprogram.god.Square;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static chessprogram.god.BitOperations.*;
+import static chessprogram.god.BitOperations.getAllPieces;
 
 public class Utils {
 

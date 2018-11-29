@@ -3,8 +3,6 @@ package chessprogram.god;
 import java.util.ArrayList;
 import java.util.List;
 
-import static chessprogram.god.BitboardResources.boardWithoutEdges;
-
 public class BitOperations {
 
     public static final long UNIVERSE = 0xffffffffffffffffL;

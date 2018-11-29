@@ -7,12 +7,13 @@ import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.BitboardResources.*;
 import static chessprogram.god.MoveConstants.*;
-import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
-import static chessprogram.god.PieceMovePawns.singlePawnPushes;
+import static chessprogram.god.MoveGenerationUtilitiesIntMove.addMovesFromAttackTableMaster;
+import static chessprogram.god.PieceMovePawnsIntMove.singlePawnCaptures;
+import static chessprogram.god.PieceMovePawnsIntMove.singlePawnPushes;
 
-class MoveGeneratorPromotion {
+class MoveGeneratorPromotionIntMove {
 
-    static void addPromotionMoves(List<Move> moves, Chessboard board, boolean white,
+    static void addPromotionMoves(List<Integer> moves, ChessboardIntMove board, boolean white,
                                                long ignoreThesePieces, long legalPushes, long legalCaptures){
         long legalPieces = ~ignoreThesePieces;
         long PENULTIMATE_RANK;
@@ -39,11 +40,12 @@ class MoveGeneratorPromotion {
                     | singlePawnCaptures(pawn, board.isWhiteTurn(), (promotionCaptureSquares & legalCaptures));
             
             if (pawnMoves != 0) {
-                List<Move> todoMoves = new ArrayList<>();
-                MoveGenerationUtilities.addMovesFromAttackTableMaster(todoMoves, pawnMoves, getIndexOfFirstPiece(pawn), board);
+                List<Integer> todoMoves = new ArrayList<>();
+                addMovesFromAttackTableMaster(todoMoves, pawnMoves, getIndexOfFirstPiece(pawn), board);
                 
-                for (Move move : todoMoves){
-                    move.move |= PROMOTION_MASK;
+                // todo
+                for (int move : todoMoves){
+                    move |= PROMOTION_MASK;
                     moves.addAll(promotingMovesByPiece(move));
                 }
             }
@@ -51,25 +53,12 @@ class MoveGeneratorPromotion {
         }
     }
 
-    private static List<Move> promotingMovesByPiece(Move move){
-        List<Move> moves = new ArrayList<>();
-
-        Move moveK = new Move(move);
-        moveK.move |= KNIGHT_PROMOTION_MASK;
-        moves.add(moveK);
-
-        Move moveB = new Move(move);
-        moveB.move |= BISHOP_PROMOTION_MASK;
-        moves.add(moveB);
-
-        Move moveR = new Move(move);
-        moveR.move |= ROOK_PROMOTION_MASK;
-        moves.add(moveR);
-
-        Move moveQ = new Move(move);
-        moveQ.move |= QUEEN_PROMOTION_MASK;
-        moves.add(moveQ);
-
+    private static List<Integer> promotingMovesByPiece(int move){
+        List<Integer> moves = new ArrayList<>();
+        moves.add(move | KNIGHT_PROMOTION_MASK);
+        moves.add(move | BISHOP_PROMOTION_MASK);
+        moves.add(move | ROOK_PROMOTION_MASK);
+        moves.add(move | QUEEN_PROMOTION_MASK);
         return moves;
     }
 }

@@ -4,10 +4,12 @@ import org.junit.Assert;
 
 import java.util.List;
 
-class MoveGeneratorCastling {
+import static chessprogram.god.CheckHelperIntMove.*;
+
+class MoveGeneratorCastlingIntMoves {
 
     // checking if we are in check happens elsewhere
-    static void addCastlingMoves(List<Move> moves, Chessboard board, boolean white){
+    static void addCastlingMoves(List<Integer> moves, ChessboardIntMove board, boolean white){
 
         if (white){
             if(board.isWhiteCanCastleK()){
@@ -17,10 +19,9 @@ class MoveGeneratorCastling {
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_EAST_CORNER) != 0)){
 
                     Assert.assertTrue(areTheseSquaresUnthreatened(board, true, board.getWhiteKing()));
-                    Assert.assertTrue(!CheckHelper.boardInCheck(board, true));
+                    Assert.assertTrue(!boardInCheck(board, true));
                     
-                    Move whiteCastleSE = new Move(3, 1, true, false, false, false, false, false, false);
-                    moves.add(whiteCastleSE);
+                    moves.add(MoveParserIntMove.makeSpecialMove(3, 1, true, false, false, false, false, false, false));
                 }
             }
 
@@ -31,10 +32,9 @@ class MoveGeneratorCastling {
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_WEST_CORNER) != 0)){
 
                     Assert.assertTrue(areTheseSquaresUnthreatened(board, true, board.getWhiteKing()));
-                    Assert.assertTrue(!CheckHelper.boardInCheck(board, true));
+                    Assert.assertTrue(!boardInCheck(board, true));
 
-                    Move whiteCastleSW = new Move(3, 5, true, false, false, false, false, false, false);
-                    moves.add(whiteCastleSW);
+                    moves.add(MoveParserIntMove.makeSpecialMove(3, 5, true, false, false, false, false, false, false));
                 }
             }
 
@@ -48,10 +48,9 @@ class MoveGeneratorCastling {
                         && ((board.getBlackRooks() & BitboardResources.NORTH_EAST_CORNER) != 0)){
 
                     Assert.assertTrue(areTheseSquaresUnthreatened(board, false, board.getBlackKing()));
-                    Assert.assertTrue(!CheckHelper.boardInCheck(board, false));
+                    Assert.assertTrue(!boardInCheck(board, false));
                     
-                    Move blackCastleNE = new Move(59, 57, true, false, false, false, false, false, false);
-                    moves.add(blackCastleNE);
+                    moves.add(MoveParserIntMove.makeSpecialMove(59, 57, true, false, false, false, false, false, false));
                 }
             }
 
@@ -62,19 +61,18 @@ class MoveGeneratorCastling {
                         && ((board.getBlackRooks() & BitboardResources.NORTH_WEST_CORNER) != 0)){
 
                     Assert.assertTrue(areTheseSquaresUnthreatened(board, false, board.getBlackKing()));
-                    Assert.assertTrue(!CheckHelper.boardInCheck(board, false));
+                    Assert.assertTrue(!boardInCheck(board, false));
                     
-                    Move blackCastleNW = new Move(59, 61, true, false, false, false, false, false, false);
-                    moves.add(blackCastleNW);
+                    moves.add(MoveParserIntMove.makeSpecialMove(59, 61, true, false, false, false, false, false, false));
                 }
             }
         }
     }
 
-    private static boolean areTheseSquaresUnthreatened(Chessboard board, boolean white, long squares){
+    private static boolean areTheseSquaresUnthreatened(ChessboardIntMove board, boolean white, long squares){
         while (squares != 0){
             final long square = BitOperations.getFirstPiece(squares);
-            int numberOfThreats = CheckHelper.numberOfPiecesThatLegalThreatenSquare(board, white, square);
+            int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(board, white, square);
             if (numberOfThreats > 0){
                 return false;
             }
@@ -83,7 +81,7 @@ class MoveGeneratorCastling {
         return true;
     }
 
-    private static boolean areTheseSquaresEmpty(Chessboard board, long squares){
+    private static boolean areTheseSquaresEmpty(ChessboardIntMove board, long squares){
         return ((board.allPieces() & squares) == 0);
     }
 }

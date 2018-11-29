@@ -8,8 +8,6 @@ import java.util.List;
 
 import static chessprogram.god.BitOperations.*;
 import static chessprogram.magic.MagicConstants.*;
-import static chessprogram.magic.MagicConstants.rookBlankBoardAttackMasks;
-import static chessprogram.magic.MagicConstants.rookShiftAmounts;
 import static chessprogram.magic.Utils.singleBishopAllVariations;
 import static chessprogram.magic.Utils.singleRookAllVariations;
 

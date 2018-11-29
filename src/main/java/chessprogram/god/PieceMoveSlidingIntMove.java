@@ -5,7 +5,7 @@ import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.Magic.singleBishopMagicMoves;
 import static chessprogram.god.Magic.singleRookMagicMoves;
 
-class PieceMoveSliding {
+class PieceMoveSlidingIntMove {
 
     static long singleBishopTable(long occupancy, boolean white, long piece, long legalCaptures){
         return singleBishopMagicMoves(occupancy, piece, legalCaptures);
@@ -19,7 +19,7 @@ class PieceMoveSliding {
         return singleBishopMagicMoves(occupancy, piece, mask) | singleRookMagicMoves(occupancy, piece, mask);
     }
 
-    static long masterAttackTableSliding(Chessboard board, boolean white,
+    static long masterAttackTableSliding(ChessboardIntMove board, boolean white,
                                          long ignoreThesePieces, long legalPushes, long legalCaptures){
         long mask = legalPushes | legalCaptures;
         long ans = 0, bishops, rooks, queens, allPieces = board.allPieces();

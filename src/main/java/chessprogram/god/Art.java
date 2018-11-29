@@ -4,6 +4,28 @@ import static chessprogram.god.BitOperations.newPieceOnSquare;
 
 public class Art {
 
+
+    static String boardArt (ChessboardIntMove board) {
+        StringBuilder s = new StringBuilder();
+        s.append("   a b c d e f g h\n");
+        s.append("  +---------------+\n");
+        for (int y = 7; y >= 0; y--) {
+            s.append(y + 1).append(" |");
+            for (int x = 7; x >= 0; x--) {
+                s.append(pieceByNumberASCII(pieceOnSquare(board, x + y * 8)));
+                if (x>0) s.append(" ");
+            }
+            s.append("| ").append(y + 1);
+            s.append("\n");
+        }
+        s.append("  +---------------+\n");
+        s.append("   a b c d e f g h\n");
+
+        return s.toString();
+    }
+
+    
+    
     static String boardArt (Chessboard board) {
         StringBuilder s = new StringBuilder();
         s.append("   a b c d e f g h\n");
@@ -73,6 +95,26 @@ public class Art {
         System.out.println("---");
     }
 
+    private static int pieceOnSquare(ChessboardIntMove board, int s){
+        long square = newPieceOnSquare(s);
+
+        if ((square & board.getWhitePawns()) != 0) return 1;
+        if ((square & board.getWhiteKnights()) != 0) return 2;
+        if ((square & board.getWhiteBishops()) != 0) return 3;
+        if ((square & board.getWhiteRooks()) != 0) return 4;
+        if ((square & board.getWhiteQueen()) != 0) return 5;
+        if ((square & board.getWhiteKing()) != 0) return 6;
+
+        if ((square & board.getBlackPawns()) != 0) return 7;
+        if ((square & board.getBlackKnights()) != 0) return 8;
+        if ((square & board.getBlackBishops()) != 0)  return 9;
+        if ((square & board.getBlackRooks()) != 0) return 10;
+        if ((square & board.getBlackQueen()) != 0) return 11;
+        if ((square & board.getBlackKing()) != 0) return 12;
+
+        else return 0;
+    }
+    
     private static int pieceOnSquare(Chessboard board, int s){
         long square = newPieceOnSquare(s);
 

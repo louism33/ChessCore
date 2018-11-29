@@ -7,15 +7,15 @@ import static chessprogram.god.PieceMoveKnight.singleKnightTable;
 import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
 import static chessprogram.god.PieceMoveSliding.*;
 
-class CheckHelper {
+class CheckHelperIntMove {
 
-    static boolean boardInCheck(Chessboard board, boolean white){
+    static boolean boardInCheck(ChessboardIntMove board, boolean white){
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
         return numberOfCheckers > 0;
     }
 
-    static int numberOfPiecesThatLegalThreatenSquare(Chessboard board, boolean myColour, long square){
+    static int numberOfPiecesThatLegalThreatenSquare(ChessboardIntMove board, boolean myColour, long square){
         long pawns, knights, bishops, rooks, queens, king, allPieces = board.allPieces();
         if (!myColour){
             pawns = board.getWhitePawns();
@@ -74,7 +74,7 @@ class CheckHelper {
     }
 
     // faster to create new stack and pop things to it ?
-    static boolean isDrawByRepetition(Chessboard board, ZobristHash zobristHash){
+    static boolean isDrawByRepetition(ChessboardIntMove board, ZobristHashIntMove zobristHash){
         Stack<Long> zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
         long zobristHashToMatch = zobristHash.getBoardHash();
         int howManyMovesToSearchToMax = 50;
@@ -93,7 +93,7 @@ class CheckHelper {
         return counter > 0;
     }
 
-    static boolean isDrawByInsufficientMaterial(Chessboard board){
+    static boolean isDrawByInsufficientMaterial(ChessboardIntMove board){
         boolean drawByMaterial = false;
         int totalPieces = populationCount(board.allPieces());
 
@@ -118,7 +118,7 @@ class CheckHelper {
     }
 
     // todo
-    static boolean colourHasInsufficientMaterialToMate(Chessboard board, boolean white){
+    static boolean colourHasInsufficientMaterialToMate(ChessboardIntMove board, boolean white){
         boolean drawByMaterial = false;
         int totalPieces = populationCount(board.allPieces());
 

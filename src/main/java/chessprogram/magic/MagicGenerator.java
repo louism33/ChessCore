@@ -1,18 +1,23 @@
 package chessprogram.magic;
 
-import chessprogram.god.*;
+import chessprogram.god.BitboardResources;
+import chessprogram.god.Chessboard;
+import chessprogram.god.Square;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
-import static chessprogram.god.BitOperations.*;
-import static chessprogram.god.Square.*;
-import static chessprogram.magic.MagicConstants.*;
+import static chessprogram.god.BitOperations.UNIVERSE;
+import static chessprogram.god.BitOperations.populationCount;
+import static chessprogram.god.Square.getPiecesOnSquare;
+import static chessprogram.magic.MagicConstants.bishopShiftAmounts;
 import static chessprogram.magic.Utils.*;
 
 public class MagicGenerator {

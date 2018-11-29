@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static chessprogram.god.BitOperations.*;
-import static chessprogram.god.BitboardResources.*;
+import static chessprogram.god.BitboardResources.FILES;
+import static chessprogram.god.BitboardResources.ROWS;
 
 public enum Square {
 

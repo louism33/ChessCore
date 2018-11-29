@@ -3,7 +3,6 @@ package chessprogram.god;
 import chessprogram.magic.Utils;
 import org.junit.Assert;
 
-import java.awt.image.BufferedImageOp;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.*;
