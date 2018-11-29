@@ -4,8 +4,6 @@ import chessprogram.god.Art;
 import chessprogram.god.Chessboard;
 import chessprogram.god.Move;
 
-import static chessprogram.god.MoveConstants.*;
-
 
 public class Dummy {
     

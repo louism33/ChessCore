@@ -11,7 +11,7 @@ import static chessprogram.god.PinnedManagerIntMove.whichPiecesArePinned;
 
 class MoveGeneratorCheckIntMove {
 
-    static void addCheckEvasionMoves(List<Integer> moves, ChessboardIntMove board, boolean white){
+    static void addCheckEvasionMoves(List<Integer> moves, Chessboard board, boolean white){
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         long ignoreThesePieces = whichPiecesArePinned(board, white, myKing);
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
@@ -19,7 +19,7 @@ class MoveGeneratorCheckIntMove {
     }
 
 
-    private static void allLegalCheckEscapeMoves(List<Integer> moves, ChessboardIntMove board, boolean white, long ignoreThesePieces) {
+    private static void allLegalCheckEscapeMoves(List<Integer> moves, Chessboard board, boolean white, long ignoreThesePieces) {
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
         long blockingSquaresMask, checkingPieceMask;
         long jumper = inCheckByAJumper(board, white);
@@ -47,7 +47,7 @@ class MoveGeneratorCheckIntMove {
 
     }
 
-    private static long inCheckByAJumper(ChessboardIntMove board, boolean white){
+    private static long inCheckByAJumper(Chessboard board, boolean white){
         long pawns, knights;
         if (!white){
             pawns = board.getWhitePawns();
@@ -71,7 +71,7 @@ class MoveGeneratorCheckIntMove {
         return 0;
     }
 
-    private static long inCheckByASlider(ChessboardIntMove board, boolean white){
+    private static long inCheckByASlider(Chessboard board, boolean white){
         long bishops, rooks, queens, allPieces = board.allPieces();
         if (!white){
             bishops = board.getWhiteBishops();

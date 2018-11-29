@@ -2,18 +2,18 @@ package chessprogram.god;
 
 class PinnedManagerIntMove {
 
-    static long whichPiecesArePinned(ChessboardIntMove board, boolean white, long squareOfInterest){
+    static long whichPiecesArePinned(Chessboard board, boolean white, long squareOfInterest){
         if (squareOfInterest == 0) {
             return 0;
         }
         return pinsToSquare(board, white, squareOfInterest);
     }
     
-    static long whichPiecesArePinned(ChessboardIntMove board, boolean white, Square squareOfInterest){
+    static long whichPiecesArePinned(Chessboard board, boolean white, Square squareOfInterest){
         return pinsToSquare(board, white, squareOfInterest.toBitboard());
     }
     
-    private static long pinsToSquare(ChessboardIntMove board, boolean white, long squareOfInterest) {
+    private static long pinsToSquare(Chessboard board, boolean white, long squareOfInterest) {
         long myPieces, enemyBishops, enemyRooks, enemyQueens, allPieces = board.allPieces();
 
         if (white){

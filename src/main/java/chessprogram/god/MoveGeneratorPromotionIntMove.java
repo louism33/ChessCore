@@ -7,14 +7,14 @@ import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.BitboardResources.*;
 import static chessprogram.god.MoveConstants.*;
-import static chessprogram.god.MoveGenerationUtilitiesIntMove.addMovesFromAttackTableMaster;
+import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
 import static chessprogram.god.PieceMovePawnsIntMove.singlePawnCaptures;
 import static chessprogram.god.PieceMovePawnsIntMove.singlePawnPushes;
 
 class MoveGeneratorPromotionIntMove {
 
-    static void addPromotionMoves(List<Integer> moves, ChessboardIntMove board, boolean white,
-                                               long ignoreThesePieces, long legalPushes, long legalCaptures){
+    static void addPromotionMoves(List<Integer> moves, Chessboard board, boolean white,
+                                  long ignoreThesePieces, long legalPushes, long legalCaptures){
         long legalPieces = ~ignoreThesePieces;
         long PENULTIMATE_RANK;
         long FINAL_RANK;

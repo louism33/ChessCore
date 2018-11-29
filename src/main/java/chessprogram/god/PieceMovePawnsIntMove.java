@@ -6,7 +6,7 @@ import static chessprogram.god.MoveConstantsPawnCapture.PAWN_CAPTURE_TABLE_WHITE
 
 class PieceMovePawnsIntMove {
 
-    static long singlePawnPushes(ChessboardIntMove board, long pawns, boolean white, long legalPushes) {
+    static long singlePawnPushes(Chessboard board, long pawns, boolean white, long legalPushes) {
         long allPieces = board.allPieces();
         final long possiblePawnSinglePushes = white ? pawns << 8 : pawns >>> 8;
         final long intermediateRank = white ? BitboardResources.RANK_THREE : BitboardResources.RANK_SIX;
@@ -21,7 +21,7 @@ class PieceMovePawnsIntMove {
                 : PAWN_CAPTURE_TABLE_BLACK[getIndexOfFirstPiece(piece)]);
     }
 
-    static long masterPawnCapturesTable(ChessboardIntMove board, boolean white,
+    static long masterPawnCapturesTable(Chessboard board, boolean white,
                                         long ignoreThesePieces, long legalCaptures){
         long ans = 0, pawns = white ? board.getWhitePawns() : board.getBlackPawns();
         while (pawns != 0){

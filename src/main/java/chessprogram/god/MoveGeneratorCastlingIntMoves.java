@@ -4,12 +4,13 @@ import org.junit.Assert;
 
 import java.util.List;
 
-import static chessprogram.god.CheckHelperIntMove.*;
+import static chessprogram.god.CheckHelper.boardInCheck;
+import static chessprogram.god.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
 
 class MoveGeneratorCastlingIntMoves {
 
     // checking if we are in check happens elsewhere
-    static void addCastlingMoves(List<Integer> moves, ChessboardIntMove board, boolean white){
+    static void addCastlingMoves(List<Integer> moves, Chessboard board, boolean white){
 
         if (white){
             if(board.isWhiteCanCastleK()){
@@ -69,7 +70,7 @@ class MoveGeneratorCastlingIntMoves {
         }
     }
 
-    private static boolean areTheseSquaresUnthreatened(ChessboardIntMove board, boolean white, long squares){
+    private static boolean areTheseSquaresUnthreatened(Chessboard board, boolean white, long squares){
         while (squares != 0){
             final long square = BitOperations.getFirstPiece(squares);
             int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(board, white, square);
@@ -81,7 +82,7 @@ class MoveGeneratorCastlingIntMoves {
         return true;
     }
 
-    private static boolean areTheseSquaresEmpty(ChessboardIntMove board, long squares){
+    private static boolean areTheseSquaresEmpty(Chessboard board, long squares){
         return ((board.allPieces() & squares) == 0);
     }
 }

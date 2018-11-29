@@ -5,7 +5,7 @@ import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
 
 class MoveMakingCastlingIntMove {
 
-    static void makeCastlingMove(ChessboardIntMove board, int move){
+    static void makeCastlingMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(MoveParserIntMove.getSourceIndex(move));
         if ((sourcePiece & BitboardResources.INITIAL_WHITE_KING) != 0){
             if (MoveParserIntMove.getDestinationIndex(move) == 1){
@@ -57,7 +57,7 @@ class MoveMakingCastlingIntMove {
         }
     }
 
-    static void castleFlagManager (ChessboardIntMove board, int move){
+    static void castleFlagManager (Chessboard board, int move){
 
         // disable relevant castle flag whenever a piece moves into the relevant square.
         if (MoveParserIntMove.getSourceIndex(move) == 0 || MoveParserIntMove.getDestinationIndex(move) == 0){

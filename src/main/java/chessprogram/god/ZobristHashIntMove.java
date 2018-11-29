@@ -10,8 +10,8 @@ import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.BitboardResources.INITIAL_BLACK_KING;
 import static chessprogram.god.BitboardResources.INITIAL_WHITE_KING;
 import static chessprogram.god.MoveMakerIntMove.whichPieceOnSquare;
-import static chessprogram.god.StackMoveDataIntMove.SpecialMove.ENPASSANTVICTIM;
-import static chessprogram.god.StackMoveDataIntMove.SpecialMove.NULL_MOVE;
+import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
+import static chessprogram.god.StackMoveData.SpecialMove.NULL_MOVE;
 
 class ZobristHashIntMove {
     private static final long initHashSeed = 100;
@@ -22,14 +22,14 @@ class ZobristHashIntMove {
     static final long zobristHashColourBlack = initColourHash();
     private long boardHash;
 
-    ZobristHashIntMove(ChessboardIntMove board) {
+    ZobristHashIntMove(Chessboard board) {
         this.boardHash = boardToHash(board);
     }
 
-    long updateWithEPFlags(ChessboardIntMove board){
+    long updateWithEPFlags(Chessboard board){
         Assert.assertTrue(board.moveStack.size() > 0);
         long hash = 0;
-        StackMoveDataIntMove peek = board.moveStack.peek();
+        StackMoveData peek = board.moveStack.peek();
         if (peek.typeOfSpecialMove == ENPASSANTVICTIM) {
             hash = hashEP(hash, peek);
         }
@@ -41,9 +41,9 @@ class ZobristHashIntMove {
         return hash;
     }
 
-    private long nullMoveEP(ChessboardIntMove board, long hash) {
-        StackMoveDataIntMove pop = board.moveStack.pop();
-        StackMoveDataIntMove peekSecondElement = board.moveStack.peek();
+    private long nullMoveEP(Chessboard board, long hash) {
+        StackMoveData pop = board.moveStack.pop();
+        StackMoveData peekSecondElement = board.moveStack.peek();
         if (peekSecondElement.typeOfSpecialMove == ENPASSANTVICTIM) {
             // file one = FILE_A
             hash = hashEP(hash, peekSecondElement);
@@ -52,12 +52,12 @@ class ZobristHashIntMove {
         return hash;
     }
 
-    private long hashEP(long hash, StackMoveDataIntMove peek) {
+    private long hashEP(long hash, StackMoveData peek) {
         hash ^= zobristHashEPFiles[peek.enPassantFile - 1];
         return hash;
     }
 
-    void updateHashPostMove(ChessboardIntMove board, int move){
+    void updateHashPostMove(Chessboard board, int move){
         /*
         invert colour
         */
@@ -77,9 +77,9 @@ class ZobristHashIntMove {
 
     }
 
-    private long postMoveCastlingRights(ChessboardIntMove board){
+    private long postMoveCastlingRights(Chessboard board){
         long updatedHashValue = 0;
-        StackMoveDataIntMove peek = board.moveStack.peek();
+        StackMoveData peek = board.moveStack.peek();
         /*
         undo previous castling rights
         */
@@ -125,7 +125,7 @@ class ZobristHashIntMove {
     }
 
 
-    void updateHashPreMove(ChessboardIntMove board, int move){
+    void updateHashPreMove(Chessboard board, int move){
         int sourceSquare = MoveParserIntMove.getSourceIndex(move);
         int destinationSquareIndex = MoveParserIntMove.getDestinationIndex(move);
 
@@ -154,7 +154,7 @@ class ZobristHashIntMove {
         /* 
         "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
         */
-        Stack<StackMoveDataIntMove> moveStack = board.moveStack;
+        Stack<StackMoveData> moveStack = board.moveStack;
         if (moveStack.size() > 0){
             boardHash ^= updateWithEPFlags(board);
         }
@@ -270,7 +270,7 @@ class ZobristHashIntMove {
     /*
     create almost unique long to identify current board
      */
-    private long boardToHash(ChessboardIntMove board){
+    private long boardToHash(Chessboard board){
         long hash = 0;
         for (int sq = 0; sq < 64; sq++) {
             long pieceOnSquare = newPieceOnSquare(sq);
@@ -293,7 +293,7 @@ class ZobristHashIntMove {
         return hash;
     }
 
-    private long castlingRightsToHash(ChessboardIntMove board){
+    private long castlingRightsToHash(Chessboard board){
         int numTo15 = 0;
         if (board.isWhiteCanCastleK()){
             numTo15 += 1;

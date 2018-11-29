@@ -9,8 +9,8 @@ class PieceMoveKingIntMove {
         return KING_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
     }
 
-    static long masterAttackTableKing(ChessboardIntMove board, boolean white,
-                                             long ignoreThesePieces, long legalPushes, long legalCaptures){
+    static long masterAttackTableKing(Chessboard board, boolean white,
+                                      long ignoreThesePieces, long legalPushes, long legalCaptures){
 
         long ans = 0, kings = white ? board.getWhiteKing() : board.getBlackKing();
         while (kings != 0) {

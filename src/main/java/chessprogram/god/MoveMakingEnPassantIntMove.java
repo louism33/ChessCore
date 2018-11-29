@@ -6,7 +6,7 @@ import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
 
 class MoveMakingEnPassantIntMove {
     
-    static void makeEnPassantMove(ChessboardIntMove board, int move){
+    static void makeEnPassantMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(MoveParserIntMove.getSourceIndex(move));
         long destinationPiece = newPieceOnSquare(MoveParserIntMove.getDestinationIndex(move));
         

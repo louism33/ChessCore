@@ -2,11 +2,11 @@ package chessprogram.god;
 
 import java.util.List;
 
-import static chessprogram.god.MoveGenerationUtilitiesIntMove.addMovesFromAttackTableMaster;
+import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
 
 class MoveGeneratorKnightIntMove {
 
-    static void addKnightMoves(List<Integer> moves, ChessboardIntMove board, boolean white,
+    static void addKnightMoves(List<Integer> moves, Chessboard board, boolean white,
                                long ignoreThesePieces, long mask){
         long knights;
         if (white){

@@ -7,7 +7,7 @@ import static chessprogram.god.MoveParserIntMove.getSourceIndex;
 
 class MoveRegularIntMove {
 
-    static void makeRegularMove(ChessboardIntMove board, int move){
+    static void makeRegularMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(getSourceIndex(move));
         long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 

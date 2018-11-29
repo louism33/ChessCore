@@ -83,49 +83,49 @@ class xoldFenParser {
         switch (epFlags) {
             case "a": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, board, 50, 1, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, board, 50, 1, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 board.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "b": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, board, 50, 2, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, board, 50, 2, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 board.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "c": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, board, 50, 3, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, board, 50, 3, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 board.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "d": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, board, 50, 4, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, board, 50, 4, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 board.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "e": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, board, 50, 5, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, board, 50, 5, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 board.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "f": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, board, 50, 6, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, board, 50, 6, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 board.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "g": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, board, 50, 7, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, board, 50, 7, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 board.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "h": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, board, 50, 8, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, board, 50, 8, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 board.moveStack.push(previousMoveForEPPurposes);
                 break;
             }

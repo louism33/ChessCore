@@ -7,6 +7,7 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static chessprogram.god.CheckHelper.*;
 import static chessprogram.god.MakeMoveAndHashUpdate.*;
 
 public class Chessboard implements Cloneable{
@@ -14,13 +15,13 @@ public class Chessboard implements Cloneable{
     // todo, consider shift to 8 bbs
     
     private ChessboardDetails details;
-    private ZobristHash zobristHash;
+    private ZobristHashIntMove zobristHash;
 
     void makeZobrist(){
-        this.zobristHash = new ZobristHash(this);
+        this.zobristHash = new ZobristHashIntMove(this);
     }
 
-    void cloneZobristStack(ZobristHash zobristHash){
+    void cloneZobristStack(ZobristHashIntMove zobristHash){
         this.zobristHash.zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
     }
     
@@ -30,7 +31,7 @@ public class Chessboard implements Cloneable{
     
     public Chessboard(boolean blank){
         this.details = new ChessboardDetails();
-        this.zobristHash = new ZobristHash(this);
+        this.zobristHash = new ZobristHashIntMove(this);
     }
     
     public Chessboard() {
@@ -50,8 +51,8 @@ public class Chessboard implements Cloneable{
         
     }
     
-    public List<Move> generateLegalMoves(){
-        return MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn());
+    public List<Integer> generateLegalMoves(){
+        return MoveGeneratorMasterIntMove.generateLegalMoves(this, isWhiteTurn());
     }
 
     private List<Move> generateCaptureMoves(){
@@ -63,11 +64,11 @@ public class Chessboard implements Cloneable{
     }
     
     
-    public void makeMove(Move move){
+    public void makeMove(int move){
         makeMoveAndHashUpdate(this, move, this.zobristHash);
     }
     
-    public void makeMoveAndFlipTurn(Move move){
+    public void makeMoveAndFlipTurn(int move){
         makeMoveAndHashUpdate(this, move, this.zobristHash);
         flipTurn();
     }
@@ -81,7 +82,7 @@ public class Chessboard implements Cloneable{
     }
 
     public void flipTurn(){
-        MoveMaker.flipTurn(this);
+        MoveMakerIntMove.flipTurn(this);
     }
     
     public void unMakeMoveAndFlipTurn(){
@@ -89,15 +90,15 @@ public class Chessboard implements Cloneable{
     }
     
     public boolean inCheck(){
-        return CheckHelper.boardInCheck(this, isWhiteTurn());
+        return boardInCheck(this, isWhiteTurn());
     }
 
     public boolean drawByRepetition (boolean white){
-        return CheckHelper.isDrawByRepetition(this, this.zobristHash);
+        return isDrawByRepetition(this, this.zobristHash);
     }
 
     private boolean drawByInsufficientMaterial (boolean white){
-        return CheckHelper.isDrawByInsufficientMaterial(this);
+        return isDrawByInsufficientMaterial(this);
     }
 
     private boolean colourHasInsufficientMaterialToMate (boolean white){
@@ -110,11 +111,11 @@ public class Chessboard implements Cloneable{
     
     public Stack<StackMoveData> moveStack = new Stack<>();
 
-    public List<Move> stackMoves(Stack<StackMoveData> stack){
-        List<Move> moves = new ArrayList<>();
+    public List<Integer> stackMoves(Stack<StackMoveData> stack){
+        List<Integer> moves = new ArrayList<>();
         Stack<StackMoveData> clone = (Stack<StackMoveData>) stack.clone();
         for (int s = 0; s < stack.size(); s++){
-            Move move = clone.pop().move;
+            int move = clone.pop().move;
             moves.add(move);
         }
         return moves;
@@ -323,7 +324,7 @@ public class Chessboard implements Cloneable{
     public Chessboard(String fen) {
         details = new ChessboardDetails();
         makeBoardBasedOnFENSpecific(fen);
-        this.zobristHash = new ZobristHash(this);
+        this.zobristHash = new ZobristHashIntMove(this);
     }
     
 
@@ -400,49 +401,49 @@ public class Chessboard implements Cloneable{
         switch (epFlags) {
             case "a": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, this, 50, 1, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, this, 50, 1, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "b": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, this, 50, 2, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, this, 50, 2, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "c": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, this, 50, 3, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, this, 50, 3, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "d": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, this, 50, 4, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, this, 50, 4, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "e": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, this, 50, 5, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, this, 50, 5, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "f": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, this, 50, 6, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, this, 50, 6, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "g": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, this, 50, 7, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, this, 50, 7, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "h": {
                 StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (null, this, 50, 8, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                        (0, this, 50, 8, StackMoveData.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
@@ -615,11 +616,11 @@ public class Chessboard implements Cloneable{
         this.details = details;
     }
 
-    public ZobristHash getZobristHash() {
+    public ZobristHashIntMove getZobristHash() {
         return zobristHash;
     }
 
-    public void setZobristHash(ZobristHash zobristHash) {
+    public void setZobristHash(ZobristHashIntMove zobristHash) {
         this.zobristHash = zobristHash;
     }
 

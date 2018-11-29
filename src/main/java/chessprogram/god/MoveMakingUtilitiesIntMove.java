@@ -2,7 +2,7 @@ package chessprogram.god;
 
 class MoveMakingUtilitiesIntMove {
 
-    public static void removePieces (ChessboardIntMove board, long sourceSquare, long destinationSquare){
+    public static void removePieces (Chessboard board, long sourceSquare, long destinationSquare){
         long mask = ~(sourceSquare | destinationSquare);
         board.setWhitePawns(board.getWhitePawns() & mask);
         board.setWhiteKnights(board.getWhiteKnights() & mask);

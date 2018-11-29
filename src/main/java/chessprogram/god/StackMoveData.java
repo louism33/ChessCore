@@ -3,7 +3,7 @@ package chessprogram.god;
 @SuppressWarnings("CanBeFinal")
 class StackMoveData {
     
-    public Move move;
+    public int move;
     public int takenPiece = 0;
     private int fiftyMoveCounter;
     public boolean whiteTurn;
@@ -18,7 +18,7 @@ class StackMoveData {
     public boolean whiteCanCastleK, whiteCanCastleQ, blackCanCastleK, blackCanCastleQ;
 
 
-    public StackMoveData(Move move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
+    public StackMoveData(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
         this.move = move;
         this.fiftyMoveCounter = fiftyMoveCounter;
         this.typeOfSpecialMove = typeOfSpecialMove;
@@ -32,7 +32,7 @@ class StackMoveData {
     }
 
     
-    public StackMoveData(Move move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove, int takenPiece) {
+    public StackMoveData(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove, int takenPiece) {
         this.move = move;
         this.fiftyMoveCounter = fiftyMoveCounter;
         this.typeOfSpecialMove = typeOfSpecialMove;
@@ -47,7 +47,7 @@ class StackMoveData {
     }
 
 
-    public StackMoveData(Move move, Chessboard board, int fiftyMoveCounter, int enPassantFile, SpecialMove typeOfSpecialMove) {
+    public StackMoveData(int move, Chessboard board, int fiftyMoveCounter, int enPassantFile, SpecialMove typeOfSpecialMove) {
         this.move = move;
         this.fiftyMoveCounter = fiftyMoveCounter;
         this.typeOfSpecialMove = typeOfSpecialMove;

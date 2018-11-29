@@ -12,7 +12,7 @@ import static chessprogram.god.PieceMoveSlidingIntMove.masterAttackTableSliding;
 
 class MoveGeneratorPseudoIntMove {
 
-    public static void addAllMovesWithoutKing(List<Integer> moves, ChessboardIntMove board, boolean whiteTurn,
+    public static void addAllMovesWithoutKing(List<Integer> moves, Chessboard board, boolean whiteTurn,
                                               long ignoreThesePieces, long legalPushes, long legalCaptures){
         
         addKnightMoves(moves, board, whiteTurn, ignoreThesePieces, (legalPushes | legalCaptures));
@@ -20,7 +20,7 @@ class MoveGeneratorPseudoIntMove {
         addPawnPushes(moves, board, whiteTurn, ignoreThesePieces, legalCaptures, legalPushes);
     }
 
-    public static long generatePseudoCaptureTable(ChessboardIntMove board, boolean whiteTurn,
+    public static long generatePseudoCaptureTable(Chessboard board, boolean whiteTurn,
                                                   long ignoreThesePieces, long legalPushes, long legalCaptures){
         long ans = 0;
 

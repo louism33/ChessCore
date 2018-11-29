@@ -2,7 +2,6 @@ package chessprogram.god;
 
 class MagicConstants {
 
-
     static long[][] rookDatabase = new long[64][];
     static long[][] bishopDatabase = new long[64][];
     

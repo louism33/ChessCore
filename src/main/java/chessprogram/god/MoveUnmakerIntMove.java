@@ -4,13 +4,13 @@ import org.junit.Assert;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
-import static chessprogram.god.StackMoveDataIntMove.SpecialMove;
-import static chessprogram.god.StackMoveDataIntMove.SpecialMove.*;
+import static chessprogram.god.StackMoveData.SpecialMove;
+import static chessprogram.god.StackMoveData.SpecialMove.*;
 
 class MoveUnmakerIntMove {
 
-    static void unMakeMoveMaster(ChessboardIntMove board) {
-        StackMoveDataIntMove popSMD = board.moveStack.pop();
+    static void unMakeMoveMaster(Chessboard board) {
+        StackMoveData popSMD = board.moveStack.pop();
         
         if (popSMD.move == 0){
             Assert.assertSame(popSMD.typeOfSpecialMove, NULL_MOVE);
@@ -133,7 +133,7 @@ class MoveUnmakerIntMove {
     }
 
 
-    private static void addRelevantPieceToSquare(ChessboardIntMove board, int pieceToAdd, int placeToAddIt){
+    private static void addRelevantPieceToSquare(Chessboard board, int pieceToAdd, int placeToAddIt){
         long placeToAddPiece = newPieceOnSquare(placeToAddIt);
 
         if (pieceToAdd == 1){
@@ -179,7 +179,7 @@ class MoveUnmakerIntMove {
     }
 
 
-    private static void makeRegularMove(ChessboardIntMove board, Move move){
+    private static void makeRegularMove(Chessboard board, Move move){
         long sourcePiece = newPieceOnSquare(move.getSourceIndex());
         long destinationPiece = newPieceOnSquare(move.getDestinationIndex());
 

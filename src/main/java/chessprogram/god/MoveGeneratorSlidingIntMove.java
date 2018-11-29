@@ -4,12 +4,12 @@ import java.util.List;
 
 import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
-import static chessprogram.god.MoveGenerationUtilitiesIntMove.addMovesFromAttackTableMaster;
+import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
 
 class MoveGeneratorSlidingIntMove {
 
-    static void addSlidingMoves (List<Integer> moves, ChessboardIntMove board, boolean white,
-                                           long ignoreThesePieces, long mask){
+    static void addSlidingMoves (List<Integer> moves, Chessboard board, boolean white,
+                                 long ignoreThesePieces, long mask){
         long bishops, rooks, queens, allPieces = board.allPieces();
         if (white){
             bishops = board.getWhiteBishops();

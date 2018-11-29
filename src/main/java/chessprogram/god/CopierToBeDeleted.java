@@ -7,7 +7,7 @@ public class CopierToBeDeleted {
     public static Chessboard copyBoard(Chessboard board, boolean white, boolean ignoreMyKing){
         Chessboard newBoard = new Chessboard();
         
-        newBoard.moveStack = (Stack< StackMoveData >) board.moveStack.clone();
+        newBoard.moveStack = (Stack<StackMoveData>) board.moveStack.clone();
         
         newBoard.setWhitePawns(board.getWhitePawns());
         newBoard.setWhiteKnights(board.getWhiteKnights());

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.*;
-import static chessprogram.god.CheckHelperIntMove.boardInCheck;
+import static chessprogram.god.CheckHelper.boardInCheck;
 import static chessprogram.god.MoveConstants.ENPASSANT_MASK;
-import static chessprogram.god.MoveGenerationUtilitiesIntMove.addMovesFromAttackTableMaster;
-import static chessprogram.god.StackMoveDataIntMove.SpecialMove.ENPASSANTVICTIM;
+import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
+import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 
 class MoveGeneratorEnPassantIntMove {
 
-    static void addEnPassantMoves(List<Integer> moves, ChessboardIntMove board, boolean white,
+    static void addEnPassantMoves(List<Integer> moves, Chessboard board, boolean white,
                                   long ignoreThesePieces, long legalPushes, long legalCaptures) {
         List<Integer> temp = new ArrayList<>();
 
@@ -33,7 +33,7 @@ class MoveGeneratorEnPassantIntMove {
             return;
         }
 
-        StackMoveDataIntMove previousMove = board.moveStack.peek();
+        StackMoveData previousMove = board.moveStack.peek();
         if (previousMove.typeOfSpecialMove != ENPASSANTVICTIM){
             return;
         }

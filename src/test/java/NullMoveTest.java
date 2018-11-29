@@ -109,12 +109,12 @@ public class NullMoveTest {
         if (depth == 0){
             return 1;
         }
-        List<Move> moves = board.generateLegalMoves();
+        List<Integer> moves = board.generateLegalMoves();
         if (depth == 1){
             final int size = moves.size();
             return size;
         }
-        for (Move move : moves) {
+        for (int move : moves) {
             board.makeMoveAndFlipTurn(move);
             Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
 

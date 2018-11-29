@@ -6,7 +6,7 @@ import static chessprogram.god.MoveParserIntMove.*;
 
 class MovePromotionIntMove {
 
-    static void makePromotingMove(ChessboardIntMove board, int move){
+    static void makePromotingMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(getSourceIndex(move));
         long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 
