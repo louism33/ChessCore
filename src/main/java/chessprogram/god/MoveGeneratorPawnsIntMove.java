@@ -11,25 +11,17 @@ import static chessprogram.god.PieceMovePawns.singlePawnPushes;
 class MoveGeneratorPawnsIntMove {
 
     static void addPawnPushes(List<Integer> moves, Chessboard board, boolean white,
-                              long ignoreThesePieces, long legalCaptures, long legalPushes){
-
-        long pawns;
-        if (white){
-            pawns = board.getWhitePawns();
-        }
-        else {
-            pawns = board.getBlackPawns();
-        }
-
-        while (pawns != 0){
-            long pawn = getFirstPiece(pawns);
+                              long ignoreThesePieces, long legalCaptures, long legalPushes,
+                              long myPawns){
+        while (myPawns != 0){
+            long pawn = getFirstPiece(myPawns);
             if ((pawn & ignoreThesePieces) == 0){
                 final long multi = singlePawnPushes(board, pawn, white, legalPushes);
                 final long pawnCaptures = singlePawnCaptures(pawn, white, legalCaptures);
                 final int pawnIndex = getIndexOfFirstPiece(pawn);
                 addMovesFromAttackTableMaster(moves, multi | pawnCaptures, pawnIndex, board);
             }
-            pawns &= pawns - 1;
+            myPawns &= myPawns - 1;
         }
 
     }

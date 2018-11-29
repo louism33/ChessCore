@@ -22,8 +22,8 @@ class PieceMovePawns {
     }
 
     static long masterPawnCapturesTable(Chessboard board, boolean white,
-                                        long ignoreThesePieces, long legalCaptures){
-        long ans = 0, pawns = white ? board.getWhitePawns() : board.getBlackPawns();
+                                        long ignoreThesePieces, long legalCaptures, long pawns){
+        long ans = 0;
         while (pawns != 0){
             final long pawn = BitOperations.getFirstPiece(pawns);
             if ((pawn & ignoreThesePieces) == 0) {

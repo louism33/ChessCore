@@ -10,9 +10,10 @@ class PieceMoveKingIntMove {
     }
 
     static long masterAttackTableKing(Chessboard board, boolean white,
-                                      long ignoreThesePieces, long legalPushes, long legalCaptures){
+                                      long ignoreThesePieces, long legalPushes, long legalCaptures, 
+                                      long kings){
 
-        long ans = 0, kings = white ? board.getWhiteKing() : board.getBlackKing();
+        long ans = 0;
         while (kings != 0) {
             final long king = BitOperations.getFirstPiece(kings);
             if ((king & ignoreThesePieces) == 0) {

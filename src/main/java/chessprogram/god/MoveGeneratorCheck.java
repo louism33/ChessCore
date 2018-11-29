@@ -5,9 +5,10 @@ import java.util.List;
 import static chessprogram.god.BitboardResources.UNIVERSE;
 import static chessprogram.god.MoveGeneratorEnPassant.addEnPassantMoves;
 import static chessprogram.god.MoveGeneratorKingLegal.addKingLegalMovesOnly;
-import static chessprogram.god.MoveGeneratorPromotionIntMove.addPromotionMoves;
-import static chessprogram.god.MoveGeneratorPseudoIntMove.addAllMovesWithoutKing;
+import static chessprogram.god.MoveGeneratorPromotion.addPromotionMoves;
+import static chessprogram.god.MoveGeneratorPseudo.addAllMovesWithoutKing;
 import static chessprogram.god.PieceMoveKnight.singleKnightTable;
+import static chessprogram.god.PieceMovePawns.*;
 import static chessprogram.god.PieceMoveSliding.singleBishopTable;
 import static chessprogram.god.PieceMoveSliding.singleQueenTable;
 import static chessprogram.god.PieceMoveSliding.singleRookTable;
@@ -18,7 +19,6 @@ class MoveGeneratorCheck {
                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                      long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing, 
                                      long enemies, long friends, long allPieces){
-
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
         long blockingSquaresMask, checkingPieceMask;
         long jumper = inCheckByAJumper(board, white, myKing, enemyPawns, enemyKnights);
@@ -38,12 +38,12 @@ class MoveGeneratorCheck {
         addPromotionMoves(moves, board, white, pinnedPieces, blockingSquaresMask, checkingPieceMask,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies);
+                enemies, friends, allPieces);
 
         addAllMovesWithoutKing (moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies);
+                enemies, friends, allPieces);
 
         addKingLegalMovesOnly(moves, board, white,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
@@ -54,12 +54,11 @@ class MoveGeneratorCheck {
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, friends, allPieces);
-
     }
 
     private static long inCheckByAJumper(Chessboard board, boolean white,
                                          long myKing, long enemyPawns, long enemyKnights){
-        long possiblePawn = PieceMovePawns.singlePawnCaptures(myKing, white, enemyPawns);
+        long possiblePawn = singlePawnCaptures(myKing, white, enemyPawns);
         if (possiblePawn != 0) {
             return possiblePawn;
         }

@@ -8,11 +8,12 @@ import static chessprogram.god.BitOperations.UNIVERSE;
 import static chessprogram.god.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
 import static chessprogram.god.Magic.*;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
+import static chessprogram.god.MoveGeneratorCastling.*;
 import static chessprogram.god.MoveGeneratorCheck.addCheckEvasionMoves;
 import static chessprogram.god.MoveGeneratorEnPassant.addEnPassantMoves;
 import static chessprogram.god.MoveGeneratorKingLegal.addKingLegalMovesOnly;
-import static chessprogram.god.MoveGeneratorPromotionIntMove.addPromotionMoves;
-import static chessprogram.god.MoveGeneratorPseudoIntMove.addAllMovesWithoutKing;
+import static chessprogram.god.MoveGeneratorPromotion.addPromotionMoves;
+import static chessprogram.god.MoveGeneratorPseudo.addAllMovesWithoutKing;
 import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
 import static chessprogram.god.PieceMovePawns.singlePawnPushes;
 import static chessprogram.god.PieceMoveSliding.*;
@@ -106,14 +107,12 @@ class MoveGeneratorMaster {
                                            long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                            long enemies, long friends, long allPieces){
 
-        long ENEMY_PIECES = (whiteTurn) ? board.blackPieces() : board.whitePieces();
-        long ALL_EMPTY_SQUARES = ~board.allPieces();
+        long emptySquares = ~allPieces;
 
-        long PENULTIMATE_RANK = whiteTurn ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
-        long promotablePawns = myPawns & PENULTIMATE_RANK;
+        long promotablePawns = myPawns & (whiteTurn ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO);
         long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
 
-        MoveGeneratorCastling.addCastlingMoves(moves, board, whiteTurn,
+        addCastlingMoves(moves, board, whiteTurn,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, friends, allPieces);
@@ -125,38 +124,38 @@ class MoveGeneratorMaster {
 
         if (pinnedPieces == 0){
             addPromotionMoves
-                    (moves, board, whiteTurn, 0, ALL_EMPTY_SQUARES, ENEMY_PIECES,
+                    (moves, board, whiteTurn, 0, emptySquares, enemies,
                             myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                             enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies);
+                            enemies, friends, allPieces);
 
             addAllMovesWithoutKing
-                    (moves, board, whiteTurn, promotablePawns, ALL_EMPTY_SQUARES, ENEMY_PIECES,
+                    (moves, board, whiteTurn, promotablePawns, emptySquares, enemies,
                             myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                             enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies);
+                            enemies, friends, allPieces);
 
             addEnPassantMoves
-                    (moves, board, whiteTurn, promotablePawns, ALL_EMPTY_SQUARES, ENEMY_PIECES,
+                    (moves, board, whiteTurn, promotablePawns, emptySquares, enemies,
                             myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                             enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                             enemies, friends, allPieces);
         }
         else {
             addPromotionMoves
-                    (moves, board, whiteTurn, pinnedPieces, ALL_EMPTY_SQUARES, ENEMY_PIECES,
+                    (moves, board, whiteTurn, pinnedPieces, emptySquares, enemies,
                             myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                             enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies);
+                            enemies, friends, allPieces);
 
             addAllMovesWithoutKing
-                    (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, ~board.allPieces(), ENEMY_PIECES,
+                    (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, ~board.allPieces(), enemies,
                             myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                             enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies);
+                            enemies, friends, allPieces);
 
             addEnPassantMoves
-                    (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, ALL_EMPTY_SQUARES, ENEMY_PIECES,
+                    (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, emptySquares, enemies,
                             myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                             enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                             enemies, friends, allPieces);
@@ -207,7 +206,7 @@ class MoveGeneratorMaster {
                     addPromotionMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, pinningPiece,
                             myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                             enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies);
+                            enemies, friends, allPieces);
                 }
                 pinnedPieces &= pinnedPieces - 1;
                 continue;

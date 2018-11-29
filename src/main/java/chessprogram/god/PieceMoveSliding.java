@@ -1,5 +1,8 @@
 package chessprogram.god;
 
+import org.junit.Assert;
+
+import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.BitOperations.UNIVERSE;
 import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.Magic.singleBishopMagicMoves;
@@ -20,22 +23,15 @@ class PieceMoveSliding {
     }
 
     static long masterAttackTableSliding(Chessboard board, boolean white,
-                                         long ignoreThesePieces, long legalPushes, long legalCaptures){
+                                         long ignoreThesePieces, long legalPushes, long legalCaptures,
+                                         long bishops, long rooks, long queens){
         long mask = legalPushes | legalCaptures;
-        long ans = 0, bishops, rooks, queens, allPieces = board.allPieces();
-        if (white){
-            bishops = board.getWhiteBishops();
-            rooks = board.getWhiteRooks();
-            queens = board.getWhiteQueen();
-        }
-        else {
-            bishops = board.getBlackBishops();
-            rooks = board.getBlackRooks();
-            queens = board.getBlackQueen();
-        }
+        long ans = 0;
+        // board without king
+        long allPieces = board.allPieces();
 
         while (bishops != 0){
-            final long bishop = BitOperations.getFirstPiece(bishops);
+            final long bishop = getFirstPiece(bishops);
             if ((bishop & ignoreThesePieces) == 0) {
                 ans |= singleBishopTable(allPieces, white, getFirstPiece(bishops), mask);
             }
@@ -43,7 +39,7 @@ class PieceMoveSliding {
         }
 
         while (rooks != 0){
-            final long rook = BitOperations.getFirstPiece(rooks);
+            final long rook = getFirstPiece(rooks);
             if ((rook & ignoreThesePieces) == 0) {
                 ans |= singleRookTable(allPieces, white, getFirstPiece(rooks), mask);
             }
@@ -51,7 +47,7 @@ class PieceMoveSliding {
         }
 
         while (queens != 0){
-            final long queen = BitOperations.getFirstPiece(queens);
+            final long queen = getFirstPiece(queens);
             if ((queen & ignoreThesePieces) == 0) {
                 ans |= singleQueenTable(allPieces, white, getFirstPiece(queens), mask);
             }

@@ -12,42 +12,32 @@ import static chessprogram.god.PieceMoveSliding.singleRookTable;
 class MoveGeneratorSlidingIntMove {
 
     static void addSlidingMoves (List<Integer> moves, Chessboard board, boolean white,
-                                 long ignoreThesePieces, long mask){
-        long bishops, rooks, queens, allPieces = board.allPieces();
-        if (white){
-            bishops = board.getWhiteBishops();
-            rooks = board.getWhiteRooks();
-            queens = board.getWhiteQueen();
-        }
-        else {
-            bishops = board.getBlackBishops();
-            rooks = board.getBlackRooks();
-            queens = board.getBlackQueen();
-        }
-        
-        while (bishops != 0){
-            long bishop = getFirstPiece(bishops);
+                                 long ignoreThesePieces, long mask,
+                                 long myBishops, long myRooks, long myQueens,
+                                 long allPieces){
+        while (myBishops != 0){
+            long bishop = getFirstPiece(myBishops);
             if ((bishop & ignoreThesePieces) == 0) {
                 long slides = singleBishopTable(allPieces, white, bishop, mask);
                 addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(bishop), board);
             }
-            bishops &= (bishops - 1);
+            myBishops &= (myBishops - 1);
         }
-        while (rooks != 0){
-            long rook = getFirstPiece(rooks);
+        while (myRooks != 0){
+            long rook = getFirstPiece(myRooks);
             if ((rook & ignoreThesePieces) == 0) {
                 long slides = singleRookTable(allPieces, white, rook, mask);
                 addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(rook), board);
             }
-            rooks &= (rooks - 1);
+            myRooks &= (myRooks - 1);
         }
-        while (queens != 0){
-            long queen = getFirstPiece(queens);
+        while (myQueens != 0){
+            long queen = getFirstPiece(myQueens);
             if ((queen & ignoreThesePieces) == 0) {
                 long slides = singleQueenTable(allPieces, white, queen, mask);
                 addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(queen), board);
             }
-            queens &= (queens - 1);
+            myQueens &= (myQueens - 1);
         }
     }
 

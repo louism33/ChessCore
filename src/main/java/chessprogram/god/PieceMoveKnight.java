@@ -10,8 +10,9 @@ class PieceMoveKnight {
     }
 
     static long masterAttackTableKnights(Chessboard board, boolean white,
-                                         long ignoreThesePieces, long legalPushes, long legalCaptures){
-        long ans = 0, knights = white ? board.getWhiteKnights() : board.getBlackKnights();
+                                         long ignoreThesePieces, long legalPushes, long legalCaptures, 
+                                         long knights){
+        long ans = 0;
         while (knights != 0) {
             final long knight = BitOperations.getFirstPiece(knights);
             if ((knight & ignoreThesePieces) == 0) {

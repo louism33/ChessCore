@@ -15,6 +15,7 @@ class MoveGeneratorCastling {
                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                  long enemies, long friends, long allPieces){
 
+        //todo
         if (white){
             if(board.isWhiteCanCastleK()){
                 if (areTheseSquaresEmpty(board, BitboardResources.whiteCastleKingEmpties)

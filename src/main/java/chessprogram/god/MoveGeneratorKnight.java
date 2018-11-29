@@ -9,22 +9,15 @@ import static chessprogram.god.PieceMoveKnight.singleKnightTable;
 class MoveGeneratorKnight {
 
     static void addKnightMoves(List<Integer> moves, Chessboard board, boolean white,
-                               long ignoreThesePieces, long mask){
-        long knights;
-        if (white){
-            knights = board.getWhiteKnights();
-        }
-        else {
-            knights = board.getBlackKnights();
-        }
+                               long ignoreThesePieces, long mask, long myKnights){
 
-        while (knights != 0){
-            final long knight = getFirstPiece(knights);
+        while (myKnights != 0){
+            final long knight = getFirstPiece(myKnights);
             if ((knight & ignoreThesePieces) == 0) {
                 long jumps = singleKnightTable(knight, mask);
                 addMovesFromAttackTableMaster(moves, jumps, getIndexOfFirstPiece(knight), board);
             }
-            knights &= (knights - 1);
+            myKnights &= (myKnights - 1);
         }
     }
 }
