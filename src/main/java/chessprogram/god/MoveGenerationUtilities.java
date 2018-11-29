@@ -1,27 +1,52 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class MoveGenerationUtilities {
 
-    public static List<Move> movesFromAttackBoard(long attackBoard, int source) {
-        List<Move> moves = new ArrayList<>();
-        List<Integer> indexOfAllPieces = dBitIndexing.getIndexOfAllPieces(attackBoard);
-        for (int i : indexOfAllPieces) {
-            moves.add(new Move(source, i));
-        }
-        return moves;
+    public static void addMovesFromAttackTableMaster(List<Move> moves, long attackBoard, int source, Chessboard board) {
+        addMovesFromAttackTableMaster(moves, attackBoard, source, board.isWhiteTurn() ? board.blackPieces() : board.whitePieces());
     }
 
-    static List<Move> movesFromAttackBoardLong(long attackBoard, long longSource) {
-        List<Move> moves = new ArrayList<>();
-        int source = dBitIndexing.getIndexOfFirstPiece(longSource);
-        List<Integer> indexOfAllPieces = dBitIndexing.getIndexOfAllPieces(attackBoard);
+    public static void addMovesFromAttackTableMaster(List<Move> moves, long attackBoard, int source, long enemyPieces) {
+        while (attackBoard != 0){
+            final long destination = BitOperations.getFirstPiece(attackBoard);
+            moves.add(new Move(source, BitOperations.getIndexOfFirstPiece(destination), 
+                    ((destination & enemyPieces) != 0)));
+            attackBoard &= attackBoard - 1;
+        }
+    }
+
+    @Deprecated
+    static void addMovesFromAttackBoard(List<Move> moves, long attackBoard, int source) {
+        List<Integer> indexOfAllPieces = BitOperations.getIndexOfAllPieces(attackBoard);
         for (int i : indexOfAllPieces) {
             moves.add(new Move(source, i));
         }
-        return moves;
+    }
+
+    @Deprecated
+    static void movesFromAttackBoardCapture(List<Move> moves, long attackBoard, int source, boolean capture) {
+        List<Integer> indexOfAllPieces = BitOperations.getIndexOfAllPieces(attackBoard);
+        for (int i : indexOfAllPieces) {
+            if (capture) {
+                final Move m = new Move(source, i, true);
+                moves.add(m);
+            }
+            else {
+                moves.add(new Move(source, i));
+            }
+
+        }
+    }
+
+    @Deprecated
+    static void addMovesFromAttackBoardLong(List<Move> moves, long attackBoard, long longSource) {
+        int source = BitOperations.getIndexOfFirstPiece(longSource);
+        List<Integer> indexOfAllPieces = BitOperations.getIndexOfAllPieces(attackBoard);
+        for (int i : indexOfAllPieces) {
+            moves.add(new Move(source, i));
+        }
     }
 
 }

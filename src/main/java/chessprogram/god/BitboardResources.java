@@ -1,0 +1,121 @@
+package chessprogram.god;
+
+public class BitboardResources {
+
+    public static long[][] inBetweenSquares = new long[64][64];
+    
+    static final long UNIVERSE = 0xffffffffffffffffL;
+
+    public static final long INITIAL_WHITE_PAWNS = 0x000000000000FF00L;
+    public static final long INITIAL_WHITE_KNIGHTS = 0x0000000000000042L;
+    public static final long INITIAL_WHITE_BISHOPS = 0x0000000000000024L;
+    public static final long INITIAL_WHITE_ROOKS = 0x0000000000000081L;
+    public static final long INITIAL_WHITE_QUEEN = 0x0000000000000010L;
+    public static final long INITIAL_WHITE_KING = 0x0000000000000008L;
+
+    public static final long INITIAL_BLACK_PAWNS = 0x00FF000000000000L;
+    public static final long INITIAL_BLACK_KNIGHTS = 0x4200000000000000L;
+    public static final long INITIAL_BLACK_BISHOPS = 0x2400000000000000L;
+    public static final long INITIAL_BLACK_ROOKS = 0x8100000000000000L;
+    public static final long INITIAL_BLACK_QUEEN = 0x1000000000000000L;
+    public static final long INITIAL_BLACK_KING = 0x0800000000000000L;
+
+    public static final long WHITE_COLOURED_SQUARES = 0x5555555555555555L;
+    public static final long BLACK_COLOURED_SQUARES = 0xAAAAAAAAAAAAAAAAL;
+
+    static long CASTLE_WHITE_KING_SQUARES = 0x0000000000000006L;
+    static long CASTLE_WHITE_QUEEN_SQUARES = 0x0000000000000070L;
+    static long CASTLE_BLACK_KING_SQUARES = 0x0600000000000000L;
+    static long CASTLE_BLACK_QUEEN_SQUARES = 0x7000000000000000L;
+
+    public static final long RANK_ONE = 0x00000000000000FFL;
+    public static final long RANK_TWO = 0x000000000000FF00L;
+    public static final long RANK_THREE = 0x0000000000FF0000L;
+    public static final long RANK_FOUR = 0x00000000FF000000L;
+    public static final long RANK_FIVE = 0x000000FF00000000L;
+    public static final long RANK_SIX = 0x0000FF0000000000L;
+    public static final long RANK_SEVEN = 0x00FF000000000000L;
+    public static final long RANK_EIGHT = 0xFF00000000000000L;
+
+    public static final long FILE_H = 0x0101010101010101L;
+    public static final long FILE_G = 0x0202020202020202L;
+    public static final long FILE_F = 0x0404040404040404L;
+    public static final long FILE_E = 0x0808080808080808L;
+    public static final long FILE_D = 0x1010101010101010L;
+    public static final long FILE_C = 0x2020202020202020L;
+    public static final long FILE_B = 0x4040404040404040L;
+    public static final long FILE_A = 0x8080808080808080L;
+
+    public static final long[] FILES = new long[]{
+            0x0101010101010101L,
+            0x0202020202020202L,
+            0x0404040404040404L,
+            0x0808080808080808L,
+            0x1010101010101010L,
+            0x2020202020202020L,
+            0x4040404040404040L,
+            0x8080808080808080L,
+    };
+
+    public static final long[] ROWS = new long[]{
+            0x00000000000000FFL,
+            0x000000000000FF00L,
+            0x0000000000FF0000L,
+            0x00000000FF000000L,
+            0x000000FF00000000L,
+            0x0000FF0000000000L,
+            0x00FF000000000000L,
+            0xFF00000000000000L,
+    };
+
+    public static final long NORTH_WEST = FILE_A | RANK_EIGHT;
+    public static final long NORTH_EAST = FILE_H | RANK_EIGHT;
+    public static final long SOUTH_WEST = FILE_A | RANK_ONE;
+    public static final long SOUTH_EAST = FILE_H | RANK_ONE;
+
+    public static final long NORTH_WEST_CORNER = FILE_A & RANK_EIGHT;
+    public static final long NORTH_EAST_CORNER = FILE_H & RANK_EIGHT;
+    public static final long SOUTH_WEST_CORNER = FILE_A & RANK_ONE;
+    public static final long SOUTH_EAST_CORNER = FILE_H & RANK_ONE;
+
+    public static final long centreFourSquares = (RANK_FOUR | RANK_FIVE) & (FILE_D | FILE_E);
+    public static final long centreNineSquares = (RANK_THREE | RANK_FOUR | RANK_FIVE | RANK_SIX) &
+            (FILE_C |FILE_D | FILE_E | FILE_F);
+
+    public static final long noMansLand = (RANK_THREE | RANK_FOUR | RANK_FIVE | RANK_SIX);
+    public static final long eastWestHighway = (RANK_FOUR | RANK_FIVE);
+    public static final long northSouthHighway = (FILE_D | FILE_E);
+
+    public static final long DIAGONAL_NW_SE = 0x8040201008040201L;
+    public static final long DIAGONAL_SW_NE = 0x0102040810204080L;
+
+    public static final long boardWithoutEdges = UNIVERSE ^ (NORTH_WEST | NORTH_EAST | SOUTH_WEST | SOUTH_EAST);
+
+    public static final long whiteCastleKingEmpties = 0x0000000000000006L;
+    public static final long whiteCastleQueenEmpties = 0x0000000000000070L;
+
+    public static final long blackCastleKingEmpties = 0x0600000000000000L;
+    public static final long blackCastleQueenEmpties = 0x7000000000000000L;
+
+    public static final long whiteCastleQueenUnthreateneds = 0x0000000000000030L;
+    public static final long blackCastleQueenUnthreateneds = 0x3000000000000000L;
+
+    public final static long immediateAdjacentSquares[] = {
+            0x0000000000000302L, 0x0000000000000705L, 0x0000000000000e0aL, 0x0000000000001c14L, 0x0000000000003828L, 0x0000000000007050L, 0x000000000000e0a0L, 0x000000000000c040L,
+            0x0000000000030203L, 0x0000000000070507L, 0x00000000000e0a0eL, 0x00000000001c141cL, 0x0000000000382838L, 0x0000000000705070L, 0x0000000000e0a0e0L, 0x0000000000c040c0L,
+            0x0000000003020300L, 0x0000000007050700L, 0x000000000e0a0e00L, 0x000000001c141c00L, 0x0000000038283800L, 0x0000000070507000L, 0x00000000e0a0e000L, 0x00000000c040c000L,
+            0x0000000302030000L, 0x0000000705070000L, 0x0000000e0a0e0000L, 0x0000001c141c0000L, 0x0000003828380000L, 0x0000007050700000L, 0x000000e0a0e00000L, 0x000000c040c00000L,
+            0x0000030203000000L, 0x0000070507000000L, 0x00000e0a0e000000L, 0x00001c141c000000L, 0x0000382838000000L, 0x0000705070000000L, 0x0000e0a0e0000000L, 0x0000c040c0000000L,
+            0x0003020300000000L, 0x0007050700000000L, 0x000e0a0e00000000L, 0x001c141c00000000L, 0x0038283800000000L, 0x0070507000000000L, 0x00e0a0e000000000L, 0x00c040c000000000L,
+            0x0302030000000000L, 0x0705070000000000L, 0x0e0a0e0000000000L, 0x1c141c0000000000L, 0x3828380000000000L, 0x7050700000000000L, 0xe0a0e00000000000L, 0xc040c00000000000L,
+            0x0203000000000000L, 0x0507000000000000L, 0x0a0e000000000000L, 0x141c000000000000L, 0x2838000000000000L, 0x5070000000000000L, 0xa0e0000000000000L, 0x40c0000000000000L
+    };
+
+    public final static long antiDiagonal[] = {
+            1L, 258L, 66052L, 16909320L, 4328785936L, 1108169199648L, 283691315109952L, 72624976668147840L, 145249953336295424L, 290499906672525312L, 580999813328273408L, 1161999622361579520L, 2323998145211531264L, 4647714815446351872L, -9223372036854775808L,
+    };
+
+    public final static long diagonal[] = {
+            128L, 32832L, 8405024L, 2151686160L, 550831656968L, 141012904183812L, 36099303471055874L, -9205322385119247871L, 4620710844295151872L, 2310355422147575808L, 1155177711073755136L, 577588855528488960L, 288794425616760832L, 144396663052566528L, 72057594037927936L,
+    };
+}

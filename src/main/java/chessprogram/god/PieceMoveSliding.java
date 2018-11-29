@@ -2,114 +2,28 @@ package chessprogram.god;
 
 import java.util.List;
 
+import static chessprogram.god.BitOperations.*;
+import static chessprogram.god.Magic.singleBishopMagicMoves;
+import static chessprogram.god.Magic.singleRookMagicMoves;
+
 class PieceMoveSliding {
 
-    public static long singleBishopPushes(Chessboard board, long piece, boolean white, long legalPushes){
-        return singleBishopAllMoves(board, piece, white, legalPushes, 0);
+    static long singleBishopTable(long occupancy, boolean white, long piece, long legalCaptures){
+        return singleBishopMagicMoves(occupancy, piece, legalCaptures);
     }
 
-    public static long singleBishopCaptures(Chessboard board, long piece, boolean white, long legalCaptures){
-        return singleBishopAllMoves(board, piece, white, 0, legalCaptures);
+    static long singleRookTable(long occupancy, boolean white, long piece, long legalPushes){
+        return singleRookMagicMoves(occupancy, piece, legalPushes);
     }
 
-    private static long singleBishopAllMoves(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
-        long ALL_PIECES = board.whitePieces() | board.blackPieces(),
-                NORTH_WEST = bBitBoardUtils.FILE_A | bBitBoardUtils.RANK_EIGHT,
-                NORTH_EAST = bBitBoardUtils.FILE_H | bBitBoardUtils.RANK_EIGHT,
-                SOUTH_WEST = bBitBoardUtils.FILE_A | bBitBoardUtils.RANK_ONE,
-                SOUTH_EAST = bBitBoardUtils.FILE_H | bBitBoardUtils.RANK_ONE;
-
-        long answer = 0;
-        long temp = piece;
-
-        while (true) {
-            if ((temp & NORTH_WEST) != 0) break;
-            temp <<= 9;
-            answer |= temp;
-            if ((temp & ALL_PIECES) != 0) break;
-        }
-        temp = piece;
-        while (true) {
-            if ((temp & NORTH_EAST) != 0) break;
-            temp <<= 7;
-            answer |= temp;
-            if ((temp & ALL_PIECES) != 0) break;
-        }
-        temp = piece;
-        while (true) {
-            if ((temp & SOUTH_WEST) != 0) break;
-            temp >>>= 7;
-            answer |= temp;
-            if ((temp & ALL_PIECES) != 0) break;
-        }
-        temp = piece;
-        while (true) {
-            if ((temp & SOUTH_EAST) != 0) break;
-            temp >>>= 9;
-            answer |= temp;
-            if ((temp & ALL_PIECES) != 0) break;
-        }
-        return answer & (legalPushes | legalCaptures);
-    }
-
-
-    public static long singleRookPushes(Chessboard board, long piece, boolean white, long legalPushes){
-        return singleRookAllMoves(board, piece, white, legalPushes, 0);
-    }
-
-    public static long singleRookCaptures(Chessboard board, long piece, boolean white, long legalCaptures){
-        return singleRookAllMoves(board, piece, white, 0, legalCaptures);
-    }
-    
-    private static long singleRookAllMoves(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
-        long allPieces = board.whitePieces() | board.blackPieces();
-        long answer = 0;
-        long temp = piece;
-        while (true) {
-            if ((temp & bBitBoardUtils.FILE_A) != 0) break;
-            temp <<= 1;
-            answer |= temp;
-            if ((temp & allPieces) != 0) break;
-        }
-        temp = piece;
-        while (true) {
-            if ((temp & bBitBoardUtils.FILE_H) != 0) break;
-            temp >>>= 1;
-            answer |= temp;
-            if ((temp & allPieces) != 0) break;
-        }
-        temp = piece;
-        while (true) {
-            if ((temp & bBitBoardUtils.RANK_EIGHT) != 0) break;
-            temp <<= 8;
-            answer |= temp;
-            if ((temp & allPieces) != 0) break;
-        }
-        temp = piece;
-        while (true) {
-            if ((temp & bBitBoardUtils.RANK_ONE) != 0) break;
-            temp >>>= 8;
-            answer |= temp;
-            if ((temp & allPieces) != 0) break;
-        }
-        return answer & (legalPushes | legalCaptures);
-    }
-
-    public static long singleQueenPushes(Chessboard board, long piece, boolean white, long legalPushes){
-        return singleQueenAllMoves(board, piece, white, legalPushes, 0);
-    }
-
-    public static long singleQueenCaptures(Chessboard board, long piece, boolean white, long legalCaptures){
-        return singleQueenAllMoves(board, piece, white, 0, legalCaptures);
-    }
-
-    private static long singleQueenAllMoves(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
-        return singleBishopAllMoves(board, piece, white, legalPushes, legalCaptures) | singleRookAllMoves(board, piece, white, legalPushes, legalCaptures);
+    static long singleQueenTable(long occupancy, boolean white, long piece, long mask){
+        return singleBishopMagicMoves(occupancy, piece, mask) | singleRookMagicMoves(occupancy, piece, mask);
     }
 
     static long masterAttackTableSliding(Chessboard board, boolean white,
-                                                long ignoreThesePieces, long legalPushes, long legalCaptures){
-        long ans = 0, bishops, rooks, queens;
+                                         long ignoreThesePieces, long legalPushes, long legalCaptures){
+        long mask = legalPushes | legalCaptures;
+        long ans = 0, bishops, rooks, queens, allPieces = board.allPieces();
         if (white){
             bishops = board.getWhiteBishops();
             rooks = board.getWhiteRooks();
@@ -121,23 +35,46 @@ class PieceMoveSliding {
             queens = board.getBlackQueen();
         }
 
-        List<Long> allBishops = dBitExtractor.getAllPieces(bishops, ignoreThesePieces);
-        for (Long piece : allBishops){
-            ans |= singleBishopPushes(board, piece, white, legalPushes);
-            ans |= singleBishopCaptures(board, piece, white, legalCaptures);
+        while (bishops != 0){
+            final long bishop = BitOperations.getFirstPiece(bishops);
+            if ((bishop & ignoreThesePieces) == 0) {
+                ans |= singleBishopTable(allPieces, white, getFirstPiece(bishops), mask);
+            }
+            bishops &= bishops - 1;
         }
 
-        List<Long> allRooks = dBitExtractor.getAllPieces(rooks, ignoreThesePieces);
-        for (Long piece : allRooks){
-            ans |= singleRookPushes(board, piece, white, legalPushes);
-            ans |= singleRookCaptures(board, piece, white, legalCaptures);
+        while (rooks != 0){
+            final long rook = BitOperations.getFirstPiece(rooks);
+            if ((rook & ignoreThesePieces) == 0) {
+                ans |= singleRookTable(allPieces, white, getFirstPiece(rooks), mask);
+            }
+            rooks &= rooks - 1;
         }
 
-        List<Long> allQueens = dBitExtractor.getAllPieces(queens, ignoreThesePieces);
-        for (Long piece : allQueens){
-            ans |= singleQueenPushes(board, piece, white, legalPushes);
-            ans |= singleQueenCaptures(board, piece, white, legalCaptures);
+        while (queens != 0){
+            final long queen = BitOperations.getFirstPiece(queens);
+            if ((queen & ignoreThesePieces) == 0) {
+                ans |= singleQueenTable(allPieces, white, getFirstPiece(queens), mask);
+            }
+            queens &= queens - 1;
         }
+
         return ans;
+    }
+
+    static long xrayQueenAttacks(long allPieces, long blockers, long queen){
+        return xrayRookAttacks(allPieces, blockers, queen) | xrayBishopAttacks(allPieces, blockers, queen);
+    }
+
+    static long xrayRookAttacks(long allPieces, long blockers, long rook){
+        final long rookMoves = singleRookTable(allPieces, true, rook, UNIVERSE);
+        blockers &= rookMoves;
+        return rookMoves ^ singleRookTable(allPieces ^ blockers, true, rook, UNIVERSE);
+    }
+
+    static long xrayBishopAttacks(long allPieces, long blockers, long bishop){
+        final long bishopMoves = singleBishopTable(allPieces, true, bishop, UNIVERSE);
+        blockers &= bishopMoves;
+        return bishopMoves ^ singleBishopTable(allPieces ^ blockers, true, bishop, UNIVERSE);
     }
 }

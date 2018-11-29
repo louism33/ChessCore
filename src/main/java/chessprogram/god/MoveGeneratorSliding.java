@@ -1,16 +1,12 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static chessprogram.god.dBitExtractor.getAllPieces;
 
 class MoveGeneratorSliding {
 
-    static List<Move> masterSlidingPushes (Chessboard board, boolean white,
-                                                  long ignoreThesePieces, long legalPushes){
-        long ans = 0, bishops, rooks, queens;
-        List<Move> moves = new ArrayList<>();
+    static void addSlidingMoves (List<Move> moves, Chessboard board, boolean white,
+                                           long ignoreThesePieces, long mask){
+        long bishops, rooks, queens, allPieces = board.allPieces();
         if (white){
             bishops = board.getWhiteBishops();
             rooks = board.getWhiteRooks();
@@ -21,112 +17,31 @@ class MoveGeneratorSliding {
             rooks = board.getBlackRooks();
             queens = board.getBlackQueen();
         }
-
-        List<Long> allBishops = getAllPieces(bishops, ignoreThesePieces);
-        for (Long piece : allBishops){
-            long slidingMoves = PieceMoveSliding.singleBishopPushes(board, piece, white, legalPushes);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(slidingMoves, indexOfPiece));
+        
+        while (bishops != 0){
+            long bishop = BitOperations.getFirstPiece(bishops);
+            if ((bishop & ignoreThesePieces) == 0) {
+                long slides = PieceMoveSliding.singleBishopTable(allPieces, white, bishop, mask);
+                MoveGenerationUtilities.addMovesFromAttackTableMaster(moves, slides, BitOperations.getIndexOfFirstPiece(bishop), board);
+            }
+            bishops &= (bishops - 1);
         }
-        List<Long> allRooks = getAllPieces(rooks, ignoreThesePieces);
-        for (Long piece : allRooks){
-            long slidingMoves = PieceMoveSliding.singleRookPushes(board, piece, white, legalPushes);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(slidingMoves, indexOfPiece));
+        while (rooks != 0){
+            long rook = BitOperations.getFirstPiece(rooks);
+            if ((rook & ignoreThesePieces) == 0) {
+                long slides = PieceMoveSliding.singleRookTable(allPieces, white, rook, mask);
+                MoveGenerationUtilities.addMovesFromAttackTableMaster(moves, slides, BitOperations.getIndexOfFirstPiece(rook), board);
+            }
+            rooks &= (rooks - 1);
         }
-        List<Long> allQueens = getAllPieces(queens, ignoreThesePieces);
-        for (Long piece : allQueens){
-            long slidingMoves = PieceMoveSliding.singleQueenPushes(board, piece, white, legalPushes);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(slidingMoves, indexOfPiece));
+        while (queens != 0){
+            long queen = BitOperations.getFirstPiece(queens);
+            if ((queen & ignoreThesePieces) == 0) {
+                long slides = PieceMoveSliding.singleQueenTable(allPieces, white, queen, mask);
+                MoveGenerationUtilities.addMovesFromAttackTableMaster(moves, slides, BitOperations.getIndexOfFirstPiece(queen), board);
+            }
+            queens &= (queens - 1);
         }
-        return moves;
-    }
-
-    static List<Move> masterSlidingCaptures (Chessboard board, boolean white,
-                                                    long ignoreThesePieces, long legalCaptures){
-        long ans = 0, bishops, rooks, queens;
-        List<Move> moves = new ArrayList<>();
-        if (white){
-            bishops = board.getWhiteBishops();
-            rooks = board.getWhiteRooks();
-            queens = board.getWhiteQueen();
-        }
-        else {
-            bishops = board.getBlackBishops();
-            rooks = board.getBlackRooks();
-            queens = board.getBlackQueen();
-        }
-
-        List<Long> allBishops = getAllPieces(bishops, ignoreThesePieces);
-        for (Long piece : allBishops){
-            long slidingMoves = PieceMoveSliding.singleBishopCaptures(board, piece, white, legalCaptures);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(slidingMoves, indexOfPiece));
-        }
-        List<Long> allRooks = getAllPieces(rooks, ignoreThesePieces);
-        for (Long piece : allRooks){
-            long slidingMoves = PieceMoveSliding.singleRookCaptures(board, piece, white, legalCaptures);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(slidingMoves, indexOfPiece));
-        }
-        List<Long> allQueens = getAllPieces(queens, ignoreThesePieces);
-        for (Long piece : allQueens){
-            long slidingMoves = PieceMoveSliding.singleQueenCaptures(board, piece, white, legalCaptures);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(slidingMoves, indexOfPiece));
-        }
-        return moves;
-    }
-
-    public static List<Move> masterMoveSliding (Chessboard board, boolean white,
-                                                long ignoreThesePieces, long legalPushes, long legalCaptures){
-        long ans = 0, bishops, rooks, queens;
-        List<Move> moves = new ArrayList<>();
-        if (white){
-            bishops = board.getWhiteBishops();
-            rooks = board.getWhiteRooks();
-            queens = board.getWhiteQueen();
-        }
-        else {
-            bishops = board.getBlackBishops();
-            rooks = board.getBlackRooks();
-            queens = board.getBlackQueen();
-        }
-
-        List<Long> allBishops = getAllPieces(bishops, ignoreThesePieces);
-        for (Long piece : allBishops){
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-
-            long slidingPushes = PieceMoveSliding.singleBishopPushes(board, piece, white, legalPushes);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(slidingPushes, indexOfPiece));
-
-            long slidingCaptures = PieceMoveSliding.singleBishopCaptures(board, piece, white, legalCaptures);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(slidingCaptures, indexOfPiece));
-        }
-
-        List<Long> allRooks = getAllPieces(rooks, ignoreThesePieces);
-        for (Long piece : allRooks){
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-
-            long rookPushes = PieceMoveSliding.singleRookPushes(board, piece, white, legalPushes);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(rookPushes, indexOfPiece));
-
-            long rookCaptures = PieceMoveSliding.singleRookCaptures(board, piece, white, legalCaptures);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(rookCaptures, indexOfPiece));
-        }
-
-        List<Long> allQueens = getAllPieces(queens, ignoreThesePieces);
-        for (Long piece : allQueens){
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-
-            long queenPushes = PieceMoveSliding.singleQueenPushes(board, piece, white, legalPushes);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(queenPushes, indexOfPiece));
-
-            long queenCaptures = PieceMoveSliding.singleQueenCaptures(board, piece, white, legalCaptures);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(queenCaptures, indexOfPiece));
-        }
-        return moves;
     }
 
 }

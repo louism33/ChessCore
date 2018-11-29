@@ -2,48 +2,26 @@ package chessprogram.god;
 
 import java.util.List;
 
-import static chessprogram.god.dBitExtractor.getAllPieces;
+import static chessprogram.god.BitOperations.*;
+import static chessprogram.god.BitOperations.getAllPieces;
+import static chessprogram.god.MoveConstantsKnight.*;
 
 class PieceMoveKnight {
 
-    public static long singleKnightPushes(Chessboard board, long piece, boolean white, long legalPushes){
-        return singleKnightAllMoves(board, piece, white, legalPushes, 0);
-    }
-
-    public static long singleKnightCaptures(Chessboard board, long piece, boolean white, long legalCaptures){
-        return singleKnightAllMoves(board, piece, white, 0, legalCaptures);
-    }
-
-    private static long singleKnightAllMoves(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures) {
-        long table = 0;
-        int index = dBitIndexing.getIndexOfFirstPiece(piece);
-
-        if (index == -1){
-            return 0;
-        }
-        long l = bKnight.KNIGHT_MOVE_TABLE[index];
-        table |= l;
-        long emptyOfMyPieces = ~((white) ? board.whitePieces() : board.blackPieces());
-
-        return table & (legalPushes | legalCaptures);
+    static long singleKnightTable(long piece, long mask){
+        return KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
     }
 
     static long masterAttackTableKnights(Chessboard board, boolean white,
-                                                long ignoreThesePieces, long legalPushes, long legalCaptures){
-        long ans = 0, knights;
-        if (white){
-            knights = board.getWhiteKnights();
+                                         long ignoreThesePieces, long legalPushes, long legalCaptures){
+        long ans = 0, knights = white ? board.getWhiteKnights() : board.getBlackKnights();
+        while (knights != 0) {
+            final long knight = BitOperations.getFirstPiece(knights);
+            if ((knight & ignoreThesePieces) == 0) {
+                ans |= singleKnightTable(knight, legalPushes | legalCaptures);
+            }
+            knights &= knights - 1;
         }
-        else {
-            knights = board.getBlackKnights();
-        }
-
-        List<Long> allKnights = getAllPieces(knights, ignoreThesePieces);
-        for (Long piece : allKnights){
-            ans |= singleKnightPushes(board, piece, white, legalPushes);
-            ans |= singleKnightCaptures(board, piece, white, legalCaptures);
-        }
-
         return ans;
     }
 

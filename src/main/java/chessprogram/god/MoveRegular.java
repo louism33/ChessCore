@@ -1,6 +1,6 @@
 package chessprogram.god;
 
-import static chessprogram.god.bBitManipulations.newPieceOnSquare;
+import static chessprogram.god.BitOperations.newPieceOnSquare;
 
 class MoveRegular {
 

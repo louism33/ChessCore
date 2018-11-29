@@ -5,15 +5,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// todo, change indexes to actual moves if possible. 
+// todo, decide access level
 class eExtendedPositionDescriptionParser {
     
-    public static EPDObject parseEDPPosition(String edpPosition){
+    static EPDObject parseEDPPosition(String edpPosition){
         
         String id = extractIDString(edpPosition);
         
         String[] bms = extractBestMoves(edpPosition);
 
-        Chessboard chessboard = eFenParser.makeBoardBasedOnFEN(edpPosition);
+        Chessboard chessboard = xoldFenParser.makeBoardBasedOnFEN(edpPosition);
         
         String boardFen = extractBoardFen(edpPosition);
 

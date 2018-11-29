@@ -2,29 +2,22 @@ package chessprogram.god;
 
 import java.util.Objects;
 
+import static chessprogram.god.MoveConstants.*;
+
 public class Move {
-
+    
     int move;
-    // todo, should not be public
-    final static int
-            ENPASSANT_MASK = 0x00002000,
-            PROMOTION_MASK = 0x00003000,
+
+    // todo get rid of eventually
+    public int getMove() {
+        return move;
+    }
+
+    
             
-            KNIGHT_PROMOTION_MASK = 0x00000000,
-            BISHOP_PROMOTION_MASK = 0x00004000,
-            ROOK_PROMOTION_MASK = 0x00008000,
-            QUEEN_PROMOTION_MASK = 0x0000c000;
 
-    final private static int
-            WHICH_PROMOTION = 0x0000c000,
-            SOURCE_OFFSET = 6,
-            SOURCE_MASK = 0x00000fc0,
-            DESTINATION_MASK = 0x0000003f,
-
-            SPECIAL_MOVE_MASK = 0x00003000,
-            CASTLING_MASK = 0x00001000;
-
-
+    
+  
 
     // copy constructor
     public Move (Move move){
@@ -32,13 +25,21 @@ public class Move {
     }
 
     public Move(int source, int destinationIndex) {
-        makeSourceAndDest(source, destinationIndex);
+        buildMove(source, destinationIndex);
+    }
+
+    public Move(int source, int destinationIndex, boolean capture) {
+        buildMove(source, destinationIndex);
+        if (capture){
+            MoveUtils.makeCapture(this);
+            this.move |= CAPTURE_MOVE_MASK;
+        }
     }
 
     public Move(int source, int destinationIndex, boolean castling, boolean enPassant, boolean promotion,
                 boolean promoteToKnight, boolean promoteToBishop, boolean promoteToRook, boolean promoteToQueen) {
 
-        makeSourceAndDest(source, destinationIndex);
+        buildMove(source, destinationIndex);
 
         if (castling) this.move |= CASTLING_MASK;
         if (enPassant) this.move |= ENPASSANT_MASK;
@@ -50,29 +51,13 @@ public class Move {
         }
     }
 
-    public Move(int source, int destinationIndex, boolean castling, boolean enPassant, boolean promotion,
-                boolean promoteToKnight, boolean promoteToBishop, boolean promoteToRook, boolean promoteToQueen, int hack) {
-
-        makeSourceAndDest(source, destinationIndex);
-
-        if (castling) this.move |= CASTLING_MASK;
-        if (enPassant) this.move |= ENPASSANT_MASK;
-        if (promotion) {
-            this.move |= PROMOTION_MASK;
-            if (promoteToKnight) this.move |= KNIGHT_PROMOTION_MASK;
-            else if (promoteToBishop) this.move |= BISHOP_PROMOTION_MASK;
-            else if (promoteToRook) this.move |= ROOK_PROMOTION_MASK;
-            else if (promoteToQueen) this.move |= QUEEN_PROMOTION_MASK;
-        }
-    }
-
-
-    private void makeSourceAndDest(int s, int d) {
+    private void buildMove(int s, int d) {
         if (s >= 64 | s < 0 | d >= 64 | d < 0) {
             throw new RuntimeException("Move: False Move " + s + " " + d);
         }
         this.move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
         this.move |= (d & DESTINATION_MASK);
+        MoveUtils.buildSource(this);
     }
 
     @Override
@@ -101,6 +86,10 @@ public class Move {
         return this.move & DESTINATION_MASK;
     }
 
+    public boolean isCaptureMove(){
+        return (this.move & CAPTURE_MOVE_MASK) != 0;
+    }
+    
     public boolean isSpecialMove (){
         return (this.move & SPECIAL_MOVE_MASK) != 0;
     }
@@ -135,6 +124,21 @@ public class Move {
     public boolean isPromotionToQueen (){
         if (!((this.move & SPECIAL_MOVE_MASK) == PROMOTION_MASK)) return false;
         return (this.move & WHICH_PROMOTION) == QUEEN_PROMOTION_MASK;
+    }
+    
+    public Piece getMovingPiece(){
+        final int indexOfSourcePiece = (this.move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
+        final Piece value = Piece.values()[indexOfSourcePiece];
+        return value;
+    }
+
+    public Piece getVictimPiece(){
+        if (!isCaptureMove()) {
+            return null;
+        }
+        final int indexOfVictimPiece = (this.move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
+        final Piece value = Piece.values()[indexOfVictimPiece];
+        return value;
     }
 
 }

@@ -7,23 +7,40 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Chessboard {
+import static chessprogram.god.MakeMoveAndHashUpdate.*;
+import static chessprogram.god.MakeMoveAndHashUpdate.UnMakeMoveAndHashUpdate;
 
+public class Chessboard implements Cloneable{
+
+    // todo, consider shift to 8 bbs
+    
     private ChessboardDetails details;
     private ZobristHash zobristHash;
+
+    void makeZobrist(){
+        this.zobristHash = new ZobristHash(this);
+    }
+
+    void cloneZobristStack(ZobristHash zobristHash){
+        this.zobristHash.zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
+    }
     
     private void init(){
+        this.details = new ChessboardDetails(true);
+    }
+    
+    public Chessboard(boolean blank){
         this.details = new ChessboardDetails();
         this.zobristHash = new ZobristHash(this);
     }
     
     public Chessboard() {
         init();
+        makeZobrist();
     }
 
     // copy constructor
     private Chessboard(Chessboard board) {
-        init();
     }
     
     public String getFenRepresentation(){
@@ -46,37 +63,46 @@ public class Chessboard {
         return null;
     }
     
+    
     public void makeMove(Move move){
-        MoveOrganiser.makeMoveMaster(this, move);
+        makeMoveAndHashUpdate(this, move, this.zobristHash);
     }
     
     public void makeMoveAndFlipTurn(Move move){
-        MoveOrganiser.makeMoveMaster(this, move);
-        MoveOrganiser.flipTurn(this);
+        makeMoveAndHashUpdate(this, move, this.zobristHash);
+        flipTurn();
     }
     
+    public void makeNullMoveAndFlipTurn(){
+        makeNullMoveAndHashUpdate(this, this.zobristHash);
+        flipTurn();
+    }
+    public void unMakeNullMoveAndFlipTurn(){
+        unMakeNullMove(this, this.zobristHash);
+    }
+
     public void flipTurn(){
-        MoveOrganiser.flipTurn(this);
+        MoveMaker.flipTurn(this);
     }
     
     public void unMakeMoveAndFlipTurn(){
-        MoveUnmaker.unMakeMoveMaster(this);
+        UnMakeMoveAndHashUpdate(this, this.zobristHash);
     }
     
-    public boolean inCheck(boolean white){
-        return cCheckChecker.boardInCheck(this, white);
+    public boolean inCheck(){
+        return CheckHelper.boardInCheck(this, isWhiteTurn());
     }
 
     public boolean drawByRepetition (boolean white){
-        return cCheckChecker.isDrawByRepetition(this, this.zobristHash);
+        return CheckHelper.isDrawByRepetition(this, this.zobristHash);
     }
 
     private boolean drawByInsufficientMaterial (boolean white){
-        return cCheckChecker.isDrawByInsufficientMaterial(this);
+        return CheckHelper.isDrawByInsufficientMaterial(this);
     }
 
     private boolean colourHasInsufficientMaterialToMate (boolean white){
-        return cCheckChecker.colourHasInsufficientMaterialToMate(this, white);
+        return CheckHelper.colourHasInsufficientMaterialToMate(this, white);
     }
     
     private void pinnedPieces(boolean white){
@@ -120,37 +146,43 @@ public class Chessboard {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Chessboard that = (Chessboard) o;
-        return isWhiteTurn() == that.isWhiteTurn() &&
-                isWhiteCanCastleK() == that.isWhiteCanCastleK() &&
-                isWhiteCanCastleQ() == that.isWhiteCanCastleQ() &&
-                isBlackCanCastleK() == that.isBlackCanCastleK() &&
-                isBlackCanCastleQ() == that.isBlackCanCastleQ() &&
-                getWhitePawns() == that.getWhitePawns() &&
-                getWhiteKnights() == that.getWhiteKnights() &&
-                getWhiteBishops() == that.getWhiteBishops() &&
-                getWhiteRooks() == that.getWhiteRooks() &&
-                getWhiteQueen() == that.getWhiteQueen() &&
-                getWhiteKing() == that.getWhiteKing() &&
-                getBlackPawns() == that.getBlackPawns() &&
-                getBlackKnights() == that.getBlackKnights() &&
-                getBlackBishops() == that.getBlackBishops() &&
-                getBlackRooks() == that.getBlackRooks() &&
-                getBlackQueen() == that.getBlackQueen() &&
-                getBlackKing() == that.getBlackKing() &&
-                Objects.equals(moveStack, that.moveStack);
+        return Objects.equals(details, that.details)
+                && Objects.equals(zobristHash, that.zobristHash)
+                && Objects.equals(moveStack, that.moveStack)
+                ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moveStack, isWhiteTurn(), isWhiteCanCastleK(), isWhiteCanCastleQ(), isBlackCanCastleK(), isBlackCanCastleQ(), getWhitePawns(), getWhiteKnights(), getWhiteBishops(), getWhiteRooks(), getWhiteQueen(), getWhiteKing(), getBlackPawns(), getBlackKnights(), getBlackBishops(), getBlackRooks(), getBlackQueen(), getBlackKing());
+        return Objects.hash(details, zobristHash, moveStack);
     }
 
     @Override
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
-        return Art.boardArt(this) + "\n" + turn;
+        return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+zobristHash.getBoardHash() +"\n";
+    }
+    
+    public boolean inCheckmate(){
+        if (!this.inCheck()){
+            return false;
+        }
+        if (this.generateLegalMoves().size() == 0){
+            return true;
+        }
+        return false;
     }
 
+    public boolean inStalemate(){
+        if (this.inCheck()){
+            return false;
+        }
+        if (this.generateLegalMoves().size() == 0){
+            return true;
+        }
+        return false;
+    }
+    
     public boolean isWhiteCanCastleK() {
         return this.details.whiteCanCastleK;
     }
@@ -290,7 +322,7 @@ public class Chessboard {
 
 
     public Chessboard(String fen) {
-        init();
+        details = new ChessboardDetails();
         makeBoardBasedOnFENSpecific(fen);
         this.zobristHash = new ZobristHash(this);
     }
@@ -510,7 +542,7 @@ public class Chessboard {
             }
             catch (NumberFormatException ignored){
             }
-            long pieceFromFen = bBitManipulations.newPieceOnSquare(square);
+            long pieceFromFen = BitOperations.newPieceOnSquare(square);
             square--;
             switch (entry) {
                 case "P":
@@ -571,4 +603,32 @@ public class Chessboard {
         return boardRepresentation;
     }
 
+    
+    void makeSeriesOfANMoves(String an){
+        
+    }
+
+    public ChessboardDetails getDetails() {
+        return details;
+    }
+
+    public void setDetails(ChessboardDetails details) {
+        this.details = details;
+    }
+
+    public ZobristHash getZobristHash() {
+        return zobristHash;
+    }
+
+    public void setZobristHash(ZobristHash zobristHash) {
+        this.zobristHash = zobristHash;
+    }
+
+    public Stack<StackMoveData> getMoveStack() {
+        return moveStack;
+    }
+
+    public void setMoveStack(Stack<StackMoveData> moveStack) {
+        this.moveStack = moveStack;
+    }
 }

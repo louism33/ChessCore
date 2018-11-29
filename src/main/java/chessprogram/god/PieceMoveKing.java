@@ -2,45 +2,28 @@ package chessprogram.god;
 
 import java.util.List;
 
-import static chessprogram.god.dBitExtractor.getAllPieces;
+import static chessprogram.god.BitOperations.*;
+import static chessprogram.god.BitOperations.getAllPieces;
+import static chessprogram.god.MoveConstantsKing.*;
 
 class PieceMoveKing {
 
-    public static long singleKingPushes(Chessboard board, long piece, boolean white, long legalPushes){
-        return singleKingAllMoves(board, piece, white, legalPushes, 0);
-    }
-
-    public static long singleKingCaptures(Chessboard board, long piece, boolean white, long legalCaptures){
-        return singleKingAllMoves(board, piece, white, 0, legalCaptures);
-    }
-
-    private static long singleKingAllMoves(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
-        if (piece == 0) return 0;
-        long table = 0;
-        int index = dBitIndexing.getIndexOfFirstPiece(piece);
-
-        long l1 = bKing.KING_MOVE_TABLE[index];
-        table |= l1;
-       
-        return table & (legalPushes | legalCaptures);
+    static long singleKingTable(long piece, long mask){
+        return KING_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
     }
 
     static long masterAttackTableKing(Chessboard board, boolean white,
                                              long ignoreThesePieces, long legalPushes, long legalCaptures){
-        long ans = 0, king;
-        if (white){
-            king = board.getWhiteKing();
-        }
-        else {
-            king = board.getBlackKing();
-        }
 
-        List<Long> allKings = getAllPieces(king, ignoreThesePieces);
-        for (Long piece : allKings){
-            ans |= singleKingAllMoves(board, piece, white, legalPushes, legalCaptures);
+        long ans = 0, kings = white ? board.getWhiteKing() : board.getBlackKing();
+        while (kings != 0) {
+            final long king = BitOperations.getFirstPiece(kings);
+            if ((king & ignoreThesePieces) == 0) {
+                ans |= singleKingTable(king, legalPushes | legalCaptures);
+            }
+            kings &= kings - 1;
         }
         return ans;
     }
-
 
 }

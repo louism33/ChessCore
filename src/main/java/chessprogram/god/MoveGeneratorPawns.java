@@ -1,27 +1,13 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static chessprogram.god.dBitExtractor.getAllPieces;
 
 class MoveGeneratorPawns {
 
-    static List<Move> masterPawnPushes(Chessboard board, boolean white,
-                                              long ignoreThesePieces, long legalPushes){
-        return masterMovePawns(board, white, ignoreThesePieces, legalPushes, 0);
-    }
+    static void addPawnPushes(List<Move> moves, Chessboard board, boolean white,
+                              long ignoreThesePieces, long legalCaptures, long legalPushes){
 
-
-    public static List<Move> masterPawnCaptures(Chessboard board, boolean white,
-                                                long ignoreThesePieces, long legalCaptures){
-        return masterMovePawns(board, white, ignoreThesePieces, 0, legalCaptures);
-    }
-
-    private static List<Move> masterMovePawns(Chessboard board, boolean white,
-                                              long ignoreThesePieces, long legalPushes, long legalCaptures){
-        long ans = 0, pawns;
-        List<Move> moves = new ArrayList<>();
+        long pawns;
         if (white){
             pawns = board.getWhitePawns();
         }
@@ -29,19 +15,17 @@ class MoveGeneratorPawns {
             pawns = board.getBlackPawns();
         }
 
-        List<Long> allPawns = getAllPieces(pawns, ignoreThesePieces);
-        for (Long piece : allPawns){
-            long pawnMoves = PieceMovePawns.singlePawnPushes(board, piece, white, legalPushes);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece));
+        while (pawns != 0){
+            long pawn = BitOperations.getFirstPiece(pawns);
+            if ((pawn & ignoreThesePieces) == 0){
+                final long multi = PieceMovePawns.singlePawnPushes(board, pawn, white, legalPushes);
+                final long pawnCaptures = PieceMovePawns.singlePawnCaptures(pawn, white, legalCaptures);
+                final int pawnIndex = BitOperations.getIndexOfFirstPiece(pawn);
+                MoveGenerationUtilities.addMovesFromAttackTableMaster(moves, multi | pawnCaptures, pawnIndex, board);
+            }
+            pawns &= pawns - 1;
         }
 
-        for (Long piece : allPawns){
-            long pawnMoves = PieceMovePawns.singlePawnCaptures(board, piece, white, legalCaptures);
-            int indexOfPiece = dBitIndexing.getIndexOfFirstPiece(piece);
-            moves.addAll(MoveGenerationUtilities.movesFromAttackBoard(pawnMoves, indexOfPiece));
-        }
-        return moves;
     }
 
 }

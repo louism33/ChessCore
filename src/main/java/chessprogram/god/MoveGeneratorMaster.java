@@ -3,104 +3,95 @@ package chessprogram.god;
 import java.util.ArrayList;
 import java.util.List;
 
+import static chessprogram.god.BitOperations.*;
+import static chessprogram.god.MoveGenerationUtilities.*;
+import static chessprogram.god.MoveGeneratorCastling.*;
+import static chessprogram.god.MoveGeneratorCheck.*;
+import static chessprogram.god.MoveGeneratorEnPassant.*;
+import static chessprogram.god.MoveGeneratorKingLegal.*;
+import static chessprogram.god.MoveGeneratorPromotion.*;
+import static chessprogram.god.MoveGeneratorPseudo.*;
+import static chessprogram.god.PieceMovePawns.*;
+import static chessprogram.god.PieceMoveSliding.*;
+import static chessprogram.god.PinnedManager.*;
+
 class MoveGeneratorMaster {
 
-    public static int numberOfChecks = 0;
-    public static int numberOfCheckMates = 0;
-    public static int numberOfStaleMates = 0;
-
-    public static List<Move> generateLegalMoves(Chessboard board, boolean white) {
-        List<Move> moves = generateLegalMovesHelper(board, white);
-
-        if (moves.size() == 0) {
-            long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-            int numberOfCheckers = cCheckChecker.numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
-            if (numberOfCheckers > 0) {
-//                System.out.println("Checkmate");
-                numberOfCheckMates++;
-            }
-            else {
-//                System.out.println("Stalemate");
-                numberOfStaleMates++;
-            }
-        }
-        return moves;
-    }
-
-    private static List<Move> generateLegalMovesHelper(Chessboard board, boolean white) {
+    static List<Move> generateLegalMoves(Chessboard board, boolean white) {
+        List<Move> moves = new ArrayList<>();
         long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-        int numberOfCheckers = cCheckChecker.numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
+        int numberOfCheckers = CheckHelper.numberOfPiecesThatLegalThreatenSquare(board, white, myKing);
 
         if (numberOfCheckers > 1){
-            numberOfChecks++;
-            return cKingLegalMoves.kingLegalMovesOnly(board, white);
+            addKingLegalMovesOnly(moves, board, white);
+            return moves;
         }
         else if (numberOfCheckers == 1){
-            numberOfChecks++;
-            return cCheckMoveOrganiser.evadeCheckMovesMaster(board, white);
+            addCheckEvasionMoves(moves, board, white);
+            return moves;
         }
-
         else {
-            return notInCheckMoves(board, white);
+            addNotInCheckMoves(moves, board, white);
+            return moves;
         }
-
     }
 
 
-    private static List<Move> notInCheckMoves(Chessboard board, boolean whiteTurn){
-        List<Move> moves = new ArrayList<>();
-
+    private static void addNotInCheckMoves(List<Move> moves, Chessboard board, boolean whiteTurn){
         long ENEMY_PIECES = (whiteTurn) ? board.blackPieces() : board.whitePieces();
         long ALL_EMPTY_SQUARES = ~board.allPieces();
         long myKing = (whiteTurn) ? board.getWhiteKing() : board.getBlackKing();
-        long pinnedPieces = PinnedManager.whichPiecesArePinned(board, whiteTurn, myKing);
-        long PENULTIMATE_RANK = whiteTurn ? bBitBoardUtils.RANK_SEVEN : bBitBoardUtils.RANK_TWO;
+        
+        long pinnedPieces = whichPiecesArePinned(board, whiteTurn, myKing);
+        
+        long PENULTIMATE_RANK = whiteTurn ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
         long myPawns = whiteTurn ? board.getWhitePawns() : board.getBlackPawns();
         long promotablePawns = myPawns & PENULTIMATE_RANK;
         long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
 
-        moves.addAll(MoveGeneratorCastling.generateCastlingMoves(board, whiteTurn));
+        addCastlingMoves(moves, board, whiteTurn);
 
-        moves.addAll(cKingLegalMoves.kingLegalMovesOnly(board, whiteTurn));
+        addKingLegalMovesOnly(moves, board, whiteTurn);
 
         if (pinnedPieces == 0){
-            List<Move> regularPiecesMoves = MoveGeneratorPseudo.generateAllMovesWithoutKing
-                    (board, whiteTurn, promotablePawns, ALL_EMPTY_SQUARES, ENEMY_PIECES);
+            addPromotionMoves
+                    (moves, board, whiteTurn, 0, ALL_EMPTY_SQUARES, ENEMY_PIECES);
 
-            moves.addAll(regularPiecesMoves);
+            addAllMovesWithoutKing
+                    (moves, board, whiteTurn, promotablePawns, ALL_EMPTY_SQUARES, ENEMY_PIECES);
 
-            moves.addAll(MoveGeneratorEnPassant.generateEnPassantMoves
-                    (board, whiteTurn, promotablePawns, ALL_EMPTY_SQUARES, ENEMY_PIECES));
-
-            moves.addAll(MoveGeneratorPromotion.generatePromotionMoves
-                    (board, whiteTurn, 0, ALL_EMPTY_SQUARES, ENEMY_PIECES));
-
-            return moves;
+            addEnPassantMoves
+                    (moves, board, whiteTurn, promotablePawns, ALL_EMPTY_SQUARES, ENEMY_PIECES);
         }
+        else {
+            addPromotionMoves
+                    (moves, board, whiteTurn, pinnedPieces, ALL_EMPTY_SQUARES, ENEMY_PIECES);
 
-        moves.addAll(MoveGeneratorEnPassant.generateEnPassantMoves
-                (board, whiteTurn, pinnedPiecesAndPromotingPawns, ALL_EMPTY_SQUARES, ENEMY_PIECES));
+            addAllMovesWithoutKing
+                    (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, ~board.allPieces(), ENEMY_PIECES);
 
-        moves.addAll(MoveGeneratorPromotion.generatePromotionMoves
-                (board, whiteTurn, pinnedPieces, ALL_EMPTY_SQUARES, ENEMY_PIECES));
-        
-        List<Move> pinnedPiecesMoves = pinnedMoveManager(board, whiteTurn, pinnedPieces, myKing);
-        moves.addAll(pinnedPiecesMoves);
+            addEnPassantMoves
+                    (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, ALL_EMPTY_SQUARES, ENEMY_PIECES);
 
-        List<Move> unpinnedPiecesMoves = MoveGeneratorPseudo.generateAllMovesWithoutKing
-                (board, whiteTurn, pinnedPiecesAndPromotingPawns, ~board.allPieces(), ENEMY_PIECES);
-        moves.addAll(unpinnedPiecesMoves);
-
-        return moves;
+            addPinnedPiecesMoves(moves, board, whiteTurn, pinnedPieces, myKing);
+        }
     }
+    
+            /*
+        while (pawns != 0){
+            final long pawn = BitOperations.getFirstPiece(pawns);
+            if ((pawn & ignoreThesePieces) == 0) {
+                ans |= singlePawnCaptures(pawn, white, legalCaptures);
+            }
+            pawns &= pawns - 1;
+        }
+         */
+    
+    private static void addPinnedPiecesMoves(List<Move> moves, Chessboard board, boolean whiteTurn,
+                                             long pinnedPieces, long squareWeArePinnedTo){
+        List<Long> allPinnedPieces = getAllPieces(pinnedPieces, 0);
 
-
-    private static List<Move> pinnedMoveManager(Chessboard board, boolean whiteTurn,
-                                               long pinnedPieces, long squareWeArePinnedTo){
-        List<Move> moves = new ArrayList<>();
-        List<Long> allPinnedPieces = dBitExtractor.getAllPieces(pinnedPieces, 0);
-
-        long ans = 0, pawns, knights, bishops, rooks, queens;
+        long pawns, knights, bishops, rooks, queens, allPieces = board.allPieces();
         if (whiteTurn){
             pawns = board.getWhitePawns();
             knights = board.getWhiteKnights();
@@ -120,9 +111,10 @@ class MoveGeneratorMaster {
         long ENEMY_PIECES = (whiteTurn) ? board.blackPieces() : board.whitePieces();
 
         for (long pinnedPiece : allPinnedPieces){
-            long infiniteRay = cCheckMoveOrganiser.extractInfiniteRayFromTwoPieces(board, squareWeArePinnedTo, pinnedPiece);
-            long pushMask = infiniteRay & ~(board.blackPieces() | board.whitePieces());
-            long captureMask = infiniteRay & ENEMY_PIECES;
+            long xray = PieceMoveSliding.xrayQueenAttacks(allPieces, pinnedPiece, squareWeArePinnedTo);
+            long pinningPiece = xray & ENEMY_PIECES;
+            long infiniteRay = Magic.extractRayFromTwoPiecesBitboardInclusive(squareWeArePinnedTo, pinningPiece);
+            long pushMask = infiniteRay ^ (pinningPiece | squareWeArePinnedTo);
 
             if ((pinnedPiece & knights) != 0) {
                 // knights cannot move cardinally or diagonally, and so cannot move while pinned
@@ -130,62 +122,44 @@ class MoveGeneratorMaster {
             }
             if ((pinnedPiece & pawns) != 0) {
 
-                long PENULTIMATE_RANK = whiteTurn ? bBitBoardUtils.RANK_SEVEN : bBitBoardUtils.RANK_TWO;
+                long PENULTIMATE_RANK = whiteTurn ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
                 long allButPinnedFriends = FRIENLDY_PIECES & ~pinnedPiece;
-                
+
                 if ((pinnedPiece & PENULTIMATE_RANK) == 0) {
 
-                    long singlePawnAllPushes = PieceMovePawns.singlePawnPushes(board, pinnedPiece, whiteTurn, pushMask);
-                    List<Move> pawnPushes = MoveGenerationUtilities.movesFromAttackBoardLong(singlePawnAllPushes, pinnedPiece);
-                    moves.addAll(pawnPushes);
+                    long singlePawnAllPushes = singlePawnPushes(board, pinnedPiece, whiteTurn, pushMask);
+                    addMovesFromAttackBoardLong(moves, singlePawnAllPushes, pinnedPiece);
 
-                    long singlePawnAllCaptures = PieceMovePawns.singlePawnCaptures(board, pinnedPiece, whiteTurn, captureMask);
-                    List<Move> pawnCaptures = MoveGenerationUtilities.movesFromAttackBoardLong(singlePawnAllCaptures, pinnedPiece);
-                    moves.addAll(pawnCaptures);
-                    
+                    long singlePawnAllCaptures = singlePawnCaptures(pinnedPiece, whiteTurn, pinningPiece);
+                    addMovesFromAttackBoardLong(moves, singlePawnAllCaptures, pinnedPiece);
+
                     // a pinned pawn may still EP
-                    moves.addAll(MoveGeneratorEnPassant.generateEnPassantMoves
-                            (board, whiteTurn, allButPinnedFriends, pushMask, captureMask));
+                    addEnPassantMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, pinningPiece);
                 }
                 else {
                     // a pinned pawn may still promote, through a capture of the pinner
-                    moves.addAll(MoveGeneratorPromotion.generatePromotionMoves
-                            (board, whiteTurn, allButPinnedFriends, pushMask, captureMask));
+                    addPromotionMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, pinningPiece);
                 }
                 continue;
             }
             if ((pinnedPiece & bishops) != 0) {
-                long singleBishopsAllPushes = PieceMoveSliding.singleBishopPushes(board, pinnedPiece, whiteTurn, pushMask);
-                List<Move> bishopMovesPushes = MoveGenerationUtilities.movesFromAttackBoardLong(singleBishopsAllPushes, pinnedPiece);
-                
-                moves.addAll(bishopMovesPushes);
-
-                long singleBishopAllCaptures = PieceMoveSliding.singleBishopCaptures(board, pinnedPiece, whiteTurn, captureMask);
-                List<Move> bishopMovesCaptures = MoveGenerationUtilities.movesFromAttackBoardLong(singleBishopAllCaptures, pinnedPiece);
-                moves.addAll(bishopMovesCaptures);
+                long pinnedBishopAllMoves = singleBishopTable(allPieces, whiteTurn, pinnedPiece, UNIVERSE);
+                addMovesFromAttackBoardLong(moves, pinnedBishopAllMoves & pushMask, pinnedPiece);
+                addMovesFromAttackBoardLong(moves, pinnedBishopAllMoves & pinningPiece, pinnedPiece);
                 continue;
             }
             if ((pinnedPiece & rooks) != 0) {
-                long singleRookAllPushes = PieceMoveSliding.singleRookPushes(board, pinnedPiece, whiteTurn, pushMask);
-                List<Move> rookMovesPushes = MoveGenerationUtilities.movesFromAttackBoardLong(singleRookAllPushes, pinnedPiece);
-                moves.addAll(rookMovesPushes);
-
-                long singleRookAllCaptures = PieceMoveSliding.singleRookCaptures(board, pinnedPiece, whiteTurn, captureMask);
-                List<Move> rookMovesCaptures = MoveGenerationUtilities.movesFromAttackBoardLong(singleRookAllCaptures, pinnedPiece);
-                moves.addAll(rookMovesCaptures);
+                long singleRookAllMoves = singleRookTable(allPieces, whiteTurn, pinnedPiece, UNIVERSE);
+                addMovesFromAttackBoardLong(moves, singleRookAllMoves & pushMask, pinnedPiece);
+                addMovesFromAttackBoardLong(moves, singleRookAllMoves & pinningPiece, pinnedPiece);
                 continue;
             }
             if ((pinnedPiece & queens) != 0) {
-                long singleQueenAllPushes = PieceMoveSliding.singleQueenPushes(board, pinnedPiece, whiteTurn, pushMask);
-                List<Move> queenPushes = MoveGenerationUtilities.movesFromAttackBoardLong(singleQueenAllPushes, pinnedPiece);
-                moves.addAll(queenPushes);
-
-                long singleQueenAllCaptures = PieceMoveSliding.singleQueenCaptures(board, pinnedPiece, whiteTurn, captureMask);
-                List<Move> queenCaptures = MoveGenerationUtilities.movesFromAttackBoardLong(singleQueenAllCaptures, pinnedPiece);
-                moves.addAll(queenCaptures);
+                long singleQueenAllMoves = singleQueenTable(allPieces, whiteTurn, pinnedPiece, UNIVERSE);
+                addMovesFromAttackBoardLong(moves, singleQueenAllMoves & pushMask, pinnedPiece);
+                addMovesFromAttackBoardLong(moves, singleQueenAllMoves & pinningPiece, pinnedPiece);
             }
         }
-        return moves;
     }
 
 
