@@ -17,7 +17,7 @@ class MoveGeneratorCheck {
     static void addCheckEvasionMoves(List<Integer> moves, Chessboard board, boolean white, long pinnedPieces,
                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                      long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing, 
-                                     long enemies){
+                                     long enemies, long friends, long allPieces){
 
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
         long blockingSquaresMask, checkingPieceMask;
@@ -48,12 +48,12 @@ class MoveGeneratorCheck {
         addKingLegalMovesOnly(moves, board, white,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies);
+                enemies, friends, allPieces);
 
         addEnPassantMoves(moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies);
+                enemies, friends, allPieces);
 
     }
 

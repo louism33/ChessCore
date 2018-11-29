@@ -13,7 +13,7 @@ class MoveGeneratorKingLegal {
     static void addKingLegalMovesOnly(List<Integer> moves, Chessboard board, boolean white,
                                       long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                       long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                      long enemies){
+                                      long enemies, long friends, long allPieces){
         addMovesFromAttackTableMaster(moves, 
                 kingLegalPushAndCaptureTable(board, white, myKing, enemies),
                 getIndexOfFirstPiece(myKing),

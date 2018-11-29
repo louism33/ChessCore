@@ -16,7 +16,7 @@ class MoveGeneratorEnPassant {
                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
                                   long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                   long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                  long enemies) {
+                                  long enemies, long friends, long allPieces) {
         
         List<Integer> temp = new ArrayList<>();
 
@@ -85,7 +85,7 @@ class MoveGeneratorEnPassant {
             boolean enPassantWouldLeadToCheck = boardInCheck(board, white,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    enemies);
+                    enemies, friends, allPieces);
             
             board.unMakeMoveAndFlipTurn();
             

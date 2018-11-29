@@ -21,22 +21,18 @@ class MoveGeneratorPromotionIntMove {
         long legalPieces = ~ignoreThesePieces;
         long PENULTIMATE_RANK;
         long FINAL_RANK;
-        long promotablePawns;
-        long promotionCaptureSquares;
-
         if (white) {
             PENULTIMATE_RANK = RANK_SEVEN;
-            promotablePawns = board.getWhitePawns() & PENULTIMATE_RANK & legalPieces;
-            promotionCaptureSquares = RANK_EIGHT & board.blackPieces();
             FINAL_RANK = RANK_EIGHT;
         }
         else {
             PENULTIMATE_RANK = RANK_TWO;
-            promotablePawns = board.getBlackPawns() & PENULTIMATE_RANK & legalPieces;
-            promotionCaptureSquares = RANK_ONE & board.whitePieces();
             FINAL_RANK = RANK_ONE;
         }
-
+        
+        long promotionCaptureSquares = FINAL_RANK & enemies;
+        long promotablePawns = myPawns & PENULTIMATE_RANK & legalPieces;
+        
         while (promotablePawns != 0){
             final long pawn = getFirstPiece(promotablePawns);
             long pawnMoves = singlePawnPushes(board, pawn, board.isWhiteTurn(), (FINAL_RANK & legalPushes))
@@ -46,10 +42,8 @@ class MoveGeneratorPromotionIntMove {
                 List<Integer> todoMoves = new ArrayList<>();
                 addMovesFromAttackTableMaster(todoMoves, pawnMoves, getIndexOfFirstPiece(pawn), board);
                 
-                // todo
-                for (int move : todoMoves){
-                    move |= PROMOTION_MASK;
-                    moves.addAll(promotingMovesByPiece(move));
+                for (int i = 0; i < todoMoves.size(); i++) {
+                    moves.addAll(promotingMovesByPiece(todoMoves.get(i) | PROMOTION_MASK));
                 }
             }
             promotablePawns &= promotablePawns - 1;

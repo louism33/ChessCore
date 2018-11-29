@@ -13,7 +13,7 @@ class MoveGeneratorCastling {
     static void addCastlingMoves(List<Integer> moves, Chessboard board, boolean white,
                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                 long enemies){
+                                 long enemies, long friends, long allPieces){
 
         if (white){
             if(board.isWhiteCanCastleK()){
@@ -21,7 +21,7 @@ class MoveGeneratorCastling {
                         && areTheseSquaresUnthreatened(board, true, BitboardResources.whiteCastleKingEmpties,
                         myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies)
+                        enemies, friends, allPieces)
 
                         && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_EAST_CORNER) != 0)){
@@ -35,7 +35,7 @@ class MoveGeneratorCastling {
                         && areTheseSquaresUnthreatened(board, true, BitboardResources.whiteCastleQueenUnthreateneds,
                         myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies)
+                        enemies, friends, allPieces)
                         && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_WEST_CORNER) != 0)){
 
@@ -51,7 +51,7 @@ class MoveGeneratorCastling {
                         && areTheseSquaresUnthreatened(board, false, BitboardResources.blackCastleKingEmpties,
                         myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies)
+                        enemies, friends, allPieces)
                         && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BitboardResources.NORTH_EAST_CORNER) != 0)){
 
@@ -63,8 +63,8 @@ class MoveGeneratorCastling {
                 if (areTheseSquaresEmpty(board, BitboardResources.blackCastleQueenEmpties)
                         && areTheseSquaresUnthreatened(board, false, BitboardResources.blackCastleQueenUnthreateneds,myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies
-                )
+                        enemies, friends, allPieces)
+                        
                         && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BitboardResources.NORTH_WEST_CORNER) != 0)){
 
@@ -77,13 +77,13 @@ class MoveGeneratorCastling {
     private static boolean areTheseSquaresUnthreatened(Chessboard board, boolean white, long squares,
                                                        long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                                        long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                                       long enemies){
+                                                       long enemies, long friends, long allPieces){
         while (squares != 0){
             final long square = BitOperations.getFirstPiece(squares);
             int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(board, white, square,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    enemies);
+                    enemies, friends, allPieces);
             if (numberOfThreats > 0){
                 return false;
             }

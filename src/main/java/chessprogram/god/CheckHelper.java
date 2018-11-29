@@ -13,22 +13,22 @@ class CheckHelper {
     static boolean boardInCheck(Chessboard board, boolean white,
                                 long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                 long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                long enemies){
-        
+                                long enemies, long friends, long allPiece){
         int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(board, white, myKing,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies);
+                enemies, friends, allPiece);
+        
         return numberOfCheckers > 0;
     }
 
     static int numberOfPiecesThatLegalThreatenSquare(Chessboard board, boolean myColour, long square,
                                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                                      long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                                     long enemies){
-        long pawns, knights, bishops, rooks, queens, king, allPieces = board.allPieces();
+                                                     long enemies, long friends, long allPiece){
+        long knights, bishops, rooks, queens, king, allPieces = board.allPieces();
         if (!myColour){
-            pawns = board.getWhitePawns();
+            myPawns = board.getWhitePawns();
             knights = board.getWhiteKnights();
             bishops = board.getWhiteBishops();
             rooks = board.getWhiteRooks();
@@ -36,7 +36,7 @@ class CheckHelper {
             king = board.getWhiteKing();
         }
         else {
-            pawns = board.getBlackPawns();
+            myPawns = board.getBlackPawns();
             knights = board.getBlackKnights();
             bishops = board.getBlackBishops();
             rooks = board.getBlackRooks();
@@ -46,8 +46,8 @@ class CheckHelper {
 
         int numberOfThreats = 0;
 
-        if (pawns != 0) {
-            numberOfThreats += populationCount(singlePawnCaptures(square, myColour, pawns));
+        if (myPawns != 0) {
+            numberOfThreats += populationCount(singlePawnCaptures(square, myColour, myPawns));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;

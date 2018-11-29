@@ -13,7 +13,7 @@ import static chessprogram.god.MakeMoveAndHashUpdate.*;
 public class Chessboard implements Cloneable{
 
     // todo, consider shift to 8 bbs
-    
+
     private ChessboardDetails details;
     private ZobristHashIntMove zobristHash;
 
@@ -24,16 +24,16 @@ public class Chessboard implements Cloneable{
     void cloneZobristStack(ZobristHashIntMove zobristHash){
         this.zobristHash.zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
     }
-    
+
     private void init(){
         this.details = new ChessboardDetails(true);
     }
-    
+
     public Chessboard(boolean blank){
         this.details = new ChessboardDetails();
         this.zobristHash = new ZobristHashIntMove(this);
     }
-    
+
     public Chessboard() {
         init();
         makeZobrist();
@@ -42,28 +42,28 @@ public class Chessboard implements Cloneable{
     // copy constructor
     private Chessboard(Chessboard board) {
     }
-    
+
     public String getFenRepresentation(){
         return "not yet";
     }
-    
+
     public void setBoardToFen(String fen){
-        
+
     }
-    
+
     public List<Integer> generateLegalMoves(){
         return MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn());
     }
-    
+
     public void makeMove(int move){
         makeMoveAndHashUpdate(this, move, this.zobristHash);
     }
-    
+
     public void makeMoveAndFlipTurn(int move){
         makeMoveAndHashUpdate(this, move, this.zobristHash);
         flipTurn();
     }
-    
+
     public void makeNullMoveAndFlipTurn(){
         makeNullMoveAndHashUpdate(this, this.zobristHash);
         flipTurn();
@@ -75,16 +75,18 @@ public class Chessboard implements Cloneable{
     public void flipTurn(){
         MoveMaker.flipTurn(this);
     }
-    
+
     public void unMakeMoveAndFlipTurn(){
         UnMakeMoveAndHashUpdate(this, this.zobristHash);
     }
-    
+
     public boolean inCheck(){
-        return boardInCheck(this, isWhiteTurn(), 
+        return boardInCheck(this, isWhiteTurn(),
                 getWhitePawns(), getWhiteKnights(), getWhiteBishops(), getWhiteRooks(), getWhiteQueen(), getWhiteKing(),
                 getBlackPawns(), getBlackKnights(), getBlackBishops(), getBlackRooks(), getBlackQueen(), getBlackKing(),
-                (isWhiteTurn() ? blackPieces() : whitePieces()));
+                (isWhiteTurn() ? blackPieces() : whitePieces()),
+                (isWhiteTurn() ? whitePieces() : blackPieces()),
+                (blackPieces() | whitePieces()));
     }
 
     public boolean drawByRepetition (boolean white){
@@ -98,11 +100,11 @@ public class Chessboard implements Cloneable{
     private boolean colourHasInsufficientMaterialToMate (boolean white){
         return CheckHelper.colourHasInsufficientMaterialToMate(this, white);
     }
-    
+
     private void pinnedPieces(boolean white){
-        
+
     }
-    
+
     public Stack<StackMoveData> moveStack = new Stack<>();
 
     public List<Integer> stackMoves(Stack<StackMoveData> stack){
@@ -156,7 +158,7 @@ public class Chessboard implements Cloneable{
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+zobristHash.getBoardHash() +"\n";
     }
-    
+
     public boolean inCheckmate(){
         if (!this.inCheck()){
             return false;
@@ -176,7 +178,7 @@ public class Chessboard implements Cloneable{
         }
         return false;
     }
-    
+
     public boolean isWhiteCanCastleK() {
         return this.details.whiteCanCastleK;
     }
@@ -320,11 +322,11 @@ public class Chessboard implements Cloneable{
         makeBoardBasedOnFENSpecific(fen);
         this.zobristHash = new ZobristHashIntMove(this);
     }
-    
+
 
     private void makeBoardBasedOnFENSpecific(String fen){
         parseFenStringSpecific(fen);
-        
+
         this.setWhiteTurn(isItWhitesTurnSpecific(fen));
 
         boolean[] castlingRights = castlingRightsSpecific(fen);
@@ -595,9 +597,9 @@ public class Chessboard implements Cloneable{
         return boardRepresentation;
     }
 
-    
+
     void makeSeriesOfANMoves(String an){
-        
+
     }
 
     public ChessboardDetails getDetails() {
