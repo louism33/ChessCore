@@ -5,7 +5,7 @@ import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
 import static chessprogram.god.PieceMoveSliding.*;
 
-class MoveGeneratorSlidingIntMove {
+class MoveGeneratorSliding {
 
     static void addSlidingMoves (int[] moves, Chessboard board, boolean white,
                                  long ignoreThesePieces, long mask,

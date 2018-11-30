@@ -1,13 +1,12 @@
 package chessprogram.god;
 
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
-import static chessprogram.god.MoveConstantsPawnCapture.PAWN_CAPTURE_TABLE_BLACK;
-import static chessprogram.god.MoveConstantsPawnCapture.PAWN_CAPTURE_TABLE_WHITE;
+import static chessprogram.god.BitboardResources.PAWN_CAPTURE_TABLE_BLACK;
+import static chessprogram.god.BitboardResources.PAWN_CAPTURE_TABLE_WHITE;
 
 class PieceMovePawns {
 
-    static long singlePawnPushes(Chessboard board, long pawns, boolean white, long legalPushes) {
-        long allPieces = board.allPieces();
+    static long singlePawnPushes(Chessboard board, long pawns, boolean white, long legalPushes, long allPieces) {
         final long possiblePawnSinglePushes = white ? pawns << 8 : pawns >>> 8;
         final long intermediateRank = white ? BitboardResources.RANK_THREE : BitboardResources.RANK_SIX;
         long possibleDoubles = (((possiblePawnSinglePushes & intermediateRank & ~allPieces) ));

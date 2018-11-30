@@ -1,7 +1,7 @@
 package chessprogram.god;
 
-import static chessprogram.god.BitOperations.UNIVERSE;
 import static chessprogram.god.BitOperations.getFirstPiece;
+import static chessprogram.god.BitboardResources.UNIVERSE;
 import static chessprogram.god.Magic.singleBishopMagicMoves;
 import static chessprogram.god.Magic.singleRookMagicMoves;
 
@@ -21,12 +21,11 @@ class PieceMoveSliding {
 
     static long masterAttackTableSliding(Chessboard board, boolean white,
                                          long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                         long bishops, long rooks, long queens, long allpieces){
+                                         long bishops, long rooks, long queens, long allPieces){
         long mask = legalPushes | legalCaptures;
         long ans = 0;
         // board without king
-        long allPieces = board.allPieces();
-
+        
         while (bishops != 0){
             final long bishop = getFirstPiece(bishops);
             if ((bishop & ignoreThesePieces) == 0) {

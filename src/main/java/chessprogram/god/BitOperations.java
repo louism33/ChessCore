@@ -5,8 +5,6 @@ import java.util.List;
 
 public class BitOperations {
 
-    public static final long UNIVERSE = 0xffffffffffffffffL;
-
     public static long newPieceOnSquare (int x){
         return 0x0000000000000001L << x;
     }

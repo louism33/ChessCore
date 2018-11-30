@@ -2,7 +2,7 @@ package chessprogram.god;
 
 class MovePrettifier {
 
-    static String prettyMoveInt(int move){
+    static String prettyMove(int move){
         int sourceAsPiece = MoveParser.getSourceIndex(move);
         String file = getFile(sourceAsPiece);
         String rank = getRank(sourceAsPiece);

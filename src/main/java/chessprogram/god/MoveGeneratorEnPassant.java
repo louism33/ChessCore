@@ -11,14 +11,6 @@ import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 
 class MoveGeneratorEnPassant {
 
-    static void addEnPassantMoves2(int[] moves, Chessboard board, boolean white,
-                                  long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                  long enemies, long friends, long allPieces) {
-        
-    }
-    
     static void addEnPassantMoves(int[] moves, Chessboard board, boolean white,
                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
                                   long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,

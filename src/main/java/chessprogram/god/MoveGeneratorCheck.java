@@ -23,7 +23,7 @@ class MoveGeneratorCheck {
             checkingPieceMask = jumper;
         }
         else {
-            long slider = inCheckByASlider(board, white);
+            long slider = inCheckByASlider(board, white, myKing, enemyBishops, enemyRooks, enemyQueens, allPieces);
             blockingSquaresMask = Magic.extractRayFromTwoPiecesBitboard(myKing, slider) & (~slider);
             checkingPieceMask = slider;
         }
@@ -66,29 +66,20 @@ class MoveGeneratorCheck {
         return 0;
     }
 
-    private static long inCheckByASlider(Chessboard board, boolean white){
-        long bishops, rooks, queens, allPieces = board.allPieces();
-        if (!white){
-            bishops = board.getWhiteBishops();
-            rooks = board.getWhiteRooks();
-            queens = board.getWhiteQueen();
-        }
-        else {
-            bishops = board.getBlackBishops();
-            rooks = board.getBlackRooks();
-            queens = board.getBlackQueen();
-        }
-        long myKing = (white) ? board.getWhiteKing() : board.getBlackKing();
-
-        long possibleBishop = singleBishopTable(allPieces, white, myKing, bishops);
+    // todo, square threatened by?
+    private static long inCheckByASlider(Chessboard board, boolean white,
+                                         long myKing,
+                                         long enemyBishops, long enemyRooks, long enemyQueens,
+                                         long allPieces){
+        long possibleBishop = singleBishopTable(allPieces, white, myKing, enemyBishops);
         if (possibleBishop != 0) {
             return possibleBishop;
         }
-        long possibleRook = singleRookTable(allPieces, white, myKing, rooks);
+        long possibleRook = singleRookTable(allPieces, white, myKing, enemyRooks);
         if (possibleRook != 0){
             return possibleRook;
         }
-        long possibleQueen = singleQueenTable(allPieces, white, myKing, queens);
+        long possibleQueen = singleQueenTable(allPieces, white, myKing, enemyQueens);
         if (possibleQueen != 0){
             return possibleQueen;
         }

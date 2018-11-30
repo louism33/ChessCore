@@ -7,11 +7,12 @@ import static chessprogram.god.MoveParser.moveFromSourceDestinationCapture;
 
 class MoveGenerationUtilities {
 
-    public static int moveIndex(int[] moves){
+    private static int moveIndex(int[] moves){
         int index = 0;
         while (moves[index] != 0){
             index++;
         }
+        
         return index;
     }
     

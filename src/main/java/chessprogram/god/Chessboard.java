@@ -1,9 +1,6 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,6 +48,12 @@ public class Chessboard implements Cloneable{
 
     }
 
+    public int[] generateCleanLegalMoves(){
+        return Arrays.stream(MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn()))
+                .filter(x -> x != 0)
+                .toArray();
+    }
+    
     public int[] generateLegalMoves(){
         return MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn());
     }

@@ -1,7 +1,8 @@
 package chessprogram.god;
 
+import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
-import static chessprogram.god.MoveConstantsKnight.KNIGHT_MOVE_TABLE;
+import static chessprogram.god.BitboardResources.KNIGHT_MOVE_TABLE;
 
 class PieceMoveKnight {
 
@@ -14,7 +15,7 @@ class PieceMoveKnight {
                                          long knights){
         long ans = 0;
         while (knights != 0) {
-            final long knight = BitOperations.getFirstPiece(knights);
+            final long knight = getFirstPiece(knights);
             if ((knight & ignoreThesePieces) == 0) {
                 ans |= singleKnightTable(knight, legalPushes | legalCaptures);
             }

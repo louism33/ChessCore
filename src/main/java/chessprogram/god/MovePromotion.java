@@ -1,10 +1,10 @@
 package chessprogram.god;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
-import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
+import static chessprogram.god.MoveMakingUtilities.removePieces;
 import static chessprogram.god.MoveParser.*;
 
-class MovePromotionIntMove {
+class MovePromotion {
 
     static void makePromotingMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(getSourceIndex(move));

@@ -1,7 +1,7 @@
 package chessprogram.god;
 
 import static chessprogram.god.MoveConstants.*;
-import static chessprogram.god.MovePrettifier.prettyMoveInt;
+import static chessprogram.god.MovePrettifier.prettyMove;
 
 public class MoveParser {
 
@@ -16,12 +16,11 @@ public class MoveParser {
         int move = 0;
         move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
         move |= (d & DESTINATION_MASK);
-//        MoveUtils.buildSourcePiece(this);
         return move;
     }
 
     public static String toString(int move){
-        return prettyMoveInt(move);
+        return prettyMove(move);
     }
 
     public static int moveFromSourceDestination(int source, int destinationIndex) {

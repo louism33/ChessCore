@@ -1,11 +1,7 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.BitboardResources.*;
-import static chessprogram.god.MoveConstants.*;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMasterPromotion;
 import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
 import static chessprogram.god.PieceMovePawns.singlePawnPushes;
@@ -17,7 +13,6 @@ class MoveGeneratorPromotion {
                                   long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                   long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                   long enemies, long friends, long allPieces){
-        long legalPieces = ~ignoreThesePieces;
         long penultimateRank;
         long finalRank;
         if (white) {
@@ -29,11 +24,11 @@ class MoveGeneratorPromotion {
             finalRank = RANK_ONE;
         }
 
-        long promotablePawns = myPawns & penultimateRank & legalPieces;
+        long promotablePawns = myPawns & penultimateRank & ~ignoreThesePieces;
 
         while (promotablePawns != 0){
             final long pawn = getFirstPiece(promotablePawns);
-            long pawnMoves = singlePawnPushes(board, pawn, board.isWhiteTurn(), (finalRank & legalPushes))
+            long pawnMoves = singlePawnPushes(board, pawn, board.isWhiteTurn(), (finalRank & legalPushes), allPieces)
                     | singlePawnCaptures(pawn, board.isWhiteTurn(), ((finalRank & enemies) & legalCaptures));
 
             if (pawnMoves != 0) {

@@ -3,7 +3,7 @@ package chessprogram.god;
 import java.util.Stack;
 
 import static chessprogram.god.BitOperations.populationCount;
-import static chessprogram.god.PieceMoveKingIntMove.singleKingTable;
+import static chessprogram.god.PieceMoveKing.singleKingTable;
 import static chessprogram.god.PieceMoveKnight.singleKnightTable;
 import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
 import static chessprogram.god.PieceMoveSliding.*;

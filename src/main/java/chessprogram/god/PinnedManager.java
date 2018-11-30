@@ -32,19 +32,6 @@ class PinnedManager {
                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                      long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                      long enemies, long friends, long allPieces) {
-//        long myPieces, enemyBishops, enemyRooks, enemyQueens, allPieces = board.allPieces();
-//
-//        if (white){
-//            myPieces = board.whitePieces();
-//            enemyBishops = board.getBlackBishops();
-//            enemyRooks = board.getBlackRooks();
-//            enemyQueens = board.getBlackQueen();
-//        } else {
-//            myPieces = board.blackPieces();
-//            enemyBishops = board.getWhiteBishops();
-//            enemyRooks = board.getWhiteRooks();
-//            enemyQueens = board.getWhiteQueen();
-//        }
 
         long pinnedPieces = 0;
 

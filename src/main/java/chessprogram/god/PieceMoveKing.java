@@ -1,9 +1,9 @@
 package chessprogram.god;
 
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
-import static chessprogram.god.MoveConstantsKing.KING_MOVE_TABLE;
+import static chessprogram.god.BitboardResources.KING_MOVE_TABLE;
 
-class PieceMoveKingIntMove {
+class PieceMoveKing {
 
     static long singleKingTable(long piece, long mask){
         return KING_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;

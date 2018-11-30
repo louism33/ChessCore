@@ -3,9 +3,9 @@ package chessprogram.god;
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.MoveMakingCastlingIntMove.castleFlagManager;
 import static chessprogram.god.MoveMakingCastlingIntMove.makeCastlingMove;
-import static chessprogram.god.MoveMakingEnPassantIntMove.makeEnPassantMove;
-import static chessprogram.god.MovePromotionIntMove.makePromotingMove;
-import static chessprogram.god.MoveRegularIntMove.makeRegularMove;
+import static chessprogram.god.MoveMakingEnPassant.makeEnPassantMove;
+import static chessprogram.god.MovePromotion.makePromotingMove;
+import static chessprogram.god.MoveRegular.makeRegularMove;
 import static chessprogram.god.StackMoveData.SpecialMove;
 import static chessprogram.god.StackMoveData.SpecialMove.*;
 

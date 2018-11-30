@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.getAllPieces;
-import static chessprogram.god.MagicConstants.rookBlankBoardAttackMasks;
+import static chessprogram.god.BitboardResources.rookBlankBoardAttackMasks;
 
 public class MagicUtils {
 

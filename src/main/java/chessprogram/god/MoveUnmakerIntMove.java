@@ -3,7 +3,8 @@ package chessprogram.god;
 import org.junit.Assert;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
-import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
+import static chessprogram.god.MoveMakingUtilities.removePieces;
+import static chessprogram.god.MoveParser.*;
 import static chessprogram.god.StackMoveData.SpecialMove;
 import static chessprogram.god.StackMoveData.SpecialMove.*;
 
@@ -18,22 +19,21 @@ class MoveUnmakerIntMove {
             return;
         }
         
-        int pieceToMoveBack = MoveParser.getDestinationIndex(popSMD.move);
-        int squareToMoveBackTo = MoveParser.getSourceIndex(popSMD.move);
+        int pieceToMoveBack = getDestinationIndex(popSMD.move);
+        int squareToMoveBackTo = getSourceIndex(popSMD.move);
 
         if (popSMD.typeOfSpecialMove == SpecialMove.BASICQUIETPUSH){
-//            int basicReversedMove = new Move(pieceToMoveBack, squareToMoveBackTo);
-            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
         
         else if (popSMD.typeOfSpecialMove == BASICLOUDPUSH){
-            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
         else if (popSMD.typeOfSpecialMove == BASICCAPTURE){
-            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
             int takenPiece = popSMD.takenPiece;
             if (takenPiece != 0){
@@ -43,12 +43,12 @@ class MoveUnmakerIntMove {
 
         //double pawn push
         else if (popSMD.typeOfSpecialMove == ENPASSANTVICTIM){
-            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
         else if (popSMD.typeOfSpecialMove == ENPASSANTCAPTURE){
-            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
             int takenPiece = popSMD.takenPiece;
             
@@ -61,7 +61,7 @@ class MoveUnmakerIntMove {
         }
         
         else if (popSMD.typeOfSpecialMove == CASTLING){
-            int basicReversedMove = MoveParser.moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
 
             if (pieceToMoveBack == 1){
                 long originalKing = newPieceOnSquare(squareToMoveBackTo);
@@ -181,8 +181,8 @@ class MoveUnmakerIntMove {
 
 
     private static void makeRegularMove(Chessboard board, int move){
-        long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
-        long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
+        long sourcePiece = newPieceOnSquare(getSourceIndex(move));
+        long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 
         if ((sourcePiece & board.getWhitePawns()) != 0){
             removePieces(board, sourcePiece, destinationPiece);

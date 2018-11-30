@@ -4,10 +4,9 @@ import org.junit.Assert;
 
 import java.util.List;
 
-import static chessprogram.god.BitOperations.*;
-import static chessprogram.god.BitboardResources.NORTH_EAST;
-import static chessprogram.god.BitboardResources.NORTH_WEST;
-import static chessprogram.god.MagicConstants.*;
+import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
+import static chessprogram.god.BitOperations.populationCount;
+import static chessprogram.god.BitboardResources.*;
 import static chessprogram.god.MagicUtils.singleBishopAllVariations;
 import static chessprogram.god.MagicUtils.singleRookAllVariations;
 
@@ -54,7 +53,7 @@ public class Magic {
         Assert.assertEquals(populationCount(rook), 1);
 
         final int rookIndex = getIndexOfFirstPiece(rook);
-        final long rookMagicNumber = MagicConstants.rookMagicNumbers[rookIndex];
+        final long rookMagicNumber = rookMagicNumbers[rookIndex];
 
         final int index = (int) (((occupancy & rookBlankBoardAttackMasks[rookIndex]) * rookMagicNumber)
                 >>> (64 - (rookShiftAmounts[rookIndex])));
@@ -72,7 +71,7 @@ public class Magic {
         Assert.assertEquals(populationCount(bishop), 1);
 
         final int bishopIndex = getIndexOfFirstPiece(bishop);
-        final long bishopMagicNumber = MagicConstants.bishopMagicNumbers[bishopIndex];
+        final long bishopMagicNumber = bishopMagicNumbers[bishopIndex];
 
         final int index = (int) (((allPieces & bishopBlankBoardAttackMasks[bishopIndex]) * bishopMagicNumber)
                 >>> (64 - (bishopShiftAmounts[bishopIndex])));
@@ -100,7 +99,7 @@ public class Magic {
 
     private static long[] makeBishopDB(Square square) {
         int length = bishopShiftAmounts[square.ordinal()];
-        long magic = MagicConstants.bishopMagicNumbers[square.ordinal()];
+        long magic = bishopMagicNumbers[square.ordinal()];
 
         List<Long> bishopVariations = bishopVariations(square);
         long sq = square.toBitboard();
@@ -121,7 +120,7 @@ public class Magic {
 
     private static long[] makeRookDB(Square square) {
         int length = rookShiftAmounts[square.ordinal()];
-        long magic = MagicConstants.rookMagicNumbers[square.ordinal()];
+        long magic = rookMagicNumbers[square.ordinal()];
 
         List<Long> rookVariations = rookVariations(square);
         long sq = square.toBitboard();

@@ -1,6 +1,8 @@
 package chessprogram.god;
 
-import static chessprogram.god.BitOperations.*;
+import static chessprogram.god.BitOperations.getFirstPiece;
+import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
+import static chessprogram.god.BitboardResources.UNIVERSE;
 import static chessprogram.god.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
 import static chessprogram.god.Magic.extractRayFromTwoPiecesBitboardInclusive;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
@@ -18,7 +20,7 @@ import static chessprogram.god.PinnedManager.whichPiecesArePinned;
 class MoveGeneratorMaster {
 
     static int[] generateLegalMoves(Chessboard board, boolean white) {
-        int[] moves = new int[192];
+        int[] moves = new int[128];
 
         long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
         long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
@@ -156,18 +158,18 @@ class MoveGeneratorMaster {
                             enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                             enemies, friends, allPieces);
 
-            addPinnedPiecesMovesMagic(moves, board, whiteTurn, pinnedPieces, myKing,
+            addPinnedPiecesMoves(moves, board, whiteTurn, pinnedPieces, myKing,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     enemies, friends, allPieces);
         }
     }
 
-    private static void addPinnedPiecesMovesMagic(int[] moves, Chessboard board, boolean whiteTurn,
-                                                  long pinnedPieces, long squareWeArePinnedTo,
-                                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                                  long enemies, long friends, long allPieces){
+    private static void addPinnedPiecesMoves(int[] moves, Chessboard board, boolean whiteTurn,
+                                             long pinnedPieces, long squareWeArePinnedTo,
+                                             long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
+                                             long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
+                                             long enemies, long friends, long allPieces){
         while (pinnedPieces != 0){
             long pinnedPiece = getFirstPiece(pinnedPieces);
             long pinningPiece = xrayQueenAttacks(allPieces, pinnedPiece, squareWeArePinnedTo) & enemies;
@@ -188,7 +190,7 @@ class MoveGeneratorMaster {
 
                 if ((pinnedPiece & PENULTIMATE_RANK) == 0) {
                     addMovesFromAttackTableMaster(moves,
-                            singlePawnPushes(board, pinnedPiece, whiteTurn, pushMask)
+                            singlePawnPushes(board, pinnedPiece, whiteTurn, pushMask, allPieces)
                                     | singlePawnCaptures(pinnedPiece, whiteTurn, pinningPiece),
                             pinnedPieceIndex, board);
 

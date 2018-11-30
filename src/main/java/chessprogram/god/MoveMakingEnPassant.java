@@ -2,9 +2,9 @@ package chessprogram.god;
 
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
-import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
+import static chessprogram.god.MoveMakingUtilities.removePieces;
 
-class MoveMakingEnPassantIntMove {
+class MoveMakingEnPassant {
     
     static void makeEnPassantMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));

@@ -1,7 +1,7 @@
 package chessprogram.god;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
-import static chessprogram.god.MoveMakingUtilitiesIntMove.removePieces;
+import static chessprogram.god.MoveMakingUtilities.removePieces;
 
 class MoveMakingCastlingIntMove {
 

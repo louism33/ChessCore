@@ -1,6 +1,6 @@
 package chessprogram.god;
 
-class MoveMakingUtilitiesIntMove {
+class MoveMakingUtilities {
 
     public static void removePieces (Chessboard board, long sourceSquare, long destinationSquare){
         long mask = ~(sourceSquare | destinationSquare);

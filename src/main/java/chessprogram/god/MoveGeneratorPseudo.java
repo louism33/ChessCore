@@ -1,9 +1,9 @@
 package chessprogram.god;
 
 import static chessprogram.god.MoveGeneratorKnight.addKnightMoves;
-import static chessprogram.god.MoveGeneratorPawnsIntMove.addPawnPushes;
-import static chessprogram.god.MoveGeneratorSlidingIntMove.addSlidingMoves;
-import static chessprogram.god.PieceMoveKingIntMove.masterAttackTableKing;
+import static chessprogram.god.MoveGeneratorPawns.addPawnPushes;
+import static chessprogram.god.MoveGeneratorSliding.addSlidingMoves;
+import static chessprogram.god.PieceMoveKing.masterAttackTableKing;
 import static chessprogram.god.PieceMoveKnight.masterAttackTableKnights;
 import static chessprogram.god.PieceMovePawns.masterPawnCapturesTable;
 import static chessprogram.god.PieceMoveSliding.masterAttackTableSliding;
@@ -21,7 +21,7 @@ class MoveGeneratorPseudo {
         addSlidingMoves(moves, board, whiteTurn, ignoreThesePieces, (legalPushes | legalCaptures),
                 myBishops, myRooks, myQueens, allPieces);
         addPawnPushes(moves, board, whiteTurn, ignoreThesePieces, legalCaptures, legalPushes, 
-                myPawns);
+                myPawns, allPieces);
     }
 
     public static long generatePseudoCaptureTable(Chessboard board, boolean whiteTurn,

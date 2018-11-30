@@ -1,10 +1,10 @@
 package chessprogram.god;
 
-import static chessprogram.god.BitOperations.UNIVERSE;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
+import static chessprogram.god.BitboardResources.UNIVERSE;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
 import static chessprogram.god.MoveGeneratorPseudo.generatePseudoCaptureTable;
-import static chessprogram.god.PieceMoveKingIntMove.singleKingTable;
+import static chessprogram.god.PieceMoveKing.singleKingTable;
 
 class MoveGeneratorKingLegal {
 
@@ -52,7 +52,7 @@ class MoveGeneratorKingLegal {
         long kingDangerSquares = generatePseudoCaptureTable(board, !white, 0, UNIVERSE, UNIVERSE,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+                enemies, friends, board.allPieces());
 
         if (white){
             board.setWhiteKing(myKing);
