@@ -2,16 +2,62 @@ package chessprogram.god;
 
 import org.junit.Assert;
 
-import static chessprogram.god.BitOperations.getFirstPiece;
-import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
-import static chessprogram.god.BitOperations.populationCount;
+import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.BitboardResources.*;
-import static chessprogram.god.BitboardResources.bishopDatabase;
-import static chessprogram.god.BitboardResources.bishopShiftAmounts;
 import static chessprogram.god.Setup.ready;
 import static chessprogram.god.Setup.setup;
 
-class PieceMoveSliding {
+class PieceMove {
+
+    static long singlePawnPushes(Chessboard board, long pawns, boolean white, long legalPushes, long allPieces) {
+        final long possiblePawnSinglePushes = white ? pawns << 8 : pawns >>> 8;
+        final long intermediateRank = white ? BitboardResources.RANK_THREE : BitboardResources.RANK_SIX;
+        long possibleDoubles = (((possiblePawnSinglePushes & intermediateRank & ~allPieces) ));
+        return (possiblePawnSinglePushes | (white ? possibleDoubles << 8 : possibleDoubles >>> 8))
+                & legalPushes & ~allPieces;
+    }
+
+    static long singlePawnCaptures(long piece, boolean white, long legalCaptures) {
+        return legalCaptures & (white
+                ? PAWN_CAPTURE_TABLE_WHITE[getIndexOfFirstPiece(piece)]
+                : PAWN_CAPTURE_TABLE_BLACK[getIndexOfFirstPiece(piece)]);
+    }
+
+    static long masterPawnCapturesTable(Chessboard board, boolean white,
+                                        long ignoreThesePieces, long legalCaptures, long pawns){
+        long ans = 0;
+        while (pawns != 0){
+            final long pawn = BitOperations.getFirstPiece(pawns);
+            if ((pawn & ignoreThesePieces) == 0) {
+                ans |= singlePawnCaptures(pawn, white, legalCaptures);
+            }
+            pawns &= pawns - 1;
+        }
+        return ans;
+    }
+
+
+    static long singleKnightTable(long piece, long mask){
+        return KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
+    }
+
+    static long masterAttackTableKnights(Chessboard board, boolean white,
+                                         long ignoreThesePieces, long legalPushes, long legalCaptures,
+                                         long knights){
+        long ans = 0;
+        while (knights != 0) {
+            final long knight = getFirstPiece(knights);
+            if ((knight & ignoreThesePieces) == 0) {
+                ans |= singleKnightTable(knight, legalPushes | legalCaptures);
+            }
+            knights &= knights - 1;
+        }
+        return ans;
+    }
+
+    
+    
+    
 
     static long singleBishopTable(long occupancy, boolean white, long piece, long legalCaptures){
         return singleBishopMagicMoves(occupancy, piece, legalCaptures);
@@ -112,4 +158,24 @@ class PieceMoveSliding {
         return legalMoves & legalMovesMask;
     }
 
+
+    static long singleKingTable(long piece, long mask){
+        return KING_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
+    }
+
+    static long masterAttackTableKing(Chessboard board, boolean white,
+                                      long ignoreThesePieces, long legalPushes, long legalCaptures,
+                                      long kings){
+
+        long ans = 0;
+        while (kings != 0) {
+            final long king = BitOperations.getFirstPiece(kings);
+            if ((king & ignoreThesePieces) == 0) {
+                ans |= singleKingTable(king, legalPushes | legalCaptures);
+            }
+            kings &= kings - 1;
+        }
+        return ans;
+    }
+    
 }

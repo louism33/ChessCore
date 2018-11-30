@@ -5,7 +5,7 @@ import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.MoveConstants.*;
 import static chessprogram.god.MoveParser.moveFromSourceDestinationCapture;
 
-class MoveGenerationUtilities {
+class MoveAdder {
 
     private static int moveIndex(int[] moves){
         int index = 0;

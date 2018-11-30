@@ -3,10 +3,7 @@ package chessprogram.god;
 import java.util.Stack;
 
 import static chessprogram.god.BitOperations.populationCount;
-import static chessprogram.god.PieceMoveKing.singleKingTable;
-import static chessprogram.god.PieceMoveKnight.singleKnightTable;
-import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
-import static chessprogram.god.PieceMoveSliding.*;
+import static chessprogram.god.PieceMove.*;
 
 class CheckHelper {
 
@@ -64,7 +61,7 @@ class CheckHelper {
     }
 
     // faster to create new stack and pop things to it ?
-    static boolean isDrawByRepetition(Chessboard board, ZobristHashIntMove zobristHash){
+    static boolean isDrawByRepetition(Chessboard board, ZobristHash zobristHash){
         Stack<Long> zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
         long zobristHashToMatch = zobristHash.getBoardHash();
         int howManyMovesToSearchToMax = 50;

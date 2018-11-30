@@ -12,13 +12,13 @@ public class Chessboard implements Cloneable{
     // todo, consider shift to 8 bbs
 
     private ChessboardDetails details;
-    private ZobristHashIntMove zobristHash;
+    private ZobristHash zobristHash;
 
     void makeZobrist(){
-        this.zobristHash = new ZobristHashIntMove(this);
+        this.zobristHash = new ZobristHash(this);
     }
 
-    void cloneZobristStack(ZobristHashIntMove zobristHash){
+    void cloneZobristStack(ZobristHash zobristHash){
         this.zobristHash.zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
     }
 
@@ -28,7 +28,7 @@ public class Chessboard implements Cloneable{
 
     public Chessboard(boolean blank){
         this.details = new ChessboardDetails();
-        this.zobristHash = new ZobristHashIntMove(this);
+        this.zobristHash = new ZobristHash(this);
     }
 
     public Chessboard() {
@@ -76,21 +76,45 @@ public class Chessboard implements Cloneable{
     }
 
     public void flipTurn(){
-        MoveMaker.flipTurn(this);
+        MakeMoveRegular.flipTurn(this);
     }
 
     public void unMakeMoveAndFlipTurn(){
         UnMakeMoveAndHashUpdate(this, this.zobristHash);
     }
 
-//    public boolean inCheck(){
-//        return boardInCheck(this, isWhiteTurn(),
-//                getWhitePawns(), getWhiteKnights(), getWhiteBishops(), getWhiteRooks(), getWhiteQueen(), getWhiteKing(),
-//                getBlackPawns(), getBlackKnights(), getBlackBishops(), getBlackRooks(), getBlackQueen(), getBlackKing(),
-//                (isWhiteTurn() ? blackPieces() : whitePieces()),
-//                (isWhiteTurn() ? whitePieces() : blackPieces()),
-//                (blackPieces() | whitePieces()));
-//    }
+    public boolean inCheck(){
+        
+        long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
+        if (isWhiteTurn()){
+            myKing = getWhiteKing();
+            enemyPawns = getBlackPawns();
+            enemyKnights = getBlackKnights();
+            enemyBishops = getBlackBishops();
+            enemyRooks = getBlackRooks();
+            enemyQueen = getBlackQueen();
+            enemyKing = getBlackKing();
+            
+            enemies = blackPieces();
+            friends = whitePieces();
+        } else {
+            myKing = getBlackKing();
+            enemyPawns = getWhitePawns();
+            enemyKnights = getWhiteKnights();
+            enemyBishops = getWhiteBishops();
+            enemyRooks = getWhiteRooks();
+            enemyQueen = getWhiteQueen();
+            enemyKing = getWhiteKing();
+            
+            enemies = whitePieces();
+            friends = blackPieces();
+        }
+        
+        return boardInCheck(this, isWhiteTurn(), myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, 
+                enemies, friends, allPieces());
+                
+    }
 
     public boolean drawByRepetition (boolean white){
         return isDrawByRepetition(this, this.zobristHash);
@@ -163,9 +187,9 @@ public class Chessboard implements Cloneable{
     }
 
     public boolean inCheckmate(){
-//        if (!this.inCheck()){
-//            return false;
-//        }
+        if (!this.inCheck()){
+            return false;
+        }
         if (this.generateLegalMoves().length == 0){
             return true;
         }
@@ -173,9 +197,9 @@ public class Chessboard implements Cloneable{
     }
 
     public boolean inStalemate(){
-//        if (this.inCheck()){
-//            return false;
-//        }
+        if (this.inCheck()){
+            return false;
+        }
         if (this.generateLegalMoves().length == 0){
             return true;
         }
@@ -323,7 +347,7 @@ public class Chessboard implements Cloneable{
     public Chessboard(String fen) {
         details = new ChessboardDetails();
         makeBoardBasedOnFENSpecific(fen);
-        this.zobristHash = new ZobristHashIntMove(this);
+        this.zobristHash = new ZobristHash(this);
     }
 
 
@@ -613,11 +637,11 @@ public class Chessboard implements Cloneable{
         this.details = details;
     }
 
-    public ZobristHashIntMove getZobristHash() {
+    public ZobristHash getZobristHash() {
         return zobristHash;
     }
 
-    public void setZobristHash(ZobristHashIntMove zobristHash) {
+    public void setZobristHash(ZobristHash zobristHash) {
         this.zobristHash = zobristHash;
     }
 

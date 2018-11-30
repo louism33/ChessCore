@@ -9,11 +9,11 @@ import java.util.Stack;
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.BitboardResources.INITIAL_BLACK_KING;
 import static chessprogram.god.BitboardResources.INITIAL_WHITE_KING;
-import static chessprogram.god.MoveMaker.whichPieceOnSquare;
+import static chessprogram.god.MakeMoveRegular.whichPieceOnSquare;
 import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 import static chessprogram.god.StackMoveData.SpecialMove.NULL_MOVE;
 
-class ZobristHashIntMove {
+class ZobristHash {
     private static final long initHashSeed = 100;
     Stack<Long> zobristStack = new Stack<>();
     private static final long[][] zobristHashPieces = initPieceHash();
@@ -22,7 +22,7 @@ class ZobristHashIntMove {
     static final long zobristHashColourBlack = initColourHash();
     private long boardHash;
 
-    ZobristHashIntMove(Chessboard board) {
+    ZobristHash(Chessboard board) {
         this.boardHash = boardToHash(board);
     }
 
@@ -378,7 +378,7 @@ class ZobristHashIntMove {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ZobristHashIntMove that = (ZobristHashIntMove) o;
+        ZobristHash that = (ZobristHash) o;
         return boardHash == that.boardHash
                 && Objects.equals(zobristStack, that.zobristStack)
         ;

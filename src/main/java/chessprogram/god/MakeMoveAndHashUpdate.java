@@ -2,12 +2,12 @@ package chessprogram.god;
 
 import org.junit.Assert;
 
-import static chessprogram.god.MoveMaker.makeMoveMaster;
-import static chessprogram.god.MoveUnmakerIntMove.unMakeMoveMaster;
+import static chessprogram.god.MakeMoveRegular.makeMoveMaster;
+import static chessprogram.god.MoveUnmaker.unMakeMoveMaster;
 
 class MakeMoveAndHashUpdate {
 
-    static void makeMoveAndHashUpdate(Chessboard board, int move, ZobristHashIntMove zobristHash){
+    static void makeMoveAndHashUpdate(Chessboard board, int move, ZobristHash zobristHash){
 
         Assert.assertNotEquals(move, 0);
         
@@ -17,12 +17,12 @@ class MakeMoveAndHashUpdate {
         zobristHash.updateHashPostMove(board, move);
     }
 
-    static void UnMakeMoveAndHashUpdate(Chessboard board, ZobristHashIntMove zobristHash){
+    static void UnMakeMoveAndHashUpdate(Chessboard board, ZobristHash zobristHash){
         zobristHash.setBoardHash(zobristHash.zobristStack.pop());
         unMakeMoveMaster(board);
     }
 
-    static void makeNullMoveAndHashUpdate(Chessboard board, ZobristHashIntMove zobristHash){
+    static void makeNullMoveAndHashUpdate(Chessboard board, ZobristHash zobristHash){
         zobristHash.zobristStack.push(zobristHash.getBoardHash());
         
         if (board.moveStack.size() > 0) {
@@ -30,10 +30,10 @@ class MakeMoveAndHashUpdate {
         }
 
         makeMoveMaster(board, 0);
-        zobristHash.setBoardHash(zobristHash.getBoardHash() ^ ZobristHashIntMove.zobristHashColourBlack);
+        zobristHash.setBoardHash(zobristHash.getBoardHash() ^ ZobristHash.zobristHashColourBlack);
     }
 
-    static void unMakeNullMove(Chessboard board, ZobristHashIntMove zobristHash){
+    static void unMakeNullMove(Chessboard board, ZobristHash zobristHash){
         zobristHash.setBoardHash(zobristHash.zobristStack.pop());
         unMakeMoveMaster(board);
     }

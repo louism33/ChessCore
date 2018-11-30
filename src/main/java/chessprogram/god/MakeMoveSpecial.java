@@ -2,8 +2,9 @@ package chessprogram.god;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
 import static chessprogram.god.MoveMakingUtilities.removePieces;
+import static chessprogram.god.MoveParser.*;
 
-class MoveMakingCastlingIntMove {
+class MakeMoveSpecial {
 
     static void makeCastlingMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
@@ -82,4 +83,66 @@ class MoveMakingCastlingIntMove {
             board.setBlackCanCastleQ(false);
         }
     }
+
+
+    static void makePromotingMove(Chessboard board, int move){
+        long sourcePiece = newPieceOnSquare(getSourceIndex(move));
+        long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
+
+        if ((sourcePiece & board.getWhitePawns()) != 0){
+            removePieces(board, sourcePiece, destinationPiece);
+            if (isPromotionToKnight(move)){
+                board.setWhiteKnights(board.getWhiteKnights() | destinationPiece);
+            }
+            else if (isPromotionToBishop(move)){
+                board.setWhiteBishops(board.getWhiteBishops() | destinationPiece);
+            }
+            else if (isPromotionToRook(move)){
+                board.setWhiteRooks(board.getWhiteRooks() | destinationPiece);
+            }
+            else if (isPromotionToQueen(move)){
+                board.setWhiteQueen(board.getWhiteQueen() | destinationPiece);
+            }
+        }
+
+        else if ((sourcePiece & board.getBlackPawns()) != 0){
+            removePieces(board, sourcePiece, destinationPiece);
+            if (isPromotionToKnight(move)){
+                board.setBlackKnights(board.getBlackKnights() | destinationPiece);
+            }
+            else if (isPromotionToBishop(move)){
+                board.setBlackBishops(board.getBlackBishops() | destinationPiece);
+            }
+            else if (isPromotionToRook(move)){
+                board.setBlackRooks(board.getBlackRooks() | destinationPiece);
+            }
+            else if (isPromotionToQueen(move)){
+                board.setBlackQueen(board.getBlackQueen() | destinationPiece);
+            }
+        }
+    }
+
+    static void makeEnPassantMove(Chessboard board, int move){
+        long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
+        long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
+
+        if ((destinationPiece & board.allPieces()) != 0) {
+            throw new RuntimeException("EP move Problem");
+        }
+
+        if ((sourcePiece & board.getWhitePawns()) != 0){
+            removePieces(board, sourcePiece, destinationPiece >>> 8);
+            board.setWhitePawns(board.getWhitePawns() | destinationPiece);
+        }
+
+        else if  ((sourcePiece & board.getBlackPawns()) != 0){
+            removePieces(board, sourcePiece, destinationPiece << 8);
+            board.setBlackPawns(board.getBlackPawns() | destinationPiece);
+        }
+        else {
+            throw new RuntimeException("false EP move");
+        }
+    }
+
+
 }

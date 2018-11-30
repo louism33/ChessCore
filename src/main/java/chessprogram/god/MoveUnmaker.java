@@ -3,22 +3,23 @@ package chessprogram.god;
 import org.junit.Assert;
 
 import static chessprogram.god.BitOperations.newPieceOnSquare;
+import static chessprogram.god.MakeMoveRegular.makeRegularMove;
 import static chessprogram.god.MoveMakingUtilities.removePieces;
 import static chessprogram.god.MoveParser.*;
 import static chessprogram.god.StackMoveData.SpecialMove;
 import static chessprogram.god.StackMoveData.SpecialMove.*;
 
-class MoveUnmakerIntMove {
+class MoveUnmaker {
 
     static void unMakeMoveMaster(Chessboard board) {
         StackMoveData popSMD = board.moveStack.pop();
-        
+
         if (popSMD.move == 0){
             Assert.assertSame(popSMD.typeOfSpecialMove, NULL_MOVE);
             board.setWhiteTurn(popSMD.whiteTurn);
             return;
         }
-        
+
         int pieceToMoveBack = getDestinationIndex(popSMD.move);
         int squareToMoveBackTo = getSourceIndex(popSMD.move);
 
@@ -26,7 +27,7 @@ class MoveUnmakerIntMove {
             int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
-        
+
         else if (popSMD.typeOfSpecialMove == BASICLOUDPUSH){
             int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
@@ -51,7 +52,7 @@ class MoveUnmakerIntMove {
             int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
             int takenPiece = popSMD.takenPiece;
-            
+
             if (popSMD.whiteTurn) {
                 addRelevantPieceToSquare(board, 7, pieceToMoveBack - 8);
             }
@@ -59,7 +60,7 @@ class MoveUnmakerIntMove {
                 addRelevantPieceToSquare(board, 1, pieceToMoveBack + 8);
             }
         }
-        
+
         else if (popSMD.typeOfSpecialMove == CASTLING){
             int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
 
@@ -106,9 +107,9 @@ class MoveUnmakerIntMove {
                 board.setBlackKing(board.getBlackKing() | originalKing);
                 board.setBlackRooks(board.getBlackRooks() | originalRook);
             }
-            
+
         }
-        
+
         else if (popSMD.typeOfSpecialMove == PROMOTION){
             long sourceSquare = newPieceOnSquare(pieceToMoveBack);
             long destinationSquare = newPieceOnSquare(squareToMoveBackTo);
@@ -176,65 +177,6 @@ class MoveUnmakerIntMove {
         }
         else {
             throw new RuntimeException("problem with putting back a captured piece");
-        }
-    }
-
-
-    private static void makeRegularMove(Chessboard board, int move){
-        long sourcePiece = newPieceOnSquare(getSourceIndex(move));
-        long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
-
-        if ((sourcePiece & board.getWhitePawns()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setWhitePawns(board.getWhitePawns() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getWhiteKnights()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setWhiteKnights(board.getWhiteKnights() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getWhiteBishops()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setWhiteBishops(board.getWhiteBishops() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getWhiteRooks()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setWhiteRooks(board.getWhiteRooks() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getWhiteQueen()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setWhiteQueen(board.getWhiteQueen() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getWhiteKing()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setWhiteKing(board.getWhiteKing() | destinationPiece);
-        }
-
-        else if ((sourcePiece & board.getBlackPawns()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setBlackPawns(board.getBlackPawns() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getBlackKnights()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setBlackKnights(board.getBlackKnights() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getBlackBishops()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setBlackBishops(board.getBlackBishops() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getBlackRooks()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setBlackRooks(board.getBlackRooks() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getBlackQueen()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setBlackQueen(board.getBlackQueen() | destinationPiece);
-        }
-        else if ((sourcePiece & board.getBlackKing()) != 0) {
-            removePieces(board, sourcePiece, destinationPiece);
-            board.setBlackKing(board.getBlackKing() | destinationPiece);
-        }
-        else {
-            throw new RuntimeException("unMakeMoveMaster: false move " + move);
         }
     }
 

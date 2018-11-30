@@ -6,7 +6,6 @@ import java.util.List;
 import static chessprogram.god.BitOperations.getAllPieces;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.BitboardResources.*;
-import static chessprogram.god.BitboardResources.rookMagicNumbers;
 
 public class Setup {
     

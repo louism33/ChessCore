@@ -1,20 +1,16 @@
 package chessprogram.god;
 
-import static chessprogram.god.BitOperations.extractRayFromTwoPiecesBitboardInclusive;
-import static chessprogram.god.BitOperations.getFirstPiece;
-import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
+import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.BitboardResources.UNIVERSE;
 import static chessprogram.god.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
-import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
-import static chessprogram.god.MoveGeneratorCastling.addCastlingMoves;
+import static chessprogram.god.MoveAdder.addMovesFromAttackTableMaster;
 import static chessprogram.god.MoveGeneratorCheck.addCheckEvasionMoves;
-import static chessprogram.god.MoveGeneratorEnPassant.addEnPassantMoves;
-import static chessprogram.god.MoveGeneratorKingLegal.addKingLegalMovesOnly;
-import static chessprogram.god.MoveGeneratorPromotion.addPromotionMoves;
+import static chessprogram.god.MoveGeneratorRegular.addKingLegalMovesOnly;
 import static chessprogram.god.MoveGeneratorPseudo.addAllMovesWithoutKing;
-import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
-import static chessprogram.god.PieceMovePawns.singlePawnPushes;
-import static chessprogram.god.PieceMoveSliding.*;
+import static chessprogram.god.MoveGeneratorSpecial.addCastlingMoves;
+import static chessprogram.god.MoveGeneratorSpecial.addEnPassantMoves;
+import static chessprogram.god.MoveGeneratorSpecial.addPromotionMoves;
+import static chessprogram.god.PieceMove.*;
 import static chessprogram.god.PinnedManager.whichPiecesArePinned;
 
 class MoveGeneratorMaster {

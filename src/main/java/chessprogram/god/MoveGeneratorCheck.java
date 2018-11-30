@@ -2,13 +2,11 @@ package chessprogram.god;
 
 import static chessprogram.god.BitOperations.extractRayFromTwoPiecesBitboard;
 import static chessprogram.god.BitboardResources.UNIVERSE;
-import static chessprogram.god.MoveGeneratorEnPassant.addEnPassantMoves;
-import static chessprogram.god.MoveGeneratorKingLegal.addKingLegalMovesOnly;
-import static chessprogram.god.MoveGeneratorPromotion.addPromotionMoves;
+import static chessprogram.god.MoveGeneratorRegular.addKingLegalMovesOnly;
 import static chessprogram.god.MoveGeneratorPseudo.addAllMovesWithoutKing;
-import static chessprogram.god.PieceMoveKnight.singleKnightTable;
-import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
-import static chessprogram.god.PieceMoveSliding.*;
+import static chessprogram.god.MoveGeneratorSpecial.addEnPassantMoves;
+import static chessprogram.god.MoveGeneratorSpecial.addPromotionMoves;
+import static chessprogram.god.PieceMove.*;
 
 class MoveGeneratorCheck {
 

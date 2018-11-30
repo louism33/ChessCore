@@ -1,12 +1,12 @@
 package chessprogram.god;
 
-import static chessprogram.god.MoveGeneratorKnight.addKnightMoves;
-import static chessprogram.god.MoveGeneratorPawns.addPawnPushes;
-import static chessprogram.god.MoveGeneratorSliding.addSlidingMoves;
-import static chessprogram.god.PieceMoveKing.masterAttackTableKing;
-import static chessprogram.god.PieceMoveKnight.masterAttackTableKnights;
-import static chessprogram.god.PieceMovePawns.masterPawnCapturesTable;
-import static chessprogram.god.PieceMoveSliding.masterAttackTableSliding;
+import static chessprogram.god.MoveGeneratorRegular.addKnightMoves;
+import static chessprogram.god.MoveGeneratorRegular.addPawnPushes;
+import static chessprogram.god.MoveGeneratorRegular.addSlidingMoves;
+import static chessprogram.god.PieceMove.masterAttackTableKing;
+import static chessprogram.god.PieceMove.masterAttackTableKnights;
+import static chessprogram.god.PieceMove.masterAttackTableSliding;
+import static chessprogram.god.PieceMove.masterPawnCapturesTable;
 
 class MoveGeneratorPseudo {
 

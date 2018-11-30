@@ -3,8 +3,8 @@ package chessprogram.god;
 public class BitboardResources {
 
     public static long[][] inBetweenSquares = new long[64][64];
-    
-    static final long UNIVERSE = 0xffffffffffffffffL;
+
+    public static final long UNIVERSE = 0xffffffffffffffffL;
 
     public static final long INITIAL_WHITE_PAWNS = 0x000000000000FF00L;
     public static final long INITIAL_WHITE_KNIGHTS = 0x0000000000000042L;
@@ -119,7 +119,7 @@ public class BitboardResources {
             128L, 32832L, 8405024L, 2151686160L, 550831656968L, 141012904183812L, 36099303471055874L, -9205322385119247871L, 4620710844295151872L, 2310355422147575808L, 1155177711073755136L, 577588855528488960L, 288794425616760832L, 144396663052566528L, 72057594037927936L,
     };
 
-    static final long[] PAWN_CAPTURE_TABLE_WHITE = {
+    public static final long[] PAWN_CAPTURE_TABLE_WHITE = {
             0x200L, 0x500L, 0xa00L, 0x1400L, 0x2800L, 0x5000L, 0xa000L, 0x4000L,
             0x20000L, 0x50000L, 0xa0000L, 0x140000L, 0x280000L, 0x500000L, 0xa00000L, 0x400000L,
             0x2000000L, 0x5000000L, 0xa000000L, 0x14000000L, 0x28000000L, 0x50000000L, 0xa0000000L, 0x40000000L,
@@ -130,7 +130,7 @@ public class BitboardResources {
             0x0L, 0x0L, 0x0L, 0x0L, 0x0L, 0x0L, 0x0L, 0x0L,
     };
 
-    static final long[] PAWN_CAPTURE_TABLE_BLACK = {
+    public static final long[] PAWN_CAPTURE_TABLE_BLACK = {
             0x0L, 0x0L, 0x0L, 0x0L, 0x0L, 0x0L, 0x0L, 0x0L,
             0x2L, 0x5L, 0xaL, 0x14L, 0x28L, 0x50L, 0xa0L, 0x40L,
             0x200L, 0x500L, 0xa00L, 0x1400L, 0x2800L, 0x5000L, 0xa000L, 0x4000L,
@@ -142,10 +142,10 @@ public class BitboardResources {
     };
 
 
-    static long[][] rookDatabase = new long[64][];
-    static long[][] bishopDatabase = new long[64][];
+    public static long[][] rookDatabase = new long[64][];
+    public static long[][] bishopDatabase = new long[64][];
 
-    static int[] rookShiftAmounts = new int[]{
+    public static int[] rookShiftAmounts = new int[]{
             12, 11, 11, 11, 11, 11, 11, 12,
             11, 10, 10, 10, 10, 10, 10, 11,
             11, 10, 10, 10, 10, 10, 10, 11,
@@ -156,7 +156,7 @@ public class BitboardResources {
             12, 11, 11, 11, 11, 11, 11, 12,
     };
 
-    static int[] bishopShiftAmounts = new int[]{
+    public static int[] bishopShiftAmounts = new int[]{
             6, 5, 5, 5, 5, 5, 5, 6,
             5, 5, 5, 5, 5, 5, 5, 5,
             5, 5, 7, 7, 7, 7, 5, 5,
