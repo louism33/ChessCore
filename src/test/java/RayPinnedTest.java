@@ -22,7 +22,7 @@ public class RayPinnedTest {
     @Test
     public void adjTest(){
 
-        Magic.init();
+        Setup.setup();
         final int length = BitboardResources.inBetweenSquares.length;
 
         for (int i = 0; i < 64; i++){

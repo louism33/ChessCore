@@ -83,14 +83,14 @@ public class Chessboard implements Cloneable{
         UnMakeMoveAndHashUpdate(this, this.zobristHash);
     }
 
-    public boolean inCheck(){
-        return boardInCheck(this, isWhiteTurn(),
-                getWhitePawns(), getWhiteKnights(), getWhiteBishops(), getWhiteRooks(), getWhiteQueen(), getWhiteKing(),
-                getBlackPawns(), getBlackKnights(), getBlackBishops(), getBlackRooks(), getBlackQueen(), getBlackKing(),
-                (isWhiteTurn() ? blackPieces() : whitePieces()),
-                (isWhiteTurn() ? whitePieces() : blackPieces()),
-                (blackPieces() | whitePieces()));
-    }
+//    public boolean inCheck(){
+//        return boardInCheck(this, isWhiteTurn(),
+//                getWhitePawns(), getWhiteKnights(), getWhiteBishops(), getWhiteRooks(), getWhiteQueen(), getWhiteKing(),
+//                getBlackPawns(), getBlackKnights(), getBlackBishops(), getBlackRooks(), getBlackQueen(), getBlackKing(),
+//                (isWhiteTurn() ? blackPieces() : whitePieces()),
+//                (isWhiteTurn() ? whitePieces() : blackPieces()),
+//                (blackPieces() | whitePieces()));
+//    }
 
     public boolean drawByRepetition (boolean white){
         return isDrawByRepetition(this, this.zobristHash);
@@ -163,9 +163,9 @@ public class Chessboard implements Cloneable{
     }
 
     public boolean inCheckmate(){
-        if (!this.inCheck()){
-            return false;
-        }
+//        if (!this.inCheck()){
+//            return false;
+//        }
         if (this.generateLegalMoves().length == 0){
             return true;
         }
@@ -173,9 +173,9 @@ public class Chessboard implements Cloneable{
     }
 
     public boolean inStalemate(){
-        if (this.inCheck()){
-            return false;
-        }
+//        if (this.inCheck()){
+//            return false;
+//        }
         if (this.generateLegalMoves().length == 0){
             return true;
         }

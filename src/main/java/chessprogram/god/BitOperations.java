@@ -3,6 +3,9 @@ package chessprogram.god;
 import java.util.ArrayList;
 import java.util.List;
 
+import static chessprogram.god.Setup.ready;
+import static chessprogram.god.Setup.setup;
+
 public class BitOperations {
 
     public static long newPieceOnSquare (int x){
@@ -48,4 +51,26 @@ public class BitOperations {
         return Long.highestOneBit(l);
     }
 
+
+    static long extractRayFromTwoPieces(Piece pieceOne, Piece pieceTwo){
+        return extractRayFromTwoPieces(pieceOne.ordinal(), pieceTwo.ordinal());
+    }
+
+    static long extractRayFromTwoPiecesBitboard(long pieceOne, long pieceTwo){
+        return extractRayFromTwoPieces(getIndexOfFirstPiece(pieceOne), getIndexOfFirstPiece(pieceTwo));
+    }
+
+    static long extractRayFromTwoPiecesBitboardInclusive(long pieceOne, long pieceTwo){
+        return extractRayFromTwoPieces(getIndexOfFirstPiece(pieceOne), getIndexOfFirstPiece(pieceTwo))
+                | pieceOne | pieceTwo;
+    }
+
+    static long extractRayFromTwoPieces(int pieceOneIndex, int pieceTwoIndex){
+        if (!ready){
+            setup();
+        }
+        return BitboardResources.inBetweenSquares[pieceOneIndex][pieceTwoIndex]
+                ^ (BitOperations.newPieceOnSquare(pieceOneIndex) | BitOperations.newPieceOnSquare(pieceTwoIndex));
+    }
+    
 }

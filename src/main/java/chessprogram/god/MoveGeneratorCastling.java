@@ -75,7 +75,7 @@ class MoveGeneratorCastling {
         while (squares != 0){
             final long square = BitOperations.getFirstPiece(squares);
             int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(board, white, square,
-                    myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+//                    myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     enemies, friends, allPieces);
             if (numberOfThreats > 0){

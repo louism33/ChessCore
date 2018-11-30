@@ -10,44 +10,24 @@ import static chessprogram.god.PieceMoveSliding.*;
 
 class CheckHelper {
 
-    static boolean boardInCheck(Chessboard board, boolean white,
-                                long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
+    static boolean boardInCheck(Chessboard board, boolean white, long myKing,
+                                long pawns, long knights, long bishops, long rooks, long queens, long king,
                                 long enemies, long friends, long allPiece){
         int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(board, white, myKing,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                pawns, knights, bishops, rooks, queens, king,
                 enemies, friends, allPiece);
         
         return numberOfCheckers > 0;
     }
 
     static int numberOfPiecesThatLegalThreatenSquare(Chessboard board, boolean myColour, long square,
-                                                     long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                                     long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                                     long enemies, long friends, long allPiece){
-        long knights, bishops, rooks, queens, king, allPieces = board.allPieces();
-        if (!myColour){
-            myPawns = board.getWhitePawns();
-            knights = board.getWhiteKnights();
-            bishops = board.getWhiteBishops();
-            rooks = board.getWhiteRooks();
-            queens = board.getWhiteQueen();
-            king = board.getWhiteKing();
-        }
-        else {
-            myPawns = board.getBlackPawns();
-            knights = board.getBlackKnights();
-            bishops = board.getBlackBishops();
-            rooks = board.getBlackRooks();
-            queens = board.getBlackQueen();
-            king = board.getBlackKing();
-        }
-
+                                                     long pawns, long knights, long bishops, long rooks, long queens, long king,
+                                                     long enemies, long friends, long allPieces){
+        
         int numberOfThreats = 0;
 
-        if (myPawns != 0) {
-            numberOfThreats += populationCount(singlePawnCaptures(square, myColour, myPawns));
+        if (pawns != 0) {
+            numberOfThreats += populationCount(singlePawnCaptures(square, myColour, pawns));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;

@@ -1,5 +1,6 @@
 package chessprogram.god;
 
+import static chessprogram.god.BitOperations.extractRayFromTwoPieces;
 import static chessprogram.god.PieceMoveSliding.xrayBishopAttacks;
 import static chessprogram.god.PieceMoveSliding.xrayRookAttacks;
 
@@ -40,7 +41,7 @@ class PinnedManager {
 
         while (pinningPieces != 0){
             final int indexOfPinningPiece = BitOperations.getIndexOfFirstPiece(pinningPieces);
-            final long ray = Magic.extractRayFromTwoPieces(indexOfPinningPiece, BitOperations.getIndexOfFirstPiece(squareOfInterest));
+            final long ray = extractRayFromTwoPieces(indexOfPinningPiece, BitOperations.getIndexOfFirstPiece(squareOfInterest));
             pinnedPieces |= (ray & friends);
             pinningPieces &= pinningPieces - 1;
         }
@@ -50,7 +51,7 @@ class PinnedManager {
 
         while (pinningPieces != 0){
             final int indexOfPinningPiece = BitOperations.getIndexOfFirstPiece(pinningPieces);
-            final long ray = Magic.extractRayFromTwoPieces(indexOfPinningPiece, BitOperations.getIndexOfFirstPiece(squareOfInterest));
+            final long ray = extractRayFromTwoPieces(indexOfPinningPiece, BitOperations.getIndexOfFirstPiece(squareOfInterest));
             pinnedPieces |= (ray & friends);
             pinningPieces &= pinningPieces - 1;
         }

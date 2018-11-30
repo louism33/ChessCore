@@ -1,9 +1,15 @@
 package chessprogram.god;
 
+import org.junit.Assert;
+
 import static chessprogram.god.BitOperations.getFirstPiece;
-import static chessprogram.god.BitboardResources.UNIVERSE;
-import static chessprogram.god.Magic.singleBishopMagicMoves;
-import static chessprogram.god.Magic.singleRookMagicMoves;
+import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
+import static chessprogram.god.BitOperations.populationCount;
+import static chessprogram.god.BitboardResources.*;
+import static chessprogram.god.BitboardResources.bishopDatabase;
+import static chessprogram.god.BitboardResources.bishopShiftAmounts;
+import static chessprogram.god.Setup.ready;
+import static chessprogram.god.Setup.setup;
 
 class PieceMoveSliding {
 
@@ -68,4 +74,42 @@ class PieceMoveSliding {
         blockers &= bishopMoves;
         return bishopMoves ^ singleBishopTable(allPieces ^ blockers, true, bishop, UNIVERSE);
     }
+
+
+    static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
+        if (!ready){
+            setup();
+        }
+        Assert.assertTrue(ready);
+        Assert.assertEquals(populationCount(rook), 1);
+
+        final int rookIndex = getIndexOfFirstPiece(rook);
+        final long rookMagicNumber = rookMagicNumbers[rookIndex];
+
+        final int index = (int) (((occupancy & rookBlankBoardAttackMasks[rookIndex]) * rookMagicNumber)
+                >>> (64 - (rookShiftAmounts[rookIndex])));
+
+        final long legalMoves = rookDatabase[rookIndex][index];
+
+        return legalMoves & legalMovesMask;
+    }
+
+    static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
+        if (!ready){
+            setup();
+        }
+        Assert.assertTrue(ready);
+        Assert.assertEquals(populationCount(bishop), 1);
+
+        final int bishopIndex = getIndexOfFirstPiece(bishop);
+        final long bishopMagicNumber = bishopMagicNumbers[bishopIndex];
+
+        final int index = (int) (((allPieces & bishopBlankBoardAttackMasks[bishopIndex]) * bishopMagicNumber)
+                >>> (64 - (bishopShiftAmounts[bishopIndex])));
+
+        final long legalMoves = bishopDatabase[bishopIndex][index];
+
+        return legalMoves & legalMovesMask;
+    }
+
 }

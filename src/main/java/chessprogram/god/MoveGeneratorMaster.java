@@ -1,10 +1,10 @@
 package chessprogram.god;
 
+import static chessprogram.god.BitOperations.extractRayFromTwoPiecesBitboardInclusive;
 import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.BitboardResources.UNIVERSE;
 import static chessprogram.god.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
-import static chessprogram.god.Magic.extractRayFromTwoPiecesBitboardInclusive;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
 import static chessprogram.god.MoveGeneratorCastling.addCastlingMoves;
 import static chessprogram.god.MoveGeneratorCheck.addCheckEvasionMoves;
@@ -66,7 +66,6 @@ class MoveGeneratorMaster {
         long allPieces = friends | enemies;
 
         int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(board, white, myKing,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, friends, allPieces);
 

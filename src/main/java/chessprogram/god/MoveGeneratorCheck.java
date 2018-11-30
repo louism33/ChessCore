@@ -1,5 +1,6 @@
 package chessprogram.god;
 
+import static chessprogram.god.BitOperations.extractRayFromTwoPiecesBitboard;
 import static chessprogram.god.BitboardResources.UNIVERSE;
 import static chessprogram.god.MoveGeneratorEnPassant.addEnPassantMoves;
 import static chessprogram.god.MoveGeneratorKingLegal.addKingLegalMovesOnly;
@@ -24,7 +25,7 @@ class MoveGeneratorCheck {
         }
         else {
             long slider = inCheckByASlider(board, white, myKing, enemyBishops, enemyRooks, enemyQueens, allPieces);
-            blockingSquaresMask = Magic.extractRayFromTwoPiecesBitboard(myKing, slider) & (~slider);
+            blockingSquaresMask = extractRayFromTwoPiecesBitboard(myKing, slider) & (~slider);
             checkingPieceMask = slider;
         }
         long PENULTIMATE_RANK = white ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
