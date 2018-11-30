@@ -1,8 +1,5 @@
 package chessprogram.god;
 
-import org.junit.Assert;
-
-import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.BitOperations.UNIVERSE;
 import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.Magic.singleBishopMagicMoves;
@@ -24,7 +21,7 @@ class PieceMoveSliding {
 
     static long masterAttackTableSliding(Chessboard board, boolean white,
                                          long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                         long bishops, long rooks, long queens){
+                                         long bishops, long rooks, long queens, long allpieces){
         long mask = legalPushes | legalCaptures;
         long ans = 0;
         // board without king

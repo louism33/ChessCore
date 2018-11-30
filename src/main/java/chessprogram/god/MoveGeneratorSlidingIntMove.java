@@ -1,17 +1,13 @@
 package chessprogram.god;
 
-import java.util.List;
-
 import static chessprogram.god.BitOperations.getFirstPiece;
 import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
-import static chessprogram.god.PieceMoveSliding.singleBishopTable;
-import static chessprogram.god.PieceMoveSliding.singleQueenTable;
-import static chessprogram.god.PieceMoveSliding.singleRookTable;
+import static chessprogram.god.PieceMoveSliding.*;
 
 class MoveGeneratorSlidingIntMove {
 
-    static void addSlidingMoves (List<Integer> moves, Chessboard board, boolean white,
+    static void addSlidingMoves (int[] moves, Chessboard board, boolean white,
                                  long ignoreThesePieces, long mask,
                                  long myBishops, long myRooks, long myQueens,
                                  long allPieces){

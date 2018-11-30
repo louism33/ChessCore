@@ -51,7 +51,7 @@ public class Chessboard implements Cloneable{
 
     }
 
-    public List<Integer> generateLegalMoves(){
+    public int[] generateLegalMoves(){
         return MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn());
     }
 
@@ -163,7 +163,7 @@ public class Chessboard implements Cloneable{
         if (!this.inCheck()){
             return false;
         }
-        if (this.generateLegalMoves().size() == 0){
+        if (this.generateLegalMoves().length == 0){
             return true;
         }
         return false;
@@ -173,7 +173,7 @@ public class Chessboard implements Cloneable{
         if (this.inCheck()){
             return false;
         }
-        if (this.generateLegalMoves().size() == 0){
+        if (this.generateLegalMoves().length == 0){
             return true;
         }
         return false;

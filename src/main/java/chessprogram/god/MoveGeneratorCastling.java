@@ -1,16 +1,11 @@
 package chessprogram.god;
 
-import org.junit.Assert;
-
-import java.util.List;
-
-import static chessprogram.god.CheckHelper.boardInCheck;
 import static chessprogram.god.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
 
 class MoveGeneratorCastling {
 
     // checking if we are in check happens elsewhere
-    static void addCastlingMoves(List<Integer> moves, Chessboard board, boolean white,
+    static void addCastlingMoves(int[] moves, Chessboard board, boolean white,
                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                  long enemies, long friends, long allPieces){
@@ -27,7 +22,8 @@ class MoveGeneratorCastling {
                         && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_EAST_CORNER) != 0)){
 
-                    moves.add(MoveParser.makeSpecialMove(3, 1, true, false, false, false, false, false, false));
+                    
+                    MoveGenerationUtilities.addMovesFromAttackTableMasterCastling(moves, 3, 1);
                 }
             }
 
@@ -40,7 +36,8 @@ class MoveGeneratorCastling {
                         && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_WEST_CORNER) != 0)){
 
-                    moves.add(MoveParser.makeSpecialMove(3, 5, true, false, false, false, false, false, false));
+                    MoveGenerationUtilities.addMovesFromAttackTableMasterCastling(moves, 3, 5);
+                    
                 }
             }
 
@@ -56,7 +53,8 @@ class MoveGeneratorCastling {
                         && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BitboardResources.NORTH_EAST_CORNER) != 0)){
 
-                    moves.add(MoveParser.makeSpecialMove(59, 57, true, false, false, false, false, false, false));
+                    MoveGenerationUtilities.addMovesFromAttackTableMasterCastling(moves, 59, 57);
+                    
                 }
             }
 
@@ -69,7 +67,8 @@ class MoveGeneratorCastling {
                         && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BitboardResources.NORTH_WEST_CORNER) != 0)){
 
-                    moves.add(MoveParser.makeSpecialMove(59, 61, true, false, false, false, false, false, false));
+                    MoveGenerationUtilities.addMovesFromAttackTableMasterCastling(moves, 59, 61);
+                    
                 }
             }
         }

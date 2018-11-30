@@ -126,11 +126,13 @@ class ZobristHashIntMove {
 
 
     void updateHashPreMove(Chessboard board, int move){
+
         int sourceSquare = MoveParser.getSourceIndex(move);
         int destinationSquareIndex = MoveParser.getDestinationIndex(move);
-
+        
         long sourcePiece = newPieceOnSquare(sourceSquare);
         int sourcePieceIdentifier = whichPieceOnSquare(board, sourcePiece) - 1;
+        
         long sourceZH = zobristHashPieces[sourceSquare][sourcePieceIdentifier];
 
         long destinationSquare = newPieceOnSquare(destinationSquareIndex);

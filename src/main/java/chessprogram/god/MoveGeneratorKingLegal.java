@@ -1,16 +1,14 @@
 package chessprogram.god;
 
-import java.util.List;
-
-import static chessprogram.god.BitOperations.*;
 import static chessprogram.god.BitOperations.UNIVERSE;
+import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
 import static chessprogram.god.MoveGeneratorPseudo.generatePseudoCaptureTable;
 import static chessprogram.god.PieceMoveKingIntMove.singleKingTable;
 
 class MoveGeneratorKingLegal {
 
-    static void addKingLegalMovesOnly(List<Integer> moves, Chessboard board, boolean white,
+    static void addKingLegalMovesOnly(int[] moves, Chessboard board, boolean white,
                                       long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                       long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                       long enemies, long friends, long allPieces){

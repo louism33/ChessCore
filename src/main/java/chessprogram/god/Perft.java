@@ -1,7 +1,5 @@
 package chessprogram.god;
 
-import java.util.List;
-
 public class Perft {
     
     private static long nodesForNps = 0;
@@ -46,13 +44,17 @@ public class Perft {
         if (depth == 0){
             return 1;
         }
-        List<Integer> moves = board.generateLegalMoves();
+        int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            final int size = moves.size();
+            final int size = realMoves(moves);
             nodesForNps += size;
             return size;
         }
-        for (int move : moves) {
+        for (int i = 0; i < moves.length; i++) {
+            int move = moves[i];
+            if (move == 0) {
+                continue;
+            }
             board.makeMoveAndFlipTurn(move);
             nodesForNps++;
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
@@ -60,6 +62,14 @@ public class Perft {
             board.unMakeMoveAndFlipTurn();
         }
         return temp;
+    }
+    
+    private static int realMoves(int[] moves){
+        int index = 0;
+        while (moves[index] != 0){
+            index++;
+        }
+        return index;
     }
 
     private static void reset(){

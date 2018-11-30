@@ -132,7 +132,7 @@ public class ChessboardHashTest {
         
         Assert.assertEquals(board, initial);
 
-        System.out.println(board);
+//        System.out.println(board);
         
         long ii = countFinalNodesAtDepthHelper(board, depth);
         Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
@@ -146,12 +146,14 @@ public class ChessboardHashTest {
         if (depth == 0){
             return 1;
         }
-        List<Integer> moves = board.generateLegalMoves();
+        int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            final int size = moves.size();
-            return size;
+            return realMoves(moves);
         }
         for (int move : moves) {
+            if (move == 0){
+                continue;
+            }
             board.makeMoveAndFlipTurn(move);
             
             Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
@@ -162,4 +164,13 @@ public class ChessboardHashTest {
         }
         return temp;
     }
+
+    private static int realMoves(int[] moves){
+        int index = 0;
+        while (moves[index] != 0){
+            index++;
+        }
+        return index;
+    }
+
 }

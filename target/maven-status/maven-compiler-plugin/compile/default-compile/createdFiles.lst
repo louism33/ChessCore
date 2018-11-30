@@ -4,10 +4,7 @@ chessprogram/god/MoveConstants.class
 chessprogram/god/Piece.class
 chessprogram/god/StackMoveData$SpecialMove.class
 chessprogram/god/BitOperations.class
-chessprogram/god/eExtendedPositionDescriptionParser$EPDObject.class
-chessprogram/god/eExtendedPositionDescriptionParser.class
 dummy/Dummy.class
-chessprogram/god/Move.class
 chessprogram/god/xoldFenParser.class
 chessprogram/god/Chessboard.class
 chessprogram/god/Square.class
@@ -19,11 +16,9 @@ chessprogram/god/CheckHelper.class
 chessprogram/god/PinnedManager.class
 chessprogram/god/MovePrettifier.class
 chessprogram/god/PieceMovePawns.class
-chessprogram/god/eMoveParserFromAN$Piece.class
 chessprogram/god/MoveGenerationUtilities.class
 chessprogram/god/MakeMoveAndHashUpdate.class
 chessprogram/god/ChessboardDetails.class
 chessprogram/god/CopierToBeDeleted.class
 chessprogram/god/PieceMoveSliding.class
-chessprogram/god/PieceMoveKing.class
 chessprogram/god/PieceMoveKnight.class

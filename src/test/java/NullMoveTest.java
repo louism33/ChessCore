@@ -88,7 +88,7 @@ public class NullMoveTest {
     private static long verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false);
         Assert.assertEquals(board, initial);
-        System.out.println(board);
+//        System.out.println(board);
         
         board.makeNullMoveAndFlipTurn();
         Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
@@ -108,12 +108,15 @@ public class NullMoveTest {
         if (depth == 0){
             return 1;
         }
-        List<Integer> moves = board.generateLegalMoves();
+        int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            final int size = moves.size();
+            final int size = moves.length;
             return size;
         }
         for (int move : moves) {
+            if (move == 0){
+                continue;
+            }
             board.makeMoveAndFlipTurn(move);
             Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
 

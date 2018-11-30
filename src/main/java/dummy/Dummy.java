@@ -1,6 +1,5 @@
 package dummy;
 
-import chessprogram.god.Art;
 import chessprogram.god.Chessboard;
 
 

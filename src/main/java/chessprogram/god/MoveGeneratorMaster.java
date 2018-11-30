@@ -1,14 +1,10 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static chessprogram.god.BitOperations.*;
-import static chessprogram.god.BitOperations.UNIVERSE;
 import static chessprogram.god.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
-import static chessprogram.god.Magic.*;
+import static chessprogram.god.Magic.extractRayFromTwoPiecesBitboardInclusive;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
-import static chessprogram.god.MoveGeneratorCastling.*;
+import static chessprogram.god.MoveGeneratorCastling.addCastlingMoves;
 import static chessprogram.god.MoveGeneratorCheck.addCheckEvasionMoves;
 import static chessprogram.god.MoveGeneratorEnPassant.addEnPassantMoves;
 import static chessprogram.god.MoveGeneratorKingLegal.addKingLegalMovesOnly;
@@ -21,8 +17,8 @@ import static chessprogram.god.PinnedManager.whichPiecesArePinned;
 
 class MoveGeneratorMaster {
 
-    static List<Integer> generateLegalMoves(Chessboard board, boolean white) {
-        List<Integer> moves = new ArrayList<>();
+    static int[] generateLegalMoves(Chessboard board, boolean white) {
+        int[] moves = new int[192];
 
         long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
         long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
@@ -102,7 +98,7 @@ class MoveGeneratorMaster {
         return moves;
     }
 
-    private static void addNotInCheckMoves(List<Integer> moves, Chessboard board, boolean whiteTurn, long pinnedPieces,
+    private static void addNotInCheckMoves(int[] moves, Chessboard board, boolean whiteTurn, long pinnedPieces,
                                            long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                            long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                            long enemies, long friends, long allPieces){
@@ -167,7 +163,7 @@ class MoveGeneratorMaster {
         }
     }
 
-    private static void addPinnedPiecesMovesMagic(List<Integer> moves, Chessboard board, boolean whiteTurn,
+    private static void addPinnedPiecesMovesMagic(int[] moves, Chessboard board, boolean whiteTurn,
                                                   long pinnedPieces, long squareWeArePinnedTo,
                                                   long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                                   long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,

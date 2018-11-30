@@ -1,21 +1,17 @@
 package chessprogram.god;
 
-import java.util.List;
-
 import static chessprogram.god.BitboardResources.UNIVERSE;
 import static chessprogram.god.MoveGeneratorEnPassant.addEnPassantMoves;
 import static chessprogram.god.MoveGeneratorKingLegal.addKingLegalMovesOnly;
 import static chessprogram.god.MoveGeneratorPromotion.addPromotionMoves;
 import static chessprogram.god.MoveGeneratorPseudo.addAllMovesWithoutKing;
 import static chessprogram.god.PieceMoveKnight.singleKnightTable;
-import static chessprogram.god.PieceMovePawns.*;
-import static chessprogram.god.PieceMoveSliding.singleBishopTable;
-import static chessprogram.god.PieceMoveSliding.singleQueenTable;
-import static chessprogram.god.PieceMoveSliding.singleRookTable;
+import static chessprogram.god.PieceMovePawns.singlePawnCaptures;
+import static chessprogram.god.PieceMoveSliding.*;
 
 class MoveGeneratorCheck {
 
-    static void addCheckEvasionMoves(List<Integer> moves, Chessboard board, boolean white, long pinnedPieces,
+    static void addCheckEvasionMoves(int[] moves, Chessboard board, boolean white, long pinnedPieces,
                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                      long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing, 
                                      long enemies, long friends, long allPieces){

@@ -1,7 +1,5 @@
 package chessprogram.god;
 
-import java.util.List;
-
 import static chessprogram.god.MoveGeneratorKnight.addKnightMoves;
 import static chessprogram.god.MoveGeneratorPawnsIntMove.addPawnPushes;
 import static chessprogram.god.MoveGeneratorSlidingIntMove.addSlidingMoves;
@@ -12,7 +10,7 @@ import static chessprogram.god.PieceMoveSliding.masterAttackTableSliding;
 
 class MoveGeneratorPseudo {
 
-    public static void addAllMovesWithoutKing(List<Integer> moves, Chessboard board, boolean whiteTurn,
+    public static void addAllMovesWithoutKing(int[] moves, Chessboard board, boolean whiteTurn,
                                               long ignoreThesePieces, long legalPushes, long legalCaptures,
                                               long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                               long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
@@ -40,10 +38,9 @@ class MoveGeneratorPseudo {
                 enemyKnights);
 
         ans |= masterAttackTableSliding(board, whiteTurn, ignoreThesePieces, legalPushes, legalCaptures,
-                enemyBishops, enemyRooks, enemyQueens);
+                enemyBishops, enemyRooks, enemyQueens, allPieces);
 
-        ans |= masterPawnCapturesTable(board, whiteTurn, ignoreThesePieces, legalCaptures,
-                enemyPawns);
+        ans |= masterPawnCapturesTable(board, whiteTurn, ignoreThesePieces, legalCaptures, enemyPawns);
 
         return ans;
     }

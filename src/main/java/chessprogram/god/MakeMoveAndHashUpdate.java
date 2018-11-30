@@ -1,11 +1,16 @@
 package chessprogram.god;
 
+import org.junit.Assert;
+
 import static chessprogram.god.MoveMaker.makeMoveMaster;
 import static chessprogram.god.MoveUnmakerIntMove.unMakeMoveMaster;
 
 class MakeMoveAndHashUpdate {
 
     static void makeMoveAndHashUpdate(Chessboard board, int move, ZobristHashIntMove zobristHash){
+
+        Assert.assertNotEquals(move, 0);
+        
         zobristHash.zobristStack.push(zobristHash.getBoardHash());
         zobristHash.updateHashPreMove(board, move);
         makeMoveMaster(board, move);

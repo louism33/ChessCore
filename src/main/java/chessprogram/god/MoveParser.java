@@ -1,7 +1,7 @@
 package chessprogram.god;
 
 import static chessprogram.god.MoveConstants.*;
-import static chessprogram.god.MovePrettifier.*;
+import static chessprogram.god.MovePrettifier.prettyMoveInt;
 
 public class MoveParser {
 

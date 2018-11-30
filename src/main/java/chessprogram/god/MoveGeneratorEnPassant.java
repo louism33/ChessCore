@@ -1,6 +1,5 @@
 package chessprogram.god;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static chessprogram.god.BitOperations.*;
@@ -12,13 +11,21 @@ import static chessprogram.god.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 
 class MoveGeneratorEnPassant {
 
-    static void addEnPassantMoves(List<Integer> moves, Chessboard board, boolean white,
+    static void addEnPassantMoves2(int[] moves, Chessboard board, boolean white,
                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
                                   long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                   long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                   long enemies, long friends, long allPieces) {
         
-        List<Integer> temp = new ArrayList<>();
+    }
+    
+    static void addEnPassantMoves(int[] moves, Chessboard board, boolean white,
+                                  long ignoreThesePieces, long legalPushes, long legalCaptures,
+                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
+                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
+                                  long enemies, long friends, long allPieces) {
+        
+        int[] temp = new int[8];
 
         long enPassantTakingRank = white ? BitboardResources.RANK_FIVE : BitboardResources.RANK_FOUR;
 
@@ -68,33 +75,47 @@ class MoveGeneratorEnPassant {
             final long pawn = getFirstPiece(myPawnsInPosition);
             if ((pawn & ignoreThesePieces) == 0) {
                 long pawnEnPassantCapture = singlePawnCaptures(pawn, white, enemyTakingSpots);
-                List<Integer> epMoves = new ArrayList<>();
-                addMovesFromAttackTableMaster(epMoves, pawnEnPassantCapture, getIndexOfFirstPiece(pawn), board);
-                temp.addAll(epMoves);
+                int[] epMoves = new int[8];
+                addMovesFromAttackTableMaster(temp, pawnEnPassantCapture, getIndexOfFirstPiece(pawn), board);
             }
             myPawnsInPosition &= myPawnsInPosition - 1;
         }
 
 
-        List<Integer> safeEPMoves = new ArrayList<>();
+        int[] safeEPMoves = new int[8];
         // remove moves that would leave us in check
-        for (int move : temp){
-            move |= ENPASSANT_MASK;
-            board.makeMoveAndFlipTurn(move);
+        for (int i = 0; i < temp.length; i++) {
+            int move = temp[i];
             
+            if (move == 0){
+                break;
+            }
+            move |= ENPASSANT_MASK;
+
+            board.makeMoveAndFlipTurn(move);
+
             boolean enPassantWouldLeadToCheck = boardInCheck(board, white,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     enemies, friends, allPieces);
-            
+
             board.unMakeMoveAndFlipTurn();
-            
-            if (enPassantWouldLeadToCheck){
+
+            if (enPassantWouldLeadToCheck) {
                 continue;
             }
-            safeEPMoves.add(move);
+            safeEPMoves[i] = move;
         }
-        moves.addAll(safeEPMoves);
+        
+        int index = 0;
+        while (moves[index] != 0){
+            index++;
+        }
+        
+        for (int i = 0; i < safeEPMoves.length; i++){
+            moves[index + i] = safeEPMoves[i];
+        }
+        
     }
 
 

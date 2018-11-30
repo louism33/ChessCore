@@ -1,14 +1,13 @@
 package chessprogram.god;
 
-import java.util.List;
-
-import static chessprogram.god.BitOperations.*;
+import static chessprogram.god.BitOperations.getFirstPiece;
+import static chessprogram.god.BitOperations.getIndexOfFirstPiece;
 import static chessprogram.god.MoveGenerationUtilities.addMovesFromAttackTableMaster;
 import static chessprogram.god.PieceMoveKnight.singleKnightTable;
 
 class MoveGeneratorKnight {
 
-    static void addKnightMoves(List<Integer> moves, Chessboard board, boolean white,
+    static void addKnightMoves(int[] moves, Chessboard board, boolean white,
                                long ignoreThesePieces, long mask, long myKnights){
 
         while (myKnights != 0){
