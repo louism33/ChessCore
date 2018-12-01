@@ -4,6 +4,7 @@
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/StackMoveData.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/BitOperations.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/PieceMove.java
+/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/UCIBoardParser.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/ChessboardDetails.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MovePrettifier.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveAdder.java

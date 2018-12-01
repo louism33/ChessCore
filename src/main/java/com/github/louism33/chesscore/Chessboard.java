@@ -286,6 +286,25 @@ public class Chessboard implements Cloneable{
         return Square.squaresFromBitboard(bitboardOfPinnedPieces);
     }
     
+    public boolean previousMoveWasPawnPushToSix(){
+        return false;
+    }
+
+    public boolean previousMoveWasPawnPushToSeven(){
+        return false;
+    }
+
+    public boolean moveIsCaptureOfLastMovePiece(int move){
+        if (this.moveStack.size() == 0){
+            return false;
+        }
+        if (this.moveStack.peek().move == 0){
+            return false;
+        }
+        int previousMoveDestinationIndex = MoveParser.getDestinationIndex(this.moveStack.peek().move);
+        return (MoveParser.getDestinationIndex(move) == previousMoveDestinationIndex);
+    }
+    
     
     private void init(){
         this.details = new ChessboardDetails(true);

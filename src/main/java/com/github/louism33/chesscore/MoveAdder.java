@@ -4,28 +4,22 @@ import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationCapture;
+import static com.github.louism33.chesscore.MoveParser.numberOfRealMoves;
 
 class MoveAdder {
 
-    private static int moveIndex(int[] moves){
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-        
-        return index;
-    }
+
     
     public static void addMovesFromAttackTableMasterCastling(int[] moves, int source, int destination) {
 
-        int index = moveIndex(moves);
+        int index = numberOfRealMoves(moves);
 
         moves[index] = MoveParser.makeSpecialMove(source, destination, true, false, false, false, false, false, false);
     }
 
     public static void addMovesFromAttackTableMasterPromotion(int[] moves, long attackBoard, int source, long enemyPieces) {
         while (attackBoard != 0){
-            int index = moveIndex(moves);
+            int index = numberOfRealMoves(moves);
             
             final long destination = getFirstPiece(attackBoard);
             final boolean capture = (destination & enemyPieces) != 0;
@@ -46,7 +40,7 @@ class MoveAdder {
 
     public static void addMovesFromAttackTableMaster(int[] moves, long attackBoard, int source, long enemyPieces) {
 
-        int index = moveIndex(moves);
+        int index = numberOfRealMoves(moves);
         
         while (attackBoard != 0){
             final long destination = getFirstPiece(attackBoard);

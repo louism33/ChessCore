@@ -5,6 +5,15 @@ import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
 
 public class MoveParser {
 
+    public static int numberOfRealMoves(int[] moves){
+        int index = 0;
+        while (moves[index] != 0){
+            index++;
+        }
+
+        return index;
+    }
+    
     public static int copyMove(int move){
         return move;
     }

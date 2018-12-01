@@ -7,9 +7,9 @@ import static com.github.louism33.chesscore.BitboardResources.*;
 import static com.github.louism33.chesscore.Setup.ready;
 import static com.github.louism33.chesscore.Setup.setup;
 
-class PieceMove {
+public class PieceMove {
 
-    static long singlePawnPushes(Chessboard board, long pawns, boolean white, long legalPushes, long allPieces) {
+    public static long singlePawnPushes(Chessboard board, long pawns, boolean white, long legalPushes, long allPieces) {
         final long possiblePawnSinglePushes = white ? pawns << 8 : pawns >>> 8;
         final long intermediateRank = white ? BitboardResources.RANK_THREE : BitboardResources.RANK_SIX;
         long possibleDoubles = (((possiblePawnSinglePushes & intermediateRank & ~allPieces) ));
@@ -17,13 +17,13 @@ class PieceMove {
                 & legalPushes & ~allPieces;
     }
 
-    static long singlePawnCaptures(long piece, boolean white, long legalCaptures) {
+    public static long singlePawnCaptures(long piece, boolean white, long legalCaptures) {
         return legalCaptures & (white
                 ? PAWN_CAPTURE_TABLE_WHITE[getIndexOfFirstPiece(piece)]
                 : PAWN_CAPTURE_TABLE_BLACK[getIndexOfFirstPiece(piece)]);
     }
 
-    static long masterPawnCapturesTable(Chessboard board, boolean white,
+    public static long masterPawnCapturesTable(Chessboard board, boolean white,
                                         long ignoreThesePieces, long legalCaptures, long pawns){
         long ans = 0;
         while (pawns != 0){
@@ -37,11 +37,11 @@ class PieceMove {
     }
 
 
-    static long singleKnightTable(long piece, long mask){
+    public static long singleKnightTable(long piece, long mask){
         return KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
     }
 
-    static long masterAttackTableKnights(Chessboard board, boolean white,
+    public static long masterAttackTableKnights(Chessboard board, boolean white,
                                          long ignoreThesePieces, long legalPushes, long legalCaptures,
                                          long knights){
         long ans = 0;
@@ -55,23 +55,19 @@ class PieceMove {
         return ans;
     }
 
-    
-    
-    
-
-    static long singleBishopTable(long occupancy, boolean white, long piece, long legalCaptures){
+    public static long singleBishopTable(long occupancy, boolean white, long piece, long legalCaptures){
         return singleBishopMagicMoves(occupancy, piece, legalCaptures);
     }
 
-    static long singleRookTable(long occupancy, boolean white, long piece, long legalPushes){
+    public static long singleRookTable(long occupancy, boolean white, long piece, long legalPushes){
         return singleRookMagicMoves(occupancy, piece, legalPushes);
     }
 
-    static long singleQueenTable(long occupancy, boolean white, long piece, long mask){
+    public static long singleQueenTable(long occupancy, boolean white, long piece, long mask){
         return singleBishopMagicMoves(occupancy, piece, mask) | singleRookMagicMoves(occupancy, piece, mask);
     }
 
-    static long masterAttackTableSliding(Chessboard board, boolean white,
+    public static long masterAttackTableSliding(Chessboard board, boolean white,
                                          long ignoreThesePieces, long legalPushes, long legalCaptures,
                                          long bishops, long rooks, long queens, long allPieces){
         long mask = legalPushes | legalCaptures;
@@ -105,24 +101,24 @@ class PieceMove {
         return ans;
     }
 
-    static long xrayQueenAttacks(long allPieces, long blockers, long queen){
+    public static long xrayQueenAttacks(long allPieces, long blockers, long queen){
         return xrayRookAttacks(allPieces, blockers, queen) | xrayBishopAttacks(allPieces, blockers, queen);
     }
 
-    static long xrayRookAttacks(long allPieces, long blockers, long rook){
+    public static long xrayRookAttacks(long allPieces, long blockers, long rook){
         final long rookMoves = singleRookTable(allPieces, true, rook, UNIVERSE);
         blockers &= rookMoves;
         return rookMoves ^ singleRookTable(allPieces ^ blockers, true, rook, UNIVERSE);
     }
 
-    static long xrayBishopAttacks(long allPieces, long blockers, long bishop){
+    public static long xrayBishopAttacks(long allPieces, long blockers, long bishop){
         final long bishopMoves = singleBishopTable(allPieces, true, bishop, UNIVERSE);
         blockers &= bishopMoves;
         return bishopMoves ^ singleBishopTable(allPieces ^ blockers, true, bishop, UNIVERSE);
     }
 
 
-    static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
+    public static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
         if (!ready){
             setup();
         }
@@ -140,7 +136,7 @@ class PieceMove {
         return legalMoves & legalMovesMask;
     }
 
-    static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
+    public static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
         if (!ready){
             setup();
         }
@@ -159,11 +155,11 @@ class PieceMove {
     }
 
 
-    static long singleKingTable(long piece, long mask){
+    public static long singleKingTable(long piece, long mask){
         return KING_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
     }
 
-    static long masterAttackTableKing(Chessboard board, boolean white,
+    public static long masterAttackTableKing(Chessboard board, boolean white,
                                       long ignoreThesePieces, long legalPushes, long legalCaptures,
                                       long kings){
 

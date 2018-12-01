@@ -37,8 +37,8 @@
         <developerConnection>scm:git:ssh://github.com:louism33/ChessCore.git</developerConnection>
         <url>https://github.com/louism33/ChessCore/tree/master</url>
     </scm>
-    
-    
+
+
     <developers>
         <developer>
             <email>louis.mackenziesmith.code@gmail.com</email>
@@ -52,6 +52,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>maven.fluxchess.com</id>
+            <url>http://maven.fluxchess.com/release</url>
+        </repository>
+    </repositories>
+
+    
     <build>
         <pluginManagement>
             <plugins>
@@ -96,8 +104,8 @@
                         </execution>
                     </executions>
                 </plugin>
-                
-                
+
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -111,8 +119,8 @@
                         </execution>
                     </executions>
                 </plugin>
-                
-                
+
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -256,7 +264,13 @@
 
         </pluginManagement>
     </build>
+    
     <dependencies>
+        <dependency>
+            <groupId>com.fluxchess</groupId>
+            <artifactId>jcpi</artifactId>
+            <version>1.4.0</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
