@@ -4,15 +4,56 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>groupId</groupId>
-    <artifactId>ChessCore</artifactId>
+    <groupId>com.github.louism33</groupId>
+    <artifactId>chesscore</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>ChessCore</name>
+    <description>Legal Chess Move Generation in Java</description>
+    <url>https://github.com/louism33/ChessCore</url>
+
+    <issueManagement>
+        <url>https://github.com/louism33/ChessCore/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>maven-repository</id>
+            <url>https://github.com/louism33/ChessCore</url>
+        </repository>
+    </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+
+    <scm>
+        <connection>scm:git:git://github.com/louism33/ChessCore.git</connection>
+        <developerConnection>scm:git:ssh://github.com:louism33/ChessCore.git</developerConnection>
+        <url>https://github.com/louism33/ChessCore/tree/master</url>
+    </scm>
+    
+    
+    <developers>
+        <developer>
+            <email>louis.mackenziesmith.code@gmail.com</email>
+            <name>Louis James Mackenzie-Smith</name>
+            <url>https://github.com/louism33</url>
+            <id>louism33</id>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <build>
-
-
         <pluginManagement>
-
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -41,8 +82,120 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-                
+
+                <plugin>
+                    <groupId>com.github.github</groupId>
+                    <artifactId>downloads-maven-plugin</artifactId>
+                    <version>0.6</version>
+                    <configuration>
+                        <description>Official ${project.name} build of the ${project.version} release</description>
+                        <override>true</override>
+                        <includeAttached>true</includeAttached>
+                        <server>github</server>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>upload</goal>
+                            </goals>
+                            <phase>install</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.github</groupId>
+                    <artifactId>site-maven-plugin</artifactId>
+                    <version>0.7</version>
+                    <configuration>
+                        <message>Building site for ${project.version}</message>
+                        <server>github</server>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>site</goal>
+                            </goals>
+                            <phase>site</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.0</version>
+                    <configuration>
+                        <reportPlugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-project-info-reports-plugin</artifactId>
+                                <version>2.2</version>
+                                <configuration>
+                                    <dependencyDetailsEnabled>true</dependencyDetailsEnabled>
+                                    <dependencyLocationsEnabled>true</dependencyLocationsEnabled>
+                                </configuration>
+                            </plugin>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-javadoc-plugin</artifactId>
+                                <version>2.7</version>
+                            </plugin>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-report-plugin</artifactId>
+                                <version>2.6</version>
+                            </plugin>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-checkstyle-plugin</artifactId>
+                                <version>2.6</version>
+                            </plugin>
+                        </reportPlugins>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>11</source>
+                        <target>11</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
+
         </pluginManagement>
     </build>
     <dependencies>
