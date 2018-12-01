@@ -1,10 +1,8 @@
-import chessprogram.god.Chessboard;
-import chessprogram.god.CopierToBeDeleted;
-import chessprogram.god.Move;
+import com.github.louism33.chesscore.Chessboard;
+import com.github.louism33.chesscore.CopierToBeDeleted;
+import com.github.louism33.chesscore.IllegalUnmakeException;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class NullMoveTest {
 
@@ -89,32 +87,44 @@ public class NullMoveTest {
     private static long verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false);
         Assert.assertEquals(board, initial);
-        System.out.println(board);
+//        System.out.println(board);
         
         board.makeNullMoveAndFlipTurn();
         Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
-        board.unMakeNullMoveAndFlipTurn();
+        try {
+            board.unMakeNullMoveAndFlipTurn();
+        } catch (IllegalUnmakeException e) {
+            e.printStackTrace();
+        }
         Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
-        
-        
-        long ii = countFinalNodesAtDepthHelper(board, depth);
+
+
+        long ii = 0;
+        try {
+            ii = countFinalNodesAtDepthHelper(board, depth);
+        } catch (IllegalUnmakeException e) {
+            e.printStackTrace();
+        }
         Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
         Assert.assertEquals(board, initial);
 
         return ii;
     }
 
-    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){
+    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {
         long temp = 0;
         if (depth == 0){
             return 1;
         }
-        List<Move> moves = board.generateLegalMoves();
+        int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            final int size = moves.size();
+            final int size = moves.length;
             return size;
         }
-        for (Move move : moves) {
+        for (int move : moves) {
+            if (move == 0){
+                continue;
+            }
             board.makeMoveAndFlipTurn(move);
             Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
 

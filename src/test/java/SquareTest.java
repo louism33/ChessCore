@@ -1,15 +1,13 @@
-import chessprogram.god.Art;
-import chessprogram.god.BitOperations;
-import chessprogram.god.Chessboard;
-import chessprogram.god.Square;
+import com.github.louism33.chesscore.Chessboard;
+import com.github.louism33.chesscore.Square;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static chessprogram.god.BitOperations.*;
-import static chessprogram.god.Square.*;
+import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.Square.*;
 
 public class SquareTest {
 
@@ -85,6 +83,7 @@ public class SquareTest {
 
     @Test
     void getFileNumber() {
+        
     }
 
     @Test

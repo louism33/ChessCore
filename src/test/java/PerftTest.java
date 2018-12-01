@@ -1,5 +1,5 @@
-import chessprogram.god.Chessboard;
-import chessprogram.god.Perft;
+import com.github.louism33.chesscore.Chessboard;
+import com.github.louism33.chesscore.Perft;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
