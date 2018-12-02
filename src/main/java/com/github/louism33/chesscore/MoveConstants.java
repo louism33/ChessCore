@@ -2,12 +2,6 @@ package com.github.louism33.chesscore;
 
 class MoveConstants {
 
-    public static void main (String[] args){
-        Art.printLong(SOURCE_PIECE_MASK);    
-        Art.printLong(VICTIM_PIECE_MASK);    
-        Art.printLong(WHITE_PAWN_MASK << VICTIM_PIECE_OFFSET);
-    }
-    
     final static int  
             SOURCE_PIECE_MASK = 0x000f0000,
             SOURCE_PIECE_OFFSET = 16,

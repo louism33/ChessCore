@@ -21,7 +21,7 @@ public class SquareTest {
     @Test
     void getPieceOnSquare() {
         Chessboard board = new Chessboard();
-        final Square pieceOnSquare = Square.getPieceOnSquare(board.getWhiteKing());
+        final Square pieceOnSquare = Square.getSquareOfBitboard(board.getWhiteKing());
         Assert.assertEquals(pieceOnSquare, E1);
     }
 

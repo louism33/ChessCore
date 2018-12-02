@@ -60,14 +60,14 @@ public enum Square {
         return squareThreatenend(board, board.isWhiteTurn(), this);
     }
     
-    public static Square getPieceOnSquare(long piece){
+    public static Square getSquareOfBitboard(long piece){
         return values()[getIndexOfFirstPiece(piece)];
     }
     
     public static List<Square> getPiecesOnSquare(long pieces){
         return getAllPieces(pieces, 0)
                 .stream()
-                .map(Square::getPieceOnSquare)
+                .map(Square::getSquareOfBitboard)
                 .collect(Collectors.toList());
     }
     

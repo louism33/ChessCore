@@ -9,16 +9,10 @@ import static com.github.louism33.chesscore.MakeMoveAndHashUpdate.*;
 
 public class Chessboard implements Cloneable{
 
-    // todo, chessboard only as wrapper?
-    
-    // todo, consider shift to 8 bbs
-
     private ChessboardDetails details;
-
 
     Stack<StackDataParser> moveStack = new Stack<>();
 
-    // todo replace hash with long
     private long zobristHash;
     
     private Stack<Long> zobristStack = new Stack<>();
@@ -277,7 +271,7 @@ public class Chessboard implements Cloneable{
      */
     private List<Square> pinnedPiecesToKing(boolean white){
         long myKing = white ? getWhiteKing() : getBlackKing();
-        return pinnedPiecesToSquare(white, Square.getPieceOnSquare(myKing));
+        return pinnedPiecesToSquare(white, Square.getSquareOfBitboard(myKing));
     }
     
     /**
@@ -336,11 +330,17 @@ public class Chessboard implements Cloneable{
     }
     
     public boolean previousMoveWasPawnPushToSix(){
-        return false;
+        if (moveStack.size() < 1){
+            return false;
+        }
+        return MoveParser.moveIsPawnPushSix(moveStack.peek().move);
     }
 
     public boolean previousMoveWasPawnPushToSeven(){
-        return false;
+        if (moveStack.size() < 1){
+            return false;
+        }
+        return MoveParser.moveIsPawnPushSeven(moveStack.peek().move);
     }
 
     public boolean moveIsCaptureOfLastMovePiece(int move){
@@ -416,7 +416,7 @@ public class Chessboard implements Cloneable{
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+this.getBoardHash() +"\n"
                 + "zobrist stack size: "+getZobristStack().size()
-                + "\nzobrist stack: "+zobristStack;
+                ;
     }
 
     public boolean isWhiteCanCastleK() {

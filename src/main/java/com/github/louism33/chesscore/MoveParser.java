@@ -3,8 +3,7 @@ package com.github.louism33.chesscore;
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
-import static com.github.louism33.chesscore.Piece.pieceOnSquare;
-import static com.github.louism33.chesscore.Piece.values;
+import static com.github.louism33.chesscore.Piece.*;
 
 public class MoveParser {
 
@@ -119,9 +118,17 @@ public class MoveParser {
     public static int getSourceIndex(int move) {
         return ((move & SOURCE_MASK) >>> SOURCE_OFFSET);
     }
+    
+    public static long getSourceLong(int move) {
+        return BitOperations.newPieceOnSquare((move & SOURCE_MASK) >>> SOURCE_OFFSET);
+    }
 
     public static int getDestinationIndex(int move) {
         return move & DESTINATION_MASK;
+    }
+
+    public static long getDestinationLong(int move) {
+        return BitOperations.newPieceOnSquare(move & DESTINATION_MASK);
     }
 
     public static boolean isCaptureMove(int move){
@@ -172,11 +179,25 @@ public class MoveParser {
 
     public static Piece getVictimPiece(int move){
         if (!isCaptureMove(move)) {
-            return null;
+            return NO_PIECE;
         }
         final int indexOfVictimPiece = (move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
         final Piece value = values()[indexOfVictimPiece];
         return value;
+    }
+
+    public static boolean moveIsPawnPushSeven(int move){
+        return getMovingPiece(move) == WHITE_PAWN
+                & getMovingPiece(move) == BLACK_PAWN
+                & (getDestinationLong(move) & BitboardResources.RANK_SEVEN) != 0
+                & (getDestinationLong(move) & BitboardResources.RANK_TWO) != 0;
+    }
+
+    public static boolean moveIsPawnPushSix(int move){
+        return getMovingPiece(move) == WHITE_PAWN
+                & getMovingPiece(move) == BLACK_PAWN
+                & (getDestinationLong(move) & BitboardResources.RANK_SIX) != 0
+                & (getDestinationLong(move) & BitboardResources.RANK_THREE) != 0;
     }
 
 }
