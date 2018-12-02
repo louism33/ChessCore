@@ -67,7 +67,12 @@ public class NullMoveTest {
 //        System.out.println(board);
         
         board.makeNullMoveAndFlipTurn();
+
+//        System.out.println(board);
+//        System.out.println(new Chessboard(board));
+        
         Assert.assertEquals(board, new Chessboard(board));
+        
         try {
             board.unMakeNullMoveAndFlipTurn();
         } catch (IllegalUnmakeException e) {

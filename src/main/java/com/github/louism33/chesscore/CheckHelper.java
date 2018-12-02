@@ -61,9 +61,9 @@ class CheckHelper {
     }
 
     // faster to create new stack and pop things to it ?
-    static boolean isDrawByRepetition(Chessboard board, ZobristHash zobristHash){
-        Stack<Long> zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
-        long zobristHashToMatch = zobristHash.getBoardHash();
+    static boolean isDrawByRepetition(Chessboard board){
+        Stack<Long> zobristStack = (Stack<Long>) board.getZobristStack().clone();
+        long zobristHashToMatch = board.getBoardHash();
         int howManyMovesToSearchToMax = 50;
         int limit = Math.min(howManyMovesToSearchToMax, zobristStack.size());
 

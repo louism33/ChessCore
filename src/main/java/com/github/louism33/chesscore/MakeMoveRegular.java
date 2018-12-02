@@ -12,10 +12,6 @@ import static com.github.louism33.chesscore.StackDataParser.SpecialMove.*;
 
 class MakeMoveRegular {
 
-    static void flipTurn(Chessboard board){
-        board.setWhiteTurn(!board.isWhiteTurn());
-    }
-
     static void makeMoveMaster(Chessboard board, int move) {
         if(move == 0){
             StackDataParser stackDataParser = new StackDataParser(0, board, 50, SpecialMove.NULL_MOVE);

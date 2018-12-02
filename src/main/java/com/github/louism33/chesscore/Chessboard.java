@@ -14,11 +14,14 @@ public class Chessboard implements Cloneable{
     // todo, consider shift to 8 bbs
 
     private ChessboardDetails details;
-    
-    // todo replace hash with long
-    private ZobristHash zobristHash;
+
 
     Stack<StackDataParser> moveStack = new Stack<>();
+
+    // todo replace hash with long
+    private long zobristHash;
+    
+    private Stack<Long> zobristStack = new Stack<>();
     
     /**
      * A new Chessboard in the starting position, white to play.
@@ -35,12 +38,12 @@ public class Chessboard implements Cloneable{
     public Chessboard(String fen) {
         details = new ChessboardDetails();
         makeBoardBasedOnFENSpecific(fen);
-        this.zobristHash = new ZobristHash(this);
+        this.zobristHash = ZobristHashUtil.boardToHash(this);
     }
 
     Chessboard(boolean blank){
         this.details = new ChessboardDetails();
-        this.zobristHash = new ZobristHash(this);
+        this.zobristHash = ZobristHashUtil.boardToHash(this);
     }
 
     /**
@@ -74,7 +77,8 @@ public class Chessboard implements Cloneable{
         this.setWhiteTurn(board.isWhiteTurn());
         
         this.makeZobrist();
-        this.cloneZobristStack(board.getZobrist());
+        
+        this.cloneZobristStack(board.getZobristStack());
     }
     
     /**
@@ -115,7 +119,7 @@ public class Chessboard implements Cloneable{
      * @param move the non-0 move you want to make of this board.
      */
     public void makeMove(int move){
-        makeMoveAndHashUpdate(this, move, this.zobristHash);
+        makeMoveAndHashUpdate(this, move);
     }
 
     /**
@@ -123,7 +127,7 @@ public class Chessboard implements Cloneable{
      * @param move the non-0 move you want to make of this board.
      */
     public void makeMoveAndFlipTurn(int move){
-        makeMoveAndHashUpdate(this, move, this.zobristHash);
+        makeMoveAndHashUpdate(this, move);
         flipTurn();
     }
 
@@ -133,15 +137,27 @@ public class Chessboard implements Cloneable{
      * @throws IllegalUnmakeException don't call this if no moves have been made
      */
     public void unMakeMoveAndFlipTurn() throws IllegalUnmakeException {
-        UnMakeMoveAndHashUpdate(this, this.zobristHash);
+        UnMakeMoveAndHashUpdate(this);
     }
     
     /**
      * Makes a null move on the board. Make sure to unmake it afterwards
      */
     public void makeNullMoveAndFlipTurn(){
-        makeNullMoveAndHashUpdate(this, this.zobristHash);
+
+//        System.out.println("---------------------------------------------------------------");
+//        System.out.println(this);
+//        System.out.println();
+        
+        makeNullMoveAndHashUpdate(this);
         flipTurn();
+
+//        System.out.println();
+//        System.out.println();
+//        System.out.println(this);
+//        System.out.println(new Chessboard(this));
+//
+//        System.out.println("xxxxxxxxxxxxx");
     }
 
 
@@ -150,7 +166,7 @@ public class Chessboard implements Cloneable{
      * @throws IllegalUnmakeException don't call this if no moves have been made
      */
     public void unMakeNullMoveAndFlipTurn() throws IllegalUnmakeException {
-        unMakeNullMove(this, this.zobristHash);
+        unMakeNullMove(this);
     }
 
 
@@ -158,7 +174,7 @@ public class Chessboard implements Cloneable{
      * Changes whose turn it is
      */
     public void flipTurn(){
-        MakeMoveRegular.flipTurn(this);
+        setWhiteTurn(!isWhiteTurn());
     }
 
     /**
@@ -205,7 +221,7 @@ public class Chessboard implements Cloneable{
      * @return true if it is a draw by repetition
      */
     public boolean drawByRepetition (boolean white){
-        return isDrawByRepetition(this, this.zobristHash);
+        return isDrawByRepetition(this);
     }
 
     /**
@@ -344,17 +360,15 @@ public class Chessboard implements Cloneable{
     }
     
     void makeZobrist(){
-        this.zobristHash = new ZobristHash(this);
+        this.zobristHash = ZobristHashUtil.boardToHash(this);
     }
 
-    void cloneZobristStack(ZobristHash zobristHash){
-        if (zobristHash.zobristStack.size() < 1){
+    void cloneZobristStack(Stack<Long> zobristStack){
+        if (zobristStack.size() < 1){
             return;
         }
-        this.zobristHash.zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
+        this.zobristStack = (Stack<Long>) zobristStack.clone();
     }
-
-
 
     List<Integer> stackMoves(Stack<StackDataParser> stack){
         List<Integer> moves = new ArrayList<>();
@@ -400,8 +414,9 @@ public class Chessboard implements Cloneable{
     @Override
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
-        return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+zobristHash.getBoardHash() +"\n"
-                + "zobrist stack size: "+zobristHash.getZobristStack().size();
+        return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+this.getBoardHash() +"\n"
+                + "zobrist stack size: "+getZobristStack().size()
+                + "\nzobrist stack: "+zobristStack;
     }
 
     public boolean isWhiteCanCastleK() {
@@ -826,15 +841,15 @@ public class Chessboard implements Cloneable{
         this.details = details;
     }
 
-    public long getZobristHash() {
-        return zobristHash.getBoardHash();
+    public long getBoardHash() {
+        return zobristHash;
     }
     
-    public ZobristHash getZobrist() {
+    public long getZobrist() {
         return zobristHash;
     }
 
-    public void setZobristHash(ZobristHash zobristHash) {
+    public void setBoardHash(long zobristHash) {
         this.zobristHash = zobristHash;
     }
 
@@ -844,5 +859,13 @@ public class Chessboard implements Cloneable{
 
     public void setMoveStack(Stack<StackDataParser> moveStack) {
         this.moveStack = moveStack;
+    }
+
+    public Stack<Long> getZobristStack() {
+        return zobristStack;
+    }
+
+    public void setZobristStack(Stack<Long> zobristStack) {
+        this.zobristStack = zobristStack;
     }
 }

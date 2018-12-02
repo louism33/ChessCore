@@ -2,7 +2,6 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import java.util.Objects;
 import java.util.Random;
 import java.util.Stack;
 
@@ -13,22 +12,21 @@ import static com.github.louism33.chesscore.MakeMoveRegular.whichIntPieceOnSquar
 import static com.github.louism33.chesscore.StackDataParser.SpecialMove.ENPASSANTVICTIM;
 import static com.github.louism33.chesscore.StackDataParser.SpecialMove.NULL_MOVE;
 
-class ZobristHash {
+class ZobristHashUtil {
+    
     private static final long initHashSeed = 100;
-    Stack<Long> zobristStack = new Stack<>();
     private static final long[][] zobristHashPieces = initPieceHash();
     private static final long[] zobristHashCastlingRights = initCastlingHash();
     private static final long[] zobristHashEPFiles = initEPHash();
-    static final long zobristHashColourBlack = initColourHash();
-    private long boardHash;
+    private static final long zobristHashColourBlack = initColourHash();
 
-    ZobristHash(Chessboard board) {
-        this.boardHash = boardToHash(board);
+    static long zobristFlipTurn(long hash){
+        return hash ^ zobristHashColourBlack;
     }
-
-    long updateWithEPFlags(Chessboard board){
+    
+    static long updateWithEPFlags(Chessboard board, long hash){
         Assert.assertTrue(board.moveStack.size() > 0);
-        long hash = 0;
+        
         StackDataParser peek = board.moveStack.peek();
         if (peek.typeOfSpecialMove == ENPASSANTVICTIM) {
             hash = hashEP(hash, peek);
@@ -41,7 +39,7 @@ class ZobristHash {
         return hash;
     }
 
-    private long nullMoveEP(Chessboard board, long hash) {
+    private static long nullMoveEP(Chessboard board, long hash) {
         StackDataParser pop = board.moveStack.pop();
         StackDataParser peekSecondElement = board.moveStack.peek();
         if (peekSecondElement.typeOfSpecialMove == ENPASSANTVICTIM) {
@@ -52,32 +50,32 @@ class ZobristHash {
         return hash;
     }
 
-    private long hashEP(long hash, StackDataParser peek) {
-        hash ^= zobristHashEPFiles[peek.enPassantFile - 1];
-        return hash;
+    private static long hashEP(long hash, StackDataParser peek) {
+        return hash ^ zobristHashEPFiles[peek.enPassantFile - 1];
     }
 
-    void updateHashPostMove(Chessboard board, int move){
+    static long updateHashPostMove(Chessboard board, long boardHash, int move){
         /*
         invert colour
         */
-        boardHash ^= zobristHashColourBlack;
+        boardHash = zobristFlipTurn(boardHash);
 
         Assert.assertTrue(board.moveStack.size() > 0);
         
         /*
         if move we just made raised EP flag, update hash
         */
-        boardHash ^= updateWithEPFlags(board);
+        boardHash = updateWithEPFlags(board, boardHash);
 
         /*
         if castling rights changed, update hash
         */
         boardHash ^= postMoveCastlingRights(board);
 
+        return boardHash;
     }
 
-    private long postMoveCastlingRights(Chessboard board){
+    private static long postMoveCastlingRights(Chessboard board){
         long updatedHashValue = 0;
         StackDataParser peek = board.moveStack.peek();
         /*
@@ -125,7 +123,7 @@ class ZobristHash {
     }
 
 
-    void updateHashPreMove(Chessboard board, int move){
+    static long updateHashPreMove(Chessboard board, long boardHash, int move){
 
         int sourceSquare = MoveParser.getSourceIndex(move);
         int destinationSquareIndex = MoveParser.getDestinationIndex(move);
@@ -158,7 +156,7 @@ class ZobristHash {
         */
         Stack<StackDataParser> moveStack = board.moveStack;
         if (moveStack.size() > 0){
-            boardHash ^= updateWithEPFlags(board);
+            boardHash = updateWithEPFlags(board, boardHash);
         }
 
         long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
@@ -267,12 +265,14 @@ class ZobristHash {
                 boardHash ^= promotionZH;
             }
         }
+        
+        return boardHash;
     }
 
     /*
     create almost unique long to identify current board
      */
-    private long boardToHash(Chessboard board){
+    static long boardToHash(Chessboard board){
         long hash = 0;
         for (int sq = 0; sq < 64; sq++) {
             long pieceOnSquare = newPieceOnSquare(sq);
@@ -285,17 +285,17 @@ class ZobristHash {
         hash ^= castlingRightsToHash(board);
 
         if (!board.isWhiteTurn()){
-            hash ^= zobristHashColourBlack;
+            hash = zobristFlipTurn(hash);
         }
         
         if (board.moveStack.size() > 0){
-            hash ^= updateWithEPFlags(board);
+            hash = updateWithEPFlags(board, hash);
         }
 
         return hash;
     }
 
-    private long castlingRightsToHash(Chessboard board){
+    private static long castlingRightsToHash(Chessboard board){
         int numTo15 = 0;
         if (board.isWhiteCanCastleK()){
             numTo15 += 1;
@@ -360,43 +360,5 @@ class ZobristHash {
         Random r = new Random(initHashSeed + 3);
         return r.nextLong();
     }
-
-    public long getBoardHash() {
-        return boardHash;
-    }
-
-    void setBoardHash(long boardHash) {
-        this.boardHash = boardHash;
-    }
-
-    public Stack<Long> getZobristStack() {
-        return zobristStack;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ZobristHash that = (ZobristHash) o;
-        return boardHash == that.boardHash
-                && Objects.equals(zobristStack, that.zobristStack)
-        ;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(zobristStack, boardHash);
-    }
-
-    @Override
-    public String toString() {
-        return "ZobristHash{" +
-                "zobristStack=" + zobristStack +
-                ", boardHash=" + boardHash +
-                '}';
-    }
-
-
     
 }
