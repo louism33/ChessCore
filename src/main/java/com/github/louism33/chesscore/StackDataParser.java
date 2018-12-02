@@ -1,8 +1,7 @@
 package com.github.louism33.chesscore;
 
 @SuppressWarnings("CanBeFinal")
-class StackMoveData {
-    
+class StackDataParser {
     
     // todo replace with long
     public int move;
@@ -20,7 +19,7 @@ class StackMoveData {
     public boolean whiteCanCastleK, whiteCanCastleQ, blackCanCastleK, blackCanCastleQ;
 
 
-    public StackMoveData(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
+    public StackDataParser(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
         this.move = move;
         this.fiftyMoveCounter = fiftyMoveCounter;
         this.typeOfSpecialMove = typeOfSpecialMove;
@@ -34,7 +33,7 @@ class StackMoveData {
     }
 
     
-    public StackMoveData(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove, int takenPiece) {
+    public StackDataParser(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove, int takenPiece) {
         this.move = move;
         this.fiftyMoveCounter = fiftyMoveCounter;
         this.typeOfSpecialMove = typeOfSpecialMove;
@@ -49,7 +48,7 @@ class StackMoveData {
     }
 
 
-    public StackMoveData(int move, Chessboard board, int fiftyMoveCounter, int enPassantFile, SpecialMove typeOfSpecialMove) {
+    public StackDataParser(int move, Chessboard board, int fiftyMoveCounter, int enPassantFile, SpecialMove typeOfSpecialMove) {
         this.move = move;
         this.fiftyMoveCounter = fiftyMoveCounter;
         this.typeOfSpecialMove = typeOfSpecialMove;
@@ -69,7 +68,7 @@ class StackMoveData {
 
     @Override
     public String toString() {
-        return "StackMoveData{" +
+        return "StackDataParser{" +
                 "move=" + move +
                 ", takenPiece=" + takenPiece +
                 ", fiftyMoveCounter=" + fiftyMoveCounter +

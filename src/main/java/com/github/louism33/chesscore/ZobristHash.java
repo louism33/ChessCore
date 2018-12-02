@@ -10,8 +10,8 @@ import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BitboardResources.INITIAL_BLACK_KING;
 import static com.github.louism33.chesscore.BitboardResources.INITIAL_WHITE_KING;
 import static com.github.louism33.chesscore.MakeMoveRegular.whichIntPieceOnSquare;
-import static com.github.louism33.chesscore.StackMoveData.SpecialMove.ENPASSANTVICTIM;
-import static com.github.louism33.chesscore.StackMoveData.SpecialMove.NULL_MOVE;
+import static com.github.louism33.chesscore.StackDataParser.SpecialMove.ENPASSANTVICTIM;
+import static com.github.louism33.chesscore.StackDataParser.SpecialMove.NULL_MOVE;
 
 class ZobristHash {
     private static final long initHashSeed = 100;
@@ -29,7 +29,7 @@ class ZobristHash {
     long updateWithEPFlags(Chessboard board){
         Assert.assertTrue(board.moveStack.size() > 0);
         long hash = 0;
-        StackMoveData peek = board.moveStack.peek();
+        StackDataParser peek = board.moveStack.peek();
         if (peek.typeOfSpecialMove == ENPASSANTVICTIM) {
             hash = hashEP(hash, peek);
         }
@@ -42,8 +42,8 @@ class ZobristHash {
     }
 
     private long nullMoveEP(Chessboard board, long hash) {
-        StackMoveData pop = board.moveStack.pop();
-        StackMoveData peekSecondElement = board.moveStack.peek();
+        StackDataParser pop = board.moveStack.pop();
+        StackDataParser peekSecondElement = board.moveStack.peek();
         if (peekSecondElement.typeOfSpecialMove == ENPASSANTVICTIM) {
             // file one = FILE_A
             hash = hashEP(hash, peekSecondElement);
@@ -52,7 +52,7 @@ class ZobristHash {
         return hash;
     }
 
-    private long hashEP(long hash, StackMoveData peek) {
+    private long hashEP(long hash, StackDataParser peek) {
         hash ^= zobristHashEPFiles[peek.enPassantFile - 1];
         return hash;
     }
@@ -79,7 +79,7 @@ class ZobristHash {
 
     private long postMoveCastlingRights(Chessboard board){
         long updatedHashValue = 0;
-        StackMoveData peek = board.moveStack.peek();
+        StackDataParser peek = board.moveStack.peek();
         /*
         undo previous castling rights
         */
@@ -156,7 +156,7 @@ class ZobristHash {
         /* 
         "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
         */
-        Stack<StackMoveData> moveStack = board.moveStack;
+        Stack<StackDataParser> moveStack = board.moveStack;
         if (moveStack.size() > 0){
             boardHash ^= updateWithEPFlags(board);
         }

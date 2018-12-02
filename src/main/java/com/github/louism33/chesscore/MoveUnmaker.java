@@ -6,8 +6,8 @@ import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveRegular.makeRegularMove;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
 import static com.github.louism33.chesscore.MoveParser.*;
-import static com.github.louism33.chesscore.StackMoveData.SpecialMove;
-import static com.github.louism33.chesscore.StackMoveData.SpecialMove.*;
+import static com.github.louism33.chesscore.StackDataParser.SpecialMove;
+import static com.github.louism33.chesscore.StackDataParser.SpecialMove.*;
 
 class MoveUnmaker {
 
@@ -17,7 +17,7 @@ class MoveUnmaker {
             throw new IllegalUnmakeException("No moves to unmake.");
         }
         
-        StackMoveData popSMD = board.moveStack.pop();
+        StackDataParser popSMD = board.moveStack.pop();
 
         if (popSMD.move == 0){
             Assert.assertSame(popSMD.typeOfSpecialMove, NULL_MOVE);

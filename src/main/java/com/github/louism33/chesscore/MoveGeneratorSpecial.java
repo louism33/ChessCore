@@ -11,7 +11,7 @@ import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMas
 import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
-import static com.github.louism33.chesscore.StackMoveData.SpecialMove.ENPASSANTVICTIM;
+import static com.github.louism33.chesscore.StackDataParser.SpecialMove.ENPASSANTVICTIM;
 
 class MoveGeneratorSpecial {
 
@@ -70,7 +70,7 @@ class MoveGeneratorSpecial {
             return;
         }
 
-        StackMoveData previousMove = board.moveStack.peek();
+        StackDataParser previousMove = board.moveStack.peek();
         if (previousMove.typeOfSpecialMove != ENPASSANTVICTIM){
             return;
         }

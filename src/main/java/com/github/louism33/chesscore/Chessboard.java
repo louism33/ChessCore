@@ -18,6 +18,8 @@ public class Chessboard implements Cloneable{
     // todo replace hash with long
     private ZobristHash zobristHash;
 
+    Stack<StackDataParser> moveStack = new Stack<>();
+    
     /**
      * A new Chessboard in the starting position, white to play.
      */
@@ -48,7 +50,7 @@ public class Chessboard implements Cloneable{
     public Chessboard(Chessboard board) {
         this.details = new ChessboardDetails();
 
-        this.moveStack = (Stack<StackMoveData>) board.moveStack.clone();
+        this.moveStack = (Stack<StackDataParser>) board.moveStack.clone();
 
         this.setWhitePawns(board.getWhitePawns());
         this.setWhiteKnights(board.getWhiteKnights());
@@ -352,11 +354,11 @@ public class Chessboard implements Cloneable{
         this.zobristHash.zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
     }
 
-    Stack<StackMoveData> moveStack = new Stack<>();
 
-    List<Integer> stackMoves(Stack<StackMoveData> stack){
+
+    List<Integer> stackMoves(Stack<StackDataParser> stack){
         List<Integer> moves = new ArrayList<>();
-        Stack<StackMoveData> clone = (Stack<StackMoveData>) stack.clone();
+        Stack<StackDataParser> clone = (Stack<StackDataParser>) stack.clone();
         for (int s = 0; s < stack.size(); s++){
             int move = clone.pop().move;
             moves.add(move);
@@ -608,50 +610,50 @@ public class Chessboard implements Cloneable{
 
         switch (epFlags) {
             case "a": {
-                StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (0, this, 50, 1, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                StackDataParser previousMoveForEPPurposes = new StackDataParser
+                        (0, this, 50, 1, StackDataParser.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "b": {
-                StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (0, this, 50, 2, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                StackDataParser previousMoveForEPPurposes = new StackDataParser
+                        (0, this, 50, 2, StackDataParser.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "c": {
-                StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (0, this, 50, 3, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                StackDataParser previousMoveForEPPurposes = new StackDataParser
+                        (0, this, 50, 3, StackDataParser.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "d": {
-                StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (0, this, 50, 4, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                StackDataParser previousMoveForEPPurposes = new StackDataParser
+                        (0, this, 50, 4, StackDataParser.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "e": {
-                StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (0, this, 50, 5, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                StackDataParser previousMoveForEPPurposes = new StackDataParser
+                        (0, this, 50, 5, StackDataParser.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "f": {
-                StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (0, this, 50, 6, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                StackDataParser previousMoveForEPPurposes = new StackDataParser
+                        (0, this, 50, 6, StackDataParser.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "g": {
-                StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (0, this, 50, 7, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                StackDataParser previousMoveForEPPurposes = new StackDataParser
+                        (0, this, 50, 7, StackDataParser.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
             case "h": {
-                StackMoveData previousMoveForEPPurposes = new StackMoveData
-                        (0, this, 50, 8, StackMoveData.SpecialMove.ENPASSANTVICTIM);
+                StackDataParser previousMoveForEPPurposes = new StackDataParser
+                        (0, this, 50, 8, StackDataParser.SpecialMove.ENPASSANTVICTIM);
                 this.moveStack.push(previousMoveForEPPurposes);
                 break;
             }
@@ -836,11 +838,11 @@ public class Chessboard implements Cloneable{
         this.zobristHash = zobristHash;
     }
 
-    public Stack<StackMoveData> getMoveStack() {
+    public Stack<StackDataParser> getMoveStack() {
         return moveStack;
     }
 
-    public void setMoveStack(Stack<StackMoveData> moveStack) {
+    public void setMoveStack(Stack<StackDataParser> moveStack) {
         this.moveStack = moveStack;
     }
 }
