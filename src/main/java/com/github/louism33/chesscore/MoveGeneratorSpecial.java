@@ -39,7 +39,7 @@ class MoveGeneratorSpecial {
                     | singlePawnCaptures(pawn, board.isWhiteTurn(), ((finalRank & enemies) & legalCaptures));
 
             if (pawnMoves != 0) {
-                addMovesFromAttackTableMasterPromotion(moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn), enemies);
+                addMovesFromAttackTableMasterPromotion(board, moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn), enemies);
 
             }
             promotablePawns &= promotablePawns - 1;
@@ -172,7 +172,7 @@ class MoveGeneratorSpecial {
                         && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_EAST_CORNER) != 0)){
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(moves, 3, 1);
+                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 1);
                 }
             }
 
@@ -185,7 +185,7 @@ class MoveGeneratorSpecial {
                         && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_WEST_CORNER) != 0)){
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(moves, 3, 5);
+                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 5);
                 }
             }
         }
@@ -200,7 +200,7 @@ class MoveGeneratorSpecial {
                         && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BitboardResources.NORTH_EAST_CORNER) != 0)){
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(moves, 59, 57);
+                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 57);
                 }
             }
 
@@ -212,7 +212,7 @@ class MoveGeneratorSpecial {
                         && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BitboardResources.NORTH_WEST_CORNER) != 0)){
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(moves, 59, 61);
+                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 61);
 
                 }
             }

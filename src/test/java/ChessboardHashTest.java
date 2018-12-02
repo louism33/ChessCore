@@ -1,5 +1,4 @@
 import com.github.louism33.chesscore.Chessboard;
-import com.github.louism33.chesscore.CopierToBeDeleted;
 import com.github.louism33.chesscore.IllegalUnmakeException;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -37,16 +36,12 @@ public class ChessboardHashTest {
     void regularBoard() {
         verifyHashToDepth(5, new Chessboard());
 
-        System.out.println("-----------------------------");
-
         verifyHashToDepth(6, new Chessboard());
     }
 
     @Test
     void AvoidIllegalEPCapture() {
         verifyHashToDepth(6, new Chessboard("8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"));
-
-        System.out.println("-----------------------------");
 
         verifyHashToDepth(6, new Chessboard("8/8/1k6/8/2pP4/8/5BK1/8 b - d3 0 1"));
     }
@@ -56,8 +51,6 @@ public class ChessboardHashTest {
     void EPCaptureChecksOpponent() {
         verifyHashToDepth(6, new Chessboard("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"));
 
-        System.out.println("-----------------------------");
-
         verifyHashToDepth(6, new Chessboard("8/5k2/8/2Pp4/2B5/1K6/8/8 w - d6 0 1"));
     }
 
@@ -66,16 +59,12 @@ public class ChessboardHashTest {
     void shortCastlingGivesCheck() {
         verifyHashToDepth(6, new Chessboard("5k2/8/8/8/8/8/8/4K2R w K - 0 1"));
 
-        System.out.println("-----------------------------");
-
         verifyHashToDepth(6, new Chessboard("4k2r/8/8/8/8/8/8/5K2 b k - 0 1"));
     }
 
     @Test
     void longCastlingGivesCheck() {
         verifyHashToDepth(6, new Chessboard("3k4/8/8/8/8/8/8/R3K3 w Q - 0 1"));
-
-        System.out.println("-----------------------------");
 
         verifyHashToDepth(6, new Chessboard("r3k3/8/8/8/8/8/8/3K4 b q - 0 1"));
     }
@@ -111,7 +100,7 @@ public class ChessboardHashTest {
     }
     
     private static long verifyHashToDepth(int depth, Chessboard board) {
-        final Chessboard initial = CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false);
+        final Chessboard initial = new Chessboard(board);
         
         Assert.assertEquals(board, initial);
 
@@ -123,7 +112,7 @@ public class ChessboardHashTest {
         } catch (IllegalUnmakeException e) {
             e.printStackTrace();
         }
-        Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+        Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
        
         return ii;
@@ -144,7 +133,7 @@ public class ChessboardHashTest {
             }
             board.makeMoveAndFlipTurn(move);
             
-            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+            Assert.assertEquals(board, new Chessboard(board));
             
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;

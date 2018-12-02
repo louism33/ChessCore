@@ -25,7 +25,7 @@ class Setup {
 
         calculateInBetweenSquares();
 
-        System.out.println("get ready");
+//        System.out.println("get ready");
         ready = true;
     }
 

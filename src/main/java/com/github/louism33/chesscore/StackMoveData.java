@@ -3,6 +3,8 @@ package com.github.louism33.chesscore;
 @SuppressWarnings("CanBeFinal")
 class StackMoveData {
     
+    
+    // todo replace with long
     public int move;
     public int takenPiece = 0;
     private int fiftyMoveCounter;

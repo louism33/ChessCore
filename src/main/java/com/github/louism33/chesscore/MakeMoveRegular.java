@@ -45,7 +45,7 @@ class MakeMoveRegular {
                 boolean capturePromotion = (destSquare & board.allPieces()) != 0;
                 if (capturePromotion) {
                     long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-                    int takenPiece = whichPieceOnSquare(board, destinationPiece);
+                    int takenPiece = whichIntPieceOnSquare(board, destinationPiece);
 
                     StackMoveData stackMoveData = new StackMoveData(move, board, 50, PROMOTION, takenPiece);
                     board.moveStack.push(stackMoveData);
@@ -69,7 +69,7 @@ class MakeMoveRegular {
             boolean captureMove = (destSquare & board.allPieces()) != 0;
             if (captureMove) {
                 long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-                int takenPiece = whichPieceOnSquare(board, destinationPiece);
+                int takenPiece = whichIntPieceOnSquare(board, destinationPiece);
                 StackMoveData stackMoveData = new StackMoveData
                         (move, board, 50, BASICCAPTURE, takenPiece);
                 board.moveStack.push(stackMoveData);
@@ -89,7 +89,7 @@ class MakeMoveRegular {
 
             else {
                 long destinationPiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
-                int movingPiece = whichPieceOnSquare(board, destinationPiece);
+                int movingPiece = whichIntPieceOnSquare(board, destinationPiece);
                 if (movingPiece == 1 || movingPiece == 7){
                     StackMoveData stackMoveData = new StackMoveData
                             (move, board, 50, BASICLOUDPUSH);
@@ -127,53 +127,12 @@ class MakeMoveRegular {
         return (destinationSquare & enPassantPossibilityRank) != 0;
     }
 
+    public static Piece whichPieceOnSquare(Chessboard board, long destinationPiece){
+        return Piece.pieceOnSquare(board, destinationPiece);
+    }
 
-    public static int whichPieceOnSquare(Chessboard board, long destinationPiece){
-
-        if ((destinationPiece & board.allPieces()) == 0){
-            return 0;
-        }
-
-        if ((destinationPiece & board.getWhitePawns()) != 0){
-            return 1;
-        }
-        else if ((destinationPiece & board.getWhiteKnights()) != 0){
-            return 2;
-        }
-        else if ((destinationPiece & board.getWhiteBishops()) != 0){
-            return 3;
-        }
-        else if ((destinationPiece & board.getWhiteRooks()) != 0){
-            return 4;
-        }
-        else if ((destinationPiece & board.getWhiteQueen()) != 0){
-            return 5;
-        }
-        else if ((destinationPiece & board.getWhiteKing()) != 0){
-            return 6;
-        }
-
-        else if ((destinationPiece & board.getBlackPawns()) != 0){
-            return 7;
-        }
-        else if ((destinationPiece & board.getBlackKnights()) != 0){
-            return 8;
-        }
-        else if ((destinationPiece & board.getBlackBishops()) != 0){
-            return 9;
-        }
-        else if ((destinationPiece & board.getBlackRooks()) != 0){
-            return 10;
-        }
-        else if ((destinationPiece & board.getBlackQueen()) != 0){
-            return 11;
-        }
-        else if ((destinationPiece & board.getBlackKing()) != 0) {
-            return 12;
-        }
-        else {
-            throw new RuntimeException("false entry");
-        }
+    static int whichIntPieceOnSquare(Chessboard board, long destinationPiece){
+        return Piece.pieceOnSquare(board, destinationPiece).ordinal();
     }
 
     static void makeRegularMove(Chessboard board, int move) {

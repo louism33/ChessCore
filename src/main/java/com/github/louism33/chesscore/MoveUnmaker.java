@@ -29,17 +29,17 @@ class MoveUnmaker {
         int squareToMoveBackTo = getSourceIndex(popSMD.move);
 
         if (popSMD.typeOfSpecialMove == SpecialMove.BASICQUIETPUSH){
-            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
         else if (popSMD.typeOfSpecialMove == BASICLOUDPUSH){
-            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
         else if (popSMD.typeOfSpecialMove == BASICCAPTURE){
-            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
             int takenPiece = popSMD.takenPiece;
             if (takenPiece != 0){
@@ -49,12 +49,12 @@ class MoveUnmaker {
 
         //double pawn push
         else if (popSMD.typeOfSpecialMove == ENPASSANTVICTIM){
-            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
         else if (popSMD.typeOfSpecialMove == ENPASSANTCAPTURE){
-            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
             int takenPiece = popSMD.takenPiece;
 
@@ -67,7 +67,7 @@ class MoveUnmaker {
         }
 
         else if (popSMD.typeOfSpecialMove == CASTLING){
-            int basicReversedMove = moveFromSourceDestination(pieceToMoveBack, squareToMoveBackTo);
+            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
 
             if (pieceToMoveBack == 1){
                 long originalKing = newPieceOnSquare(squareToMoveBackTo);

@@ -88,7 +88,7 @@ class MoveGeneratorRegular {
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                         enemies, friends, allPieces),
                 getIndexOfFirstPiece(myKing),
-                enemies);
+                board);
     }
 
     private static long kingLegalPushAndCaptureTable(Chessboard board, boolean white,

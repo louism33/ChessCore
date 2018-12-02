@@ -1,5 +1,4 @@
 import com.github.louism33.chesscore.Chessboard;
-import com.github.louism33.chesscore.CopierToBeDeleted;
 import com.github.louism33.chesscore.IllegalUnmakeException;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -85,18 +84,18 @@ public class NullMoveTest {
     
     
     private static long verifyHashToDepth(int depth, Chessboard board) {
-        final Chessboard initial = CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false);
+        final Chessboard initial = new Chessboard(board);
         Assert.assertEquals(board, initial);
 //        System.out.println(board);
         
         board.makeNullMoveAndFlipTurn();
-        Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+        Assert.assertEquals(board, new Chessboard(board));
         try {
             board.unMakeNullMoveAndFlipTurn();
         } catch (IllegalUnmakeException e) {
             e.printStackTrace();
         }
-        Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+        Assert.assertEquals(board, new Chessboard(board));
 
 
         long ii = 0;
@@ -105,7 +104,7 @@ public class NullMoveTest {
         } catch (IllegalUnmakeException e) {
             e.printStackTrace();
         }
-        Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+        Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
 
         return ii;
@@ -126,20 +125,20 @@ public class NullMoveTest {
                 continue;
             }
             board.makeMoveAndFlipTurn(move);
-            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+            Assert.assertEquals(board, new Chessboard(board));
 
             board.makeNullMoveAndFlipTurn();
 
-            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+            Assert.assertEquals(board, new Chessboard(board));
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;
             
             board.unMakeNullMoveAndFlipTurn();
-            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+            Assert.assertEquals(board, new Chessboard(board));
 
             board.unMakeMoveAndFlipTurn();
-            Assert.assertEquals(board, CopierToBeDeleted.copyBoard(board, board.isWhiteTurn(), false));
+            Assert.assertEquals(board, new Chessboard(board));
 
         }
         return temp;

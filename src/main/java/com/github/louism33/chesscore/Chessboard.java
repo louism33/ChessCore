@@ -9,9 +9,13 @@ import static com.github.louism33.chesscore.MakeMoveAndHashUpdate.*;
 
 public class Chessboard implements Cloneable{
 
+    // todo, chessboard only as wrapper?
+    
     // todo, consider shift to 8 bbs
 
     private ChessboardDetails details;
+    
+    // todo replace hash with long
     private ZobristHash zobristHash;
 
     /**
@@ -38,10 +42,37 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     * 
+     * Copy Constructor
      * @param board the chessboard you want an exact copy of
      */
-    private Chessboard(Chessboard board) {
+    public Chessboard(Chessboard board) {
+        this.details = new ChessboardDetails();
+
+        this.moveStack = (Stack<StackMoveData>) board.moveStack.clone();
+
+        this.setWhitePawns(board.getWhitePawns());
+        this.setWhiteKnights(board.getWhiteKnights());
+        this.setWhiteBishops(board.getWhiteBishops());
+        this.setWhiteRooks(board.getWhiteRooks());
+        this.setWhiteQueen(board.getWhiteQueen());
+        this.setWhiteKing(board.getWhiteKing());
+
+        this.setBlackPawns(board.getBlackPawns());
+        this.setBlackKnights(board.getBlackKnights());
+        this.setBlackBishops(board.getBlackBishops());
+        this.setBlackRooks(board.getBlackRooks());
+        this.setBlackQueen(board.getBlackQueen());
+        this.setBlackKing(board.getBlackKing());
+
+        this.setWhiteCanCastleK(board.isWhiteCanCastleK());
+        this.setBlackCanCastleK(board.isBlackCanCastleK());
+        this.setWhiteCanCastleQ(board.isWhiteCanCastleQ());
+        this.setBlackCanCastleQ(board.isBlackCanCastleQ());
+
+        this.setWhiteTurn(board.isWhiteTurn());
+        
+        this.makeZobrist();
+        this.cloneZobristStack(board.getZobrist());
     }
     
     /**
@@ -315,6 +346,9 @@ public class Chessboard implements Cloneable{
     }
 
     void cloneZobristStack(ZobristHash zobristHash){
+        if (zobristHash.zobristStack.size() < 1){
+            return;
+        }
         this.zobristHash.zobristStack = (Stack<Long>) zobristHash.getZobristStack().clone();
     }
 
@@ -362,14 +396,10 @@ public class Chessboard implements Cloneable{
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(details, zobristHash, moveStack);
-    }
-
-    @Override
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
-        return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+zobristHash.getBoardHash() +"\n";
+        return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+zobristHash.getBoardHash() +"\n"
+                + "zobrist stack size: "+zobristHash.getZobristStack().size();
     }
 
     public boolean isWhiteCanCastleK() {
@@ -794,7 +824,11 @@ public class Chessboard implements Cloneable{
         this.details = details;
     }
 
-    public ZobristHash getZobristHash() {
+    public long getZobristHash() {
+        return zobristHash.getBoardHash();
+    }
+    
+    public ZobristHash getZobrist() {
         return zobristHash;
     }
 

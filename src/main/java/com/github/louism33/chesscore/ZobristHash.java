@@ -9,7 +9,7 @@ import java.util.Stack;
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BitboardResources.INITIAL_BLACK_KING;
 import static com.github.louism33.chesscore.BitboardResources.INITIAL_WHITE_KING;
-import static com.github.louism33.chesscore.MakeMoveRegular.whichPieceOnSquare;
+import static com.github.louism33.chesscore.MakeMoveRegular.whichIntPieceOnSquare;
 import static com.github.louism33.chesscore.StackMoveData.SpecialMove.ENPASSANTVICTIM;
 import static com.github.louism33.chesscore.StackMoveData.SpecialMove.NULL_MOVE;
 
@@ -131,7 +131,7 @@ class ZobristHash {
         int destinationSquareIndex = MoveParser.getDestinationIndex(move);
         
         long sourcePiece = newPieceOnSquare(sourceSquare);
-        int sourcePieceIdentifier = whichPieceOnSquare(board, sourcePiece) - 1;
+        int sourcePieceIdentifier = whichIntPieceOnSquare(board, sourcePiece) - 1;
         
         long sourceZH = zobristHashPieces[sourceSquare][sourcePieceIdentifier];
 
@@ -145,7 +145,7 @@ class ZobristHash {
         captures
          */
         if ((destinationSquare & board.allPieces()) != 0){
-            int destinationPieceIdentifier = whichPieceOnSquare(board, destinationSquare) - 1;
+            int destinationPieceIdentifier = whichIntPieceOnSquare(board, destinationSquare) - 1;
             /*
             remove taken piece from hash
             */
@@ -192,7 +192,7 @@ class ZobristHash {
                     throw new RuntimeException("Mistake in Zobrist of castling");
                 }
 
-                int myRook = whichPieceOnSquare(board, newPieceOnSquare(originalRookIndex)) - 1;
+                int myRook = whichIntPieceOnSquare(board, newPieceOnSquare(originalRookIndex)) - 1;
                 long originalRookZH = zobristHashPieces[originalRookIndex][myRook];
                 long newRookZH = zobristHashPieces[newRookIndex][myRook];
                 boardHash ^= originalRookZH;
@@ -203,7 +203,7 @@ class ZobristHash {
                 if ((sourcePiece & board.getWhitePawns()) != 0){
                     long victimPawn = destinationPiece >>> 8;
                     int indexOfVictimPawn = BitOperations.getIndexOfFirstPiece(victimPawn);
-                    int pieceToKill = whichPieceOnSquare(board, victimPawn) - 1;
+                    int pieceToKill = whichIntPieceOnSquare(board, victimPawn) - 1;
                     long victimPawnZH = zobristHashPieces[indexOfVictimPawn][pieceToKill];
                     boardHash ^= victimPawnZH;
                 }
@@ -211,7 +211,7 @@ class ZobristHash {
                 else if  ((sourcePiece & board.getBlackPawns()) != 0){
                     long victimPawn = destinationPiece << 8;
                     int indexOfVictimPawn = BitOperations.getIndexOfFirstPiece(victimPawn);
-                    int pieceToKill = whichPieceOnSquare(board, victimPawn) - 1;
+                    int pieceToKill = whichIntPieceOnSquare(board, victimPawn) - 1;
                     long victimPawnZH = zobristHashPieces[indexOfVictimPawn][pieceToKill];
                     boardHash ^= victimPawnZH;
                 }
@@ -276,7 +276,7 @@ class ZobristHash {
         long hash = 0;
         for (int sq = 0; sq < 64; sq++) {
             long pieceOnSquare = newPieceOnSquare(sq);
-            int pieceIndex = whichPieceOnSquare(board, pieceOnSquare) - 1;
+            int pieceIndex = whichIntPieceOnSquare(board, pieceOnSquare) - 1;
             if (pieceIndex != -1) {
                 hash ^= zobristHashPieces[sq][pieceIndex];
             }

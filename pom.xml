@@ -51,14 +51,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>maven.fluxchess.com</id>
-            <url>http://maven.fluxchess.com/release</url>
-        </repository>
-    </repositories>
-
     
     <build>
         <pluginManagement>
@@ -266,11 +258,6 @@
     </build>
     
     <dependencies>
-        <dependency>
-            <groupId>com.fluxchess</groupId>
-            <artifactId>jcpi</artifactId>
-            <version>1.4.0</version>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
