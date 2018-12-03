@@ -12,6 +12,8 @@ import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
 import static com.github.louism33.chesscore.StackDataParser.SpecialMove.ENPASSANTVICTIM;
+import static com.github.louism33.chesscore.StackDataRes.SMD_EP_FILE;
+import static com.github.louism33.chesscore.StackDataRes.smdEPOffset;
 
 class MoveGeneratorSpecial {
 
@@ -60,24 +62,22 @@ class MoveGeneratorSpecial {
         if (myPawnsInPosition == 0) {
             return;
         }
-
+        
         long enemyPawnsInPosition = enemyPawns & enPassantTakingRank;
         if (enemyPawnsInPosition == 0) {
             return;
         }
 
-        if (board.moveStack.size() < 1){
+        if (board.moveStackCool.size() < 1){
             return;
         }
 
-        StackDataParser previousMove = board.moveStack.peek();
-        if (previousMove.typeOfSpecialMove != ENPASSANTVICTIM){
+        long previousMove = board.moveStackCool.peek();
+        if (StackDataParser.SpecialMove.values()[StackDataCool.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
             return;
         }
 
-        long FILE = extractFileFromInt(previousMove.enPassantFile);
-
-        List<Long> allEnemyPawnsInPosition = getAllPieces(enemyPawnsInPosition, ignoreThesePieces);
+        long FILE = extractFileFromStack(StackDataCool.getEPMove(previousMove));
 
         long enemyTakingSpots = 0;
 
@@ -150,8 +150,11 @@ class MoveGeneratorSpecial {
         }
     }
 
-    private static long extractFileFromInt(int file){
-        return FILES[8 - file];
+    private static long extractFileFromStack(int file){
+        if (file == 0){
+            return 0;
+        }
+        return FILES[8-file];
     }
 
 

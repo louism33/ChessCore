@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import java.util.Arrays;
+
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
@@ -14,6 +16,10 @@ public class MoveParser {
         }
 
         return index;
+    }
+    
+    public static void printMoves(int[] moves){
+        System.out.println(Arrays.toString(MoveParser.toString(moves)));
     }
     
     public static int copyMove(int move){
@@ -43,7 +49,7 @@ public class MoveParser {
     }
     
     public static String toString(int move){
-        return move == 0 ? "" : prettyMove(move);
+        return move == 0 ? "NULL_MOVE" : prettyMove(move);
     }
 
     public static int moveFromSourceDestination(Chessboard board, int source, int destinationIndex) {

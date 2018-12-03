@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import java.util.Arrays;
+
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
@@ -9,28 +11,25 @@ import static com.github.louism33.chesscore.Piece.NO_PIECE;
 import static com.github.louism33.chesscore.Piece.pieceOnSquare;
 import static com.github.louism33.chesscore.StackDataParser.SpecialMove;
 import static com.github.louism33.chesscore.StackDataParser.SpecialMove.*;
+import static com.github.louism33.chesscore.StackDataParser.buildStackData;
 
 class MakeMoveRegular {
 
     static void makeMoveMaster(Chessboard board, int move) {
         if(move == 0){
-            StackDataParser stackDataParser = new StackDataParser(0, board, 50, SpecialMove.NULL_MOVE);
-            board.moveStack.push(stackDataParser);
+            board.moveStackCool.push(buildStackData(0, board, 50, SpecialMove.NULL_MOVE));
             return;
         }
         
         if (MoveParser.isSpecialMove(move)){
             if (MoveParser.isCastlingMove(move)) {
-                StackDataParser stackDataParser = new StackDataParser(move, board, 50, CASTLING);
-                board.moveStack.push(stackDataParser);
+                board.moveStackCool.push(buildStackData(move, board, 50, CASTLING));
                 makeCastlingMove(board, move);
                 castleFlagManager(board, move);
             }
 
             else if (MoveParser.isEnPassantMove(move)){
-                StackDataParser stackDataParser = new StackDataParser
-                        (move, board, 50, ENPASSANTCAPTURE);
-                board.moveStack.push(stackDataParser);
+                board.moveStackCool.push((buildStackData(move, board, 50, ENPASSANTCAPTURE)));
                 makeEnPassantMove(board, move);
                 castleFlagManager(board, move);
             }
@@ -43,14 +42,15 @@ class MakeMoveRegular {
                     long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
                     int takenPiece = whichIntPieceOnSquare(board, destinationPiece);
 
-                    StackDataParser stackDataParser = new StackDataParser(move, board, 50, PROMOTION, takenPiece);
-                    board.moveStack.push(stackDataParser);
+                    board.moveStackCool.push((buildStackData(move, board, 50, PROMOTION)));
+                    
                     makePromotingMove(board, move);
                     castleFlagManager(board, move);
                 }
                 else {
-                    StackDataParser stackDataParser = new StackDataParser(move, board, 50, PROMOTION);
-                    board.moveStack.push(stackDataParser);
+
+                    board.moveStackCool.push(buildStackData(move, board, 50, PROMOTION));
+                    
                     makePromotingMove(board, move);
                     castleFlagManager(board, move);
                 }
@@ -66,9 +66,9 @@ class MakeMoveRegular {
             if (captureMove) {
                 long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
                 int takenPiece = whichIntPieceOnSquare(board, destinationPiece);
-                StackDataParser stackDataParser = new StackDataParser
-                        (move, board, 50, BASICCAPTURE, takenPiece);
-                board.moveStack.push(stackDataParser);
+
+                board.moveStackCool.push(buildStackData(move, board, 50, BASICCAPTURE));
+                
                 makeRegularMove(board, move);
                 castleFlagManager(board, move);
             }
@@ -76,9 +76,9 @@ class MakeMoveRegular {
             else if (enPassantPossibility(board, move)){
                 int sourceAsPiece = MoveParser.getSourceIndex(move);
                 int whichFile = 8 - sourceAsPiece % 8;
-                StackDataParser stackDataParser = new StackDataParser
-                        (move, board, 50, whichFile, ENPASSANTVICTIM);
-                board.moveStack.push(stackDataParser);
+
+                board.moveStackCool.push(buildStackData(move, board, 50, ENPASSANTVICTIM, whichFile));
+                
                 makeRegularMove(board, move);
                 castleFlagManager(board, move);
             }
@@ -87,17 +87,16 @@ class MakeMoveRegular {
                 long destinationPiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
                 int movingPiece = whichIntPieceOnSquare(board, destinationPiece);
                 if (movingPiece == 1 || movingPiece == 7){
-                    StackDataParser stackDataParser = new StackDataParser
-                            (move, board, 50, BASICLOUDPUSH);
-                    board.moveStack.push(stackDataParser);
+
+                    board.moveStackCool.push(buildStackData(move, board, 50, BASICLOUDPUSH));
+                    
                     makeRegularMove(board, move);
                     castleFlagManager(board, move);
                 }
                 else {
                     // increment 50 move rule
-                    StackDataParser stackDataParser = new StackDataParser
-                            (move, board, 50, BASICQUIETPUSH);
-                    board.moveStack.push(stackDataParser);
+                    board.moveStackCool.push(buildStackData(move, board, 50, BASICQUIETPUSH));
+                    
                     makeRegularMove(board, move);
                     castleFlagManager(board, move);
                 }

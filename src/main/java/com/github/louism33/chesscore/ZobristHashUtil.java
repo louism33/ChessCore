@@ -2,6 +2,7 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Stack;
 
@@ -9,6 +10,7 @@ import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BitboardResources.INITIAL_BLACK_KING;
 import static com.github.louism33.chesscore.BitboardResources.INITIAL_WHITE_KING;
 import static com.github.louism33.chesscore.MakeMoveRegular.whichIntPieceOnSquare;
+import static com.github.louism33.chesscore.MakeMoveRegular.whichPieceOnSquare;
 import static com.github.louism33.chesscore.StackDataParser.SpecialMove.ENPASSANTVICTIM;
 import static com.github.louism33.chesscore.StackDataParser.SpecialMove.NULL_MOVE;
 
@@ -25,14 +27,14 @@ class ZobristHashUtil {
     }
     
     static long updateWithEPFlags(Chessboard board, long hash){
-        Assert.assertTrue(board.moveStack.size() > 0);
+        Assert.assertTrue(board.moveStackCool.size() > 0);
         
-        StackDataParser peek = board.moveStack.peek();
-        if (peek.typeOfSpecialMove == ENPASSANTVICTIM) {
+        Long peek = board.moveStackCool.peek();
+        if (StackDataParser.SpecialMove.values()[StackDataCool.getSpecialMove(peek)] == ENPASSANTVICTIM) {
             hash = hashEP(hash, peek);
         }
         
-        if (peek.typeOfSpecialMove == NULL_MOVE && board.moveStack.size() > 1){
+        if (StackDataParser.SpecialMove.values()[StackDataCool.getSpecialMove(peek)] == NULL_MOVE && board.moveStackCool.size() > 1){
             hash = nullMoveEP(board, hash);
         }
         
@@ -40,18 +42,18 @@ class ZobristHashUtil {
     }
 
     private static long nullMoveEP(Chessboard board, long hash) {
-        StackDataParser pop = board.moveStack.pop();
-        StackDataParser peekSecondElement = board.moveStack.peek();
-        if (peekSecondElement.typeOfSpecialMove == ENPASSANTVICTIM) {
+        Long pop = board.moveStackCool.pop();
+        Long peekSecondElement = board.moveStackCool.peek();
+        if (StackDataParser.SpecialMove.values()[StackDataCool.getSpecialMove(peekSecondElement)] == ENPASSANTVICTIM) {
             // file one = FILE_A
             hash = hashEP(hash, peekSecondElement);
         }
-        board.moveStack.add(pop);
+        board.moveStackCool.add(pop);
         return hash;
     }
 
-    private static long hashEP(long hash, StackDataParser peek) {
-        return hash ^ zobristHashEPFiles[peek.enPassantFile - 1];
+    private static long hashEP(long hash, long peek) {
+        return hash ^ zobristHashEPFiles[StackDataCool.getEPMove(peek) - 1];
     }
 
     static long updateHashPostMove(Chessboard board, long boardHash, int move){
@@ -60,7 +62,7 @@ class ZobristHashUtil {
         */
         boardHash = zobristFlipTurn(boardHash);
 
-        Assert.assertTrue(board.moveStack.size() > 0);
+        Assert.assertTrue(board.moveStackCool.size() > 0);
         
         /*
         if move we just made raised EP flag, update hash
@@ -77,26 +79,15 @@ class ZobristHashUtil {
 
     private static long postMoveCastlingRights(Chessboard board){
         long updatedHashValue = 0;
-        StackDataParser peek = board.moveStack.peek();
+        final long peek = board.moveStackCool.peek();
+
+        int castlingRights = StackDataCool.getCastlingRights(peek);
+        
         /*
         undo previous castling rights
         */
-        int numTo15Undo = 0;
-        if (peek.whiteCanCastleK){
-            numTo15Undo += 1;
-        }
-        if (peek.whiteCanCastleQ){
-            numTo15Undo += 2;
-        }
-        if (peek.blackCanCastleK){
-            numTo15Undo += 4;
-        }
-        if (peek.blackCanCastleQ){
-            numTo15Undo += 8;
-        }
-        Assert.assertTrue(numTo15Undo >= 0 && numTo15Undo <= 15);
-        updatedHashValue ^= zobristHashCastlingRights[numTo15Undo];
- 
+        updatedHashValue ^= zobristHashCastlingRights[castlingRights];
+        
         /*
         update with new castling rights
         */
@@ -130,6 +121,8 @@ class ZobristHashUtil {
         
         long sourcePiece = newPieceOnSquare(sourceSquare);
         int sourcePieceIdentifier = whichIntPieceOnSquare(board, sourcePiece) - 1;
+
+        final Piece piece = whichPieceOnSquare(board, sourcePiece);
         
         long sourceZH = zobristHashPieces[sourceSquare][sourcePieceIdentifier];
 
@@ -154,7 +147,7 @@ class ZobristHashUtil {
         /* 
         "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
         */
-        Stack<StackDataParser> moveStack = board.moveStack;
+        Stack<Long> moveStack = board.moveStackCool;
         if (moveStack.size() > 0){
             boardHash = updateWithEPFlags(board, boardHash);
         }
@@ -288,7 +281,7 @@ class ZobristHashUtil {
             hash = zobristFlipTurn(hash);
         }
         
-        if (board.moveStack.size() > 0){
+        if (board.moveStackCool.size() > 0){
             hash = updateWithEPFlags(board, hash);
         }
 

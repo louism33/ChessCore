@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ChessboardHashTest" time="79.272" tests="13" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="MoveTest" time="47.338" tests="13" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -58,17 +58,17 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="tinyDepths" classname="ChessboardHashTest" time="0.037"/>
-  <testcase name="regularBoard" classname="ChessboardHashTest" time="8.14"/>
-  <testcase name="bigDepth10" classname="ChessboardHashTest" time="17.021"/>
-  <testcase name="bigDepth11" classname="ChessboardHashTest" time="8.898"/>
-  <testcase name="bigDepth12" classname="ChessboardHashTest" time="1.482"/>
-  <testcase name="longCastlingGivesCheck" classname="ChessboardHashTest" time="0.395"/>
-  <testcase name="test1" classname="ChessboardHashTest" time="0.2"/>
-  <testcase name="bigDepth3" classname="ChessboardHashTest" time="2.774"/>
-  <testcase name="bigDepth4" classname="ChessboardHashTest" time="20.071"/>
-  <testcase name="bigDepth5" classname="ChessboardHashTest" time="19.177"/>
-  <testcase name="EPCaptureChecksOpponent" classname="ChessboardHashTest" time="0.6"/>
-  <testcase name="shortCastlingGivesCheck" classname="ChessboardHashTest" time="0.291"/>
-  <testcase name="AvoidIllegalEPCapture" classname="ChessboardHashTest" time="0.177"/>
+  <testcase name="tinyDepths" classname="MoveTest" time="0.328"/>
+  <testcase name="regularBoard" classname="MoveTest" time="6.526"/>
+  <testcase name="bigDepth10" classname="MoveTest" time="8.63"/>
+  <testcase name="bigDepth11" classname="MoveTest" time="4.086"/>
+  <testcase name="bigDepth12" classname="MoveTest" time="0.961"/>
+  <testcase name="longCastlingGivesCheck" classname="MoveTest" time="0.141"/>
+  <testcase name="test1" classname="MoveTest" time="0.098"/>
+  <testcase name="bigDepth3" classname="MoveTest" time="1.62"/>
+  <testcase name="bigDepth4" classname="MoveTest" time="11.577"/>
+  <testcase name="bigDepth5" classname="MoveTest" time="12.923"/>
+  <testcase name="EPCaptureChecksOpponent" classname="MoveTest" time="0.225"/>
+  <testcase name="shortCastlingGivesCheck" classname="MoveTest" time="0.139"/>
+  <testcase name="AvoidIllegalEPCapture" classname="MoveTest" time="0.08"/>
 </testsuite>

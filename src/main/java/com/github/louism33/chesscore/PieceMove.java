@@ -18,6 +18,9 @@ public class PieceMove {
     }
 
     public static long singlePawnCaptures(long piece, boolean white, long legalCaptures) {
+        if (getIndexOfFirstPiece(piece) < 0 || getIndexOfFirstPiece(piece) > 63){
+            System.out.println();
+        }
         return legalCaptures & (white
                 ? PAWN_CAPTURE_TABLE_WHITE[getIndexOfFirstPiece(piece)]
                 : PAWN_CAPTURE_TABLE_BLACK[getIndexOfFirstPiece(piece)]);

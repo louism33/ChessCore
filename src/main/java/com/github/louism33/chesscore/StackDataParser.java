@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import static com.github.louism33.chesscore.StackDataRes.*;
+
 @SuppressWarnings("CanBeFinal")
 class StackDataParser {
     
@@ -10,14 +12,33 @@ class StackDataParser {
     public boolean whiteTurn;
     
     public enum SpecialMove {
-        BASICQUIETPUSH, BASICLOUDPUSH, BASICCAPTURE, ENPASSANTVICTIM, ENPASSANTCAPTURE, CASTLING, PROMOTION, NULL_MOVE
+        NONE, BASICQUIETPUSH, BASICLOUDPUSH, BASICCAPTURE, ENPASSANTVICTIM, ENPASSANTCAPTURE, CASTLING, PROMOTION, NULL_MOVE
     }
+    
     public SpecialMove typeOfSpecialMove;
     
     // file one : FILE_A 
     public int enPassantFile = -1;
     public boolean whiteCanCastleK, whiteCanCastleQ, blackCanCastleK, blackCanCastleQ;
 
+    public static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, 
+                                      SpecialMove typeOfSpecialMove, int enPassantFile) {
+        
+        long epFile = StackDataCool.smdMakeEPMove(enPassantFile);
+        return buildStackData(move, board, fiftyMoveCounter, typeOfSpecialMove) | epFile;
+    }
+    
+    public static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
+        long stackData = 0;
+        
+        stackData |= StackDataCool.smdMakeMove(move);
+        stackData |= StackDataCool.smdMakeFiftyPiece(fiftyMoveCounter);
+        stackData |= StackDataCool.smdMakeTurn(board.isWhiteTurn());
+        stackData |= StackDataCool.smdMakeSpecialMove(typeOfSpecialMove);
+        stackData |= StackDataCool.smdMakeCastlingRights(board);
+
+        return stackData;
+    }
 
     public StackDataParser(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
         this.move = move;

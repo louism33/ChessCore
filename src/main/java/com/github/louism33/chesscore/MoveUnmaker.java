@@ -13,52 +13,54 @@ class MoveUnmaker {
 
     static void unMakeMoveMaster(Chessboard board) throws IllegalUnmakeException {
         
-        if (board.moveStack.size() < 1){
+        if (board.moveStackCool.size() < 1){
             throw new IllegalUnmakeException("No moves to unmake.");
         }
         
-        StackDataParser popSMD = board.moveStack.pop();
+//        StackDataParser popSMD = board.moveStackCool.pop();
+// 
 
-        if (popSMD.move == 0){
-            Assert.assertSame(popSMD.typeOfSpecialMove, NULL_MOVE);
-            board.setWhiteTurn(popSMD.whiteTurn);
+        final Long pop = board.moveStackCool.pop();
+
+        if (StackDataCool.getMove(pop) == 0){
+            board.setWhiteTurn(StackDataCool.getTurn(pop) == 1);
             return;
         }
 
-        int pieceToMoveBack = getDestinationIndex(popSMD.move);
-        int squareToMoveBackTo = getSourceIndex(popSMD.move);
+        int pieceToMoveBack = getDestinationIndex(StackDataCool.getMove(pop));
+        int squareToMoveBackTo = getSourceIndex(StackDataCool.getMove(pop));
 
-        if (popSMD.typeOfSpecialMove == SpecialMove.BASICQUIETPUSH){
+        if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == SpecialMove.BASICQUIETPUSH){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
-        else if (popSMD.typeOfSpecialMove == BASICLOUDPUSH){
+        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == BASICLOUDPUSH){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
-        else if (popSMD.typeOfSpecialMove == BASICCAPTURE){
+        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == BASICCAPTURE){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
-            int takenPiece = popSMD.takenPiece;
+            int takenPiece = MoveParser.getVictimPiece(StackDataCool.getMove(pop)).ordinal();
             if (takenPiece != 0){
                 addRelevantPieceToSquare(board, takenPiece, pieceToMoveBack);
             }
         }
 
         //double pawn push
-        else if (popSMD.typeOfSpecialMove == ENPASSANTVICTIM){
+        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == ENPASSANTVICTIM){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
-        else if (popSMD.typeOfSpecialMove == ENPASSANTCAPTURE){
+        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == ENPASSANTCAPTURE){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
-            int takenPiece = popSMD.takenPiece;
+            int takenPiece = MoveParser.getVictimPiece(StackDataCool.getMove(pop)).ordinal();
 
-            if (popSMD.whiteTurn) {
+            if (StackDataCool.getTurn(pop) == 1) {
                 addRelevantPieceToSquare(board, 7, pieceToMoveBack - 8);
             }
             else {
@@ -66,7 +68,7 @@ class MoveUnmaker {
             }
         }
 
-        else if (popSMD.typeOfSpecialMove == CASTLING){
+        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == CASTLING){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
 
             if (pieceToMoveBack == 1){
@@ -115,30 +117,45 @@ class MoveUnmaker {
 
         }
 
-        else if (popSMD.typeOfSpecialMove == PROMOTION){
+        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == PROMOTION){
             long sourceSquare = newPieceOnSquare(pieceToMoveBack);
             long destinationSquare = newPieceOnSquare(squareToMoveBackTo);
             removePieces(board, sourceSquare, destinationSquare);
-            if (popSMD.whiteTurn) {
+            if (StackDataCool.getTurn(pop) == 1) {
                 addRelevantPieceToSquare(board, 1, squareToMoveBackTo);
             }
             else {
                 addRelevantPieceToSquare(board, 7, squareToMoveBackTo);
             }
-            int takenPiece = popSMD.takenPiece;
+            int takenPiece = MoveParser.getVictimPiece(StackDataCool.getMove(pop)).ordinal();
             if (takenPiece > 0){
                 addRelevantPieceToSquare(board, takenPiece, pieceToMoveBack);
             }
         }
 
-        board.setWhiteCanCastleK(popSMD.whiteCanCastleK);
-        board.setWhiteCanCastleQ(popSMD.whiteCanCastleQ);
-        board.setBlackCanCastleK(popSMD.blackCanCastleK);
-        board.setBlackCanCastleQ(popSMD.blackCanCastleQ);
+        int castlingRights = StackDataCool.getCastlingRights(pop);
 
-        board.setWhiteTurn(popSMD.whiteTurn);
+        if (castlingRights >= 8){
+            castlingRights -= 8;
+            board.setBlackCanCastleQ(true);
+        }
+        if (castlingRights >= 4){
+            castlingRights -= 4;
+            board.setBlackCanCastleK(true);
+        }
+        if (castlingRights >= 2){
+            castlingRights -= 2;
+            board.setWhiteCanCastleQ(true);
+        }
+        if (castlingRights >= 1){
+            castlingRights -= 1;
+            board.setWhiteCanCastleK(true);
+        }
+      
+        board.setWhiteTurn(StackDataCool.getTurn(pop) == 1);
     }
 
+    
 
     private static void addRelevantPieceToSquare(Chessboard board, int pieceToAdd, int placeToAddIt){
         long placeToAddPiece = newPieceOnSquare(placeToAddIt);

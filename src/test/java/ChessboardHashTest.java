@@ -104,8 +104,6 @@ public class ChessboardHashTest {
         
         Assert.assertEquals(board, initial);
 
-//        System.out.println(board);
-
         long ii = 0;
         try {
             ii = countFinalNodesAtDepthHelper(board, depth);
