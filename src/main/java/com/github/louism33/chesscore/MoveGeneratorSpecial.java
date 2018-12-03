@@ -1,8 +1,7 @@
 package com.github.louism33.chesscore;
 
-import java.util.List;
-
-import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitboardResources.*;
 import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
@@ -11,9 +10,7 @@ import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMas
 import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
-import static com.github.louism33.chesscore.StackDataParser.SpecialMove.ENPASSANTVICTIM;
-import static com.github.louism33.chesscore.StackDataRes.SMD_EP_FILE;
-import static com.github.louism33.chesscore.StackDataRes.smdEPOffset;
+import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.ENPASSANTVICTIM;
 
 class MoveGeneratorSpecial {
 
@@ -68,16 +65,16 @@ class MoveGeneratorSpecial {
             return;
         }
 
-        if (board.moveStackCool.size() < 1){
+        if (board.moveStack.size() < 1){
             return;
         }
 
-        long previousMove = board.moveStackCool.peek();
-        if (StackDataParser.SpecialMove.values()[StackDataCool.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
+        long previousMove = board.moveStack.peek();
+        if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
             return;
         }
 
-        long FILE = extractFileFromStack(StackDataCool.getEPMove(previousMove));
+        long FILE = extractFileFromStack(StackDataUtil.getEPMove(previousMove));
 
         long enemyTakingSpots = 0;
 

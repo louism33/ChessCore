@@ -26,7 +26,7 @@ class MakeMoveAndHashUpdate {
     static void makeNullMoveAndHashUpdate(Chessboard board){
         board.getZobristStack().push(board.getBoardHash());
         
-        if (board.moveStackCool.size() > 0) {
+        if (board.moveStack.size() > 0) {
             ZobristHashUtil.updateWithEPFlags(board, board.getBoardHash());
         }
 

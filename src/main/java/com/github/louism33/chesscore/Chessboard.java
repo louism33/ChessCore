@@ -1,20 +1,22 @@
 package com.github.louism33.chesscore;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.github.louism33.chesscore.CheckHelper.*;
 import static com.github.louism33.chesscore.MakeMoveAndHashUpdate.*;
-import static com.github.louism33.chesscore.StackDataParser.SpecialMove.CASTLING;
-import static com.github.louism33.chesscore.StackDataParser.SpecialMove.ENPASSANTVICTIM;
-import static com.github.louism33.chesscore.StackDataParser.buildStackData;
+import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.ENPASSANTVICTIM;
+import static com.github.louism33.chesscore.StackDataUtil.buildStackData;
 
 public class Chessboard implements Cloneable{
 
     private ChessboardDetails details;
 
-    Stack<Long> moveStackCool = new Stack<>();
+    Stack<Long> moveStack = new Stack<>();
 
     private long zobristHash;
     
@@ -50,9 +52,9 @@ public class Chessboard implements Cloneable{
     public Chessboard(Chessboard board) {
         this.details = new ChessboardDetails();
 
-//        this.moveStack = (Stack<StackDataParser>) board.moveStack.clone();
+//        this.moveStack = (Stack<StackDataUtil>) board.moveStack.clone();
         
-        this.moveStackCool = (Stack<Long>) board.moveStackCool.clone();
+        this.moveStack = (Stack<Long>) board.moveStack.clone();
 
         this.setWhitePawns(board.getWhitePawns());
         this.setWhiteKnights(board.getWhiteKnights());
@@ -323,30 +325,27 @@ public class Chessboard implements Cloneable{
     }
     
     public boolean previousMoveWasPawnPushToSix(){
-//        if (moveStackCool.size() < 1){
-//            return false;
-//        }
-        if (moveStackCool.size() < 1){
+        if (moveStack.size() < 1){
             return false;
         }
-        return MoveParser.moveIsPawnPushSix(StackDataCool.getMove(moveStackCool.peek()));
+        return MoveParser.moveIsPawnPushSix(StackDataUtil.getMove(moveStack.peek()));
     }
 
     public boolean previousMoveWasPawnPushToSeven(){
-        if (moveStackCool.size() < 1){
+        if (moveStack.size() < 1){
             return false;
         }
-        return MoveParser.moveIsPawnPushSeven(StackDataCool.getMove(moveStackCool.peek()));
+        return MoveParser.moveIsPawnPushSeven(StackDataUtil.getMove(moveStack.peek()));
     }
 
     public boolean moveIsCaptureOfLastMovePiece(int move){
-        if (this.moveStackCool.size() == 0){
+        if (this.moveStack.size() == 0){
             return false;
         }
-        if (StackDataCool.getMove(moveStackCool.peek()) == 0){
+        if (StackDataUtil.getMove(moveStack.peek()) == 0){
             return false;
         }
-        int previousMoveDestinationIndex = MoveParser.getDestinationIndex(StackDataCool.getMove(moveStackCool.peek()));
+        int previousMoveDestinationIndex = MoveParser.getDestinationIndex(StackDataUtil.getMove(moveStack.peek()));
         return (MoveParser.getDestinationIndex(move) == previousMoveDestinationIndex);
     }
     
@@ -364,16 +363,6 @@ public class Chessboard implements Cloneable{
             return;
         }
         this.zobristStack = (Stack<Long>) zobristStack.clone();
-    }
-
-    List<Integer> stackMoves(Stack<StackDataParser> stack){
-        List<Integer> moves = new ArrayList<>();
-        Stack<StackDataParser> clone = (Stack<StackDataParser>) stack.clone();
-        for (int s = 0; s < stack.size(); s++){
-            int move = clone.pop().move;
-            moves.add(move);
-        }
-        return moves;
     }
 
     public long whitePieces(){
@@ -412,7 +401,7 @@ public class Chessboard implements Cloneable{
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+this.getBoardHash() +"\n"
                 + "zobrist stack size: "+getZobristStack().size()
-                + "\nmove stack size: "+ getMoveStackCool().size()
+                + "\nmove stack size: "+ getMoveStack().size()
                 + "\nmove stack: "+ Arrays.toString(getMoveStackAsStrings())
                 ;
     }
@@ -623,35 +612,35 @@ public class Chessboard implements Cloneable{
 
         switch (epFlags) {
             case "a": {
-                this.moveStackCool.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 1));
+                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 1));
                 break;
             }
             case "b": {
-                this.moveStackCool.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 2));
+                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 2));
                 break;
             }
             case "c": {
-                this.moveStackCool.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 3));
+                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 3));
                 break;
             }
             case "d": {
-                this.moveStackCool.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 4));
+                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 4));
                 break;
             }
             case "e": {
-                this.moveStackCool.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 5));
+                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 5));
                 break;
             }
             case "f": {
-                this.moveStackCool.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 6));
+                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 6));
                 break;
             }
             case "g": {
-                this.moveStackCool.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 7));
+                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 7));
                 break;
             }
             case "h": {
-                this.moveStackCool.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 8));
+                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 8));
                 break;
             }
             default:
@@ -843,24 +832,24 @@ public class Chessboard implements Cloneable{
         this.zobristStack = zobristStack;
     }
 
-    public Stack<Long> getMoveStackCool() {
-        return moveStackCool;
+    public Stack<Long> getMoveStack() {
+        return moveStack;
     }
 
     public String[] getMoveStackAsStrings() {
-        String[] prettyMoves = new String[getMoveStackCool().size()];
-        Stack<Long> clone = (Stack<Long>) getMoveStackCool().clone();
+        String[] prettyMoves = new String[getMoveStack().size()];
+        Stack<Long> clone = (Stack<Long>) getMoveStack().clone();
         int index = 0;
         while (clone.size() > 0){
             final long pop = clone.pop();
-            prettyMoves[index] = MoveParser.toString(StackDataCool.getMove(pop));
+            prettyMoves[index] = MoveParser.toString(StackDataUtil.getMove(pop));
             index++;
         }
         return prettyMoves;
     }
 
-    public void setMoveStackCool(Stack<Long> moveStackCool) {
-        this.moveStackCool = moveStackCool;
+    public void setMoveStack(Stack<Long> moveStack) {
+        this.moveStack = moveStack;
     }
 
     public long getZobristHash() {

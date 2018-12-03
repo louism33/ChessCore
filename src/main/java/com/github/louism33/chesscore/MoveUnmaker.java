@@ -1,66 +1,64 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveRegular.makeRegularMove;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
 import static com.github.louism33.chesscore.MoveParser.*;
-import static com.github.louism33.chesscore.StackDataParser.SpecialMove;
-import static com.github.louism33.chesscore.StackDataParser.SpecialMove.*;
+import static com.github.louism33.chesscore.StackDataUtil.SpecialMove;
+import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.*;
 
 class MoveUnmaker {
 
     static void unMakeMoveMaster(Chessboard board) throws IllegalUnmakeException {
         
-        if (board.moveStackCool.size() < 1){
+        if (board.moveStack.size() < 1){
             throw new IllegalUnmakeException("No moves to unmake.");
         }
         
-//        StackDataParser popSMD = board.moveStackCool.pop();
+//        StackDataUtil popSMD = board.moveStack.pop();
 // 
 
-        final Long pop = board.moveStackCool.pop();
+        final Long pop = board.moveStack.pop();
 
-        if (StackDataCool.getMove(pop) == 0){
-            board.setWhiteTurn(StackDataCool.getTurn(pop) == 1);
+        if (StackDataUtil.getMove(pop) == 0){
+            board.setWhiteTurn(StackDataUtil.getTurn(pop) == 1);
             return;
         }
 
-        int pieceToMoveBack = getDestinationIndex(StackDataCool.getMove(pop));
-        int squareToMoveBackTo = getSourceIndex(StackDataCool.getMove(pop));
+        int pieceToMoveBack = getDestinationIndex(StackDataUtil.getMove(pop));
+        int squareToMoveBackTo = getSourceIndex(StackDataUtil.getMove(pop));
 
-        if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == SpecialMove.BASICQUIETPUSH){
+        if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == SpecialMove.BASICQUIETPUSH){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
-        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == BASICLOUDPUSH){
+        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == BASICLOUDPUSH){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
-        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == BASICCAPTURE){
+        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == BASICCAPTURE){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
-            int takenPiece = MoveParser.getVictimPiece(StackDataCool.getMove(pop)).ordinal();
+            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
             if (takenPiece != 0){
                 addRelevantPieceToSquare(board, takenPiece, pieceToMoveBack);
             }
         }
 
         //double pawn push
-        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == ENPASSANTVICTIM){
+        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == ENPASSANTVICTIM){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
-        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == ENPASSANTCAPTURE){
+        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == ENPASSANTCAPTURE){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
-            int takenPiece = MoveParser.getVictimPiece(StackDataCool.getMove(pop)).ordinal();
+            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
 
-            if (StackDataCool.getTurn(pop) == 1) {
+            if (StackDataUtil.getTurn(pop) == 1) {
                 addRelevantPieceToSquare(board, 7, pieceToMoveBack - 8);
             }
             else {
@@ -68,7 +66,7 @@ class MoveUnmaker {
             }
         }
 
-        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == CASTLING){
+        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == CASTLING){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
 
             if (pieceToMoveBack == 1){
@@ -117,23 +115,23 @@ class MoveUnmaker {
 
         }
 
-        else if (SpecialMove.values()[StackDataCool.getSpecialMove(pop)] == PROMOTION){
+        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == PROMOTION){
             long sourceSquare = newPieceOnSquare(pieceToMoveBack);
             long destinationSquare = newPieceOnSquare(squareToMoveBackTo);
             removePieces(board, sourceSquare, destinationSquare);
-            if (StackDataCool.getTurn(pop) == 1) {
+            if (StackDataUtil.getTurn(pop) == 1) {
                 addRelevantPieceToSquare(board, 1, squareToMoveBackTo);
             }
             else {
                 addRelevantPieceToSquare(board, 7, squareToMoveBackTo);
             }
-            int takenPiece = MoveParser.getVictimPiece(StackDataCool.getMove(pop)).ordinal();
+            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
             if (takenPiece > 0){
                 addRelevantPieceToSquare(board, takenPiece, pieceToMoveBack);
             }
         }
 
-        int castlingRights = StackDataCool.getCastlingRights(pop);
+        int castlingRights = StackDataUtil.getCastlingRights(pop);
 
         if (castlingRights >= 8){
             castlingRights -= 8;
@@ -152,7 +150,7 @@ class MoveUnmaker {
             board.setWhiteCanCastleK(true);
         }
       
-        board.setWhiteTurn(StackDataCool.getTurn(pop) == 1);
+        board.setWhiteTurn(StackDataUtil.getTurn(pop) == 1);
     }
 
     

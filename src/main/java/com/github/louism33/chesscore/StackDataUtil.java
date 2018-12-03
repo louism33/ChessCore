@@ -1,14 +1,15 @@
 package com.github.louism33.chesscore;
 
-import static com.github.louism33.chesscore.StackDataParser.*;
-import static com.github.louism33.chesscore.StackDataRes.*;
 
-public class StackDataCool {
-    
+import static com.github.louism33.chesscore.ConstantsMoveStackData.*;
+
+@SuppressWarnings("CanBeFinal")
+class StackDataUtil {
+
     public static int getMove(long stackMoveData){
         return (int) (stackMoveData & SMD_MOVE_MASK);
     }
-
+    
     public static int getFiftyPiece(long stackMoveData){
         return (int) ((stackMoveData & SMD_FIFTY_MOVES) >> smdFiftyPieceOffset);
     }
@@ -29,12 +30,9 @@ public class StackDataCool {
         return (int) ((stackMoveData & SMD_CASTLE_FLAGS) >> smdCastleOffset);
     }
 
-
-
     public static long smdMakeMove(int move){
         return (long) move & SMD_MOVE_MASK;
     }
-
 
     public static long smdMakeFiftyPiece(int fifty){
         return (long) fifty << smdFiftyPieceOffset;
@@ -51,8 +49,8 @@ public class StackDataCool {
 
     public static long smdMakeSpecialMove(int specialMove){
         return (long) specialMove << smdSpecialOffset;
-    }    
-    
+    }
+
     public static long smdMakeSpecialMove(SpecialMove specialMove){
         return (long) specialMove.ordinal() << smdSpecialOffset;
     }
@@ -77,8 +75,31 @@ public class StackDataCool {
         }
         return smdMakeCastlingRights(numTo15);
     }
-    
+
     private static long smdMakeCastlingRights(int castlingRights){
         return (long) castlingRights << smdCastleOffset;
+    }
+
+    public enum SpecialMove {
+        NONE, BASICQUIETPUSH, BASICLOUDPUSH, BASICCAPTURE, ENPASSANTVICTIM, ENPASSANTCAPTURE, CASTLING, PROMOTION, NULL_MOVE
+    }
+
+    static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, 
+                                      SpecialMove typeOfSpecialMove, int enPassantFile) {
+        
+        long epFile = smdMakeEPMove(enPassantFile);
+        return buildStackData(move, board, fiftyMoveCounter, typeOfSpecialMove) | epFile;
+    }
+    
+    static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
+        long stackData = 0;
+        
+        stackData |= smdMakeMove(move);
+        stackData |= smdMakeFiftyPiece(fiftyMoveCounter);
+        stackData |= smdMakeTurn(board.isWhiteTurn());
+        stackData |= smdMakeSpecialMove(typeOfSpecialMove);
+        stackData |= smdMakeCastlingRights(board);
+
+        return stackData;
     }
 }
