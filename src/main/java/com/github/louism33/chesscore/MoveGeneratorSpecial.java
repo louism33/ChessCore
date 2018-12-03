@@ -1,7 +1,8 @@
 package com.github.louism33.chesscore;
 
-import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
+import org.junit.Assert;
+
+import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BitboardResources.*;
 import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
@@ -66,10 +67,18 @@ class MoveGeneratorSpecial {
         }
 
         if (board.moveStack.size() < 1){
+            Assert.assertTrue(!board.hasPreviousMove());
             return;
+        }
+        
+        if (!board.hasPreviousMove()){
+//            return;
         }
 
         long previousMove = board.moveStack.peek();
+        long previousMoveArray = board.moveStackArrayPeek();
+        Assert.assertEquals(previousMove, previousMoveArray);
+        
         if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
             return;
         }

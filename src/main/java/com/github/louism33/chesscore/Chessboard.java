@@ -1,9 +1,8 @@
 package com.github.louism33.chesscore;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Stack;
+import org.junit.Assert;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,12 +15,16 @@ public class Chessboard implements Cloneable{
 
     private ChessboardDetails details;
 
+    int index = 0;
+
+    long[] moveStackArray = new long[128];
+
     Stack<Long> moveStack = new Stack<>();
 
     private long zobristHash;
-    
+
     private Stack<Long> zobristStack = new Stack<>();
-    
+
     /**
      * A new Chessboard in the starting position, white to play.
      */
@@ -37,6 +40,9 @@ public class Chessboard implements Cloneable{
     public Chessboard(String fen) {
         details = new ChessboardDetails();
         makeBoardBasedOnFENSpecific(fen);
+
+        System.out.println(this);
+        
         this.zobristHash = ZobristHashUtil.boardToHash(this);
     }
 
@@ -52,10 +58,16 @@ public class Chessboard implements Cloneable{
     public Chessboard(Chessboard board) {
         this.details = new ChessboardDetails();
 
-//        this.moveStack = (Stack<StackDataUtil>) board.moveStack.clone();
-        
         this.moveStack = (Stack<Long>) board.moveStack.clone();
+        
+        System.arraycopy(board.moveStackArray, 0, this.moveStackArray, 0, board.moveStackArray.length);
 
+//        int length = board.filterZerosAndFlip().length;
+//        System.out.println("        "+length);
+//        Assert.assertEquals(length, this.filterZerosAndFlip().length);
+        
+        this.index = board.index;
+        
         this.setWhitePawns(board.getWhitePawns());
         this.setWhiteKnights(board.getWhiteKnights());
         this.setWhiteBishops(board.getWhiteBishops());
@@ -76,24 +88,18 @@ public class Chessboard implements Cloneable{
         this.setBlackCanCastleQ(board.isBlackCanCastleQ());
 
         this.setWhiteTurn(board.isWhiteTurn());
-        
+
         this.makeZobrist();
-        
+
         this.cloneZobristStack(board.getZobristStack());
     }
-    
+
     /**
      * @return a String representation of the current board.
      */
     public String getFenRepresentation(){
         return "not yet";
     }
-
-    public void setBoardToFen(String fen){
-
-    }
-    
-
 
     /** legal chess move generation
      * @return an array of length 128 populated with fully legal chess moves, and 0s. 
@@ -140,7 +146,7 @@ public class Chessboard implements Cloneable{
     public void unMakeMoveAndFlipTurn() throws IllegalUnmakeException {
         UnMakeMoveAndHashUpdate(this);
     }
-    
+
     /**
      * Makes a null move on the board. Make sure to unmake it afterwards
      */
@@ -167,7 +173,7 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     *  
+     *
      * Tells you if the specified player is in check
      * @param white true if white to play
      * @return true if in check, otherwise false
@@ -205,7 +211,7 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     * 
+     *
      * @param white the player 
      * @return true if it is a draw by repetition
      */
@@ -214,7 +220,7 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     * 
+     *
      * @param white the player
      * @return true if draw by repetition
      */
@@ -223,7 +229,7 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     * 
+     *
      * @param white the player
      * @return true if this side does not have enough pieces to ever win the game
      */
@@ -232,7 +238,7 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     * 
+     *
      * @return true if in checkmate
      */
     public boolean inCheckmate(){
@@ -246,7 +252,7 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     * 
+     *
      * @return true if in stalemate
      */
     public boolean inStalemate(){
@@ -268,7 +274,7 @@ public class Chessboard implements Cloneable{
         long myKing = white ? getWhiteKing() : getBlackKing();
         return pinnedPiecesToSquare(white, Square.getSquareOfBitboard(myKing));
     }
-    
+
     /**
      * Expensive operation to determine pinned pieces to a particular square
      * @param white the player 
@@ -277,8 +283,8 @@ public class Chessboard implements Cloneable{
      */
     private List<Square> pinnedPiecesToSquare(boolean white, Square square){
 
-        long myPawns, myKnights, myBishops, myRooks, myQueen, myKing, 
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, 
+        long myPawns, myKnights, myBishops, myRooks, myQueen, myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
                 enemies, friends;
         if (isWhiteTurn()){
             myPawns = getWhitePawns();
@@ -287,7 +293,7 @@ public class Chessboard implements Cloneable{
             myRooks = getWhiteRooks();
             myQueen = getWhiteQueen();
             myKing = getWhiteKing();
-            
+
             enemyPawns = getBlackPawns();
             enemyKnights = getBlackKnights();
             enemyBishops = getBlackBishops();
@@ -304,7 +310,7 @@ public class Chessboard implements Cloneable{
             myRooks = getBlackRooks();
             myQueen = getBlackQueen();
             myKing = getBlackKing();
-            
+
             enemyPawns = getWhitePawns();
             enemyKnights = getWhiteKnights();
             enemyBishops = getWhiteBishops();
@@ -320,40 +326,56 @@ public class Chessboard implements Cloneable{
                 myPawns, myKnights, myBishops, myRooks, myQueen, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
                 enemies, friends, allPieces());
-        
+
         return Square.squaresFromBitboard(bitboardOfPinnedPieces);
     }
-    
+
     public boolean previousMoveWasPawnPushToSix(){
         if (moveStack.size() < 1){
             return false;
         }
-        return MoveParser.moveIsPawnPushSix(StackDataUtil.getMove(moveStack.peek()));
+        if (!hasPreviousMove()){
+            return false;
+        }
+        Long peek = moveStack.peek();
+        long peekArray = moveStackArrayPeek();
+        return MoveParser.moveIsPawnPushSix(StackDataUtil.getMove(peek));
     }
 
     public boolean previousMoveWasPawnPushToSeven(){
         if (moveStack.size() < 1){
             return false;
         }
-        return MoveParser.moveIsPawnPushSeven(StackDataUtil.getMove(moveStack.peek()));
+        if (!hasPreviousMove()){
+            return false;
+        }
+        Long peek = moveStack.peek();
+        long peekArray = moveStackArrayPeek();
+        return MoveParser.moveIsPawnPushSeven(StackDataUtil.getMove(peek));
     }
 
     public boolean moveIsCaptureOfLastMovePiece(int move){
+        if (!hasPreviousMove()){
+//            return false;
+        }
         if (this.moveStack.size() == 0){
             return false;
         }
-        if (StackDataUtil.getMove(moveStack.peek()) == 0){
+        
+        Long peek = moveStack.peek();
+        long peekArray = moveStackArrayPeek();
+        if (StackDataUtil.getMove(peek) == 0){
             return false;
         }
         int previousMoveDestinationIndex = MoveParser.getDestinationIndex(StackDataUtil.getMove(moveStack.peek()));
         return (MoveParser.getDestinationIndex(move) == previousMoveDestinationIndex);
     }
-    
-    
+
+
     private void init(){
         this.details = new ChessboardDetails(true);
     }
-    
+
     void makeZobrist(){
         this.zobristHash = ZobristHashUtil.boardToHash(this);
     }
@@ -401,8 +423,8 @@ public class Chessboard implements Cloneable{
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+this.getBoardHash() +"\n"
                 + "zobrist stack size: "+getZobristStack().size()
-                + "\nmove stack size: "+ getMoveStack().size()
-                + "\nmove stack: "+ Arrays.toString(getMoveStackAsStrings())
+//                + "\nmove stack size: "+ getMoveStack().size()
+//                + "\nmove stack: "+ Arrays.toString(getMoveStackAsStrings())
                 ;
     }
 
@@ -539,7 +561,7 @@ public class Chessboard implements Cloneable{
 
 
 
- 
+
 
 
     private void makeBoardBasedOnFENSpecific(String fen){
@@ -610,42 +632,46 @@ public class Chessboard implements Cloneable{
             throw new RuntimeException("Could not Parse board rep of fen string");
         }
 
+        int epFlag;
         switch (epFlags) {
             case "a": {
-                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 1));
+                epFlag = 1;
                 break;
             }
             case "b": {
-                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 2));
+                epFlag = 2;
                 break;
             }
             case "c": {
-                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 3));
+                epFlag = 3;
                 break;
             }
             case "d": {
-                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 4));
+                epFlag = 4;
                 break;
             }
             case "e": {
-                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 5));
+                epFlag = 5;
                 break;
             }
             case "f": {
-                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 6));
+                epFlag = 6;
                 break;
             }
             case "g": {
-                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 7));
+                epFlag = 7;
                 break;
             }
             case "h": {
-                this.moveStack.push(buildStackData(0, this, 50, ENPASSANTVICTIM, 8));
+                epFlag = 8;
                 break;
             }
             default:
-                System.out.println("problem with EP flag");
+                return;
         }
+        final long item = buildStackData(0, this, 50, ENPASSANTVICTIM, epFlag);
+        this.moveStack.push(item);
+        this.moveStackArrayPush(item);
     }
 
     private static boolean isEPFlagSetSpecific(String fen){
@@ -815,7 +841,7 @@ public class Chessboard implements Cloneable{
     public long getBoardHash() {
         return zobristHash;
     }
-    
+
     public long getZobrist() {
         return zobristHash;
     }
@@ -858,5 +884,59 @@ public class Chessboard implements Cloneable{
 
     public void setZobristHash(long zobristHash) {
         this.zobristHash = zobristHash;
+    }
+
+    void moveStackArrayPush(long l){
+        moveStackArray[index] = l;
+
+        index++;
+    }
+
+    long moveStackArrayPop(){
+        if (index < 1){
+            throw new RuntimeException("popping an empty array");
+        }
+        moveStackArray[index] = 0;
+        index--;
+        return moveStackArray[index];
+    }
+
+    long moveStackArrayPeek(){
+        if (index < 1){
+            throw new RuntimeException("peeking at empty array");
+        }
+        return moveStackArray[index-1];
+    }
+    
+    boolean hasPreviousMove(){
+        return index > 0 && moveStackArray[index - 1] != 0;
+    }
+    
+    long[] filterZerosAndFlip(){
+        final long[] arr = Arrays.stream(moveStackArray)
+                .filter(x -> x != 0)
+                .toArray();
+        return reverse(arr);
+//        return arr;
+    }
+
+    public static long[] reverse(long[] arr) {
+        long[] flip = new long[arr.length];
+        final int length = flip.length;
+        for (int i = 0; i < length; i++){
+            flip[i] = arr[length - i - 1];
+        }
+        return flip;
+    }
+
+    public long[] getMoveStackAsArray() {
+        long[] moveArray = new long[getMoveStack().size()];
+        Stack<Long> clone = (Stack<Long>) getMoveStack().clone();
+        int index = 0;
+        while (clone.size() > 0){
+            moveArray[index] = clone.pop();
+            index++;
+        }
+        return moveArray;
     }
 }

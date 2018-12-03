@@ -15,19 +15,25 @@ class MakeMoveRegular {
 
     static void makeMoveMaster(Chessboard board, int move) {
         if(move == 0){
-            board.moveStack.push(buildStackData(0, board, 50, SpecialMove.NULL_MOVE));
+            final long item = buildStackData(0, board, 50, SpecialMove.NULL_MOVE);
+            board.moveStackArrayPush(item);
+            board.moveStack.push(item);
             return;
         }
         
         if (MoveParser.isSpecialMove(move)){
             if (MoveParser.isCastlingMove(move)) {
-                board.moveStack.push(buildStackData(move, board, 50, CASTLING));
+                final long item = buildStackData(move, board, 50, CASTLING);
+                board.moveStackArrayPush(item);
+                board.moveStack.push(item);
                 makeCastlingMove(board, move);
                 castleFlagManager(board, move);
             }
 
             else if (MoveParser.isEnPassantMove(move)){
-                board.moveStack.push((buildStackData(move, board, 50, ENPASSANTCAPTURE)));
+                final long item = buildStackData(move, board, 50, ENPASSANTCAPTURE);
+                board.moveStackArrayPush(item);
+                board.moveStack.push(item);
                 makeEnPassantMove(board, move);
                 castleFlagManager(board, move);
             }
@@ -40,14 +46,18 @@ class MakeMoveRegular {
                     long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
                     int takenPiece = whichIntPieceOnSquare(board, destinationPiece);
 
-                    board.moveStack.push((buildStackData(move, board, 50, PROMOTION)));
+                    final long item = buildStackData(move, board, 50, PROMOTION);
+                    board.moveStackArrayPush(item);
+                    board.moveStack.push(item);
                     
                     makePromotingMove(board, move);
                     castleFlagManager(board, move);
                 }
                 else {
 
-                    board.moveStack.push(buildStackData(move, board, 50, PROMOTION));
+                    final long item = buildStackData(move, board, 50, PROMOTION);
+                    board.moveStackArrayPush(item);
+                    board.moveStack.push(item);
                     
                     makePromotingMove(board, move);
                     castleFlagManager(board, move);
@@ -65,7 +75,9 @@ class MakeMoveRegular {
                 long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
                 int takenPiece = whichIntPieceOnSquare(board, destinationPiece);
 
-                board.moveStack.push(buildStackData(move, board, 50, BASICCAPTURE));
+                final long item = buildStackData(move, board, 50, BASICCAPTURE);
+                board.moveStackArrayPush(item);
+                board.moveStack.push(item);
                 
                 makeRegularMove(board, move);
                 castleFlagManager(board, move);
@@ -75,7 +87,9 @@ class MakeMoveRegular {
                 int sourceAsPiece = MoveParser.getSourceIndex(move);
                 int whichFile = 8 - sourceAsPiece % 8;
 
-                board.moveStack.push(buildStackData(move, board, 50, ENPASSANTVICTIM, whichFile));
+                final long item = buildStackData(move, board, 50, ENPASSANTVICTIM, whichFile);
+                board.moveStackArrayPush(item);
+                board.moveStack.push(item);
                 
                 makeRegularMove(board, move);
                 castleFlagManager(board, move);
@@ -86,14 +100,18 @@ class MakeMoveRegular {
                 int movingPiece = whichIntPieceOnSquare(board, destinationPiece);
                 if (movingPiece == 1 || movingPiece == 7){
 
-                    board.moveStack.push(buildStackData(move, board, 50, BASICLOUDPUSH));
+                    final long item = buildStackData(move, board, 50, BASICLOUDPUSH);
+                    board.moveStackArrayPush(item);
+                    board.moveStack.push(item);
                     
                     makeRegularMove(board, move);
                     castleFlagManager(board, move);
                 }
                 else {
                     // increment 50 move rule
-                    board.moveStack.push(buildStackData(move, board, 50, BASICQUIETPUSH));
+                    final long item = buildStackData(move, board, 50, BASICQUIETPUSH);
+                    board.moveStackArrayPush(item);
+                    board.moveStack.push(item);
                     
                     makeRegularMove(board, move);
                     castleFlagManager(board, move);

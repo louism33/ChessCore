@@ -2,6 +2,7 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Stack;
 
@@ -14,7 +15,7 @@ import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.ENPASSANTV
 import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.NULL_MOVE;
 
 class ZobristHashUtil {
-    
+
     private static final long initHashSeed = 100;
     private static final long[][] zobristHashPieces = initPieceHash();
     private static final long[] zobristHashCastlingRights = initCastlingHash();
@@ -24,19 +25,31 @@ class ZobristHashUtil {
     static long zobristFlipTurn(long hash){
         return hash ^ zobristHashColourBlack;
     }
-    
+
     static long updateWithEPFlags(Chessboard board, long hash){
         Assert.assertTrue(board.moveStack.size() > 0);
-        
+
+        Assert.assertTrue(board.hasPreviousMove());
+
         Long peek = board.moveStack.peek();
+        long peekArray = board.moveStackArrayPeek();
+
+        int epMove = StackDataUtil.getEPMove(peek);
+
+        Assert.assertEquals(peek.longValue(), peekArray);
+
         if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peek)] == ENPASSANTVICTIM) {
             hash = hashEP(hash, peek);
         }
-        
+
         if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peek)] == NULL_MOVE && board.moveStack.size() > 1){
             hash = nullMoveEP(board, hash);
         }
-        
+
+        if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peek)] == NULL_MOVE && board.hasPreviousMove()){
+//            hash = nullMoveEP(board, hash);
+        }
+
         return hash;
     }
 
@@ -47,7 +60,17 @@ class ZobristHashUtil {
             // file one = FILE_A
             hash = hashEP(hash, peekSecondElement);
         }
+
         board.moveStack.add(pop);
+
+        long peekSecondElementArray = board.moveStackArrayPeek();
+        if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peekSecondElementArray)] == ENPASSANTVICTIM) {
+            // file one = FILE_A
+//            hash = hashEP(hash, peekSecondElement);
+        }
+
+
+
         return hash;
     }
 
@@ -62,6 +85,7 @@ class ZobristHashUtil {
         boardHash = zobristFlipTurn(boardHash);
 
         Assert.assertTrue(board.moveStack.size() > 0);
+        Assert.assertTrue(board.hasPreviousMove());
         
         /*
         if move we just made raised EP flag, update hash
@@ -79,6 +103,7 @@ class ZobristHashUtil {
     private static long postMoveCastlingRights(Chessboard board){
         long updatedHashValue = 0;
         final long peek = board.moveStack.peek();
+        final long peekArray = board.moveStackArrayPeek();
 
         int castlingRights = StackDataUtil.getCastlingRights(peek);
         
@@ -108,7 +133,7 @@ class ZobristHashUtil {
         }
 
         updatedHashValue ^= zobristHashCastlingRights[numTo15Do];
-        
+
         return updatedHashValue;
     }
 
@@ -117,12 +142,12 @@ class ZobristHashUtil {
 
         int sourceSquare = MoveParser.getSourceIndex(move);
         int destinationSquareIndex = MoveParser.getDestinationIndex(move);
-        
+
         long sourcePiece = newPieceOnSquare(sourceSquare);
         int sourcePieceIdentifier = whichIntPieceOnSquare(board, sourcePiece) - 1;
 
         final Piece piece = whichPieceOnSquare(board, sourcePiece);
-        
+
         long sourceZH = zobristHashPieces[sourceSquare][sourcePieceIdentifier];
 
         long destinationSquare = newPieceOnSquare(destinationSquareIndex);
@@ -146,7 +171,11 @@ class ZobristHashUtil {
         /* 
         "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
         */
+        // todo
         Stack<Long> moveStack = board.moveStack;
+        if (board.hasPreviousMove()){
+//            boardHash = updateWithEPFlags(board, boardHash);
+        }
         if (moveStack.size() > 0){
             boardHash = updateWithEPFlags(board, boardHash);
         }
@@ -238,7 +267,7 @@ class ZobristHashUtil {
                     else if (MoveParser.isPromotionToRook(move)){
                         whichPromotingPiece = 10;
                     }
-                    
+
                     else if (MoveParser.isPromotionToQueen(move)){
                         whichPromotingPiece = 11;
                     }
@@ -248,7 +277,7 @@ class ZobristHashUtil {
                 remove my pawn from zh
                  */
                 boardHash ^= destinationZH;
-                
+
                 if (whichPromotingPiece == 0){
                     System.out.println(board);
                     System.out.println();
@@ -257,7 +286,7 @@ class ZobristHashUtil {
                 boardHash ^= promotionZH;
             }
         }
-        
+
         return boardHash;
     }
 
@@ -279,9 +308,12 @@ class ZobristHashUtil {
         if (!board.isWhiteTurn()){
             hash = zobristFlipTurn(hash);
         }
-        
+
         if (board.moveStack.size() > 0){
             hash = updateWithEPFlags(board, hash);
+        }
+        if (board.hasPreviousMove()){
+//            hash = updateWithEPFlags(board, hash);
         }
 
         return hash;
@@ -344,7 +376,7 @@ class ZobristHashUtil {
         }
         return zobristHash;
     }
-    
+
     /*
     create value for the player being black
     */
@@ -352,5 +384,5 @@ class ZobristHashUtil {
         Random r = new Random(initHashSeed + 3);
         return r.nextLong();
     }
-    
+
 }
