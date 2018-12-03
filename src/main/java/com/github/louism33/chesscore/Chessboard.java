@@ -15,15 +15,15 @@ public class Chessboard implements Cloneable{
 
     private ChessboardDetails details;
 
-    int index = 0;
+    private int index = 0;
 
-    long[] moveStackArray = new long[128];
-
-    Stack<Long> moveStack = new Stack<>();
+    private long[] moveStackArray = new long[128];
 
     private long zobristHash;
 
     private Stack<Long> zobristStack = new Stack<>();
+
+    private long[] zobristStackArray = new long[128];
 
     /**
      * A new Chessboard in the starting position, white to play.
@@ -58,8 +58,6 @@ public class Chessboard implements Cloneable{
     public Chessboard(Chessboard board) {
         this.details = new ChessboardDetails();
 
-        this.moveStack = (Stack<Long>) board.moveStack.clone();
-        
         System.arraycopy(board.moveStackArray, 0, this.moveStackArray, 0, board.moveStackArray.length);
 
 //        int length = board.filterZerosAndFlip().length;
@@ -331,43 +329,31 @@ public class Chessboard implements Cloneable{
     }
 
     public boolean previousMoveWasPawnPushToSix(){
-        if (moveStack.size() < 1){
-            return false;
-        }
         if (!hasPreviousMove()){
             return false;
         }
-        Long peek = moveStack.peek();
-        long peekArray = moveStackArrayPeek();
+        long peek = moveStackArrayPeek();
         return MoveParser.moveIsPawnPushSix(StackDataUtil.getMove(peek));
     }
 
     public boolean previousMoveWasPawnPushToSeven(){
-        if (moveStack.size() < 1){
-            return false;
-        }
         if (!hasPreviousMove()){
             return false;
         }
-        Long peek = moveStack.peek();
-        long peekArray = moveStackArrayPeek();
+        long peek = moveStackArrayPeek();
         return MoveParser.moveIsPawnPushSeven(StackDataUtil.getMove(peek));
     }
 
     public boolean moveIsCaptureOfLastMovePiece(int move){
         if (!hasPreviousMove()){
-//            return false;
-        }
-        if (this.moveStack.size() == 0){
             return false;
         }
         
-        Long peek = moveStack.peek();
-        long peekArray = moveStackArrayPeek();
+        long peek = moveStackArrayPeek();
         if (StackDataUtil.getMove(peek) == 0){
             return false;
         }
-        int previousMoveDestinationIndex = MoveParser.getDestinationIndex(StackDataUtil.getMove(moveStack.peek()));
+        int previousMoveDestinationIndex = MoveParser.getDestinationIndex(StackDataUtil.getMove(peek));
         return (MoveParser.getDestinationIndex(move) == previousMoveDestinationIndex);
     }
 
@@ -670,7 +656,6 @@ public class Chessboard implements Cloneable{
                 return;
         }
         final long item = buildStackData(0, this, 50, ENPASSANTVICTIM, epFlag);
-        this.moveStack.push(item);
         this.moveStackArrayPush(item);
     }
 
@@ -858,26 +843,6 @@ public class Chessboard implements Cloneable{
         this.zobristStack = zobristStack;
     }
 
-    public Stack<Long> getMoveStack() {
-        return moveStack;
-    }
-
-    public String[] getMoveStackAsStrings() {
-        String[] prettyMoves = new String[getMoveStack().size()];
-        Stack<Long> clone = (Stack<Long>) getMoveStack().clone();
-        int index = 0;
-        while (clone.size() > 0){
-            final long pop = clone.pop();
-            prettyMoves[index] = MoveParser.toString(StackDataUtil.getMove(pop));
-            index++;
-        }
-        return prettyMoves;
-    }
-
-    public void setMoveStack(Stack<Long> moveStack) {
-        this.moveStack = moveStack;
-    }
-
     public long getZobristHash() {
         return zobristHash;
     }
@@ -886,6 +851,32 @@ public class Chessboard implements Cloneable{
         this.zobristHash = zobristHash;
     }
 
+
+
+
+    void zobristStackArrayPush(long l){
+        zobristStackArray[index] = l;
+
+        index++;
+    }
+
+    long zobristStackArrayPop(){
+        if (index < 1){
+            throw new RuntimeException("popping an empty zobrist array");
+        }
+        zobristStackArray[index] = 0;
+        index--;
+        return zobristStackArray[index];
+    }
+
+    long zobristStackArrayPeek(){
+        if (index < 1){
+            throw new RuntimeException("peeking at empty zobrist array");
+        }
+        return zobristStackArray[index-1];
+    }
+    
+    
     void moveStackArrayPush(long l){
         moveStackArray[index] = l;
 
@@ -929,14 +920,6 @@ public class Chessboard implements Cloneable{
         return flip;
     }
 
-    public long[] getMoveStackAsArray() {
-        long[] moveArray = new long[getMoveStack().size()];
-        Stack<Long> clone = (Stack<Long>) getMoveStack().clone();
-        int index = 0;
-        while (clone.size() > 0){
-            moveArray[index] = clone.pop();
-            index++;
-        }
-        return moveArray;
-    }
+
+
 }

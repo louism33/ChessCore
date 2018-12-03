@@ -16,16 +16,11 @@ class MoveUnmaker {
         if (!board.hasPreviousMove()){
             throw new IllegalUnmakeException("No moves to unmake.");
         }
-        
-        if (board.moveStack.size() < 1){
-            throw new IllegalUnmakeException("No moves to unmake.");
-        }
-        
 
-        final Long pop = board.moveStack.pop();
-        final long popArray = board.moveStackArrayPop();
-
-        Assert.assertEquals(pop.longValue(), popArray);
+        board.setBoardHash(board.getZobristStack().pop());
+        
+        
+        final long pop = board.moveStackArrayPop();
         
         if (StackDataUtil.getMove(pop) == 0){
             board.setWhiteTurn(StackDataUtil.getTurn(pop) == 1);

@@ -66,8 +66,7 @@ class MoveGeneratorSpecial {
             return;
         }
 
-        if (board.moveStack.size() < 1){
-            Assert.assertTrue(!board.hasPreviousMove());
+        if (!board.hasPreviousMove()){
             return;
         }
         
@@ -75,9 +74,8 @@ class MoveGeneratorSpecial {
 //            return;
         }
 
-        long previousMove = board.moveStack.peek();
-        long previousMoveArray = board.moveStackArrayPeek();
-        Assert.assertEquals(previousMove, previousMoveArray);
+        long previousMove = board.moveStackArrayPeek();
+        Assert.assertEquals(previousMove, previousMove);
         
         if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
             return;

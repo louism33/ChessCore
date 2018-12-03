@@ -27,50 +27,26 @@ class ZobristHashUtil {
     }
 
     static long updateWithEPFlags(Chessboard board, long hash){
-        Assert.assertTrue(board.moveStack.size() > 0);
-
         Assert.assertTrue(board.hasPreviousMove());
 
-        Long peek = board.moveStack.peek();
-        long peekArray = board.moveStackArrayPeek();
-
-        int epMove = StackDataUtil.getEPMove(peek);
-
-        Assert.assertEquals(peek.longValue(), peekArray);
+        long peek = board.moveStackArrayPeek();
 
         if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peek)] == ENPASSANTVICTIM) {
             hash = hashEP(hash, peek);
         }
 
-        if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peek)] == NULL_MOVE && board.moveStack.size() > 1){
-            hash = nullMoveEP(board, hash);
-        }
-
         if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peek)] == NULL_MOVE && board.hasPreviousMove()){
-//            hash = nullMoveEP(board, hash);
+            hash = nullMoveEP(board, hash);
         }
 
         return hash;
     }
 
     private static long nullMoveEP(Chessboard board, long hash) {
-        Long pop = board.moveStack.pop();
-        Long peekSecondElement = board.moveStack.peek();
+        long peekSecondElement = board.moveStackArrayPeek();
         if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peekSecondElement)] == ENPASSANTVICTIM) {
-            // file one = FILE_A
             hash = hashEP(hash, peekSecondElement);
         }
-
-        board.moveStack.add(pop);
-
-        long peekSecondElementArray = board.moveStackArrayPeek();
-        if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peekSecondElementArray)] == ENPASSANTVICTIM) {
-            // file one = FILE_A
-//            hash = hashEP(hash, peekSecondElement);
-        }
-
-
-
         return hash;
     }
 
@@ -84,7 +60,6 @@ class ZobristHashUtil {
         */
         boardHash = zobristFlipTurn(boardHash);
 
-        Assert.assertTrue(board.moveStack.size() > 0);
         Assert.assertTrue(board.hasPreviousMove());
         
         /*
@@ -102,8 +77,7 @@ class ZobristHashUtil {
 
     private static long postMoveCastlingRights(Chessboard board){
         long updatedHashValue = 0;
-        final long peek = board.moveStack.peek();
-        final long peekArray = board.moveStackArrayPeek();
+        final long peek = board.moveStackArrayPeek();
 
         int castlingRights = StackDataUtil.getCastlingRights(peek);
         
@@ -171,12 +145,7 @@ class ZobristHashUtil {
         /* 
         "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
         */
-        // todo
-        Stack<Long> moveStack = board.moveStack;
         if (board.hasPreviousMove()){
-//            boardHash = updateWithEPFlags(board, boardHash);
-        }
-        if (moveStack.size() > 0){
             boardHash = updateWithEPFlags(board, boardHash);
         }
 
@@ -309,11 +278,8 @@ class ZobristHashUtil {
             hash = zobristFlipTurn(hash);
         }
 
-        if (board.moveStack.size() > 0){
-            hash = updateWithEPFlags(board, hash);
-        }
         if (board.hasPreviousMove()){
-//            hash = updateWithEPFlags(board, hash);
+            hash = updateWithEPFlags(board, hash);
         }
 
         return hash;
