@@ -1,6 +1,8 @@
 package com.github.louism33.chesscore;
 
 public enum Piece {
+    NO_PIECE,
+    
     WHITE_PAWN,
     WHITE_KNIGHT,
     WHITE_BISHOP,
@@ -13,9 +15,7 @@ public enum Piece {
     BLACK_BISHOP,
     BLACK_ROOK,
     BLACK_QUEEN,
-    BLACK_KING,
-    
-    NO_PIECE;
+    BLACK_KING;
 
     public static Piece pieceOnSquare(Chessboard board, Square square){
         return pieceOnSquare(board, square.toBitboard());

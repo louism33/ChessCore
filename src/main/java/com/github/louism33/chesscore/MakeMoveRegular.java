@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import java.util.Arrays;
+
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
@@ -7,34 +9,27 @@ import static com.github.louism33.chesscore.MoveParser.getDestinationIndex;
 import static com.github.louism33.chesscore.MoveParser.getSourceIndex;
 import static com.github.louism33.chesscore.Piece.NO_PIECE;
 import static com.github.louism33.chesscore.Piece.pieceOnSquare;
-import static com.github.louism33.chesscore.StackMoveData.SpecialMove;
-import static com.github.louism33.chesscore.StackMoveData.SpecialMove.*;
+import static com.github.louism33.chesscore.StackDataParser.SpecialMove;
+import static com.github.louism33.chesscore.StackDataParser.SpecialMove.*;
+import static com.github.louism33.chesscore.StackDataParser.buildStackData;
 
 class MakeMoveRegular {
 
-    static void flipTurn(Chessboard board){
-        board.setWhiteTurn(!board.isWhiteTurn());
-    }
-
     static void makeMoveMaster(Chessboard board, int move) {
         if(move == 0){
-            StackMoveData stackMoveData = new StackMoveData(0, board, 50, SpecialMove.NULL_MOVE);
-            board.moveStack.push(stackMoveData);
+            board.moveStackCool.push(buildStackData(0, board, 50, SpecialMove.NULL_MOVE));
             return;
         }
         
         if (MoveParser.isSpecialMove(move)){
             if (MoveParser.isCastlingMove(move)) {
-                StackMoveData stackMoveData = new StackMoveData(move, board, 50, CASTLING);
-                board.moveStack.push(stackMoveData);
+                board.moveStackCool.push(buildStackData(move, board, 50, CASTLING));
                 makeCastlingMove(board, move);
                 castleFlagManager(board, move);
             }
 
             else if (MoveParser.isEnPassantMove(move)){
-                StackMoveData stackMoveData = new StackMoveData
-                        (move, board, 50, ENPASSANTCAPTURE);
-                board.moveStack.push(stackMoveData);
+                board.moveStackCool.push((buildStackData(move, board, 50, ENPASSANTCAPTURE)));
                 makeEnPassantMove(board, move);
                 castleFlagManager(board, move);
             }
@@ -45,16 +40,17 @@ class MakeMoveRegular {
                 boolean capturePromotion = (destSquare & board.allPieces()) != 0;
                 if (capturePromotion) {
                     long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-                    int takenPiece = whichPieceOnSquare(board, destinationPiece);
+                    int takenPiece = whichIntPieceOnSquare(board, destinationPiece);
 
-                    StackMoveData stackMoveData = new StackMoveData(move, board, 50, PROMOTION, takenPiece);
-                    board.moveStack.push(stackMoveData);
+                    board.moveStackCool.push((buildStackData(move, board, 50, PROMOTION)));
+                    
                     makePromotingMove(board, move);
                     castleFlagManager(board, move);
                 }
                 else {
-                    StackMoveData stackMoveData = new StackMoveData(move, board, 50, PROMOTION);
-                    board.moveStack.push(stackMoveData);
+
+                    board.moveStackCool.push(buildStackData(move, board, 50, PROMOTION));
+                    
                     makePromotingMove(board, move);
                     castleFlagManager(board, move);
                 }
@@ -69,10 +65,10 @@ class MakeMoveRegular {
             boolean captureMove = (destSquare & board.allPieces()) != 0;
             if (captureMove) {
                 long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-                int takenPiece = whichPieceOnSquare(board, destinationPiece);
-                StackMoveData stackMoveData = new StackMoveData
-                        (move, board, 50, BASICCAPTURE, takenPiece);
-                board.moveStack.push(stackMoveData);
+                int takenPiece = whichIntPieceOnSquare(board, destinationPiece);
+
+                board.moveStackCool.push(buildStackData(move, board, 50, BASICCAPTURE));
+                
                 makeRegularMove(board, move);
                 castleFlagManager(board, move);
             }
@@ -80,28 +76,27 @@ class MakeMoveRegular {
             else if (enPassantPossibility(board, move)){
                 int sourceAsPiece = MoveParser.getSourceIndex(move);
                 int whichFile = 8 - sourceAsPiece % 8;
-                StackMoveData stackMoveData = new StackMoveData
-                        (move, board, 50, whichFile, ENPASSANTVICTIM);
-                board.moveStack.push(stackMoveData);
+
+                board.moveStackCool.push(buildStackData(move, board, 50, ENPASSANTVICTIM, whichFile));
+                
                 makeRegularMove(board, move);
                 castleFlagManager(board, move);
             }
 
             else {
                 long destinationPiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
-                int movingPiece = whichPieceOnSquare(board, destinationPiece);
+                int movingPiece = whichIntPieceOnSquare(board, destinationPiece);
                 if (movingPiece == 1 || movingPiece == 7){
-                    StackMoveData stackMoveData = new StackMoveData
-                            (move, board, 50, BASICLOUDPUSH);
-                    board.moveStack.push(stackMoveData);
+
+                    board.moveStackCool.push(buildStackData(move, board, 50, BASICLOUDPUSH));
+                    
                     makeRegularMove(board, move);
                     castleFlagManager(board, move);
                 }
                 else {
                     // increment 50 move rule
-                    StackMoveData stackMoveData = new StackMoveData
-                            (move, board, 50, BASICQUIETPUSH);
-                    board.moveStack.push(stackMoveData);
+                    board.moveStackCool.push(buildStackData(move, board, 50, BASICQUIETPUSH));
+                    
                     makeRegularMove(board, move);
                     castleFlagManager(board, move);
                 }
@@ -127,53 +122,12 @@ class MakeMoveRegular {
         return (destinationSquare & enPassantPossibilityRank) != 0;
     }
 
+    public static Piece whichPieceOnSquare(Chessboard board, long destinationPiece){
+        return Piece.pieceOnSquare(board, destinationPiece);
+    }
 
-    public static int whichPieceOnSquare(Chessboard board, long destinationPiece){
-
-        if ((destinationPiece & board.allPieces()) == 0){
-            return 0;
-        }
-
-        if ((destinationPiece & board.getWhitePawns()) != 0){
-            return 1;
-        }
-        else if ((destinationPiece & board.getWhiteKnights()) != 0){
-            return 2;
-        }
-        else if ((destinationPiece & board.getWhiteBishops()) != 0){
-            return 3;
-        }
-        else if ((destinationPiece & board.getWhiteRooks()) != 0){
-            return 4;
-        }
-        else if ((destinationPiece & board.getWhiteQueen()) != 0){
-            return 5;
-        }
-        else if ((destinationPiece & board.getWhiteKing()) != 0){
-            return 6;
-        }
-
-        else if ((destinationPiece & board.getBlackPawns()) != 0){
-            return 7;
-        }
-        else if ((destinationPiece & board.getBlackKnights()) != 0){
-            return 8;
-        }
-        else if ((destinationPiece & board.getBlackBishops()) != 0){
-            return 9;
-        }
-        else if ((destinationPiece & board.getBlackRooks()) != 0){
-            return 10;
-        }
-        else if ((destinationPiece & board.getBlackQueen()) != 0){
-            return 11;
-        }
-        else if ((destinationPiece & board.getBlackKing()) != 0) {
-            return 12;
-        }
-        else {
-            throw new RuntimeException("false entry");
-        }
+    static int whichIntPieceOnSquare(Chessboard board, long destinationPiece){
+        return Piece.pieceOnSquare(board, destinationPiece).ordinal();
     }
 
     static void makeRegularMove(Chessboard board, int move) {

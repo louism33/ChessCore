@@ -1,15 +1,17 @@
-/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/ZobristHash.java
+/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/StackDataCool.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveGeneratorPseudo.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/Square.java
-/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/StackMoveData.java
+/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/PerftDivide.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/BitOperations.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/PieceMove.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/ChessboardDetails.java
+/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/StackDataParser.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MovePrettifier.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveAdder.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveParser.java
-/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/xoldFenParser.java
+/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/ExtendedPositionDescriptionParser.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/Perft.java
+/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/ZobristHashUtil.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/Art.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveGeneratorMaster.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MakeMoveRegular.java
@@ -20,6 +22,7 @@
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/PinnedManager.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveConstants.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveUtils.java
+/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/StackDataRes.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/CheckHelper.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveGeneratorRegular.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveGeneratorSpecial.java
@@ -27,7 +30,6 @@
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/BitboardResources.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/Piece.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MakeMoveAndHashUpdate.java
-/home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/CopierToBeDeleted.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/eMoveParserFromAN.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/MoveMakingUtilities.java
 /home/louis/IdeaProjects/ChessCore/src/main/java/com/github/louism33/chesscore/IllegalUnmakeException.java

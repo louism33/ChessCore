@@ -21,14 +21,53 @@ public enum Square {
     H7, G7, F7, E7, D7, C7, B7, A7,
     H8, G8, F8, E8, D8, C8, B8, A8;
 
-    public static Square getPieceOnSquare(long piece){
+    public static boolean squareThreatenend(Chessboard board, boolean white, Square square){
+        return squareThreatenend(board, white, square.toBitboard());
+    }
+    
+    public static boolean squareThreatenend(Chessboard board, boolean white, long square){
+        long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
+        if (white){
+            myKing = board.getWhiteKing();
+            enemyPawns = board.getBlackPawns();
+            enemyKnights = board.getBlackKnights();
+            enemyBishops = board.getBlackBishops();
+            enemyRooks = board.getBlackRooks();
+            enemyQueen = board.getBlackQueen();
+            enemyKing = board.getBlackKing();
+
+            enemies = board.blackPieces();
+            friends = board.whitePieces();
+        } else {
+            myKing = board.getBlackKing();
+            enemyPawns = board.getWhitePawns();
+            enemyKnights = board.getWhiteKnights();
+            enemyBishops = board.getWhiteBishops();
+            enemyRooks = board.getWhiteRooks();
+            enemyQueen = board.getWhiteQueen();
+            enemyKing = board.getWhiteKing();
+
+            enemies = board.whitePieces();
+            friends = board.blackPieces();
+        }
+
+        return CheckHelper.numberOfPiecesThatLegalThreatenSquare(board, white, square,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
+                enemies, friends, board.allPieces()) > 0;
+    }
+
+    public boolean squareThreatenend(Chessboard board){
+        return squareThreatenend(board, board.isWhiteTurn(), this);
+    }
+    
+    public static Square getSquareOfBitboard(long piece){
         return values()[getIndexOfFirstPiece(piece)];
     }
     
     public static List<Square> getPiecesOnSquare(long pieces){
         return getAllPieces(pieces, 0)
                 .stream()
-                .map(Square::getPieceOnSquare)
+                .map(Square::getSquareOfBitboard)
                 .collect(Collectors.toList());
     }
     

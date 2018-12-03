@@ -1,21 +1,42 @@
 package com.github.louism33.chesscore;
 
-public class Perft {
+public class PerftDivide {
     
     private static long nodesForNps = 0;
+    
+    public static void main (String[] args){
+        Chessboard boardAdvanced = new Chessboard("r3k2r/p1ppqpb1/bn2pnp1/3PN3/Pp2P3/2N2Q1p/1PPBBPPP/R3K2R b KQkq a3 0 1");
+        Chessboard board = new Chessboard("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        final int[] legalMoves = board.generateCleanLegalMoves();
+
+//        perftTest(1, boardAdvanced, 0);
+
+        // a2a4
+
+        for (int i = legalMoves.length - 3; i < legalMoves.length-2; i++) {
+            final int legalMove = legalMoves[i];
+            System.out.print(MoveParser.toString(legalMove) +": ");
+            board.makeMoveAndFlipTurn(legalMove);
+            perftTest(1, board, 0);
+            try {
+                board.unMakeMoveAndFlipTurn();
+            } catch (IllegalUnmakeException e) {
+                e.printStackTrace();
+            }
+            System.out.println();
+        }
+    }
 
     public static long perftTest(int d, Chessboard board){
-        String s = Art.boardArt(board);
-        System.out.println(s);
+        System.out.println(board);
         return runPerftTestWithBoard(d, board);
     }
     
     public static long perftTest(int d, Chessboard board, long correctAnswer){
-        String s = Art.boardArt(board);
-        System.out.println(s);
-        System.out.println("-----------------------------------");
-        System.out.println("Correct Number of nodes at depth " + d + ": "+ correctAnswer);
-        System.out.println("-----------------------------------");
+//        System.out.println(board);
+//        System.out.println("-----------------------------------");
+//        System.out.println("Correct Number of nodes at depth " + d + ": "+ correctAnswer);
+//        System.out.println("-----------------------------------");
         return runPerftTestWithBoard(d, board);
     }
 
@@ -29,17 +50,17 @@ public class Perft {
         long t1 = System.currentTimeMillis();
         long ii = 0;
         try {
-            ii = Perft.countFinalNodesAtDepthHelper(board, depth);
+            ii = PerftDivide.countFinalNodesAtDepthHelper(board, depth);
         } catch (IllegalUnmakeException e) {
             e.printStackTrace();
         }
-        System.out.println("Final Nodes at Depth " + depth + ": " + ii);
+        System.out.println(ii);
         long t2 = System.currentTimeMillis();
         long t = t2 - t1;
         long seconds = t / 1000;
-        System.out.println("Depth " + depth + " took " + seconds + " seconds (" + t+" milliseconds).");
+//        System.out.println("Depth " + depth + " took " + seconds + " seconds (" + t+" milliseconds).");
         if (t > 0) {
-            System.out.println("NPS: " + ((nodesForNps / t) * 1000) );
+//            System.out.println("NPS: " + ((nodesForNps / t) * 1000) );
         }
         return ii;
     }
@@ -51,6 +72,8 @@ public class Perft {
         }
         int[] moves = board.generateLegalMoves();
 
+        MoveParser.printMoves(moves);
+        
         if (depth == 1){
             final int size = realMoves(moves);
             nodesForNps += size;

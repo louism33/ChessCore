@@ -25,7 +25,7 @@ class Setup {
 
         calculateInBetweenSquares();
 
-        System.out.println("get ready");
+//        System.out.println("get ready");
         ready = true;
     }
 
@@ -442,7 +442,6 @@ class Setup {
 
         final int LIMIT = allPieces.size();
         final double size = Math.pow(2, LIMIT);
-//        System.out.println((int) size);
 
         for (int t = 0; t < size; t++){
             long mask = 0;
@@ -692,11 +691,6 @@ class Setup {
 
         List<Long> allPossibleEffectiveBlockers = new ArrayList<>();
 
-//        Art.printLong(left);
-//        Art.printLong(right);
-//        Art.printLong(up);
-//        Art.printLong(down);
-
         final List<Long> allLeft = getAllPieces(left, 0);
         final List<Long> allRight = getAllPieces(right, 0);
         final List<Long> allUp = getAllPieces(up, 0);
@@ -708,28 +702,20 @@ class Setup {
         allDown.add(0L);
         int total = 0;
 
-//        System.out.println("l: "+allLeft.size()+", r: "+allRight.size()+", u: "+allUp.size()+ ", d: "+allDown.size());
-
-        for (Long l : allLeft){
-//            System.out.println("left ");
-            for (Long r : allRight){
-//                System.out.println("right");
-                for (Long u : allUp){
-//                    System.out.println("up");
-                    for (Long d : allDown) {
-//                        System.out.println("down");
+        for (int i = 0; i < allLeft.size(); i++) {
+            long l = allLeft.get(i);
+            for (int i1 = 0; i1 < allRight.size(); i1++) {
+                long r = allRight.get(i1);
+                for (int i2 = 0; i2 < allUp.size(); i2++) {
+                    long u = allUp.get(i2);
+                    for (int i3 = 0; i3 < allDown.size(); i3++) {
+                        long d = allDown.get(i3);
                         total++;
                         allPossibleEffectiveBlockers.add(l | r | u | r);
                     }
                 }
             }
         }
-
-        for (Long blocker : allPossibleEffectiveBlockers){
-//            Art.printLong(blocker);
-        }
-
-//        System.out.println("total: "+total);
 
         return allPossibleEffectiveBlockers;
     }

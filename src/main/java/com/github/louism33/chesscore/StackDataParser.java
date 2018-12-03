@@ -1,24 +1,46 @@
 package com.github.louism33.chesscore;
 
+import static com.github.louism33.chesscore.StackDataRes.*;
+
 @SuppressWarnings("CanBeFinal")
-class StackMoveData {
+class StackDataParser {
     
+    // todo replace with long
     public int move;
     public int takenPiece = 0;
     private int fiftyMoveCounter;
     public boolean whiteTurn;
     
     public enum SpecialMove {
-        BASICQUIETPUSH, BASICLOUDPUSH, BASICCAPTURE, ENPASSANTVICTIM, ENPASSANTCAPTURE, CASTLING, PROMOTION, NULL_MOVE
+        NONE, BASICQUIETPUSH, BASICLOUDPUSH, BASICCAPTURE, ENPASSANTVICTIM, ENPASSANTCAPTURE, CASTLING, PROMOTION, NULL_MOVE
     }
+    
     public SpecialMove typeOfSpecialMove;
     
     // file one : FILE_A 
     public int enPassantFile = -1;
     public boolean whiteCanCastleK, whiteCanCastleQ, blackCanCastleK, blackCanCastleQ;
 
+    public static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, 
+                                      SpecialMove typeOfSpecialMove, int enPassantFile) {
+        
+        long epFile = StackDataCool.smdMakeEPMove(enPassantFile);
+        return buildStackData(move, board, fiftyMoveCounter, typeOfSpecialMove) | epFile;
+    }
+    
+    public static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
+        long stackData = 0;
+        
+        stackData |= StackDataCool.smdMakeMove(move);
+        stackData |= StackDataCool.smdMakeFiftyPiece(fiftyMoveCounter);
+        stackData |= StackDataCool.smdMakeTurn(board.isWhiteTurn());
+        stackData |= StackDataCool.smdMakeSpecialMove(typeOfSpecialMove);
+        stackData |= StackDataCool.smdMakeCastlingRights(board);
 
-    public StackMoveData(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
+        return stackData;
+    }
+
+    public StackDataParser(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove) {
         this.move = move;
         this.fiftyMoveCounter = fiftyMoveCounter;
         this.typeOfSpecialMove = typeOfSpecialMove;
@@ -32,7 +54,7 @@ class StackMoveData {
     }
 
     
-    public StackMoveData(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove, int takenPiece) {
+    public StackDataParser(int move, Chessboard board, int fiftyMoveCounter, SpecialMove typeOfSpecialMove, int takenPiece) {
         this.move = move;
         this.fiftyMoveCounter = fiftyMoveCounter;
         this.typeOfSpecialMove = typeOfSpecialMove;
@@ -47,7 +69,7 @@ class StackMoveData {
     }
 
 
-    public StackMoveData(int move, Chessboard board, int fiftyMoveCounter, int enPassantFile, SpecialMove typeOfSpecialMove) {
+    public StackDataParser(int move, Chessboard board, int fiftyMoveCounter, int enPassantFile, SpecialMove typeOfSpecialMove) {
         this.move = move;
         this.fiftyMoveCounter = fiftyMoveCounter;
         this.typeOfSpecialMove = typeOfSpecialMove;
@@ -67,7 +89,7 @@ class StackMoveData {
 
     @Override
     public String toString() {
-        return "StackMoveData{" +
+        return "StackDataParser{" +
                 "move=" + move +
                 ", takenPiece=" + takenPiece +
                 ", fiftyMoveCounter=" + fiftyMoveCounter +

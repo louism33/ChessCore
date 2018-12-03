@@ -7,34 +7,36 @@ import static com.github.louism33.chesscore.MoveUnmaker.unMakeMoveMaster;
 
 class MakeMoveAndHashUpdate {
 
-    static void makeMoveAndHashUpdate(Chessboard board, int move, ZobristHash zobristHash){
-
+    static void makeMoveAndHashUpdate(Chessboard board, int move){
         Assert.assertNotEquals(move, 0);
+
+        board.getZobristStack().push(board.getBoardHash());
+        board.setBoardHash(ZobristHashUtil.updateHashPreMove(board, board.getBoardHash(), move));
         
-        zobristHash.zobristStack.push(zobristHash.getBoardHash());
-        zobristHash.updateHashPreMove(board, move);
         makeMoveMaster(board, move);
-        zobristHash.updateHashPostMove(board, move);
+        
+        board.setBoardHash(ZobristHashUtil.updateHashPostMove(board, board.getBoardHash(), move));
     }
 
-    static void UnMakeMoveAndHashUpdate(Chessboard board, ZobristHash zobristHash) throws IllegalUnmakeException {
-        zobristHash.setBoardHash(zobristHash.zobristStack.pop());
+    static void UnMakeMoveAndHashUpdate(Chessboard board) throws IllegalUnmakeException {
+        board.setBoardHash(board.getZobristStack().pop());
         unMakeMoveMaster(board);
     }
 
-    static void makeNullMoveAndHashUpdate(Chessboard board, ZobristHash zobristHash){
-        zobristHash.zobristStack.push(zobristHash.getBoardHash());
+    static void makeNullMoveAndHashUpdate(Chessboard board){
+        board.getZobristStack().push(board.getBoardHash());
         
-        if (board.moveStack.size() > 0) {
-            zobristHash.updateWithEPFlags(board);
+        if (board.moveStackCool.size() > 0) {
+            ZobristHashUtil.updateWithEPFlags(board, board.getBoardHash());
         }
 
         makeMoveMaster(board, 0);
-        zobristHash.setBoardHash(zobristHash.getBoardHash() ^ ZobristHash.zobristHashColourBlack);
+        
+        board.setBoardHash(ZobristHashUtil.zobristFlipTurn(board.getBoardHash()));
     }
 
-    static void unMakeNullMove(Chessboard board, ZobristHash zobristHash) throws IllegalUnmakeException {
-        zobristHash.setBoardHash(zobristHash.zobristStack.pop());
+    static void unMakeNullMove(Chessboard board) throws IllegalUnmakeException {
+        board.setBoardHash(board.getZobristStack().pop());
         unMakeMoveMaster(board);
     }
 }

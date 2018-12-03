@@ -11,7 +11,9 @@ import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMas
 import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
-import static com.github.louism33.chesscore.StackMoveData.SpecialMove.ENPASSANTVICTIM;
+import static com.github.louism33.chesscore.StackDataParser.SpecialMove.ENPASSANTVICTIM;
+import static com.github.louism33.chesscore.StackDataRes.SMD_EP_FILE;
+import static com.github.louism33.chesscore.StackDataRes.smdEPOffset;
 
 class MoveGeneratorSpecial {
 
@@ -39,7 +41,7 @@ class MoveGeneratorSpecial {
                     | singlePawnCaptures(pawn, board.isWhiteTurn(), ((finalRank & enemies) & legalCaptures));
 
             if (pawnMoves != 0) {
-                addMovesFromAttackTableMasterPromotion(moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn), enemies);
+                addMovesFromAttackTableMasterPromotion(board, moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn), enemies);
 
             }
             promotablePawns &= promotablePawns - 1;
@@ -60,24 +62,22 @@ class MoveGeneratorSpecial {
         if (myPawnsInPosition == 0) {
             return;
         }
-
+        
         long enemyPawnsInPosition = enemyPawns & enPassantTakingRank;
         if (enemyPawnsInPosition == 0) {
             return;
         }
 
-        if (board.moveStack.size() < 1){
+        if (board.moveStackCool.size() < 1){
             return;
         }
 
-        StackMoveData previousMove = board.moveStack.peek();
-        if (previousMove.typeOfSpecialMove != ENPASSANTVICTIM){
+        long previousMove = board.moveStackCool.peek();
+        if (StackDataParser.SpecialMove.values()[StackDataCool.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
             return;
         }
 
-        long FILE = extractFileFromInt(previousMove.enPassantFile);
-
-        List<Long> allEnemyPawnsInPosition = getAllPieces(enemyPawnsInPosition, ignoreThesePieces);
+        long FILE = extractFileFromStack(StackDataCool.getEPMove(previousMove));
 
         long enemyTakingSpots = 0;
 
@@ -150,8 +150,11 @@ class MoveGeneratorSpecial {
         }
     }
 
-    private static long extractFileFromInt(int file){
-        return FILES[8 - file];
+    private static long extractFileFromStack(int file){
+        if (file == 0){
+            return 0;
+        }
+        return FILES[8-file];
     }
 
 
@@ -172,7 +175,7 @@ class MoveGeneratorSpecial {
                         && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_EAST_CORNER) != 0)){
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(moves, 3, 1);
+                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 1);
                 }
             }
 
@@ -185,7 +188,7 @@ class MoveGeneratorSpecial {
                         && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BitboardResources.SOUTH_WEST_CORNER) != 0)){
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(moves, 3, 5);
+                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 5);
                 }
             }
         }
@@ -200,7 +203,7 @@ class MoveGeneratorSpecial {
                         && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BitboardResources.NORTH_EAST_CORNER) != 0)){
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(moves, 59, 57);
+                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 57);
                 }
             }
 
@@ -212,7 +215,7 @@ class MoveGeneratorSpecial {
                         && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BitboardResources.NORTH_WEST_CORNER) != 0)){
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(moves, 59, 61);
+                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 61);
 
                 }
             }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.Square.*;
 
 public class SquareTest {
@@ -21,7 +21,7 @@ public class SquareTest {
     @Test
     void getPieceOnSquare() {
         Chessboard board = new Chessboard();
-        final Square pieceOnSquare = Square.getPieceOnSquare(board.getWhiteKing());
+        final Square pieceOnSquare = Square.getSquareOfBitboard(board.getWhiteKing());
         Assert.assertEquals(pieceOnSquare, E1);
     }
 
