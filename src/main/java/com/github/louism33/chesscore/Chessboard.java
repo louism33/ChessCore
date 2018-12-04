@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +15,9 @@ public class Chessboard implements Cloneable{
 
     private int index = 0;
 
-    private long[] moveStackArray = new long[128];
+    private long[] moveStack = new long[128];
+    
+    long moveStackData;
 
     private long zobristHash;
 
@@ -58,12 +58,10 @@ public class Chessboard implements Cloneable{
     public Chessboard(Chessboard board) {
         this.details = new ChessboardDetails();
 
-        System.arraycopy(board.moveStackArray, 0, this.moveStackArray, 0, board.moveStackArray.length);
-
-//        int length = board.filterZerosAndFlip().length;
-//        System.out.println("        "+length);
-//        Assert.assertEquals(length, this.filterZerosAndFlip().length);
+        System.arraycopy(board.moveStack, 0, this.moveStack, 0, board.moveStack.length);
         
+        System.arraycopy(board.zobristStackArray, 0, this.zobristStackArray, 0, board.zobristStackArray.length);
+
         this.index = board.index;
         
         this.setWhitePawns(board.getWhitePawns());
@@ -409,8 +407,10 @@ public class Chessboard implements Cloneable{
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+this.getBoardHash() +"\n"
                 + "zobrist stack size: "+getZobristStack().size()
-//                + "\nmove stack size: "+ getMoveStack().size()
-//                + "\nmove stack: "+ Arrays.toString(getMoveStackAsStrings())
+                +"\nzobrist stack: "+ getZobristStack()
+                +"\nzobrist stack array: "+ Arrays.toString(filterZerosAndFlip(zobristStackArray))
+                + "\nmove stack size: "+ filterZerosAndFlip(moveStack).length
+                + "\nmove stack: "+ Arrays.toString(filterZerosAndFlip(moveStack))
                 ;
     }
 
@@ -860,15 +860,6 @@ public class Chessboard implements Cloneable{
         index++;
     }
 
-    long zobristStackArrayPop(){
-        if (index < 1){
-            throw new RuntimeException("popping an empty zobrist array");
-        }
-        zobristStackArray[index] = 0;
-        index--;
-        return zobristStackArray[index];
-    }
-
     long zobristStackArrayPeek(){
         if (index < 1){
             throw new RuntimeException("peeking at empty zobrist array");
@@ -878,33 +869,39 @@ public class Chessboard implements Cloneable{
     
     
     void moveStackArrayPush(long l){
-        moveStackArray[index] = l;
+        moveStack[index] = l;
 
         index++;
     }
 
-    long moveStackArrayPop(){
+    void masterPop(){
         if (index < 1){
             throw new RuntimeException("popping an empty array");
         }
-        moveStackArray[index] = 0;
+
+        moveStack[index] = 0;
+        zobristStackArray[index] = 0;
+        
         index--;
-        return moveStackArray[index];
+        
+        moveStackData = moveStack[index];
+        zobristHash = zobristStack.pop();
+//        this.setBoardHash(this.getZobristStack().pop());
     }
 
     long moveStackArrayPeek(){
         if (index < 1){
             throw new RuntimeException("peeking at empty array");
         }
-        return moveStackArray[index-1];
+        return moveStack[index-1];
     }
     
     boolean hasPreviousMove(){
-        return index > 0 && moveStackArray[index - 1] != 0;
+        return index > 0 && moveStack[index - 1] != 0;
     }
     
-    long[] filterZerosAndFlip(){
-        final long[] arr = Arrays.stream(moveStackArray)
+    long[] filterZerosAndFlip(long[] arr){
+        arr = Arrays.stream(moveStack)
                 .filter(x -> x != 0)
                 .toArray();
         return reverse(arr);

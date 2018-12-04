@@ -19,9 +19,6 @@ class MakeMoveAndHashUpdate {
     }
 
     static void UnMakeMoveAndHashUpdate(Chessboard board) throws IllegalUnmakeException {
-        
-       
-       
         unMakeMoveMaster(board);
     }
 
@@ -29,7 +26,8 @@ class MakeMoveAndHashUpdate {
         board.getZobristStack().push(board.getBoardHash());
         
         if (board.hasPreviousMove()){
-            ZobristHashUtil.updateWithEPFlags(board, board.getBoardHash());
+//            ZobristHashUtil.updateWithEPFlags(board, board.getBoardHash());
+            board.setBoardHash(ZobristHashUtil.updateWithEPFlags(board, board.getBoardHash()));
         }
 
         makeMoveMaster(board, 0);
@@ -38,9 +36,6 @@ class MakeMoveAndHashUpdate {
     }
 
     static void unMakeNullMove(Chessboard board) throws IllegalUnmakeException {
-
-        // todo: replace pop with delta calc
-        board.setBoardHash(board.getZobristStack().pop());
         unMakeMoveMaster(board);
     }
 }

@@ -1,5 +1,6 @@
 import com.github.louism33.chesscore.Chessboard;
 import com.github.louism33.chesscore.IllegalUnmakeException;
+import com.github.louism33.chesscore.MoveParser;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
@@ -64,13 +65,11 @@ public class NullMoveTest {
     private static long verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
         Assert.assertEquals(board, initial);
-//        System.out.println(board);
+
+        System.out.println(board);
         
         board.makeNullMoveAndFlipTurn();
 
-//        System.out.println(board);
-//        System.out.println(new Chessboard(board));
-        
         Assert.assertEquals(board, new Chessboard(board));
         
         try {
