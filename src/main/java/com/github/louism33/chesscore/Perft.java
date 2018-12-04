@@ -68,26 +68,22 @@ public class Perft {
 
             board.makeMoveAndFlipTurn(move);
 
-            long[] longs = board.filterZerosAndFlip(board.getZobristStackArray());
-            
-            if (longs.length != board.getZobristStack().size()){
-                System.out.println("moveStackArray: " + longs.length);
-                System.out.println("moveStack: " + board.getZobristStack().size());
-
-                System.out.println("moveStackArray:  " + Arrays.toString(longs));
-                System.out.println("moveStack:       " + Arrays.toString(board.getZobristStackAsArray()));
-            }
-            Assert.assertEquals(longs.length, board.getZobristStack().size());
-
-            if (!Arrays.equals(board.getZobristStackAsArray(), longs)){
-                System.out.println("moveStackArray: " + longs.length);
-                System.out.println("moveStack: " + board.getZobristStack().size());
-
-                System.out.println("moveStackArray:  " + Arrays.toString(longs));
-                System.out.println("moveStack:       " + Arrays.toString(board.getZobristStackAsArray()));
-            }
-
-            Assert.assertTrue(Arrays.equals(board.getZobristStackAsArray(), longs));
+//
+//            if (board.filterZerosAndFlip().length != board.moveStack.size()){
+//                System.out.println("moveStackArray: " + board.filterZerosAndFlip().length);
+//                System.out.println("moveStack: " + board.moveStack.size());
+//
+//                System.out.println("moveStackArray:  " + Arrays.toString(board.filterZerosAndFlip()));
+//                System.out.println("moveStack:       " + Arrays.toString(board.getMoveStackAsArray()));
+//            }
+//            Assert.assertEquals(board.filterZerosAndFlip().length, board.moveStack.size());
+//            
+//            if (!Arrays.equals(board.getMoveStackAsArray(), board.filterZerosAndFlip())){
+//                System.out.println(Arrays.toString(board.filterZerosAndFlip()));
+//                System.out.println(Arrays.toString(board.getMoveStackAsArray()));
+//            }
+//            
+//            Assert.assertTrue(Arrays.equals(board.getMoveStackAsArray(), board.filterZerosAndFlip()));
             
             
             nodesForNps++;
