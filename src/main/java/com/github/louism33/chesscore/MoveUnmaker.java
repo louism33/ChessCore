@@ -17,9 +17,14 @@ class MoveUnmaker {
             throw new IllegalUnmakeException("No moves to unmake.");
         }
 
-        board.setBoardHash(board.getZobristStack().pop());
-        
-        
+        Long realPop = board.getZobristStack().pop();
+        board.setBoardHash(realPop);
+
+        long zobbyPop = board.zobristStackArrayPop();
+        board.setZOBBYHash(zobbyPop);
+
+        Assert.assertEquals(realPop.longValue(), zobbyPop);
+
         board.moveStackArrayPop();
         
         long pop = board.moveStackData;

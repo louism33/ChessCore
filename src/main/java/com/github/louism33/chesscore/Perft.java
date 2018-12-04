@@ -68,22 +68,31 @@ public class Perft {
 
             board.makeMoveAndFlipTurn(move);
 
-//
-//            if (board.filterZerosAndFlip().length != board.moveStack.size()){
-//                System.out.println("moveStackArray: " + board.filterZerosAndFlip().length);
-//                System.out.println("moveStack: " + board.moveStack.size());
-//
-//                System.out.println("moveStackArray:  " + Arrays.toString(board.filterZerosAndFlip()));
-//                System.out.println("moveStack:       " + Arrays.toString(board.getMoveStackAsArray()));
-//            }
-//            Assert.assertEquals(board.filterZerosAndFlip().length, board.moveStack.size());
-//            
-//            if (!Arrays.equals(board.getMoveStackAsArray(), board.filterZerosAndFlip())){
-//                System.out.println(Arrays.toString(board.filterZerosAndFlip()));
-//                System.out.println(Arrays.toString(board.getMoveStackAsArray()));
-//            }
-//            
-//            Assert.assertTrue(Arrays.equals(board.getMoveStackAsArray(), board.filterZerosAndFlip()));
+
+            
+            
+            
+            long[] zobbb = board.filterZerosAndFlip(board.zobbyHopeAndPrayers);
+            
+            if (zobbb.length != board.getZobristStack().size()){
+                System.out.println("moveStackArray: " + zobbb.length);
+                System.out.println("moveStack: " + board.getZobristStack().size());
+
+                String zobbbbbb = Arrays.toString(zobbb);
+                System.out.println("moveStackArray:  " + zobbbbbb);
+                System.out.println("moveStack:       " + Arrays.toString(board.getZobristStackAsArray()));
+            }
+            Assert.assertEquals(zobbb.length, board.getZobristStack().size());
+
+            if (!Arrays.equals(board.getZobristStackAsArray(), zobbb)){
+                System.out.println(Arrays.toString(zobbb));
+                System.out.println(Arrays.toString(board.getZobristStackAsArray()));
+            }
+
+            Assert.assertTrue(Arrays.equals(board.getZobristStackAsArray(), zobbb));
+            
+            
+            Assert.assertEquals(board.zobbyHash, board.getZobrist());
             
             
             nodesForNps++;
