@@ -2,6 +2,8 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
+import java.util.Arrays;
+
 import static com.github.louism33.chesscore.MakeMoveRegular.makeMoveMaster;
 import static com.github.louism33.chesscore.MoveUnmaker.unMakeMoveMaster;
 
@@ -11,6 +13,26 @@ class MakeMoveAndHashUpdate {
         Assert.assertNotEquals(move, 0);
 
         board.getZobristStack().push(board.getBoardHash());
+        board.zobristStackArrayPush(board.getBoardHash());
+
+
+        long[] longs = board.filterZerosAndFlip(board.getZobristStackArray());
+        
+        if (!Arrays.equals(board.getZobristStackAsArray(), longs)){
+            System.out.println("zobristStackArray length: " + longs.length);
+            System.out.println("zobristStack size : " + board.getZobristStack().size());
+
+            System.out.println("zobristStackArray:  " + Arrays.toString(longs));
+            System.out.println("zobristStack:       " + Arrays.toString(board.getZobristStackAsArray()));
+
+            System.out.println("index: "+board.getIndex());
+
+//            System.out.println(Arrays.toString(board.getZobristStackArray()));
+//            System.out.println(Arrays.toString(board.filterZerosAndFlip(board.getZobristStackArray())));
+        }
+
+        Assert.assertTrue(Arrays.equals(board.getZobristStackAsArray(), longs));
+        
         board.setBoardHash(ZobristHashUtil.updateHashPreMove(board, board.getBoardHash(), move));
         
         makeMoveMaster(board, move);
@@ -24,6 +46,7 @@ class MakeMoveAndHashUpdate {
 
     static void makeNullMoveAndHashUpdate(Chessboard board){
         board.getZobristStack().push(board.getBoardHash());
+        board.zobristStackArrayPush(board.getBoardHash());
         
         if (board.hasPreviousMove()){
 //            ZobristHashUtil.updateWithEPFlags(board, board.getBoardHash());

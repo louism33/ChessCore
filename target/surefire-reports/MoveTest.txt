@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: MoveTest
 -------------------------------------------------------------------------------
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 47.338 s - in MoveTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 63.61 s - in MoveTest

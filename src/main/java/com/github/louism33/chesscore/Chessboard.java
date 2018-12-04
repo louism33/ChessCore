@@ -11,6 +11,19 @@ import static com.github.louism33.chesscore.StackDataUtil.buildStackData;
 
 public class Chessboard implements Cloneable{
 
+
+    public long[] getZobristStackAsArray() {
+        long[] moveArray = new long[getZobristStack().size()];
+        Stack<Long> clone = (Stack<Long>) getZobristStack().clone();
+        int index = 0;
+        while (clone.size() > 0){
+            moveArray[index] = clone.pop();
+            index++;
+        }
+        return moveArray;
+    }
+    
+
     private ChessboardDetails details;
 
     private int index = 0;
@@ -398,7 +411,7 @@ public class Chessboard implements Cloneable{
         Chessboard that = (Chessboard) o;
         return Objects.equals(details, that.details)
                 && Objects.equals(zobristHash, that.zobristHash)
-//                && Objects.equals(moveStack, that.moveStack)
+                && Arrays.equals(getZobristStackAsArray(), that.getZobristStackAsArray())
                 ;
     }
 
@@ -857,7 +870,7 @@ public class Chessboard implements Cloneable{
     void zobristStackArrayPush(long l){
         zobristStackArray[index] = l;
 
-        index++;
+//        index++;
     }
 
     long zobristStackArrayPeek(){
@@ -901,7 +914,7 @@ public class Chessboard implements Cloneable{
     }
     
     long[] filterZerosAndFlip(long[] arr){
-        arr = Arrays.stream(moveStack)
+        arr = Arrays.stream(arr)
                 .filter(x -> x != 0)
                 .toArray();
         return reverse(arr);
@@ -918,5 +931,35 @@ public class Chessboard implements Cloneable{
     }
 
 
+    public int getIndex() {
+        return index;
+    }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public long[] getMoveStack() {
+        return moveStack;
+    }
+
+    public void setMoveStack(long[] moveStack) {
+        this.moveStack = moveStack;
+    }
+
+    public long getMoveStackData() {
+        return moveStackData;
+    }
+
+    public void setMoveStackData(long moveStackData) {
+        this.moveStackData = moveStackData;
+    }
+
+    public long[] getZobristStackArray() {
+        return zobristStackArray;
+    }
+
+    public void setZobristStackArray(long[] zobristStackArray) {
+        this.zobristStackArray = zobristStackArray;
+    }
 }
