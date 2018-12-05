@@ -1,6 +1,8 @@
 package com.github.louism33.chesscore;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,42 +13,25 @@ import static com.github.louism33.chesscore.StackDataUtil.buildStackData;
 
 public class Chessboard implements Cloneable{
 
-    public long[] getZobristStackAsArray() {
-        long[] moveArray = new long[getZobristStack().size()];
-        Stack<Long> clone = (Stack<Long>) getZobristStack().clone();
-        int index = 0;
-        while (clone.size() > 0){
-            moveArray[index] = clone.pop();
-            index++;
-        }
-        return moveArray;
-    }
-
-    long[] filterZerosAndFlip(long[] arr){
-        arr = Arrays.stream(arr)
-                .filter(x -> x != 0)
-                .toArray();
-        return reverse(arr);
-//        return arr;
-    }
-
-    
-    
     private ChessboardDetails details;
 
     private int index = 0;
-
-    private long[] moveStackArray = new long[128];
+    private int zobristIndex = 0;
     
+    private long zobristHash;
     long moveStackData;
 
-    private long zobristHash;
-    long zobbyHash;
-
-    private Stack<Long> zobristStack = new Stack<>();
-
-    public long[] zobbyHopeAndPrayers = new long[1280000];
-
+    private int arrayLength = 128;
+    
+    private long[] zobbyHopeAndPrayers = new long[arrayLength];
+    private long[] moveStackArray = new long[arrayLength];
+    
+    public boolean inCheckRecorder;
+    public long pinnedPieces;
+    public long[] pinnedPiecesArray = new long[arrayLength];
+    public boolean[] checkStack = new boolean[arrayLength];
+    
+    
     /**
      * A new Chessboard in the starting position, white to play.
      */
@@ -66,13 +51,11 @@ public class Chessboard implements Cloneable{
         System.out.println(this);
         
         this.zobristHash = ZobristHashUtil.boardToHash(this);
-        this.zobbyHash = this.zobristHash;
     }
 
     Chessboard(boolean blank){
         this.details = new ChessboardDetails();
         this.zobristHash = ZobristHashUtil.boardToHash(this);
-        this.zobbyHash = this.zobristHash;
     }
 
     /**
@@ -84,10 +67,18 @@ public class Chessboard implements Cloneable{
 
         System.arraycopy(board.moveStackArray, 0, this.moveStackArray, 0, board.moveStackArray.length);
         System.arraycopy(board.zobbyHopeAndPrayers, 0, this.zobbyHopeAndPrayers, 0, board.zobbyHopeAndPrayers.length);
+        
+        System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
+        System.arraycopy(board.pinnedPiecesArray, 0, this.pinnedPiecesArray, 0, board.pinnedPiecesArray.length);
 
+
+        this.inCheckRecorder = board.inCheckRecorder;
+        this.pinnedPieces = board.pinnedPieces;
         
         this.index = board.index;
         this.zobristIndex = board.zobristIndex;
+        this.checkIndex = board.checkIndex;
+        this.pinIndex = board.pinIndex;
         
         this.setWhitePawns(board.getWhitePawns());
         this.setWhiteKnights(board.getWhiteKnights());
@@ -110,9 +101,9 @@ public class Chessboard implements Cloneable{
 
         this.setWhiteTurn(board.isWhiteTurn());
 
+        // this.zobrist = that.zobrist...
         this.makeZobrist();
 
-        this.cloneZobristStack(board.getZobristStack());
     }
 
     /**
@@ -201,7 +192,7 @@ public class Chessboard implements Cloneable{
      */
     public boolean inCheck(boolean white){
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
-        if (isWhiteTurn()){
+        if (white){
             myKing = getWhiteKing();
             enemyPawns = getBlackPawns();
             enemyKnights = getBlackKnights();
@@ -225,7 +216,7 @@ public class Chessboard implements Cloneable{
             friends = blackPieces();
         }
 
-        return boardInCheck(this, isWhiteTurn(), myKing,
+        return boardInCheck(this, white, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
                 enemies, friends, allPieces());
 
@@ -302,7 +293,17 @@ public class Chessboard implements Cloneable{
      * @param square the square you are interested in seeing the pins to
      * @return a list of squares that have pinned pieces on them
      */
-    private List<Square> pinnedPiecesToSquare(boolean white, Square square){
+    public List<Square> pinnedPiecesToSquare(boolean white, Square square){
+        return Square.squaresFromBitboard(pinnedPiecesToSquareBitBoard(white, square));
+    }
+
+    /**
+     * Expensive operation to determine pinned pieces to a particular square
+     * @param white the player 
+     * @param square the square you are interested in seeing the pins to
+     * @return a list of squares that have pinned pieces on them
+     */
+    public long pinnedPiecesToSquareBitBoard(boolean white, Square square){
 
         long myPawns, myKnights, myBishops, myRooks, myQueen, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
@@ -343,12 +344,10 @@ public class Chessboard implements Cloneable{
             friends = blackPieces();
         }
 
-        final long bitboardOfPinnedPieces = PinnedManager.whichPiecesArePinned(this, white, white ? getWhiteKing() : getBlackKing(),
+        return PinnedManager.whichPiecesArePinned(this, white, white ? getWhiteKing() : getBlackKing(),
                 myPawns, myKnights, myBishops, myRooks, myQueen, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
                 enemies, friends, allPieces());
-
-        return Square.squaresFromBitboard(bitboardOfPinnedPieces);
     }
 
     public boolean previousMoveWasPawnPushToSix(){
@@ -387,15 +386,15 @@ public class Chessboard implements Cloneable{
 
     void makeZobrist(){
         this.zobristHash = ZobristHashUtil.boardToHash(this);
-        this.zobbyHash = this.zobristHash;
+//        this.zobbyHash = this.zobristHash;
     }
 
-    void cloneZobristStack(Stack<Long> zobristStack){
-        if (zobristStack.size() < 1){
-            return;
-        }
-        this.zobristStack = (Stack<Long>) zobristStack.clone();
-    }
+//    void cloneZobristStack(Stack<Long> zobristStack){
+//        if (zobristStack.size() < 1){
+//            return;
+//        }
+//        this.zobristStack = (Stack<Long>) zobristStack.clone();
+//    }
 
     public long whitePieces(){
         return getWhitePawns() | getWhiteKnights() | getWhiteBishops() | getWhiteRooks() | getWhiteQueen() | getWhiteKing();
@@ -424,8 +423,9 @@ public class Chessboard implements Cloneable{
         Chessboard that = (Chessboard) o;
         return Objects.equals(details, that.details)
                 && Objects.equals(zobristHash, that.zobristHash)
-                && Objects.equals(zobbyHash, that.zobbyHash)
                 && Arrays.equals(zobbyHopeAndPrayers, that.zobbyHopeAndPrayers)
+                && Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray)
+                && Arrays.equals(checkStack, that.checkStack)
                 ;
     }
 
@@ -433,9 +433,9 @@ public class Chessboard implements Cloneable{
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+this.getBoardHash() +"\n"
-                + "old zobrist stack size: "+getZobristStack().size()
-                + "\nzobrist array size: "+ filterZerosAndFlip(zobbyHopeAndPrayers).length
-                + "\nzobrist array: "+ Arrays.toString(filterZerosAndFlip(zobbyHopeAndPrayers))
+//                + "\npin array: "+ Arrays.toString(pinnedPiecesArray)
+//                + "\npinned pieces: "+ pinnedPieces
+//                +"\ncheck? " + inCheckRecorder
                 ;
     }
 
@@ -860,36 +860,21 @@ public class Chessboard implements Cloneable{
         this.zobristHash = zobristHash;
     }
 
-    public void setZOBBYHash(long zobristHash) {
-        this.zobbyHash = this.zobristHash;
-    }
-
-    public Stack<Long> getZobristStack() {
-        return zobristStack;
-    }
-
-    public void setZobristStack(Stack<Long> zobristStack) {
-        this.zobristStack = zobristStack;
-    }
-
-    int zobristIndex = 0;
-
     void zobristStackArrayPush(long l){
         zobbyHopeAndPrayers[zobristIndex] = l;
 
         zobristIndex++;
     }
 
-    long zobristStackArrayPop(){
+    void zobristStackArrayPop(){
         if (zobristIndex < 1){
             throw new RuntimeException("popping an empty zobrist array");
         }
         
         zobristIndex--;
-        long temp = zobbyHopeAndPrayers[zobristIndex];
+        zobristHash = zobbyHopeAndPrayers[zobristIndex];
         zobbyHopeAndPrayers[zobristIndex] = 0;
         
-        return temp;
     }
 
     long zobristStackArrayPeek(){
@@ -898,6 +883,40 @@ public class Chessboard implements Cloneable{
         }
         return zobbyHopeAndPrayers[zobristIndex-1];
     }
+
+    private int checkIndex = 0;
+    void checkStackArrayPush(){
+        checkStack[checkIndex] = this.inCheckRecorder;
+        this.inCheckRecorder = false;
+        checkIndex++;
+    }
+
+    void checkStackArrayPop(){
+        if (checkIndex < 1){
+            throw new RuntimeException("popping an empty array");
+        }       
+        checkIndex--; 
+        inCheckRecorder = checkStack[checkIndex];
+        checkStack[checkIndex] = false;
+    }
+    
+
+    private int pinIndex = 0;
+    void pinStackArrayPush(){
+        pinnedPiecesArray[pinIndex] = this.pinnedPieces;
+        this.pinnedPieces = 0;
+        pinIndex++;
+    }
+
+    void pinStackArrayPop(){
+        if (pinIndex < 1){
+            throw new RuntimeException("popping an empty array");
+        } 
+        pinIndex--;  
+        pinnedPieces = pinnedPiecesArray[pinIndex];
+        pinnedPiecesArray[pinIndex] = 0;
+    }
+    
     
     
     void moveStackArrayPush(long l){

@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveRegular.makeRegularMove;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
@@ -17,14 +15,9 @@ class MoveUnmaker {
             throw new IllegalUnmakeException("No moves to unmake.");
         }
 
-        Long realPop = board.getZobristStack().pop();
-        board.setBoardHash(realPop);
-
-        long zobbyPop = board.zobristStackArrayPop();
-        board.setZOBBYHash(zobbyPop);
-
-        Assert.assertEquals(realPop.longValue(), zobbyPop);
-
+        board.checkStackArrayPop();
+        board.pinStackArrayPop();
+        board.zobristStackArrayPop();
         board.moveStackArrayPop();
         
         long pop = board.moveStackData;

@@ -1,9 +1,5 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
-import java.util.Arrays;
-
 public class Perft {
     
     private static long nodesForNps = 0;
@@ -68,33 +64,6 @@ public class Perft {
 
             board.makeMoveAndFlipTurn(move);
 
-
-            
-            
-            
-            long[] zobbb = board.filterZerosAndFlip(board.zobbyHopeAndPrayers);
-            
-            if (zobbb.length != board.getZobristStack().size()){
-                System.out.println("moveStackArray: " + zobbb.length);
-                System.out.println("moveStack: " + board.getZobristStack().size());
-
-                String zobbbbbb = Arrays.toString(zobbb);
-                System.out.println("moveStackArray:  " + zobbbbbb);
-                System.out.println("moveStack:       " + Arrays.toString(board.getZobristStackAsArray()));
-            }
-            Assert.assertEquals(zobbb.length, board.getZobristStack().size());
-
-            if (!Arrays.equals(board.getZobristStackAsArray(), zobbb)){
-                System.out.println(Arrays.toString(zobbb));
-                System.out.println(Arrays.toString(board.getZobristStackAsArray()));
-            }
-
-            Assert.assertTrue(Arrays.equals(board.getZobristStackAsArray(), zobbb));
-            
-            
-            Assert.assertEquals(board.zobbyHash, board.getZobrist());
-            
-            
             nodesForNps++;
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;

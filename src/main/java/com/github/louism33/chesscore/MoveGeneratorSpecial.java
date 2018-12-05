@@ -2,7 +2,8 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitboardResources.*;
 import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
@@ -70,12 +71,7 @@ class MoveGeneratorSpecial {
             return;
         }
         
-        if (!board.hasPreviousMove()){
-//            return;
-        }
-
         long previousMove = board.moveStackArrayPeek();
-        Assert.assertEquals(previousMove, previousMove);
         
         if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
             return;
@@ -131,6 +127,12 @@ class MoveGeneratorSpecial {
             if (move == 0){
                 break;
             }
+            
+            Chessboard initial = new Chessboard(board);
+            if (initial.inCheck(board.isWhiteTurn())){
+                Assert.assertTrue(board.inCheckRecorder);
+            }
+            
             move |= ENPASSANT_MASK;
 
             board.makeMoveAndFlipTurn(move);
@@ -147,6 +149,13 @@ class MoveGeneratorSpecial {
                 e.printStackTrace();
             }
 
+//            if (!board.equals(initial)){
+//                System.out.println("initial");
+//                System.out.println(initial);
+//                System.out.println(board);
+//            }
+            Assert.assertEquals(board, initial);
+            
             if (enPassantWouldLeadToCheck) {
                 continue;
             }

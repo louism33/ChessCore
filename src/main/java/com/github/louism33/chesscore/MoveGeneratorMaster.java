@@ -64,6 +64,8 @@ class MoveGeneratorMaster {
                 enemies, friends, allPieces);
 
         if (numberOfCheckers > 1){
+            board.inCheckRecorder = true;
+            
             addKingLegalMovesOnly(moves, board, white,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
@@ -76,7 +78,11 @@ class MoveGeneratorMaster {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, friends, allPieces);
 
+        board.pinnedPieces = pinnedPieces;
+        
         if (numberOfCheckers == 1){
+            board.inCheckRecorder = true;
+
             addCheckEvasionMoves(moves, board, white, pinnedPieces,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
@@ -84,6 +90,8 @@ class MoveGeneratorMaster {
 
             return moves;
         }
+        
+        board.inCheckRecorder = false;
 
         addNotInCheckMoves(moves, board, white, pinnedPieces,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
