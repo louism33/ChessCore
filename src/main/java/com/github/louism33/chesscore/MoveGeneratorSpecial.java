@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitboardResources.*;
@@ -61,7 +59,7 @@ class MoveGeneratorSpecial {
         if (myPawnsInPosition == 0) {
             return;
         }
-        
+
         long enemyPawnsInPosition = enemyPawns & enPassantTakingRank;
         if (enemyPawnsInPosition == 0) {
             return;
@@ -70,9 +68,9 @@ class MoveGeneratorSpecial {
         if (!board.hasPreviousMove()){
             return;
         }
-        
+
         long previousMove = board.moveStackArrayPeek();
-        
+
         if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
             return;
         }
@@ -127,12 +125,7 @@ class MoveGeneratorSpecial {
             if (move == 0){
                 break;
             }
-            
-            Chessboard initial = new Chessboard(board);
-            if (initial.inCheck(board.isWhiteTurn())){
-                Assert.assertTrue(board.inCheckRecorder);
-            }
-            
+
             move |= ENPASSANT_MASK;
 
             board.makeMoveAndFlipTurn(move);
@@ -149,13 +142,6 @@ class MoveGeneratorSpecial {
                 e.printStackTrace();
             }
 
-//            if (!board.equals(initial)){
-//                System.out.println("initial");
-//                System.out.println(initial);
-//                System.out.println(board);
-//            }
-            Assert.assertEquals(board, initial);
-            
             if (enPassantWouldLeadToCheck) {
                 continue;
             }
@@ -181,12 +167,12 @@ class MoveGeneratorSpecial {
         if (white){
             if(board.isWhiteCanCastleK()){
                 if (areTheseSquaresEmpty(board, BitboardResources.whiteCastleKingEmpties)
+                        && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
+                        && ((board.getWhiteRooks() & BitboardResources.SOUTH_EAST_CORNER) != 0)
                         && areTheseSquaresUnthreatened(board, true, BitboardResources.whiteCastleKingEmpties,
                         myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends, allPieces)
-                        && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
-                        && ((board.getWhiteRooks() & BitboardResources.SOUTH_EAST_CORNER) != 0)){
+                        enemies, friends, allPieces)){
 
                     MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 1);
                 }
@@ -194,12 +180,12 @@ class MoveGeneratorSpecial {
 
             if(board.isWhiteCanCastleQ()){
                 if (areTheseSquaresEmpty(board, BitboardResources.whiteCastleQueenEmpties)
+                        && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
+                        && ((board.getWhiteRooks() & BitboardResources.SOUTH_WEST_CORNER) != 0)
                         && areTheseSquaresUnthreatened(board, true, BitboardResources.whiteCastleQueenUnthreateneds,
                         myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends, allPieces)
-                        && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
-                        && ((board.getWhiteRooks() & BitboardResources.SOUTH_WEST_CORNER) != 0)){
+                        enemies, friends, allPieces)){
 
                     MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 5);
                 }
@@ -209,12 +195,12 @@ class MoveGeneratorSpecial {
         else {
             if(board.isBlackCanCastleK()){
                 if (areTheseSquaresEmpty(board, BitboardResources.blackCastleKingEmpties)
+                        && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
+                        && ((board.getBlackRooks() & BitboardResources.NORTH_EAST_CORNER) != 0)
                         && areTheseSquaresUnthreatened(board, false, BitboardResources.blackCastleKingEmpties,
                         myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends, allPieces)
-                        && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
-                        && ((board.getBlackRooks() & BitboardResources.NORTH_EAST_CORNER) != 0)){
+                        enemies, friends, allPieces)){
 
                     MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 57);
                 }
@@ -222,11 +208,11 @@ class MoveGeneratorSpecial {
 
             if(board.isBlackCanCastleQ()){
                 if (areTheseSquaresEmpty(board, BitboardResources.blackCastleQueenEmpties)
+                        && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
+                        && ((board.getBlackRooks() & BitboardResources.NORTH_WEST_CORNER) != 0)
                         && areTheseSquaresUnthreatened(board, false, BitboardResources.blackCastleQueenUnthreateneds,myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends, allPieces)
-                        && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
-                        && ((board.getBlackRooks() & BitboardResources.NORTH_WEST_CORNER) != 0)){
+                        enemies, friends, allPieces)){
 
                     MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 61);
 

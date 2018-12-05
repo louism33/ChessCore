@@ -179,8 +179,7 @@ public class MoveParser {
 
     public static Piece getMovingPiece(int move){
         final int indexOfSourcePiece = (move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
-        final Piece value = values()[indexOfSourcePiece];
-        return value;
+        return values()[indexOfSourcePiece];
     }
 
     public static Piece getVictimPiece(int move){
@@ -188,8 +187,7 @@ public class MoveParser {
             return NO_PIECE;
         }
         final int indexOfVictimPiece = (move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
-        final Piece value = values()[indexOfVictimPiece];
-        return value;
+        return values()[indexOfVictimPiece];
     }
 
     public static boolean moveIsPawnPushSeven(int move){

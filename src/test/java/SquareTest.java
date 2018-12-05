@@ -73,24 +73,4 @@ public class SquareTest {
         Assert.assertEquals(square, H1);
     }
 
-    @Test
-    void toBitboard() {
-    }
-
-    @Test
-    void getRowNumber() {
-    }
-
-    @Test
-    void getFileNumber() {
-        
-    }
-
-    @Test
-    void getRow() {
-    }
-
-    @Test
-    void getFile() {
-    }
 }

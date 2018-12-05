@@ -2,8 +2,6 @@ import com.github.louism33.chesscore.*;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 public class ChessboardStateTest {
 
     @Test
@@ -100,7 +98,7 @@ public class ChessboardStateTest {
         verifyStateToDepth(5, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
     }
 
-    private static long verifyStateToDepth(int depth, Chessboard board) {
+    private static void verifyStateToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
 
         Assert.assertEquals(board, initial);
@@ -114,7 +112,6 @@ public class ChessboardStateTest {
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
 
-        return ii;
     }
 
     private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="PerftTest" time="13.535" tests="30" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="PerftTest" time="17.375" tests="30" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/jdk-11.0.1/lib"/>
-    <property name="sun.java.command" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter901200962652352025.jar /home/louis/IdeaProjects/ChessCore/target/surefire 2018-12-04T22-53-03_920-jvmRun1 surefire10374566416161165092tmp surefire_05806752497876961994tmp"/>
+    <property name="sun.java.command" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter15643423966294338179.jar /home/louis/IdeaProjects/ChessCore/target/surefire 2018-12-05T22-40-42_969-jvmRun1 surefire10219998560815578921tmp surefire_04211030747960496656tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/louis/IdeaProjects/ChessCore/target/test-classes:/home/louis/IdeaProjects/ChessCore/target/classes:/home/louis/.m2/repository/junit/junit/4.13-beta-1/junit-4.13-beta-1.jar:/home/louis/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/louis/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.3.2/junit-jupiter-api-5.3.2.jar:/home/louis/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar:/home/louis/.m2/repository/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar:/home/louis/.m2/repository/org/junit/platform/junit-platform-commons/1.3.2/junit-platform-commons-1.3.2.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -32,7 +32,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter901200962652352025.jar"/>
+    <property name="surefire.real.class.path" value="/home/louis/IdeaProjects/ChessCore/target/surefire/surefirebooter15643423966294338179.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="11.0.1+13-LTS"/>
     <property name="user.name" value="louis"/>
@@ -58,34 +58,34 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="CastlingPrevented" classname="PerftTest" time="0.154"/>
-  <testcase name="doubleCheck" classname="PerftTest" time="0.013"/>
-  <testcase name="PromoteOutOfCheck" classname="PerftTest" time="0.279"/>
-  <testcase name="underPromoteToCheck" classname="PerftTest" time="0.025"/>
-  <testcase name="test10" classname="PerftTest" time="0.024"/>
-  <testcase name="test11" classname="PerftTest" time="0.014"/>
-  <testcase name="test12" classname="PerftTest" time="0.004"/>
-  <testcase name="test13" classname="PerftTest" time="0.035"/>
-  <testcase name="test14" classname="PerftTest" time="0.007"/>
-  <testcase name="test15" classname="PerftTest" time="5.509"/>
-  <testcase name="regularBoard" classname="PerftTest" time="4.706"/>
-  <testcase name="checkStalemate" classname="PerftTest" time="0.061"/>
-  <testcase name="promoteToCheck" classname="PerftTest" time="0.045"/>
+  <testcase name="CastlingPrevented" classname="PerftTest" time="0.15"/>
+  <testcase name="doubleCheck" classname="PerftTest" time="0.009"/>
+  <testcase name="PromoteOutOfCheck" classname="PerftTest" time="0.295"/>
+  <testcase name="underPromoteToCheck" classname="PerftTest" time="0.018"/>
+  <testcase name="test10" classname="PerftTest" time="0.02"/>
+  <testcase name="test11" classname="PerftTest" time="0.009"/>
+  <testcase name="test12" classname="PerftTest" time="0.001"/>
+  <testcase name="test13" classname="PerftTest" time="0.027"/>
+  <testcase name="test14" classname="PerftTest" time="0.004"/>
+  <testcase name="test15" classname="PerftTest" time="7.93"/>
+  <testcase name="regularBoard" classname="PerftTest" time="6.029"/>
+  <testcase name="checkStalemate" classname="PerftTest" time="0.058"/>
+  <testcase name="promoteToCheck" classname="PerftTest" time="0.039"/>
   <testcase name="longCastlingGivesCheck" classname="PerftTest" time="0.13"/>
-  <testcase name="misc" classname="PerftTest" time="1.323"/>
-  <testcase name="test1" classname="PerftTest" time="0.093"/>
-  <testcase name="test2" classname="PerftTest" time="0.074"/>
-  <testcase name="test3" classname="PerftTest" time="0.108"/>
-  <testcase name="test4" classname="PerftTest" time="0.059"/>
-  <testcase name="test5" classname="PerftTest" time="0.068"/>
+  <testcase name="misc" classname="PerftTest" time="1.412"/>
+  <testcase name="test1" classname="PerftTest" time="0.094"/>
+  <testcase name="test2" classname="PerftTest" time="0.076"/>
+  <testcase name="test3" classname="PerftTest" time="0.104"/>
+  <testcase name="test4" classname="PerftTest" time="0.056"/>
+  <testcase name="test5" classname="PerftTest" time="0.063"/>
   <testcase name="test6" classname="PerftTest" time="0.035"/>
-  <testcase name="test7" classname="PerftTest" time="0.045"/>
-  <testcase name="test8" classname="PerftTest" time="0.139"/>
-  <testcase name="test9" classname="PerftTest" time="0.026"/>
-  <testcase name="EPCaptureChecksOpponent" classname="PerftTest" time="0.21"/>
-  <testcase name="selfStaleMate" classname="PerftTest" time="0.007"/>
-  <testcase name="shortCastlingGivesCheck" classname="PerftTest" time="0.124"/>
-  <testcase name="discoveredCheck" classname="PerftTest" time="0.054"/>
-  <testcase name="CastlingCRAndDoublePins" classname="PerftTest" time="0.064"/>
-  <testcase name="AvoidIllegalEPCapture" classname="PerftTest" time="0.084"/>
+  <testcase name="test7" classname="PerftTest" time="0.044"/>
+  <testcase name="test8" classname="PerftTest" time="0.156"/>
+  <testcase name="test9" classname="PerftTest" time="0.028"/>
+  <testcase name="EPCaptureChecksOpponent" classname="PerftTest" time="0.247"/>
+  <testcase name="selfStaleMate" classname="PerftTest" time="0.001"/>
+  <testcase name="shortCastlingGivesCheck" classname="PerftTest" time="0.111"/>
+  <testcase name="discoveredCheck" classname="PerftTest" time="0.058"/>
+  <testcase name="CastlingCRAndDoublePins" classname="PerftTest" time="0.074"/>
+  <testcase name="AvoidIllegalEPCapture" classname="PerftTest" time="0.088"/>
 </testsuite>

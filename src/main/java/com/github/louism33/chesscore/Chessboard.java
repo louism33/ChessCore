@@ -21,7 +21,7 @@ public class Chessboard implements Cloneable{
     private long zobristHash;
     long moveStackData;
 
-    private int arrayLength = 128;
+    private final int arrayLength = 128;
     
     private long[] zobbyHopeAndPrayers = new long[arrayLength];
     private long[] moveStackArray = new long[arrayLength];
@@ -257,10 +257,7 @@ public class Chessboard implements Cloneable{
         if (!this.inCheck(isWhiteTurn())){
             return false;
         }
-        if (this.generateLegalMoves().length == 0){
-            return true;
-        }
-        return false;
+        return this.generateLegalMoves().length == 0;
     }
 
     /**
@@ -271,10 +268,7 @@ public class Chessboard implements Cloneable{
         if (this.inCheck(isWhiteTurn())){
             return false;
         }
-        if (this.generateLegalMoves().length == 0){
-            return true;
-        }
-        return false;
+        return this.generateLegalMoves().length == 0;
     }
 
     /**
@@ -386,15 +380,7 @@ public class Chessboard implements Cloneable{
 
     void makeZobrist(){
         this.zobristHash = ZobristHashUtil.boardToHash(this);
-//        this.zobbyHash = this.zobristHash;
     }
-
-//    void cloneZobristStack(Stack<Long> zobristStack){
-//        if (zobristStack.size() < 1){
-//            return;
-//        }
-//        this.zobristStack = (Stack<Long>) zobristStack.clone();
-//    }
 
     public long whitePieces(){
         return getWhitePawns() | getWhiteKnights() | getWhiteBishops() | getWhiteRooks() | getWhiteQueen() | getWhiteKing();
@@ -432,7 +418,8 @@ public class Chessboard implements Cloneable{
     @Override
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
-        return "\n" + Art.boardArt(this) + "\n" + turn +"\n"+this.getBoardHash() +"\n"
+        return "\n" + Art.boardArt(this) + "\n" + turn
+//                + "\n"+this.getBoardHash() +"\n"
 //                + "\npin array: "+ Arrays.toString(pinnedPiecesArray)
 //                + "\npinned pieces: "+ pinnedPieces
 //                +"\ncheck? " + inCheckRecorder
@@ -835,10 +822,6 @@ public class Chessboard implements Cloneable{
         return boardRepresentation;
     }
 
-
-    void makeSeriesOfANMoves(String an){
-
-    }
 
     public ChessboardDetails getDetails() {
         return details;
