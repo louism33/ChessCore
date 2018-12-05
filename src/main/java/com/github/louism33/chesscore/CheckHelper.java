@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import java.util.Stack;
-
 import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.PieceMove.*;
 
@@ -62,22 +60,23 @@ class CheckHelper {
 
     // faster to create new stack and pop things to it ?
     static boolean isDrawByRepetition(Chessboard board){
-        Stack<Long> zobristStack = (Stack<Long>) board.getZobristStack().clone();
-        long zobristHashToMatch = board.getBoardHash();
-        int howManyMovesToSearchToMax = 50;
-        int limit = Math.min(howManyMovesToSearchToMax, zobristStack.size());
-
-        int counter = 0;
-        for (int previousBoardHashIndex = limit - 1; previousBoardHashIndex >= 0; previousBoardHashIndex--){
-            Long pop = zobristStack.pop();
-            if (pop == zobristHashToMatch){
-                counter++;
-            }
-            if (counter > 0){
-                return true;
-            }
-        }
-        return counter > 0;
+        return false;
+//        Stack<Long> zobristStack = (Stack<Long>) board.getZobristStack().clone();
+//        long zobristHashToMatch = board.getBoardHash();
+//        int howManyMovesToSearchToMax = 50;
+//        int limit = Math.min(howManyMovesToSearchToMax, zobristStack.size());
+//
+//        int counter = 0;
+//        for (int previousBoardHashIndex = limit - 1; previousBoardHashIndex >= 0; previousBoardHashIndex--){
+//            Long pop = zobristStack.pop();
+//            if (pop == zobristHashToMatch){
+//                counter++;
+//            }
+//            if (counter > 0){
+//                return true;
+//            }
+//        }
+//        return counter > 0;
     }
 
     static boolean isDrawByInsufficientMaterial(Chessboard board){

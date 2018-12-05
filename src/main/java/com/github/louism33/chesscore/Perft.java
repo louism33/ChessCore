@@ -63,7 +63,7 @@ public class Perft {
             }
 
             board.makeMoveAndFlipTurn(move);
-            
+
             nodesForNps++;
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;

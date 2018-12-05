@@ -10,8 +10,14 @@ class MakeMoveAndHashUpdate {
     static void makeMoveAndHashUpdate(Chessboard board, int move){
         Assert.assertNotEquals(move, 0);
 
-        board.getZobristStack().push(board.getBoardHash());
+        
+        board.checkStackArrayPush();
+        board.pinStackArrayPush();
+        
+        board.zobristStackArrayPush(board.getBoardHash());
+        
         board.setBoardHash(ZobristHashUtil.updateHashPreMove(board, board.getBoardHash(), move));
+        
         
         makeMoveMaster(board, move);
         
@@ -19,15 +25,19 @@ class MakeMoveAndHashUpdate {
     }
 
     static void UnMakeMoveAndHashUpdate(Chessboard board) throws IllegalUnmakeException {
-        board.setBoardHash(board.getZobristStack().pop());
+        
         unMakeMoveMaster(board);
     }
 
     static void makeNullMoveAndHashUpdate(Chessboard board){
-        board.getZobristStack().push(board.getBoardHash());
+
+        board.zobristStackArrayPush(board.getBoardHash());
+
+        board.checkStackArrayPush();
+        board.pinStackArrayPush();
         
-        if (board.moveStackCool.size() > 0) {
-            ZobristHashUtil.updateWithEPFlags(board, board.getBoardHash());
+        if (board.hasPreviousMove()){
+            board.setBoardHash(ZobristHashUtil.updateWithEPFlags(board, board.getBoardHash()));
         }
 
         makeMoveMaster(board, 0);
@@ -36,7 +46,7 @@ class MakeMoveAndHashUpdate {
     }
 
     static void unMakeNullMove(Chessboard board) throws IllegalUnmakeException {
-        board.setBoardHash(board.getZobristStack().pop());
+
         unMakeMoveMaster(board);
     }
 }
