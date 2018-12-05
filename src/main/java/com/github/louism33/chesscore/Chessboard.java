@@ -884,9 +884,12 @@ public class Chessboard implements Cloneable{
         if (zobristIndex < 1){
             throw new RuntimeException("popping an empty zobrist array");
         }
-        zobbyHopeAndPrayers[zobristIndex] = 0;
+        
         zobristIndex--;
-        return zobbyHopeAndPrayers[zobristIndex];
+        long temp = zobbyHopeAndPrayers[zobristIndex];
+        zobbyHopeAndPrayers[zobristIndex] = 0;
+        
+        return temp;
     }
 
     long zobristStackArrayPeek(){
