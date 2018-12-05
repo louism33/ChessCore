@@ -75,7 +75,6 @@ public class PieceMove {
                                          long bishops, long rooks, long queens, long allPieces){
         long mask = legalPushes | legalCaptures;
         long ans = 0;
-        // board without king
         
         while (bishops != 0){
             final long bishop = getFirstPiece(bishops);

@@ -166,8 +166,7 @@ class Setup {
     }
 
     private static long singleBishopAllMovesFromOcc(long blockers, long piece){
-        long ALL_PIECES = blockers,
-                NORTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_EIGHT,
+        long NORTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_EIGHT,
                 NORTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_EIGHT,
                 SOUTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_ONE,
                 SOUTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_ONE;
@@ -179,63 +178,62 @@ class Setup {
             if ((temp & NORTH_WEST) != 0) break;
             temp <<= 9;
             answer |= temp;
-            if ((temp & ALL_PIECES) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
             if ((temp & NORTH_EAST) != 0) break;
             temp <<= 7;
             answer |= temp;
-            if ((temp & ALL_PIECES) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
             if ((temp & SOUTH_WEST) != 0) break;
             temp >>>= 7;
             answer |= temp;
-            if ((temp & ALL_PIECES) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
             if ((temp & SOUTH_EAST) != 0) break;
             temp >>>= 9;
             answer |= temp;
-            if ((temp & ALL_PIECES) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         return answer;
     }
 
 
     private static long singleRookAllMovesFromOcc(long blockers, long piece){
-        long allPieces = blockers;
         long answer = 0;
         long temp = piece;
         while (true) {
             if ((temp & BitboardResources.FILE_A) != 0) break;
             temp <<= 1;
             answer |= temp;
-            if ((temp & allPieces) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
             if ((temp & BitboardResources.FILE_H) != 0) break;
             temp >>>= 1;
             answer |= temp;
-            if ((temp & allPieces) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
             if ((temp & BitboardResources.RANK_EIGHT) != 0) break;
             temp <<= 8;
             answer |= temp;
-            if ((temp & allPieces) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
             if ((temp & BitboardResources.RANK_ONE) != 0) break;
             temp >>>= 8;
             answer |= temp;
-            if ((temp & allPieces) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         return answer;
     }
@@ -275,7 +273,6 @@ class Setup {
     }
 
     public static long singleRookAllMovesCleverer(long blockers, long piece, boolean white, long legalPushes, long legalCaptures){
-        long allPieces = blockers;
         long answer = 0;
         long temp = piece;
         while (true) {
@@ -283,7 +280,7 @@ class Setup {
             if ((temp & BitboardResources.FILE_B) != 0) break;
             temp <<= 1;
             answer |= temp;
-            if ((temp & allPieces) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
@@ -291,7 +288,7 @@ class Setup {
             if ((temp & BitboardResources.FILE_G) != 0) break;
             temp >>>= 1;
             answer |= temp;
-            if ((temp & allPieces) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
@@ -299,7 +296,7 @@ class Setup {
             if ((temp & BitboardResources.RANK_SEVEN) != 0) break;
             temp <<= 8;
             answer |= temp;
-            if ((temp & allPieces) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
@@ -307,7 +304,7 @@ class Setup {
             if ((temp & BitboardResources.RANK_TWO) != 0) break;
             temp >>>= 8;
             answer |= temp;
-            if ((temp & allPieces) != 0) break;
+            if ((temp & blockers) != 0) break;
         }
         return answer & (legalPushes | legalCaptures);
     }
@@ -356,26 +353,12 @@ class Setup {
             if ((temp & allPieces) != 0) break;
         }
 
-        List<Long> allPossibleEffectiveBlockers = new ArrayList<>();
-
-//        Art.printLong(left);
-//        Art.printLong(right);
-//        Art.printLong(up);
-//        Art.printLong(down);
-
         final List<Long> allLeft = getAllPieces(left, 0);
         final List<Long> allRight = getAllPieces(right, 0);
         final List<Long> allUp = getAllPieces(up, 0);
         final List<Long> allDown = getAllPieces(down, 0);
 
-        final List<Long> permute = permuteRook(allLeft, allRight, allDown, allUp);
-
-//        allLeft.add(0L);
-//        allRight.add(0L);
-//        allUp.add(0L);
-//        allDown.add(0L);
-
-        return permute;
+        return permuteRook(allLeft, allRight, allDown, allUp);
     }
 
 
@@ -426,7 +409,6 @@ class Setup {
             if (LIMIT > 11) {
                 if ((t & 2048) == 0) mask |= allPieces.get(11);
             }
-//            Art.printLong(mask);
             allMasks.add(mask);
         }
         return allMasks;
@@ -461,7 +443,6 @@ class Setup {
             if (LIMIT > 11) {
                 if ((t & 2048) == 0) mask |= allPieces.get(11);
             }
-//            Art.printLong(mask);
             allMasks.add(mask);
         }
         return allMasks;
@@ -620,27 +601,12 @@ class Setup {
             if ((temp & ALL_PIECES) != 0) break;
         }
 
-
-        List<Long> allPossibleEffectiveBlockers = new ArrayList<>();
-
-//        Art.printLong(upleft);
-//        Art.printLong(upright);
-//        Art.printLong(downleft);
-//        Art.printLong(downright);
-
         final List<Long> allupLeft = getAllPieces(upleft, 0);
         final List<Long> allupRight = getAllPieces(upright, 0);
         final List<Long> alldownleft = getAllPieces(downleft, 0);
         final List<Long> alldownright = getAllPieces(downright, 0);
 
-        final List<Long> permute = permuteBishop(allupLeft, allupRight, alldownleft, alldownright);
-
-//        allLeft.add(0L);
-//        allRight.add(0L);
-//        allUp.add(0L);
-//        allDown.add(0L);
-
-        return permute;
+        return permuteBishop(allupLeft, allupRight, alldownleft, alldownright);
     }
 
 

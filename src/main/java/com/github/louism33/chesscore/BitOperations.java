@@ -20,15 +20,6 @@ public class BitOperations {
         return Long.numberOfTrailingZeros(pieces);
     }
 
-    public static List<Integer> getIndexOfAllPieces(long pieces){
-        List<Integer> indexes = new ArrayList<>();
-        while (pieces != 0){
-            indexes.add(getIndexOfFirstPiece(pieces));
-            pieces &= pieces - 1;
-        }
-        return indexes;
-    }
-
     public static int populationCount (long pieces) {
         return Long.bitCount(pieces);
     }

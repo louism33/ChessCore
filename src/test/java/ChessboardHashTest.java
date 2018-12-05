@@ -99,7 +99,7 @@ public class ChessboardHashTest {
         verifyHashToDepth(5, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
     }
     
-    private static long verifyHashToDepth(int depth, Chessboard board) {
+    private static void verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
         
         Assert.assertEquals(board, initial);
@@ -112,8 +112,7 @@ public class ChessboardHashTest {
         }
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
-       
-        return ii;
+
     }
 
     private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {

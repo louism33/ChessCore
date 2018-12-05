@@ -58,7 +58,6 @@ class CheckHelper {
         return numberOfThreats;
     }
 
-    // faster to create new stack and pop things to it ?
     static boolean isDrawByRepetition(Chessboard board){
         return false;
 //        Stack<Long> zobristStack = (Stack<Long>) board.getZobristStack().clone();

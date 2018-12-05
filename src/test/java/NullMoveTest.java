@@ -61,7 +61,7 @@ public class NullMoveTest {
 
     
     
-    private static long verifyHashToDepth(int depth, Chessboard board) {
+    private static void verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
         Assert.assertEquals(board, initial);
 //        System.out.println(board);
@@ -92,7 +92,6 @@ public class NullMoveTest {
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
 
-        return ii;
     }
 
     private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {
@@ -102,8 +101,7 @@ public class NullMoveTest {
         }
         int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            final int size = moves.length;
-            return size;
+            return moves.length;
         }
         for (int move : moves) {
             if (move == 0){
