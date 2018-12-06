@@ -49,8 +49,6 @@ public class Chessboard implements Cloneable{
         details = new ChessboardDetails();
         makeBoardBasedOnFENSpecific(fen);
 
-        System.out.println(this);
-        
         this.zobristHash = ZobristHashUtil.boardToHash(this);
         Setup.init(false);
     }
@@ -805,7 +803,7 @@ public class Chessboard implements Cloneable{
                     this.setBlackKing(this.getBlackKing() | pieceFromFen);
                     break;
                 default:
-                    System.out.println("I don't know this Piece");
+                    throw new RuntimeException("Could not parse fen string");
             }
         }
     }

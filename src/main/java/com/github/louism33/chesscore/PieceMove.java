@@ -18,9 +18,7 @@ public class PieceMove {
     }
 
     public static long singlePawnCaptures(long piece, boolean white, long legalCaptures) {
-        if (getIndexOfFirstPiece(piece) < 0 || getIndexOfFirstPiece(piece) > 63){
-            System.out.println();
-        }
+        Assert.assertTrue(getIndexOfFirstPiece(piece) < 0 || getIndexOfFirstPiece(piece) > 63);
         return legalCaptures & (white
                 ? PAWN_CAPTURE_TABLE_WHITE[getIndexOfFirstPiece(piece)]
                 : PAWN_CAPTURE_TABLE_BLACK[getIndexOfFirstPiece(piece)]);

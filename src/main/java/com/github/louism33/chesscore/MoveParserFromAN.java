@@ -10,8 +10,6 @@ public class MoveParserFromAN {
     }
     
     private static int makeMoveBasedOnAlgNotation(Chessboard board, String algebraicNotation){
-        System.out.println(algebraicNotation);
-        System.out.println();
 
         long whichPieceCouldBeMoving = whichPieceIsMoving(board, algebraicNotation);
         int x = rankAndFile(board, algebraicNotation);
@@ -21,9 +19,6 @@ public class MoveParserFromAN {
         Piece piece = extractRealPieceFromLong(board, whichPieceCouldBeMoving, destinationSquare);
 
 //        findOriginalPiece(piece, destinationSquare);
-
-        Art.printLong(whichPieceCouldBeMoving);
-        Art.printLong(destinationSquare);
 
         return 0;
     }
@@ -86,7 +81,6 @@ public class MoveParserFromAN {
             throw new RuntimeException("Could not parse Piece");
         }
 
-        System.out.println(pieceFromAN);
         
         switch (pieceFromAN) {
             case "p": {
@@ -127,8 +121,7 @@ public class MoveParserFromAN {
                 return board.getWhiteKing();
             }
             default:
-                System.out.println("problem with Piece identifier in which piece in moving()");
-                return 0;
+                throw new RuntimeException("problem with Piece identifier in which piece in moving()");
         }
     }
     
@@ -194,8 +187,7 @@ public class MoveParserFromAN {
                 return 0;
             }
             default:
-                System.out.println("problem with Getting destinationIndex file");
-                return 0;
+                throw new RuntimeException("problem with Getting destinationIndex file");
         }
     }
     
