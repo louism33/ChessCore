@@ -245,10 +245,7 @@ class ZobristHashUtil {
                  */
                 boardHash ^= destinationZH;
 
-                if (whichPromotingPiece == 0){
-                    System.out.println(board);
-                    System.out.println();
-                }
+                Assert.assertTrue(whichPromotingPiece != 0);
                 long promotionZH = zobristHashPieces[destinationSquareIndex][whichPromotingPiece - 1];
                 boardHash ^= promotionZH;
             }

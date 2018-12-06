@@ -18,9 +18,7 @@ public class PieceMove {
     }
 
     public static long singlePawnCaptures(long piece, boolean white, long legalCaptures) {
-        if (getIndexOfFirstPiece(piece) < 0 || getIndexOfFirstPiece(piece) > 63){
-            System.out.println();
-        }
+        Assert.assertTrue(getIndexOfFirstPiece(piece) > 0 || getIndexOfFirstPiece(piece) <= 63);
         return legalCaptures & (white
                 ? PAWN_CAPTURE_TABLE_WHITE[getIndexOfFirstPiece(piece)]
                 : PAWN_CAPTURE_TABLE_BLACK[getIndexOfFirstPiece(piece)]);
@@ -122,7 +120,7 @@ public class PieceMove {
 
     public static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
         if (!ready){
-            setup();
+            setup(false);
         }
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(rook), 1);
@@ -140,7 +138,7 @@ public class PieceMove {
 
     public static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
         if (!ready){
-            setup();
+            setup(false);
         }
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(bishop), 1);

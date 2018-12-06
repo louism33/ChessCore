@@ -3,17 +3,15 @@ package com.github.louism33.chesscore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class eMoveParserFromAN {
+public class MoveParserFromAN {
 
-    static int destinationIndex(Chessboard board, String algebraicNotation){
+    public static int destinationIndex(Chessboard board, String algebraicNotation){
         return rankAndFile(board, algebraicNotation);
     }
     
     private static int makeMoveBasedOnAlgNotation(Chessboard board, String algebraicNotation){
-        System.out.println(algebraicNotation);
-        System.out.println();
 
-        long whichPieceCouldBeMoving = whichPieceIsMoving(board, algebraicNotation);
+        long whichPieceCouldBeMoving = whichPieceIsMovingBitboard(board, algebraicNotation);
         int x = rankAndFile(board, algebraicNotation);
         
         long destinationSquare = BitOperations.newPieceOnSquare(x);
@@ -21,9 +19,6 @@ class eMoveParserFromAN {
         Piece piece = extractRealPieceFromLong(board, whichPieceCouldBeMoving, destinationSquare);
 
 //        findOriginalPiece(piece, destinationSquare);
-
-        Art.printLong(whichPieceCouldBeMoving);
-        Art.printLong(destinationSquare);
 
         return 0;
     }
@@ -72,7 +67,7 @@ class eMoveParserFromAN {
         }
     }
 
-    private static long whichPieceIsMoving(Chessboard board, String algebraicNotation){
+    public static Piece whichPieceIsMoving(Chessboard board, String algebraicNotation){
         String boardPattern = "[p|n|b|r|q|k|P|N|B|R|Q|K]?";
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(algebraicNotation);
@@ -86,7 +81,63 @@ class eMoveParserFromAN {
             throw new RuntimeException("Could not parse Piece");
         }
 
-        System.out.println(pieceFromAN);
+        switch (pieceFromAN) {
+            case "p": {
+                return Piece.BLACK_PAWN;
+            }
+            case "n": {
+                return Piece.BLACK_KNIGHT;
+            }
+            case "b": {
+                return Piece.BLACK_BISHOP;
+            }
+            case "r": {
+                return Piece.BLACK_ROOK;
+            }
+            case "q": {
+                return Piece.BLACK_QUEEN;
+            }
+            case "k": {
+                return Piece.BLACK_KING;
+            }
+
+            case "P": {
+                return Piece.WHITE_PAWN;
+            }
+            case "N": {
+                return Piece.WHITE_KNIGHT;
+            }
+            case "B": {
+                return Piece.WHITE_BISHOP;
+            }
+            case "R": {
+                return Piece.WHITE_ROOK;
+            }
+            case "Q": {
+                return Piece.WHITE_QUEEN;
+            }
+            case "K": {
+                return Piece.WHITE_KING;
+            }
+            default:
+                throw new RuntimeException("problem with Piece identifier in which piece in moving()");
+        }
+    }
+    
+    
+    private static long whichPieceIsMovingBitboard(Chessboard board, String algebraicNotation){
+        String boardPattern = "[p|n|b|r|q|k|P|N|B|R|Q|K]?";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(algebraicNotation);
+
+        String pieceFromAN = "";
+
+        if (m.find()){
+            pieceFromAN = m.group();
+        }
+        if (pieceFromAN.length() == 0){
+            throw new RuntimeException("Could not parse Piece");
+        }
         
         switch (pieceFromAN) {
             case "p": {
@@ -127,8 +178,7 @@ class eMoveParserFromAN {
                 return board.getWhiteKing();
             }
             default:
-                System.out.println("problem with Piece identifier in which piece in moving()");
-                return 0;
+                throw new RuntimeException("problem with Piece identifier in which piece in moving()");
         }
     }
     
@@ -194,8 +244,7 @@ class eMoveParserFromAN {
                 return 0;
             }
             default:
-                System.out.println("problem with Getting destinationIndex file");
-                return 0;
+                throw new RuntimeException("problem with Getting destinationIndex file");
         }
     }
     
