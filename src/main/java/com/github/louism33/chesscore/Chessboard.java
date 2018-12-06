@@ -38,6 +38,7 @@ public class Chessboard implements Cloneable{
     public Chessboard() {
         init();
         makeZobrist();
+        Setup.init(false);
     }
 
     /**
@@ -51,6 +52,7 @@ public class Chessboard implements Cloneable{
         System.out.println(this);
         
         this.zobristHash = ZobristHashUtil.boardToHash(this);
+        Setup.init(false);
     }
 
     Chessboard(boolean blank){
@@ -103,6 +105,7 @@ public class Chessboard implements Cloneable{
 
         // this.zobrist = that.zobrist...
         this.makeZobrist();
+        Setup.init(false);
 
     }
 
@@ -928,15 +931,4 @@ public class Chessboard implements Cloneable{
         return index > 0 && moveStackArray[index - 1] != 0;
     }
     
-    public static long[] reverse(long[] arr) {
-        long[] flip = new long[arr.length];
-        final int length = flip.length;
-        for (int i = 0; i < length; i++){
-            flip[i] = arr[length - i - 1];
-        }
-        return flip;
-    }
-
-
-
 }

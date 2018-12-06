@@ -10,22 +10,24 @@ import static com.github.louism33.chesscore.BitboardResources.*;
 class Setup {
     
     public static void main(String[] args){
-        setup();
+        setup(false);
     }
     
-    public static void setup(){
-        init();
+    static void setup(boolean force){
+        init(false);
     }
 
     static boolean ready = false;
 
-    private static void init(){
-        calculateRookDatabase();
-        calculateBishopDatabase();
+    static void init(boolean force){
+        if (!ready || force) {
+            calculateRookDatabase();
+            calculateBishopDatabase();
 
-        calculateInBetweenSquares();
+            calculateInBetweenSquares();
 
 //        System.out.println("get ready");
+        }
         ready = true;
     }
 

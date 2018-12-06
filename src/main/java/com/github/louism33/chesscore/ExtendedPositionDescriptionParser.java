@@ -19,14 +19,14 @@ public class ExtendedPositionDescriptionParser {
 
         List<Integer> goodDestinations = new ArrayList<>();
         for (String bm : bms) {
-            goodDestinations.add(eMoveParserFromAN.destinationIndex(chessboard, bm));
+            goodDestinations.add(MoveParserFromAN.destinationIndex(chessboard, bm));
         }
 
 
         String[] ams = extractAvoidMoves(edpPosition);
         List<Integer> badDestinations = new ArrayList<>();
         for (String am : ams) {
-            badDestinations.add(eMoveParserFromAN.destinationIndex(chessboard, am));
+            badDestinations.add(MoveParserFromAN.destinationIndex(chessboard, am));
         }
 
         return new EPDObject(chessboard, goodDestinations, id, boardFen, badDestinations);

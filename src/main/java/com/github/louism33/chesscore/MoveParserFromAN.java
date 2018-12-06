@@ -3,9 +3,9 @@ package com.github.louism33.chesscore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class eMoveParserFromAN {
+public class MoveParserFromAN {
 
-    static int destinationIndex(Chessboard board, String algebraicNotation){
+    public static int destinationIndex(Chessboard board, String algebraicNotation){
         return rankAndFile(board, algebraicNotation);
     }
     

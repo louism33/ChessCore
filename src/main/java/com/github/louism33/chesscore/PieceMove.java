@@ -122,7 +122,7 @@ public class PieceMove {
 
     public static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
         if (!ready){
-            setup();
+            setup(false);
         }
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(rook), 1);
@@ -140,7 +140,7 @@ public class PieceMove {
 
     public static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
         if (!ready){
-            setup();
+            setup(false);
         }
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(bishop), 1);
