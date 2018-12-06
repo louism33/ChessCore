@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c35fe9c9-175e-43e1-b3c4-5d6bc53ba64a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Chessboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Chessboard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/PieceMove.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/PieceMove.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ZobristHashUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ZobristHashUtil.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -218,7 +214,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544083644187" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544084082235" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -239,7 +235,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.CloneTest">
+  <component name="RunManager" selected="JUnit.NullMoveTest">
     <configuration name="All Features in: java" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
       <option name="CUCUMBER_CORE_VERSION" value="3" />
       <option name="FILE_PATH" value="$PROJECT_DIR$/src/test/java" />
@@ -265,6 +261,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="NullMoveTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ChessCore" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="NullMoveTest" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="PerftTestTinyDepths" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ChessCore" />
       <option name="PACKAGE_NAME" value="" />
@@ -277,9 +281,11 @@
       <item itemvalue="Cucumber java.All Features in: java" />
       <item itemvalue="JUnit.PerftTestTinyDepths" />
       <item itemvalue="JUnit.CloneTest" />
+      <item itemvalue="JUnit.NullMoveTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.NullMoveTest" />
         <item itemvalue="JUnit.CloneTest" />
         <item itemvalue="Cucumber java.All Features in: java" />
         <item itemvalue="JUnit.PerftTestTinyDepths" />
@@ -299,7 +305,7 @@
       <workItem from="1542536265152" duration="92000" />
       <workItem from="1543617792366" duration="1429000" />
       <workItem from="1544046010664" duration="3451000" />
-      <workItem from="1544082182308" duration="1433000" />
+      <workItem from="1544082182308" duration="1766000" />
     </task>
     <servers />
   </component>
@@ -319,15 +325,17 @@
     <history-entry file="CloneTest - 2018.12.06 at 08h 57m 23s.xml">
       <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="CloneTest - 2018.12.06 at 09h 07m 28s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6405000" />
+    <option name="totallyTimeSpent" value="6738000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1368" height="741" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3689394" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3689394" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -340,7 +348,7 @@
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" />
-      <window_info anchor="bottom" id="Run" order="3" visible="true" weight="0.2003231" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.2003231" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -348,7 +356,7 @@
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32956383" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32956383" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.32956383" />
       <window_info anchor="bottom" id="Messages" order="13" weight="0.3279483" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
