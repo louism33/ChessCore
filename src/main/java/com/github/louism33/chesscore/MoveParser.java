@@ -1,13 +1,19 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import java.util.Arrays;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
-import static com.github.louism33.chesscore.MoveConstants.*;
+import static com.github.louism33.chesscore.ConstantsMove.*;
 import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
 import static com.github.louism33.chesscore.Piece.*;
 
 public class MoveParser {
+    
+    public static int newMove(Chessboard board, String algebraicNotation){
+        return MoveParserFromAN.buildMoveFromAN(board, algebraicNotation);
+    }
 
     public static int numberOfRealMoves(int[] moves){
         int index = 0;
@@ -27,14 +33,13 @@ public class MoveParser {
     }
 
     private static int buildMove(Chessboard board, int s, int d) {
-        if (s >= 64 | s < 0 | d >= 64 | d < 0) {
-            throw new RuntimeException("Move: False Move " + s + " " + d);
-        }
+        Assert.assertTrue(s >= 0 && s < 64 && d >= 0 && d < 64);
+        
         int move = 0;
         move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
         move |= (d & DESTINATION_MASK);
         
-        move |= (MoveConstants.SOURCE_PIECE_MASK | whichPieceMask(pieceOnSquare(board, newPieceOnSquare(s)))) << MoveConstants.SOURCE_PIECE_OFFSET;
+        move |= (ConstantsMove.SOURCE_PIECE_MASK | whichPieceMask(pieceOnSquare(board, newPieceOnSquare(s)))) << ConstantsMove.SOURCE_PIECE_OFFSET;
         
         return move;
     }
@@ -56,43 +61,83 @@ public class MoveParser {
         return buildMove(board, source, destinationIndex);
     }
 
-    public static int moveFromSourceDestinationCapture(Chessboard board, int source, int destinationIndex, boolean capture) {
+    static int moveFromSourceDestinationSquareCaptureSecure(Chessboard board, Piece movingPiece, 
+                                                            long file, Square source, Square destinationIndex, boolean capture) {
+        if (source == null){
+            int sourceIndex = -1;
+            
+            int[] moves = board.generateLegalMoves();
+            for (int i = 0; i < moves.length; i++){
+                int move = moves[i];
+                if (move == 0){
+                    break;
+                }
+                if ((MoveParser.getSourceLong(move) & file) == 0){
+                    continue;
+                }
+                
+                if (MoveParser.getDestinationIndex(move) == destinationIndex.ordinal()){
+                    if (movingPiece != null && movingPiece != NO_PIECE){
+                        if (MoveParser.getMovingPiece(move) != movingPiece){
+                            continue;
+                        }
+                    }
+                    sourceIndex = MoveParser.getSourceIndex(move);
+                }
+            }
+            if (sourceIndex == -1){
+                throw new RuntimeException("Could not parse Algebraic notation move");
+            }
+            return buildMove(board, sourceIndex, destinationIndex.ordinal())
+                    | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
+        }
+        
+        return buildMove(board, source.ordinal(), destinationIndex.ordinal())
+                | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
+    }
+    
+    static int moveFromSourceDestinationSquareCapture(Chessboard board, Square source, Square destinationIndex, boolean capture) {
+        return buildMove(board, source.ordinal(), destinationIndex.ordinal())
+                | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
+    }
+    
+    static int moveFromSourceDestinationCapture(Chessboard board, int source, int destinationIndex, boolean capture) {
         return buildMove(board, source, destinationIndex) 
                 | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex)) : 0);
     }
 
     private static int capturePieceMask(Chessboard board, int destinationIndex) {
-        return whichPieceMask(pieceOnSquare(board, newPieceOnSquare(destinationIndex))) << MoveConstants.VICTIM_PIECE_OFFSET;
+        return whichPieceMask(pieceOnSquare(board, newPieceOnSquare(destinationIndex))) << ConstantsMove.VICTIM_PIECE_OFFSET;
     }
 
     private static int whichPieceMask(Piece piece) {
         switch (piece){
 
             case WHITE_PAWN:
-                return MoveConstants.WHITE_PAWN_MASK;
+                return ConstantsMove.WHITE_PAWN_MASK;
             case WHITE_KNIGHT:
-                return MoveConstants.WHITE_KNIGHT_MASK;
+                return ConstantsMove.WHITE_KNIGHT_MASK;
             case WHITE_BISHOP:
-                return MoveConstants.WHITE_BISHOP_MASK;
+                return ConstantsMove.WHITE_BISHOP_MASK;
             case WHITE_ROOK:
-                return MoveConstants.WHITE_ROOK_MASK;
+                return ConstantsMove.WHITE_ROOK_MASK;
             case WHITE_QUEEN:
-                return MoveConstants.WHITE_QUEEN_MASK;
+                return ConstantsMove.WHITE_QUEEN_MASK;
             case WHITE_KING:
-                return MoveConstants.WHITE_KING_MASK;
+                return ConstantsMove.WHITE_KING_MASK;
 
             case BLACK_PAWN:
-                return MoveConstants.BLACK_PAWN_MASK;
+                return ConstantsMove.BLACK_PAWN_MASK;
             case BLACK_KNIGHT:
-                return MoveConstants.BLACK_KNIGHT_MASK;
+                return ConstantsMove.BLACK_KNIGHT_MASK;
             case BLACK_BISHOP:
-                return MoveConstants.BLACK_BISHOP_MASK;
+                return ConstantsMove.BLACK_BISHOP_MASK;
             case BLACK_ROOK:
-                return MoveConstants.BLACK_ROOK_MASK;
+                return ConstantsMove.BLACK_ROOK_MASK;
             case BLACK_QUEEN:
-                return MoveConstants.BLACK_QUEEN_MASK;
+                return ConstantsMove.BLACK_QUEEN_MASK;
             case BLACK_KING:
-                return MoveConstants.BLACK_KING_MASK;
+                return ConstantsMove.BLACK_KING_MASK;
                 
             case NO_PIECE:
                 return 0;
@@ -176,6 +221,24 @@ public class MoveParser {
         if (!((move & SPECIAL_MOVE_MASK) == PROMOTION_MASK)) return false;
         return (move & WHICH_PROMOTION) == QUEEN_PROMOTION_MASK;
     }
+    
+    static int makeCheckingMove(int move){
+        return move | (inCheck << checkOffset);
+    }
+
+    public static boolean isCheckingMove (int move){
+        if (((move & OPTIONAL_CHECKING_MOVE_MASK) >>> checkOffset)  == notSet){
+            return false;
+        }
+        else if (((move & OPTIONAL_CHECKING_MOVE_MASK) >>> checkOffset) == notInCheck){
+            return false;
+        }
+        else if (((move & OPTIONAL_CHECKING_MOVE_MASK) >>> checkOffset) == inCheck){
+            return true;
+        }
+
+        return (move & WHICH_PROMOTION) == QUEEN_PROMOTION_MASK;
+    }
 
     public static Piece getMovingPiece(int move){
         final int indexOfSourcePiece = (move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
@@ -202,6 +265,13 @@ public class MoveParser {
                 & getMovingPiece(move) == BLACK_PAWN
                 & (getDestinationLong(move) & BitboardResources.RANK_SIX) != 0
                 & (getDestinationLong(move) & BitboardResources.RANK_THREE) != 0;
+    }
+    
+    public static boolean equalsANMove(int move, int compareMove){
+        int destinationIndexMove = getDestinationIndex(move);
+        int destinationIndexCompare = getDestinationIndex(compareMove);
+        
+        return destinationIndexMove == destinationIndexCompare;
     }
 
 }

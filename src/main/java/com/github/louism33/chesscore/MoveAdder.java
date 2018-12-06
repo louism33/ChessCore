@@ -2,7 +2,7 @@ package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
-import static com.github.louism33.chesscore.MoveConstants.*;
+import static com.github.louism33.chesscore.ConstantsMove.*;
 import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationCapture;
 import static com.github.louism33.chesscore.MoveParser.numberOfRealMoves;
 

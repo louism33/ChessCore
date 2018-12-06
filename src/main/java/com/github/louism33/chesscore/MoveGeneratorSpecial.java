@@ -7,7 +7,7 @@ import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterPromotion;
-import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
+import static com.github.louism33.chesscore.ConstantsMove.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
 import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.ENPASSANTVICTIM;

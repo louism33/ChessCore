@@ -36,11 +36,11 @@ public class CloneTest {
     public void test() {
         final Chessboard board = EPDObject.getBoard();
         
-        System.out.println(board);
+//        System.out.println(board);
 
         Chessboard board2 = new Chessboard(board);
 
-        System.out.println(board2);
+//        System.out.println(board2);
         
         Assert.assertEquals(board, board2);
         
