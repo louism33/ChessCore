@@ -2,11 +2,41 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c35fe9c9-175e-43e1-b3c4-5d6bc53ba64a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.attach_pid10046" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid11344" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid11657" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid11737" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid11822" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid11910" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid12170" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid12313" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid12389" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid12455" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid12605" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid14464" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid14650" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid15300" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid15444" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid16237" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid16942" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid17119" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid17307" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid17460" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid17997" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid18085" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid18189" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid18322" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid18433" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid18523" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid19018" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid5111" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid5529" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid9237" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid9375" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid9630" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid9803" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.attach_pid9979" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ExtendedPositionDescriptionParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ExtendedPositionDescriptionParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/CloneTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/CloneTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,8 +54,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ExtendedPositionDescriptionParser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="27" column="38" selection-start-line="27" selection-start-column="38" selection-end-line="27" selection-end-column="38" />
+            <state relative-caret-position="420">
+              <caret line="31" column="28" lean-forward="true" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -189,7 +219,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544115168333" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544115244663" />
     <property name="last.edited.regexp" value="Rg1" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -297,7 +327,7 @@
       <workItem from="1542536265152" duration="92000" />
       <workItem from="1543617792366" duration="1429000" />
       <workItem from="1544046010664" duration="3451000" />
-      <workItem from="1544082182308" duration="22209000" />
+      <workItem from="1544082182308" duration="22273000" />
     </task>
     <task id="LOCAL-00001" summary="assert problem">
       <created>1544084102963</created>
@@ -349,13 +379,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27181000" />
+    <option name="totallyTimeSpent" value="27245000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1368" height="741" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20530303" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20530303" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -368,7 +398,7 @@
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32956383" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" visible="true" weight="0.19224556" />
+      <window_info anchor="bottom" id="Run" order="3" visible="true" weight="0.19224556" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -628,8 +658,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ExtendedPositionDescriptionParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="27" column="38" selection-start-line="27" selection-start-column="38" selection-end-line="27" selection-end-column="38" />
+        <state relative-caret-position="420">
+          <caret line="31" column="28" lean-forward="true" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
         </state>
       </provider>
     </entry>
