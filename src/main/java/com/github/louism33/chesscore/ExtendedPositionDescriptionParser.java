@@ -6,8 +6,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExtendedPositionDescriptionParser {
+    /*
+    todo: static pattern for this
+    
+    "2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - - bm Qg6; id \"WAC.001\";\n"
+     */
+    private static final String pattern = "" +
+            "([/|\\w]* )" +
+            "(bm ([\\w| |+]*);)" +
+            "(am ([\\w| |+]*);)?" +
+            "(id \\\"(\\w*[\\.+| +\\w]*)\\\")" +
+            "";
+            
     
     public static EPDObject parseEDPPosition(String edpPosition){
+        
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(edpPosition);
+        
+        String fen = m.group(1);
+        String bestMoves = m.group(2);
+        String avoidMoves = m.group(3);
+        String ID = m.group(4);
         
         String id = extractIDString(edpPosition);
         
@@ -18,20 +38,15 @@ public class ExtendedPositionDescriptionParser {
         String boardFen = extractBoardFen(edpPosition);
 
         List<Integer> goodDestinations = new ArrayList<>();
-        for (String bm : bms) {
-//            goodDestinations.add(MoveParserFromAN.destinationIndex(chessboard, bm));
-
-            System.out.println("bm: "+bm);
+        for (int i = 0; i < bms.length; i++) {
+            String bm = bms[i];
             goodDestinations.add(MoveParserFromAN.buildMoveFromAN(chessboard, bm));
         }
-        
-        
-
 
         String[] ams = extractAvoidMoves(edpPosition);
         List<Integer> badDestinations = new ArrayList<>();
-        for (String am : ams) {
-//            badDestinations.add(MoveParserFromAN.destinationIndex(chessboard, am));
+        for (int i = 0; i < ams.length; i++) {
+            String am = ams[i];
             badDestinations.add(MoveParserFromAN.buildMoveFromAN(chessboard, am));
         }
 

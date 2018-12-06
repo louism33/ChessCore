@@ -61,7 +61,8 @@ public class MoveParser {
         return buildMove(board, source, destinationIndex);
     }
 
-    static int moveFromSourceDestinationSquareCaptureSecure(Chessboard board, Piece movingPiece, Square source, Square destinationIndex, boolean capture) {
+    static int moveFromSourceDestinationSquareCaptureSecure(Chessboard board, Piece movingPiece, 
+                                                            long file, Square source, Square destinationIndex, boolean capture) {
         if (source == null){
             int sourceIndex = -1;
             
@@ -71,6 +72,10 @@ public class MoveParser {
                 if (move == 0){
                     break;
                 }
+                if ((MoveParser.getSourceLong(move) & file) == 0){
+                    continue;
+                }
+                
                 if (MoveParser.getDestinationIndex(move) == destinationIndex.ordinal()){
                     if (movingPiece != null && movingPiece != NO_PIECE){
                         if (MoveParser.getMovingPiece(move) != movingPiece){
