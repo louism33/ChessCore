@@ -19,14 +19,20 @@ public class ExtendedPositionDescriptionParser {
 
         List<Integer> goodDestinations = new ArrayList<>();
         for (String bm : bms) {
-            goodDestinations.add(MoveParserFromAN.destinationIndex(chessboard, bm));
+//            goodDestinations.add(MoveParserFromAN.destinationIndex(chessboard, bm));
+
+            System.out.println("bm: "+bm);
+            goodDestinations.add(MoveParserFromAN.buildMoveFromAN(chessboard, bm));
         }
+        
+        
 
 
         String[] ams = extractAvoidMoves(edpPosition);
         List<Integer> badDestinations = new ArrayList<>();
         for (String am : ams) {
-            badDestinations.add(MoveParserFromAN.destinationIndex(chessboard, am));
+//            badDestinations.add(MoveParserFromAN.destinationIndex(chessboard, am));
+            badDestinations.add(MoveParserFromAN.buildMoveFromAN(chessboard, am));
         }
 
         return new EPDObject(chessboard, goodDestinations, id, boardFen, badDestinations);
@@ -111,34 +117,34 @@ public class ExtendedPositionDescriptionParser {
     
     public static class EPDObject {
         private final Chessboard board;
-        private final List<Integer> bestMoveDestinationIndex;
-        private final List<Integer> avoidMoveDestinationIndex;
+        private final List<Integer> bestMoves;
+        private final List<Integer> avoidMoves;
         private final String id;
         private final String boardFen;
 
-        EPDObject(Chessboard board, List<Integer> bestMoveDestinationIndex, String id,
-                  String boardFen, List<Integer> avoidMoveDestinationIndex) {
+        EPDObject(Chessboard board, List<Integer> bestMoves, String id,
+                  String boardFen, List<Integer> avoidMoves) {
             this.board = board;
-            this.bestMoveDestinationIndex = bestMoveDestinationIndex;
+            this.bestMoves = bestMoves;
             this.id = id;
             this.boardFen = boardFen;
-            this.avoidMoveDestinationIndex = avoidMoveDestinationIndex;
+            this.avoidMoves = avoidMoves;
         }
 
         public Chessboard getBoard() {
             return board;
         }
 
-        public List<Integer> getBestMoveDestinationIndex() {
-            return bestMoveDestinationIndex;
+        public List<Integer> getBestMoves() {
+            return bestMoves;
         }
 
         public String getId() {
             return id;
         }
 
-        public List<Integer> getAvoidMoveDestinationIndex() {
-            return avoidMoveDestinationIndex;
+        public List<Integer> getAvoidMoves() {
+            return avoidMoves;
         }
 
         public String getBoardFen() {
@@ -148,7 +154,7 @@ public class ExtendedPositionDescriptionParser {
         @Override
         public String toString() {
             return "EPDObject{" +
-                    "bestMoveDestinationIndex=" + bestMoveDestinationIndex +
+                    "bestMoves=" + bestMoves +
                     ", id='" + id + '\'' +
                     ", boardFen='" + boardFen + '\'' +
                     '}';
