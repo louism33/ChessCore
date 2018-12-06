@@ -11,7 +11,7 @@ public class MoveParserFromAN {
     
     private static int makeMoveBasedOnAlgNotation(Chessboard board, String algebraicNotation){
 
-        long whichPieceCouldBeMoving = whichPieceIsMoving(board, algebraicNotation);
+        long whichPieceCouldBeMoving = whichPieceIsMovingBitboard(board, algebraicNotation);
         int x = rankAndFile(board, algebraicNotation);
         
         long destinationSquare = BitOperations.newPieceOnSquare(x);
@@ -67,7 +67,7 @@ public class MoveParserFromAN {
         }
     }
 
-    private static long whichPieceIsMoving(Chessboard board, String algebraicNotation){
+    public static Piece whichPieceIsMoving(Chessboard board, String algebraicNotation){
         String boardPattern = "[p|n|b|r|q|k|P|N|B|R|Q|K]?";
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(algebraicNotation);
@@ -81,6 +81,63 @@ public class MoveParserFromAN {
             throw new RuntimeException("Could not parse Piece");
         }
 
+        switch (pieceFromAN) {
+            case "p": {
+                return Piece.BLACK_PAWN;
+            }
+            case "n": {
+                return Piece.BLACK_KNIGHT;
+            }
+            case "b": {
+                return Piece.BLACK_BISHOP;
+            }
+            case "r": {
+                return Piece.BLACK_ROOK;
+            }
+            case "q": {
+                return Piece.BLACK_QUEEN;
+            }
+            case "k": {
+                return Piece.BLACK_KING;
+            }
+
+            case "P": {
+                return Piece.WHITE_PAWN;
+            }
+            case "N": {
+                return Piece.WHITE_KNIGHT;
+            }
+            case "B": {
+                return Piece.WHITE_BISHOP;
+            }
+            case "R": {
+                return Piece.WHITE_ROOK;
+            }
+            case "Q": {
+                return Piece.WHITE_QUEEN;
+            }
+            case "K": {
+                return Piece.WHITE_KING;
+            }
+            default:
+                throw new RuntimeException("problem with Piece identifier in which piece in moving()");
+        }
+    }
+    
+    
+    private static long whichPieceIsMovingBitboard(Chessboard board, String algebraicNotation){
+        String boardPattern = "[p|n|b|r|q|k|P|N|B|R|Q|K]?";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(algebraicNotation);
+
+        String pieceFromAN = "";
+
+        if (m.find()){
+            pieceFromAN = m.group();
+        }
+        if (pieceFromAN.length() == 0){
+            throw new RuntimeException("Could not parse Piece");
+        }
         
         switch (pieceFromAN) {
             case "p": {
