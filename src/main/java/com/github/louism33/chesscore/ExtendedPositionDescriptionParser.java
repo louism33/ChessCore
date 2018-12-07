@@ -21,14 +21,6 @@ public class ExtendedPositionDescriptionParser {
     
     public static EPDObject parseEDPPosition(String edpPosition){
         
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(edpPosition);
-        
-        String fen = m.group(1);
-        String bestMoves = m.group(2);
-        String avoidMoves = m.group(3);
-        String ID = m.group(4);
-        
         String id = extractIDString(edpPosition);
         
         String[] bms = extractBestMoves(edpPosition);

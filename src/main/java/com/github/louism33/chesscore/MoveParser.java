@@ -3,6 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.ConstantsMove.*;
@@ -10,6 +11,13 @@ import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
 import static com.github.louism33.chesscore.Piece.*;
 
 public class MoveParser {
+
+    /*
+    00000001
+    11111111
+    00000000
+    00000000
+     */
     
     public static int newMove(Chessboard board, String algebraicNotation){
         return MoveParserFromAN.buildMoveFromAN(board, algebraicNotation);
@@ -42,6 +50,15 @@ public class MoveParser {
         move |= (ConstantsMove.SOURCE_PIECE_MASK | whichPieceMask(pieceOnSquare(board, newPieceOnSquare(s)))) << ConstantsMove.SOURCE_PIECE_OFFSET;
         
         return move;
+    }
+
+    public static String[] toString(List<Integer> moves){
+        final int number = moves.size();
+        String[] realMoves = new String[number];
+        for (int i = 0; i < number; i ++){
+            realMoves[i] = prettyMove(moves.get(i));
+        }
+        return realMoves;
     }
 
     public static String[] toString(int[] moves){
@@ -219,24 +236,6 @@ public class MoveParser {
 
     public static boolean isPromotionToQueen (int move){
         if (!((move & SPECIAL_MOVE_MASK) == PROMOTION_MASK)) return false;
-        return (move & WHICH_PROMOTION) == QUEEN_PROMOTION_MASK;
-    }
-    
-    static int makeCheckingMove(int move){
-        return move | (inCheck << checkOffset);
-    }
-
-    public static boolean isCheckingMove (int move){
-        if (((move & OPTIONAL_CHECKING_MOVE_MASK) >>> checkOffset)  == notSet){
-            return false;
-        }
-        else if (((move & OPTIONAL_CHECKING_MOVE_MASK) >>> checkOffset) == notInCheck){
-            return false;
-        }
-        else if (((move & OPTIONAL_CHECKING_MOVE_MASK) >>> checkOffset) == inCheck){
-            return true;
-        }
-
         return (move & WHICH_PROMOTION) == QUEEN_PROMOTION_MASK;
     }
 

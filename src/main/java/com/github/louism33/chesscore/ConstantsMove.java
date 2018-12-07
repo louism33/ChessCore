@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 class ConstantsMove {
 
     /*
-    00000111
+    00000001
     11111111
     00000000
     00000000
@@ -48,21 +48,6 @@ class ConstantsMove {
             VICTIM_PIECE_OFFSET = 20,
 
 
-    CAPTURE_MOVE_MASK = 0x01000000,
-    
-    OPTIONAL_CHECKING_MOVE_MASK = 0x06000000,
-    notSet = 0,
-    notInCheck = 1,
-    inCheck = 2,
-    checkOffset = 25
+    CAPTURE_MOVE_MASK = 0x01000000
             ;
-   
-
-
-
-
-
-
-
-
 }

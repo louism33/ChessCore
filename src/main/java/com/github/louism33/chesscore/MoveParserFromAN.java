@@ -15,11 +15,9 @@ import static com.github.louism33.chesscore.MoveParser.*;
 public class MoveParserFromAN {
 
     private static final String boardPattern =
-            "([(PNBRQK)|a-h]?)" +
-//            "[a-h]?"+
+            "([(PNBRQKpnrqk)|a-h]?)" +
             "([a-h])?" +
             "(x?)" +
-//            "([a-h])?" +
             "([a-h][1-8])?" +
             "(x?)" +
             "([a-zA-Z][1-8])" +
@@ -27,14 +25,9 @@ public class MoveParserFromAN {
             "";
     
     public static int buildMoveFromAN(Chessboard board, String an){
-
-//        System.out.println();
-//        System.out.println("Algebraic notation: "+an);
-        
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(an);
 
-        String all = "";
         String sourcePiece = "";
         String capture1 = "";
         String possibleSourceFile = "";
@@ -45,7 +38,6 @@ public class MoveParserFromAN {
         String checkMove = "";
 
         if (m.find()){
-            all = m.group();
             sourcePiece = m.group(1);
             capture1 = m.group(3);
             possibleSourceFile = m.group(2);
@@ -54,22 +46,7 @@ public class MoveParserFromAN {
             destinationString = m.group(6);
             checkMove = m.group(7);
         }
-
-//        System.out.println("__________________");
-//        System.out.println("all: "+  all);
-//        System.out.println();
-//        
-//        System.out.println("sourcePiece:            "+ sourcePiece);
-//
-//        System.out.println("capture1:               "+ capture1);
-//        System.out.println("possibleSourceFile:     "+ possibleSourceFile);
-//        System.out.println("sourceSquareString:     "+ sourceSquareString);
-//        System.out.println("capture2:               "+ capture2);
-//        System.out.println("destinationString:      "+ destinationString);
-//        System.out.println("checking move:          "+ checkMove);
-//        System.out.println();
-//        System.out.println("__________________");
-
+        
         Square sourceSquare = null;
         if (sourceSquareString != null){
             sourceSquare = Square.valueOf(sourceSquareString.toUpperCase());
@@ -81,7 +58,6 @@ public class MoveParserFromAN {
         
         Piece movingPiece = null;
         if (sourcePiece != null && !sourcePiece.equals("")) {
-//            System.out.println(translateFromLetter(sourcePiece));
             movingPiece = translateFromLetter(board.isWhiteTurn(), sourcePiece);
         }
         
@@ -90,7 +66,7 @@ public class MoveParserFromAN {
         if (possibleSourceFile != null && !possibleSourceFile.equals("")){
             optionalSourceFile = FILES[7 - (possibleSourceFile.charAt(0) - 'a')];
         }
-        
+
         int move = moveFromSourceDestinationSquareCaptureSecure(board, movingPiece, optionalSourceFile, sourceSquare, destinationSquare,
                 isCapture);
 
@@ -105,7 +81,7 @@ public class MoveParserFromAN {
         }
 
         if (checkMove.equals("+")) {
-            return makeCheckingMove(move);
+//            return makeCheckingMove(move);
         }
 
         return move;
@@ -122,14 +98,15 @@ public class MoveParserFromAN {
                 case "e":
                 case "f":
                 case "g":
+                case "h":
                 case "P":
                     return Piece.WHITE_PAWN;
                 case "N":
                     return Piece.WHITE_KNIGHT;
-                case "R":
-                    return Piece.WHITE_ROOK;
                 case "B":
                     return Piece.WHITE_BISHOP;
+                case "R":
+                    return Piece.WHITE_ROOK;
                 case "Q":
                     return Piece.WHITE_QUEEN;
                 case "K":
@@ -147,17 +124,23 @@ public class MoveParserFromAN {
                 case "e":
                 case "f":
                 case "g":
+                case "h":
                 case "P":
+                case "p":
                     return Piece.BLACK_PAWN;
                 case "N":
+                case "n":
                     return Piece.BLACK_KNIGHT;
-                case "R":
-                    return Piece.BLACK_ROOK;
                 case "B":
                     return Piece.BLACK_BISHOP;
+                case "R":
+                case "r":
+                    return Piece.BLACK_ROOK;
                 case "Q":
+                case "q":
                     return Piece.BLACK_QUEEN;
                 case "K":
+                case "k":
                     return Piece.BLACK_KING;
                 default:
                     return Piece.NO_PIECE;
