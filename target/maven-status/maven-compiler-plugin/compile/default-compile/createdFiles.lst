@@ -21,6 +21,7 @@ com/github/louism33/chesscore/Art.class
 com/github/louism33/chesscore/ZobristHashUtil.class
 com/github/louism33/chesscore/MoveGeneratorPseudo.class
 com/github/louism33/chesscore/MoveGeneratorSpecial.class
+com/github/louism33/chesscore/ConstantsMove.class
 com/github/louism33/chesscore/PieceMove.class
 com/github/louism33/chesscore/MakeMoveRegular$1.class
 com/github/louism33/chesscore/BitboardResources.class

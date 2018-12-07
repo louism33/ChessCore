@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 public class Perft {
     
     private static long nodesForNps = 0;
@@ -61,7 +63,7 @@ public class Perft {
             if (move == 0) {
                 continue;
             }
-
+            
             board.makeMoveAndFlipTurn(move);
 
             nodesForNps++;

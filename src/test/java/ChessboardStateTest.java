@@ -11,7 +11,7 @@ public class ChessboardStateTest {
 
     @Test
     void tinyDepths() {
-//        verifyStateToDepth(1, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"));
+        verifyStateToDepth(1, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"));
 
         verifyStateToDepth(1, new Chessboard("8/8/8/2k5/2pP4/8/B7/4K3 b - d3 5 3"));
 
@@ -121,10 +121,6 @@ public class ChessboardStateTest {
         }
         int[] moves = board.generateLegalMoves();
 
-        if (!(board.inCheckRecorder == board.inCheck(board.isWhiteTurn()))){
-            System.out.println(board);
-            System.out.println("i think: "+ board.inCheckRecorder);
-        }
         Assert.assertEquals(board.inCheckRecorder, board.inCheck(board.isWhiteTurn()));
         Assert.assertEquals(board.inCheckRecorder, new Chessboard(board).inCheck(board.isWhiteTurn()));
 
@@ -133,14 +129,6 @@ public class ChessboardStateTest {
                 Square.getSquareOfBitboard(board.getWhiteKing()) :
                 Square.getSquareOfBitboard(board.getBlackKing());
 
-        if (!(board.pinnedPieces == board.pinnedPiecesToSquareBitBoard(board.isWhiteTurn(), king))){
-            System.out.println(board);
-            System.out.println("i think: ");
-            Art.printLong(board.pinnedPieces);
-            System.out.println("but really");
-            Art.printLong(board.pinnedPiecesToSquareBitBoard(board.isWhiteTurn(), king));
-        }
-        
         
         Assert.assertEquals(board.pinnedPieces, board.pinnedPiecesToSquareBitBoard(board.isWhiteTurn(),
                 king));
@@ -156,6 +144,10 @@ public class ChessboardStateTest {
             if (move == 0){
                 continue;
             }
+
+            long biggestMoveBit = 0x02000000L;
+
+            Assert.assertTrue(move < biggestMoveBit);
 
             board.makeMoveAndFlipTurn(move);
             
