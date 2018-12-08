@@ -9,6 +9,9 @@ import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.ConstantsMove.*;
 import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
 import static com.github.louism33.chesscore.Piece.*;
+import static com.github.louism33.chesscore.Piece.BLACK_PAWN;
+import static com.github.louism33.chesscore.Piece.NO_PIECE;
+import static com.github.louism33.chesscore.Piece.WHITE_PAWN;
 
 public class MoveParser {
 
@@ -250,6 +253,17 @@ public class MoveParser {
         }
         final int indexOfVictimPiece = (move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
         return values()[indexOfVictimPiece];
+    }
+
+    public static int getMovingPieceInt(int move){
+        return (move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
+    }
+
+    public static int getVictimPieceInt(int move){
+//        if (!isCaptureMove(move)) {
+//            return NO_PIECE;
+//        }
+        return (move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
     }
 
     public static boolean moveIsPawnPushSeven(int move){
