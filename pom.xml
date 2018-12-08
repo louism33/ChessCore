@@ -21,17 +21,15 @@
         <repository>
             <uniqueVersion>true</uniqueVersion>
             <id>ossrh</id>
-            <!--<name>chesscore</name>-->
             <url>https://oss.sonatype.org/content/repositories/releases</url>
-            <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
             <layout>default</layout>
         </repository>
-        
         
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        
     </distributionManagement>
 
     <licenses>
