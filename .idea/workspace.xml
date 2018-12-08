@@ -21,8 +21,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="43" column="22" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
+            <state relative-caret-position="251">
+              <caret line="44" column="74" selection-start-line="44" selection-start-column="74" selection-end-line="44" selection-end-column="74" />
             </state>
           </provider>
         </entry>
@@ -45,7 +45,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>println</find>
       <find>println(board</find>
       <find>bm: R</find>
       <find>bm: Rh</find>
@@ -72,9 +71,10 @@
       <find>snapsh</find>
       <find>1.3</find>
       <find>github.com</find>
-      <find>ssh</find>
       <find>github</find>
       <find>connection</find>
+      <find>ssh</find>
+      <find>url</find>
     </findStrings>
     <replaceStrings>
       <replace>BLACK</replace>
@@ -126,9 +126,9 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="4">
     <option name="x" value="-1" />
-    <option name="width" value="578" />
+    <option name="width" value="684" />
     <option name="height" value="741" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -196,7 +196,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544307542288" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544308165862" />
     <property name="last.edited.regexp" value="Rg1" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -304,7 +304,7 @@
       <workItem from="1544170003607" duration="6445000" />
       <workItem from="1544206868134" duration="1181000" />
       <workItem from="1544265818790" duration="6127000" />
-      <workItem from="1544294861766" duration="10931000" />
+      <workItem from="1544294861766" duration="11478000" />
     </task>
     <task id="LOCAL-00001" summary="assert problem">
       <created>1544084102963</created>
@@ -355,7 +355,14 @@
       <option name="project" value="LOCAL" />
       <updated>1544306756426</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="preparing for release">
+      <created>1544307549642</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1544307549642</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -391,7 +398,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="59543000" />
+    <option name="totallyTimeSpent" value="60090000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -774,8 +781,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="43" column="22" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
+        <state relative-caret-position="251">
+          <caret line="44" column="74" selection-start-line="44" selection-start-column="74" selection-end-line="44" selection-end-column="74" />
         </state>
       </provider>
     </entry>
