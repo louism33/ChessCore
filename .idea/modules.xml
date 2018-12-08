@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ChessCore.iml" filepath="$PROJECT_DIR$/.idea/ChessCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chesscore.iml" filepath="$PROJECT_DIR$/chesscore.iml" />
     </modules>
   </component>
 </project>

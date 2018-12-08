@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.louism33</groupId>
     <artifactId>chesscore</artifactId>
-    <version>2.0</version>
+    <version>1.2-SNAPSHOT</version>
     <name>ChessCore</name>
     <description>Legal Chess Move Generation in Java</description>
     <url>https://github.com/louism33/ChessCore</url>
@@ -22,12 +24,12 @@
             <url>https://oss.sonatype.org/content/repositories/releases</url>
             <layout>default</layout>
         </repository>
-
+        
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
-
+        
     </distributionManagement>
 
     <licenses>
@@ -41,9 +43,8 @@
 
     <scm>
         <connection>scm:git:git://github.com/louism33/ChessCore.git</connection>
-        <developerConnection>scm:git:ssh://github.com/louism33/ChessCore.git</developerConnection>
+        <developerConnection>scm:git:ssh://github.com:louism33/ChessCore.git</developerConnection>
         <url>https://github.com/louism33/ChessCore/tree/master</url>
-        <tag>2.0</tag>
     </scm>
 
 
@@ -59,7 +60,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
+    
     <build>
         <pluginManagement>
             <plugins>
@@ -275,7 +276,7 @@
 
         </pluginManagement>
     </build>
-
+    
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
