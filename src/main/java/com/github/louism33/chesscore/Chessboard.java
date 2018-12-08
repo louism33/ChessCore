@@ -581,7 +581,6 @@ public class Chessboard implements Cloneable{
 
 
     private static boolean totalMovesSpecific(String fen){
-        //todo
         String boardPattern = " (.) (\\w+|-) (\\w+|-)";
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(fen);
@@ -600,7 +599,6 @@ public class Chessboard implements Cloneable{
 
 
     private static boolean fiftyMovesSpecific(String fen){
-        //todo
         String boardPattern = " (.) (\\w+|-) (\\w+|-)";
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(fen);

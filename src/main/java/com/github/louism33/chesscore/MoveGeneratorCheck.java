@@ -65,7 +65,6 @@ class MoveGeneratorCheck {
         return 0;
     }
 
-    // todo, square threatened by?
     private static long inCheckByASlider(Chessboard board, boolean white,
                                          long myKing,
                                          long enemyBishops, long enemyRooks, long enemyQueens,
