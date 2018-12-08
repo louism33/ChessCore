@@ -6,18 +6,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExtendedPositionDescriptionParser {
-    /*
-    todo: static pattern for this
     
-    "2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - - bm Qg6; id \"WAC.001\";\n"
-     */
     private static final String pattern = "" +
             "([/|\\w]* )" +
             "(bm ([\\w| |+]*);)" +
             "(am ([\\w| |+]*);)?" +
             "(id \\\"(\\w*[\\.+| +\\w]*)\\\")" +
             "";
-            
     
     public static EPDObject parseEDPPosition(String edpPosition){
         

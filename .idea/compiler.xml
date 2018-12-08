@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ChessCore" />
+        <module name="chesscore" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ChessCore" target="11" />
+      <module name="chesscore" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

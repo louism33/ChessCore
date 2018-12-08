@@ -4,7 +4,6 @@ import java.util.Objects;
 
 class ChessboardDetails {
 
-    // todo, replace with int
     boolean whiteTurn = true;
     boolean whiteCanCastleK = true;
     boolean whiteCanCastleQ = true;

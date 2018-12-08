@@ -102,7 +102,6 @@ class CheckHelper {
         return drawByMaterial;
     }
 
-    // todo
     static boolean colourHasInsufficientMaterialToMate(Chessboard board, boolean white){
         boolean drawByMaterial = false;
         int totalPieces = populationCount(board.allPieces());
