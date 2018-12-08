@@ -4,7 +4,7 @@
 
     <groupId>com.github.louism33</groupId>
     <artifactId>chesscore</artifactId>
-    <version>2.0</version>
+    <version>1.5</version>
     <name>ChessCore</name>
     <description>Legal Chess Move Generation in Java</description>
     <url>https://github.com/louism33/ChessCore</url>
@@ -41,9 +41,10 @@
 
     <scm>
         <connection>scm:git:git://github.com/louism33/ChessCore.git</connection>
-        <developerConnection>scm:git:ssh://github.com/louism33/ChessCore.git</developerConnection>
+        <!--<developerConnection>scm:git:ssh://github.com/louism33/ChessCore.git</developerConnection>-->
+        <developerConnection>scm:git:git@github.com/louism33/ChessCore.git</developerConnection>
         <url>https://github.com/louism33/ChessCore/tree/master</url>
-        <tag>2.0</tag>
+        <tag>1.5</tag>
     </scm>
 
 
