@@ -21,6 +21,22 @@ public class MoveParser {
     00000000
     00000000
      */
+
+    public static final int NO_PIECE = 0;
+
+    public static final int WHITE_PAWN = 1;
+    public static final int WHITE_KNIGHT = 2;
+    public static final int WHITE_BISHOP = 3;
+    public static final int WHITE_ROOK = 4;
+    public static final int WHITE_QUEEN = 5;
+    public static final int WHITE_KING = 6;
+
+    public static final int BLACK_PAWN = 7;
+    public static final int BLACK_KNIGHT = 8;
+    public static final int BLACK_BISHOP = 9;
+    public static final int BLACK_ROOK = 10;
+    public static final int BLACK_QUEEN = 11;
+    public static final int BLACK_KING = 12;
     
     public static int newMove(Chessboard board, String algebraicNotation){
         return MoveParserFromAN.buildMoveFromAN(board, algebraicNotation);
@@ -97,7 +113,7 @@ public class MoveParser {
                 }
                 
                 if (MoveParser.getDestinationIndex(move) == destinationIndex.ordinal()){
-                    if (movingPiece != null && movingPiece != NO_PIECE){
+                    if (movingPiece != null && movingPiece != Piece.NO_PIECE){
                         if (MoveParser.getMovingPiece(move) != movingPiece){
                             continue;
                         }
@@ -249,7 +265,7 @@ public class MoveParser {
 
     public static Piece getVictimPiece(int move){
         if (!isCaptureMove(move)) {
-            return NO_PIECE;
+            return Piece.NO_PIECE;
         }
         final int indexOfVictimPiece = (move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
         return values()[indexOfVictimPiece];
@@ -260,22 +276,19 @@ public class MoveParser {
     }
 
     public static int getVictimPieceInt(int move){
-//        if (!isCaptureMove(move)) {
-//            return NO_PIECE;
-//        }
         return (move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
     }
 
     public static boolean moveIsPawnPushSeven(int move){
-        return getMovingPiece(move) == WHITE_PAWN
-                & getMovingPiece(move) == BLACK_PAWN
+        return getMovingPieceInt(move) == WHITE_PAWN
+                & getMovingPieceInt(move) == BLACK_PAWN
                 & (getDestinationLong(move) & BitboardResources.RANK_SEVEN) != 0
                 & (getDestinationLong(move) & BitboardResources.RANK_TWO) != 0;
     }
 
     public static boolean moveIsPawnPushSix(int move){
-        return getMovingPiece(move) == WHITE_PAWN
-                & getMovingPiece(move) == BLACK_PAWN
+        return getMovingPieceInt(move) == WHITE_PAWN
+                & getMovingPieceInt(move) == BLACK_PAWN
                 & (getDestinationLong(move) & BitboardResources.RANK_SIX) != 0
                 & (getDestinationLong(move) & BitboardResources.RANK_THREE) != 0;
     }

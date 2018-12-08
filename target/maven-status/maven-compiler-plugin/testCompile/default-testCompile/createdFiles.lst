@@ -3,6 +3,7 @@ ChessboardHashTest.class
 ChessboardStateTest.class
 MoveTest.class
 PerftTestDetail.class
+com/github/louism33/chesscore/ZobristHashUniquenessTest.class
 SquareTest.class
 PerftTestsBigDepths.class
 PerftTest.class

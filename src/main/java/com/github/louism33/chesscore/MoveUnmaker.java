@@ -43,7 +43,8 @@ class MoveUnmaker {
         else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == BASICCAPTURE){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
-            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
+//            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
+            int takenPiece = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
             if (takenPiece != 0){
                 addRelevantPieceToSquare(board, takenPiece, pieceToMoveBack);
             }
@@ -58,8 +59,9 @@ class MoveUnmaker {
         else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == ENPASSANTCAPTURE){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
-            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
-
+//            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
+            int takenPiece = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
+            
             if (StackDataUtil.getTurn(pop) == 1) {
                 addRelevantPieceToSquare(board, 7, pieceToMoveBack - 8);
             }
@@ -127,7 +129,8 @@ class MoveUnmaker {
             else {
                 addRelevantPieceToSquare(board, 7, squareToMoveBackTo);
             }
-            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
+//            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
+            int takenPiece = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
             if (takenPiece > 0){
                 addRelevantPieceToSquare(board, takenPiece, pieceToMoveBack);
             }
