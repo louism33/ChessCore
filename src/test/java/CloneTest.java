@@ -36,12 +36,8 @@ public class CloneTest {
     public void test() {
         final Chessboard board = EPDObject.getBoard();
         
-//        System.out.println(board);
-
         Chessboard board2 = new Chessboard(board);
 
-//        System.out.println(board2);
-        
         Assert.assertEquals(board, board2);
         
     }
@@ -349,7 +345,7 @@ public class CloneTest {
             "b2b1r1k/3R1ppp/4qP2/4p1PQ/4P3/5B2/4N1K1/8 w - - bm g6; id \"WAC.300\";" +
             "";
 
-    private static final String[] splitUpWACs = wacTests.split("\\\n");
+    private static final String[] splitUpWACs = wacTests.split("\n");
     static int totalWACS = splitUpWACs.length;
 
 
