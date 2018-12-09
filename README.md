@@ -8,14 +8,14 @@ Through Maven:
 
 <repository>
     <id>com.github.louism33</id>
-    <url>https://oss.sonatype.org/content/repositories/snapshots/com/github/louism33/chesscore/1.0-SNAPSHOT</url>
+    <url>https://oss.sonatype.org/content/repositories/releases/com/github/louism33/chesscore/1.0</url>
 </repository>
 ```
 ```
 
 <dependency>
-    <groupId>com.github.louism33</groupId>
-    <artifactId>chesscore</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>com.github.louism33</groupId>
+  <artifactId>chesscore</artifactId>
+  <version>1.0</version>
 </dependency>
 ```
