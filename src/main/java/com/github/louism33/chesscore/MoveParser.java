@@ -180,10 +180,6 @@ public class MoveParser {
         }
         return 0;
     }
-
-    private static int whichMover(int move){
-        return 0;
-    }
     
     
     public static int makeSpecialMove(Chessboard board, int source, int destinationIndex, boolean castling, boolean enPassant, boolean promotion,
@@ -300,4 +296,32 @@ public class MoveParser {
         return destinationIndexMove == destinationIndexCompare;
     }
 
+    public static boolean verifyMoveCheap(Chessboard board, int move){
+        long sourceLong = getSourceLong(move);
+        if ((sourceLong & board.allPieces()) == 0){
+            return false;
+        }
+        long destinationLong = getDestinationLong(move);
+        if (isCaptureMove(move)){
+            if ((destinationLong & board.allPieces()) == 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean verifyMoveCertain(Chessboard board, int move){
+        int[] legalMoves = board.generateLegalMoves();
+        for (int j = 0; j < legalMoves.length; j++) {
+            int possibleMove = legalMoves[j];
+            if (possibleMove == 0) {
+                break;
+            }
+            if (move == possibleMove) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }

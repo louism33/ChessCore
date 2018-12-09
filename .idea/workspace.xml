@@ -8,7 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c35fe9c9-175e-43e1-b3c4-5d6bc53ba64a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/../Axolotl/target/" />
@@ -24,11 +24,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="318" column="31" lean-forward="true" selection-start-line="318" selection-start-column="31" selection-end-line="318" selection-end-column="31" />
+            <state relative-caret-position="228">
+              <caret line="318" column="31" selection-start-line="318" selection-start-column="31" selection-end-line="318" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="186">
+              <caret line="304" column="33" lean-forward="true" selection-start-line="304" selection-start-column="33" selection-end-line="304" selection-end-column="33" />
+              <folding>
+                <element signature="e#10124#10125#0" expanded="true" />
+                <element signature="e#10197#10198#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -55,7 +68,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Square.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="315">
-              <caret line="29" column="19" lean-forward="true" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
+              <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -125,7 +138,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Perft.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ConstantsMove.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveUnmaker.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/.travis.yml" />
@@ -136,6 +148,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorCheck.java" />
         <option value="$PROJECT_DIR$/../Axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" />
       </list>
     </option>
   </component>
@@ -165,7 +178,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -210,14 +222,15 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544357933488" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544357940024" />
     <property name="last.edited.regexp" value="Rg1" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -325,7 +338,8 @@
       <workItem from="1544265818790" duration="6127000" />
       <workItem from="1544294861766" duration="11478000" />
       <workItem from="1544345775534" duration="1695000" />
-      <workItem from="1544347581820" duration="7468000" />
+      <workItem from="1544347581820" duration="7482000" />
+      <workItem from="1544369109873" duration="378000" />
     </task>
     <task id="LOCAL-00001" summary="assert problem">
       <created>1544084102963</created>
@@ -404,7 +418,14 @@
       <option name="project" value="LOCAL" />
       <updated>1544357898463</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="preparing for release">
+      <created>1544357938484</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1544357938484</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -440,7 +461,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="69253000" />
+    <option name="totallyTimeSpent" value="69645000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -455,7 +476,7 @@
     <frame x="-1" y="0" width="1368" height="741" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25530303" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2590909" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -698,17 +719,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3450">
-          <caret line="265" column="35" selection-start-line="265" selection-start-column="35" selection-end-line="265" selection-end-column="35" />
-          <folding>
-            <element signature="e#10124#10125#0" expanded="true" />
-            <element signature="e#10197#10198#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveUnmaker.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1905">
@@ -822,6 +832,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="318" column="31" selection-start-line="318" selection-start-column="31" selection-end-line="318" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Art.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1050">
@@ -839,14 +856,18 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Square.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
-          <caret line="29" column="19" lean-forward="true" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
+          <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="318" column="31" lean-forward="true" selection-start-line="318" selection-start-column="31" selection-end-line="318" selection-end-column="31" />
+        <state relative-caret-position="186">
+          <caret line="304" column="33" lean-forward="true" selection-start-line="304" selection-start-column="33" selection-end-line="304" selection-end-column="33" />
+          <folding>
+            <element signature="e#10124#10125#0" expanded="true" />
+            <element signature="e#10197#10198#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
