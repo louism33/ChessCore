@@ -38,14 +38,12 @@
         </license>
     </licenses>
 
-
     <scm>
         <connection>scm:git:git@github.com:louism33/ChessCore.git</connection>
         <developerConnection>scm:git:git@github.com:louism33/ChessCore.git</developerConnection>
         <url>https://github.com/louism33/ChessCore/tree/master</url>
         <tag>HEAD</tag>
     </scm>
-
 
     <developers>
         <developer>
@@ -65,8 +63,6 @@
             <id>releases</id>
             <build>
                 <plugins>
-
-
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-release-plugin</artifactId>
@@ -77,7 +73,6 @@
                             <releaseProfiles>releases</releaseProfiles>
                         </configuration>
                     </plugin>
-
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -89,9 +84,6 @@
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
-
-                    
-                    
                 </plugins>
             </build>
         </profile>
