@@ -1,11 +1,8 @@
 package com.github.louism33.chesscore;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.Assert.*;
 
 public class ZobristHashUniquenessTest {
 

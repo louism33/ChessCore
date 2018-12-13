@@ -105,7 +105,7 @@ public class ExtendedPositionDescriptionParser {
     }
     
     private static String extractIDString(String edpPosition){
-        String pattern = "id \\\"(\\w*[\\.+| +\\w]*)\\\"";
+        String pattern = "id \"(\\w*[.+| +\\w]*)\"";
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(edpPosition);
 

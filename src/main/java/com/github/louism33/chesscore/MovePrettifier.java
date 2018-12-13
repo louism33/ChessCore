@@ -11,15 +11,7 @@ class MovePrettifier {
         String destinationRank = getRank(destination);
         String m = ""+file+ rank+destinationFile+ destinationRank;
 
-        if (MoveParser.isCastlingMove(move)){
-            m += "";
-        }
-        else if (MoveParser.isEnPassantMove(move)){
-            m += "";
-        }
-
-        else if (MoveParser.isPromotionMove(move)){
-            m += "";
+        if (MoveParser.isPromotionMove(move)){
 
             if (MoveParser.isPromotionToKnight(move)){
                 m += "N";

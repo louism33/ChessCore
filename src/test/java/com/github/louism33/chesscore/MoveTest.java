@@ -1,4 +1,5 @@
-import com.github.louism33.chesscore.*;
+package com.github.louism33.chesscore;
+
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 

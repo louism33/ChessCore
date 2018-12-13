@@ -59,23 +59,14 @@ class CheckHelper {
     }
 
     static boolean isDrawByRepetition(Chessboard board){
+        int limit = 25;
+        long currentZob = board.getBoardHash();
+        for (int i = 0; i < limit; i++) {
+            if (board.getZobristHashStack()[i] == currentZob){
+                return true;
+            }
+        }
         return false;
-//        Stack<Long> zobristStack = (Stack<Long>) board.getZobristStack().clone();
-//        long zobristHashToMatch = board.getBoardHash();
-//        int howManyMovesToSearchToMax = 50;
-//        int limit = Math.min(howManyMovesToSearchToMax, zobristStack.size());
-//
-//        int counter = 0;
-//        for (int previousBoardHashIndex = limit - 1; previousBoardHashIndex >= 0; previousBoardHashIndex--){
-//            Long pop = zobristStack.pop();
-//            if (pop == zobristHashToMatch){
-//                counter++;
-//            }
-//            if (counter > 0){
-//                return true;
-//            }
-//        }
-//        return counter > 0;
     }
 
     static boolean isDrawByInsufficientMaterial(Chessboard board){
