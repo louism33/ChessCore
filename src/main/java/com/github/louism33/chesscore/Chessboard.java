@@ -23,7 +23,7 @@ public class Chessboard implements Cloneable{
 
     private final int arrayLength = 128;
     
-    private long[] zobbyHopeAndPrayers = new long[arrayLength];
+    private long[] zobristHashStack = new long[arrayLength];
     private long[] moveStackArray = new long[arrayLength];
     
     public boolean inCheckRecorder;
@@ -66,7 +66,7 @@ public class Chessboard implements Cloneable{
         this.details = new ChessboardDetails();
 
         System.arraycopy(board.moveStackArray, 0, this.moveStackArray, 0, board.moveStackArray.length);
-        System.arraycopy(board.zobbyHopeAndPrayers, 0, this.zobbyHopeAndPrayers, 0, board.zobbyHopeAndPrayers.length);
+        System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
         
         System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
         System.arraycopy(board.pinnedPiecesArray, 0, this.pinnedPiecesArray, 0, board.pinnedPiecesArray.length);
@@ -410,7 +410,7 @@ public class Chessboard implements Cloneable{
         Chessboard that = (Chessboard) o;
         return Objects.equals(details, that.details)
                 && Objects.equals(zobristHash, that.zobristHash)
-                && Arrays.equals(zobbyHopeAndPrayers, that.zobbyHopeAndPrayers)
+                && Arrays.equals(zobristHashStack, that.zobristHashStack)
                 && Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray)
                 && Arrays.equals(checkStack, that.checkStack)
                 ;
@@ -420,10 +420,6 @@ public class Chessboard implements Cloneable{
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn
-//                + "\n"+this.getBoardHash() +"\n"
-//                + "\npin array: "+ Arrays.toString(pinnedPiecesArray)
-//                + "\npinned pieces: "+ pinnedPieces
-//                +"\ncheck? " + inCheckRecorder
                 ;
     }
 
@@ -843,7 +839,7 @@ public class Chessboard implements Cloneable{
     }
 
     void zobristStackArrayPush(long l){
-        zobbyHopeAndPrayers[zobristIndex] = l;
+        zobristHashStack[zobristIndex] = l;
 
         zobristIndex++;
     }
@@ -854,8 +850,8 @@ public class Chessboard implements Cloneable{
         }
         
         zobristIndex--;
-        zobristHash = zobbyHopeAndPrayers[zobristIndex];
-        zobbyHopeAndPrayers[zobristIndex] = 0;
+        zobristHash = zobristHashStack[zobristIndex];
+        zobristHashStack[zobristIndex] = 0;
         
     }
 
@@ -863,7 +859,7 @@ public class Chessboard implements Cloneable{
         if (zobristIndex < 1){
             throw new RuntimeException("peeking at empty zobrist array");
         }
-        return zobbyHopeAndPrayers[zobristIndex-1];
+        return zobristHashStack[zobristIndex-1];
     }
 
     private int checkIndex = 0;
@@ -926,5 +922,8 @@ public class Chessboard implements Cloneable{
     boolean hasPreviousMove(){
         return index > 0 && moveStackArray[index - 1] != 0;
     }
-    
+
+    public long[] getZobristHashStack() {
+        return zobristHashStack;
+    }
 }
