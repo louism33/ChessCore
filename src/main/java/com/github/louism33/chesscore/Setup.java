@@ -8,11 +8,11 @@ import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitboardResources.*;
 
 class Setup {
-    
+
     public static void main(String[] args){
         setup(false);
     }
-    
+
     static void setup(boolean force){
         init(false);
     }
@@ -23,10 +23,7 @@ class Setup {
         if (!ready || force) {
             calculateRookDatabase();
             calculateBishopDatabase();
-
             calculateInBetweenSquares();
-
-//        System.out.println("get ready");
         }
         ready = true;
     }

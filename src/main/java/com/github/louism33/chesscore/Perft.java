@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
 public class Perft {
     
     private static long nodesForNps = 0;

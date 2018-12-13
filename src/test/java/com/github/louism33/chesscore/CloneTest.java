@@ -1,5 +1,5 @@
-import com.github.louism33.chesscore.Chessboard;
-import com.github.louism33.chesscore.ExtendedPositionDescriptionParser;
+package com.github.louism33.chesscore;
+
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

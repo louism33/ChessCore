@@ -7,10 +7,8 @@ import java.util.regex.Pattern;
 
 import static com.github.louism33.chesscore.BitboardResources.FILES;
 import static com.github.louism33.chesscore.BitboardResources.UNIVERSE;
-import static com.github.louism33.chesscore.ConstantsMove.*;
-import static com.github.louism33.chesscore.ConstantsMove.CAPTURE_MOVE_MASK;
-import static com.github.louism33.chesscore.ConstantsMove.VICTIM_PIECE_MASK;
-import static com.github.louism33.chesscore.MoveParser.*;
+import static com.github.louism33.chesscore.ConstantsMove.CASTLING_MASK;
+import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationSquareCaptureSecure;
 
 public class MoveParserFromAN {
 
@@ -46,13 +44,14 @@ public class MoveParserFromAN {
             destinationString = m.group(6);
             checkMove = m.group(7);
         }
-        
+
         Square sourceSquare = null;
         if (sourceSquareString != null){
             sourceSquare = Square.valueOf(sourceSquareString.toUpperCase());
         }
-        Square destinationSquare = Square.valueOf(destinationString.toUpperCase());
 
+        Square destinationSquare = Square.valueOf(destinationString.toUpperCase());
+        
         // ep ?
         boolean isCapture = (destinationSquare.toBitboard() & board.allPieces()) != 0;
         
@@ -69,8 +68,14 @@ public class MoveParserFromAN {
 
         int move = moveFromSourceDestinationSquareCaptureSecure(board, movingPiece, optionalSourceFile, sourceSquare, destinationSquare,
                 isCapture);
-
         
+        
+        if (sourceSquare != null){
+            if (isCastle(sourceSquare, destinationSquare)){
+                move |= CASTLING_MASK;
+            }
+        }
+
         if ((capture1 != null && capture1.equals("x")) || capture2 != null && capture2.equals("x")){
             Assert.assertTrue(isCapture);
             Assert.assertTrue(MoveParser.isCaptureMove(move));
@@ -87,6 +92,19 @@ public class MoveParserFromAN {
         return move;
     }
 
+    private static boolean isCastle(Square sourceSquare, Square destinationSquare){
+        if (sourceSquare == Square.E1){
+            if (destinationSquare == Square.G1 || destinationSquare == Square.C1){
+                return true;
+            }
+        }
+        if (sourceSquare == Square.E8){
+            if (destinationSquare == Square.G8 || destinationSquare == Square.C8){
+                return true;
+            }
+        }
+        return false;
+    }
 
     private static Piece translateFromLetter (boolean white, String piece){
         if (white) {

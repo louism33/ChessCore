@@ -112,12 +112,14 @@ public enum Square {
         return this.ordinal() % 8;
     }
     
-    public long getRow(){ 
-        return ROWS[this.ordinal() / 8];
+    public static long getRow(int index){ 
+        return ROWS[index / 8];
     }
     
-    public long getFile(){
-        return FILES[this.ordinal() % 8];
+    public static long getFile(int index){
+        return FILES[index % 8];
     }
+    
+    
     
 }

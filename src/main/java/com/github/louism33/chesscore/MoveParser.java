@@ -8,10 +8,8 @@ import java.util.List;
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.ConstantsMove.*;
 import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
-import static com.github.louism33.chesscore.Piece.*;
-import static com.github.louism33.chesscore.Piece.BLACK_PAWN;
-import static com.github.louism33.chesscore.Piece.NO_PIECE;
-import static com.github.louism33.chesscore.Piece.WHITE_PAWN;
+import static com.github.louism33.chesscore.Piece.pieceOnSquare;
+import static com.github.louism33.chesscore.Piece.values;
 
 public class MoveParser {
 

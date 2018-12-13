@@ -3,6 +3,8 @@ package com.github.louism33.chesscore;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.louism33.chesscore.BitboardResources.FILES;
+import static com.github.louism33.chesscore.BitboardResources.ROWS;
 import static com.github.louism33.chesscore.Setup.ready;
 import static com.github.louism33.chesscore.Setup.setup;
 
@@ -16,6 +18,28 @@ public class BitOperations {
         return BitboardResources.immediateAdjacentSquares[x];
     }
 
+    public static long bigSquareCentredOnIndex(int x){
+        return BitboardResources.bigAdjacentSquares[x];
+    }
+
+    public static long enemyPawnKillZoneCentredOnIndex(int x, boolean myColour){
+        if (myColour){
+            return BitboardResources.blackPawnKillZone[x];
+        }
+        else {
+            return BitboardResources.whitePawnKillZone[x];
+        }
+    }
+
+    public static long fileForward(int x, boolean white){
+        if (white){
+            return BitboardResources.fileForwardWhite[x];
+        }
+        else {
+            return BitboardResources.fileForwardBlack[x];
+        }
+    }
+    
     public static int getIndexOfFirstPiece (long pieces) {
         return Long.numberOfTrailingZeros(pieces);
     }
@@ -42,7 +66,6 @@ public class BitOperations {
         return Long.highestOneBit(l);
     }
 
-
     static long extractRayFromTwoPieces(Piece pieceOne, Piece pieceTwo){
         return extractRayFromTwoPieces(pieceOne.ordinal(), pieceTwo.ordinal());
     }
@@ -63,5 +86,20 @@ public class BitOperations {
         return BitboardResources.inBetweenSquares[pieceOneIndex][pieceTwoIndex]
                 ^ (BitOperations.newPieceOnSquare(pieceOneIndex) | BitOperations.newPieceOnSquare(pieceTwoIndex));
     }
-    
+
+    public int getRowNumber(long piece){
+        return getIndexOfFirstPiece(piece) / 8;
+    }
+
+    public int getFileNumber(long piece){
+        return getIndexOfFirstPiece(piece)  % 8;
+    }
+
+    public long getRow(long piece){
+        return ROWS[getIndexOfFirstPiece(piece)  / 8];
+    }
+
+    public long getFile(long piece) {
+        return FILES[getIndexOfFirstPiece(piece) % 8];
+    }
 }

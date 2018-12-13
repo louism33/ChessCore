@@ -151,7 +151,6 @@ class MoveUnmaker {
             board.setWhiteCanCastleQ(true);
         }
         if (castlingRights >= 1){
-            castlingRights -= 1;
             board.setWhiteCanCastleK(true);
         }
       
