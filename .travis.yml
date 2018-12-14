@@ -1,14 +1,6 @@
 language: java
 jdk:
-  - openjdk11
-branches:
-  only:
-    - master
-    - "/v\\d+\\.\\d+\\.\\d+/"
-deploy:
-  provider: releases
-  api_key:
-    secure: c+9zbxVuV9Rg8DXFBFe37RDhRRq+qlvH0YVg355VcpNWwQbhpryx1pHfFH1e4zdb4eIaaUDOv6Szti96ivEnhvcaI8+Y2S2IORLpQZfB6gi+7bVESmGelmIGno8TFqH1JmqrvCi/2n0lT/KyawSrVmWxmvVsPc0HHPbD627Pc1YfpVLex3B3HjnWKVmIRw8K5CAWTrh+1qmtl+ky0qPes96IYSPgpA6L27TMHRy/vQ+qVermEUzvbYoS3LHqhUJvVXWxEoLVP1/7kzCXcWo1HtXZqO1w+O+dmPGsCQ0sIQcpDZk+bZfwI/iXQkZtTk7AHE2V6BFZXtYHKrd5vtltiQo59+EO4uP1GXJXj1tEY7YJ1jULxMmYtIvykWshq+bMWp8quZHB10RwPtncUjwVHbBD1gucWw9KGW+bRKHOJTYYcE9/V6eD8Xvz96Vbya/pcp+2pb/gM0dCxYPjrHgFRtwnNuJs00+WJuePNzezF1UTMUvKKFaelvv90eOCZeL7qSbKJpYNOU1wP6iYJ93MuooZQAGlFQzP9C8Wmh7s92eYq9jRThIA6mknxF50fD4LpvKDdJpkqNk3mBgW9SBmnP2gcyqzpaSkyJR/jV03/3Nbl8xU74Lyray+/1vKAbmXEDEeSHKVDLBmvSgFPPwn3KFuV5Xfl8wFDQKC4I8JZuQ=
-  file: axolotl.jar
-  on:
-    repo: louism33/ChessCore
+- openjdk11
+env:
+  global:
+    secure: mphAoAjtdmMbs6jXJFV8pOObVPBm50TilKWotL+vAQA+prZTL5XZzwHlI3ayYC864Ec0eArUHVwHHSlGeFDyGS3Y2Cl7NVVjVoIaUFqPX3yVdoTEtO2Kq575CCCL7kAiexCRu4lgkq/X+drRI9UR7AqFc1F/a1C0KWKX0vLNyJvnwWLYywhECEC0vjxH9OMCE4oT12R9e99oMuTMJVCiMfWtQyfeCgzdSVHGWu8RNF0/24Y4+jwTTZe2kqzxJY6wv6qTK0t9bfmomUyLPWr5y1q0+ikWtxwjqDtOtQv+uMSMlO638yVlDT/OK2SU3OCQ8XFMwqPEthTweP4znAcu/g12upWKj32HbIGEy1vBHOIc5DOp6UF9eAfN1VOG9kOXaExMv6aMaJX/lb4DtIYQ4gNmZlWKOUfy/c4pDXca3aH6YI6WLuFSfeWPSr8/tpyAp7j7hzXN/VUqIm+R36SmQ6DGdodHxsmH1ndYHkmXXx6/IuF0xkkE/0PYFzxbVcfZSqBGCGSWrg2f5ET8ym55sIiL3OLH7OHc1USPRHemsX1sh3Gh6mo4Ug1nH3rbcWIfoYDwxwVVo/HcTY8ms6jIeyaWNpkbkni049xhs5cr5alYmVuVIERc1/ZDh4W1dylGNoLab0nHCmDKQlQdKyWjW6a9k9yLm8rL+PQctYc1vP0=
