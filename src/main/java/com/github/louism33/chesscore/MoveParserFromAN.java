@@ -69,9 +69,8 @@ public class MoveParserFromAN {
         int move = moveFromSourceDestinationSquareCaptureSecure(board, movingPiece, optionalSourceFile, sourceSquare, destinationSquare,
                 isCapture);
         
-        
         if (sourceSquare != null){
-            if (isCastle(sourceSquare, destinationSquare)){
+            if (isCastle(sourceSquare, destinationSquare, movingPiece)){
                 move |= CASTLING_MASK;
             }
         }
@@ -92,13 +91,16 @@ public class MoveParserFromAN {
         return move;
     }
 
-    private static boolean isCastle(Square sourceSquare, Square destinationSquare){
-        if (sourceSquare == Square.E1){
+    private static boolean isCastle(Square sourceSquare, Square destinationSquare, Piece movingPiece){
+        if (movingPiece == null){
+            return false;
+        }
+        if (sourceSquare == Square.E1 && movingPiece == Piece.WHITE_KING){
             if (destinationSquare == Square.G1 || destinationSquare == Square.C1){
                 return true;
             }
         }
-        if (sourceSquare == Square.E8){
+        if (sourceSquare == Square.E8 && movingPiece == Piece.BLACK_KING){
             if (destinationSquare == Square.G8 || destinationSquare == Square.C8){
                 return true;
             }
