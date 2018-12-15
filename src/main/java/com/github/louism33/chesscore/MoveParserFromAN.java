@@ -2,26 +2,49 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.github.louism33.chesscore.BitboardResources.FILES;
 import static com.github.louism33.chesscore.BitboardResources.UNIVERSE;
-import static com.github.louism33.chesscore.ConstantsMove.CASTLING_MASK;
+import static com.github.louism33.chesscore.ConstantsMove.*;
+import static com.github.louism33.chesscore.MoveGeneratorSpecial.extractFileFromStack;
 import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationSquareCaptureSecure;
+import static com.github.louism33.chesscore.Square.*;
+import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.ENPASSANTVICTIM;
 
 public class MoveParserFromAN {
 
+//    public static void main (String[] args){
+//        Chessboard board = new Chessboard("8/8/8/2k5/2pP4/8/B7/4K3 b - d3 5 3");
+//        System.out.println(board);
+//
+//        int[] moves = board.generateLegalMoves();
+//        MoveParser.printMoves(moves);
+//
+//        String an = "c4d3";
+//        int move = buildMoveFromAN(board, an);
+//        String s = MoveParser.toString(move);
+//        System.out.println("-----> "+ s);
+//
+//        System.out.println("EP: " + MoveParser.isEnPassantMove(move));
+//        board.makeMoveAndFlipTurn(move);
+//        System.out.println(board);
+//
+//    }
+
     private static final String boardPattern =
             "([(PNBRQKpnrqk)|a-h]?)" +
-            "([a-h])?" +
-            "(x?)" +
-            "([a-h][1-8])?" +
-            "(x?)" +
-            "([a-zA-Z][1-8])" +
-            "(\\+?)" +
-            "";
-    
+                    "([a-h])?" +
+                    "(x?)" +
+                    "([a-h][1-8])?" +
+                    "(x?)" +
+                    "([a-zA-Z][1-8])" +
+                    "(\\+)?" +
+                    "([nbrqNBRQ])?" +
+                    "";
+
     public static int buildMoveFromAN(Chessboard board, String an){
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(an);
@@ -34,6 +57,7 @@ public class MoveParserFromAN {
         String destinationString = "";
 
         String checkMove = "";
+        String promotionPiece = "";
 
         if (m.find()){
             sourcePiece = m.group(1);
@@ -43,7 +67,17 @@ public class MoveParserFromAN {
             capture2 = m.group(5);
             destinationString = m.group(6);
             checkMove = m.group(7);
+            promotionPiece = m.group(8);
         }
+
+//        System.out.println(sourcePiece);
+//        System.out.println(possibleSourceFile);
+//        System.out.println(capture1);
+//        System.out.println(sourceSquareString);
+//        System.out.println(capture2);
+//        System.out.println(destinationString);
+//        System.out.println(checkMove);
+//        System.out.println("prom piece: " + promotionPiece);
 
         Square sourceSquare = null;
         if (sourceSquareString != null){
@@ -51,27 +85,55 @@ public class MoveParserFromAN {
         }
 
         Square destinationSquare = Square.valueOf(destinationString.toUpperCase());
-        
+
+//        System.out.println(destinationSquare.ordinal());
         // ep ?
         boolean isCapture = (destinationSquare.toBitboard() & board.allPieces()) != 0;
-        
+
         Piece movingPiece = null;
         if (sourcePiece != null && !sourcePiece.equals("")) {
             movingPiece = translateFromLetter(board.isWhiteTurn(), sourcePiece);
         }
-        
+
         long optionalSourceFile = UNIVERSE;
-        
+
         if (possibleSourceFile != null && !possibleSourceFile.equals("")){
             optionalSourceFile = FILES[7 - (possibleSourceFile.charAt(0) - 'a')];
         }
 
         int move = moveFromSourceDestinationSquareCaptureSecure(board, movingPiece, optionalSourceFile, sourceSquare, destinationSquare,
                 isCapture);
-        
+
+        if (isEP(board, sourceSquare, destinationSquare, movingPiece, isCapture)){
+            move |= ENPASSANT_MASK;
+        }
+
         if (sourceSquare != null){
             if (isCastle(sourceSquare, destinationSquare, movingPiece)){
                 move |= CASTLING_MASK;
+            }
+        }
+
+        if (promotionPiece != null){
+            Assert.assertTrue(destinationSquare.ordinal() < 8 || destinationSquare.ordinal() > 55);
+            move |= PROMOTION_MASK;
+            switch (promotionPiece){
+                case "n":
+                case "N":
+                    move |= KNIGHT_PROMOTION_MASK;
+                    break;
+                case "b":
+                case "B":
+                    move |= BISHOP_PROMOTION_MASK;
+                    break;
+                case "r":
+                case "R":
+                    move |= ROOK_PROMOTION_MASK;
+                    break;
+                case "q":
+                case "Q":
+                    move |= QUEEN_PROMOTION_MASK;
+                    break;
             }
         }
 
@@ -79,12 +141,12 @@ public class MoveParserFromAN {
             Assert.assertTrue(isCapture);
             Assert.assertTrue(MoveParser.isCaptureMove(move));
         }
-        
+
         if (sourcePiece != null && !sourcePiece.equals("")) {
             Assert.assertEquals(translateFromLetter(board.isWhiteTurn(), sourcePiece), MoveParser.getMovingPiece(move));
         }
 
-        if (checkMove.equals("+")) {
+        if (checkMove != null && checkMove.equals("+")) {
 //            return makeCheckingMove(move);
         }
 
@@ -105,6 +167,49 @@ public class MoveParserFromAN {
                 return true;
             }
         }
+        return false;
+    }
+
+    private static boolean isEP (Chessboard board, Square sourceSquare, Square destinationSquare, Piece movingPiece, boolean isCapture){
+        if ((destinationSquare.ordinal() >= 16 && destinationSquare.ordinal() <= 23)
+                || (destinationSquare.ordinal() >= 40 && destinationSquare.ordinal() <= 47)){
+
+            if (isCapture){
+                return false;
+            }
+
+            if (!board.hasPreviousMove()){
+                return false;
+            }
+
+            long previousMove = board.moveStackArrayPeek();
+
+            if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
+                return false;
+            }
+
+            long FILE = extractFileFromStack(StackDataUtil.getEPMove(previousMove));
+
+            if (FILES[destinationSquare.getFileNumber()] != FILE){
+                return false;
+            }
+
+            if ((sourceSquare.toBitboard() & (board.getWhitePawns() | board.getBlackPawns())) == 0){
+                return false;
+            }
+
+            int ordinalS = sourceSquare.ordinal();
+            int ordinalD = destinationSquare.ordinal();
+            if ((ordinalS != ordinalD + 7)
+                    && (ordinalS != ordinalD + 9)
+                    && (ordinalS != ordinalD - 7)
+                    && (ordinalS != ordinalD - 9)){
+                return false;
+            }
+
+            return true;
+        }
+
         return false;
     }
 
