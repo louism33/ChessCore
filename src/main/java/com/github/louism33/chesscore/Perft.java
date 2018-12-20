@@ -1,6 +1,6 @@
 package com.github.louism33.chesscore;
 
-public class Perft {
+class Perft {
     
     private static long nodesForNps = 0;
 

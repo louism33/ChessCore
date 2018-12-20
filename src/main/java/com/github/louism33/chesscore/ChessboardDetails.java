@@ -32,7 +32,7 @@ class ChessboardDetails {
         init();
     }
     
-    void init(){
+    private void init(){
         whitePawns = 0x000000000000FF00L;
         whiteKnights = 0x0000000000000042L;
         whiteBishops = 0x0000000000000024L;

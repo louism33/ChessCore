@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-public class ChessboardHashTest {
+class ChessboardHashTest {
 
     @Test
     void test1() {

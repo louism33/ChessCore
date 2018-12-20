@@ -11,7 +11,7 @@ import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
 import static com.github.louism33.chesscore.Piece.pieceOnSquare;
 import static com.github.louism33.chesscore.Piece.values;
 
-public class MoveParser {
+class MoveParser {
 
     /*
     00000001
@@ -22,14 +22,14 @@ public class MoveParser {
 
     public static final int NO_PIECE = 0;
 
-    public static final int WHITE_PAWN = 1;
+    private static final int WHITE_PAWN = 1;
     public static final int WHITE_KNIGHT = 2;
     public static final int WHITE_BISHOP = 3;
     public static final int WHITE_ROOK = 4;
     public static final int WHITE_QUEEN = 5;
     public static final int WHITE_KING = 6;
 
-    public static final int BLACK_PAWN = 7;
+    private static final int BLACK_PAWN = 7;
     public static final int BLACK_KNIGHT = 8;
     public static final int BLACK_BISHOP = 9;
     public static final int BLACK_ROOK = 10;
@@ -78,7 +78,7 @@ public class MoveParser {
         return realMoves;
     }
 
-    public static String[] toString(int[] moves){
+    private static String[] toString(int[] moves){
         final int number = numberOfRealMoves(moves);
         String[] realMoves = new String[number];
         for (int i = 0; i < number; i ++){
@@ -200,7 +200,7 @@ public class MoveParser {
         return ((move & SOURCE_MASK) >>> SOURCE_OFFSET);
     }
     
-    public static long getSourceLong(int move) {
+    private static long getSourceLong(int move) {
         return BitOperations.newPieceOnSquare((move & SOURCE_MASK) >>> SOURCE_OFFSET);
     }
 
@@ -208,7 +208,7 @@ public class MoveParser {
         return move & DESTINATION_MASK;
     }
 
-    public static long getDestinationLong(int move) {
+    private static long getDestinationLong(int move) {
         return BitOperations.newPieceOnSquare(move & DESTINATION_MASK);
     }
 
@@ -265,7 +265,7 @@ public class MoveParser {
         return values()[indexOfVictimPiece];
     }
 
-    public static int getMovingPieceInt(int move){
+    private static int getMovingPieceInt(int move){
         return (move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
     }
 

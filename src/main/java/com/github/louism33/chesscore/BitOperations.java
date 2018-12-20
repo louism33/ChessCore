@@ -8,7 +8,7 @@ import static com.github.louism33.chesscore.BitboardResources.ROWS;
 import static com.github.louism33.chesscore.Setup.ready;
 import static com.github.louism33.chesscore.Setup.setup;
 
-public class BitOperations {
+class BitOperations {
 
     public static long newPieceOnSquare (int x){
         return 0x0000000000000001L << x;

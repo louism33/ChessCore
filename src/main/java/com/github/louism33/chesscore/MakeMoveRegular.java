@@ -7,15 +7,13 @@ import static com.github.louism33.chesscore.MoveParser.getDestinationIndex;
 import static com.github.louism33.chesscore.MoveParser.getSourceIndex;
 import static com.github.louism33.chesscore.Piece.NO_PIECE;
 import static com.github.louism33.chesscore.Piece.pieceOnSquare;
-import static com.github.louism33.chesscore.StackDataUtil.SpecialMove;
-import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.*;
-import static com.github.louism33.chesscore.StackDataUtil.buildStackData;
+import static com.github.louism33.chesscore.StackDataUtil.*;
 
 class MakeMoveRegular {
 
     static void makeMoveMaster(Chessboard board, int move) {
         if(move == 0){
-            final long item = buildStackData(0, board, 50, SpecialMove.NULL_MOVE);
+            final long item = buildStackData(0, board, 50, NULL_MOVE);
             board.moveStackArrayPush(item);
             return;
         }

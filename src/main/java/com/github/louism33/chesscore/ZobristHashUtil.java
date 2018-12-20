@@ -9,8 +9,8 @@ import static com.github.louism33.chesscore.BitboardResources.INITIAL_BLACK_KING
 import static com.github.louism33.chesscore.BitboardResources.INITIAL_WHITE_KING;
 import static com.github.louism33.chesscore.MakeMoveRegular.whichIntPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveRegular.whichPieceOnSquare;
-import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.ENPASSANTVICTIM;
-import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.NULL_MOVE;
+import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
+import static com.github.louism33.chesscore.StackDataUtil.NULL_MOVE;
 
 class ZobristHashUtil {
 
@@ -29,11 +29,11 @@ class ZobristHashUtil {
 
         long peek = board.moveStackArrayPeek();
 
-        if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peek)] == ENPASSANTVICTIM) {
+        if (StackDataUtil.getSpecialMove(peek) == ENPASSANTVICTIM) {
             hash = hashEP(hash, peek);
         }
 
-        if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peek)] == NULL_MOVE && board.hasPreviousMove()){
+        if (StackDataUtil.getSpecialMove(peek) == NULL_MOVE && board.hasPreviousMove()){
             hash = nullMoveEP(board, hash);
         }
 
@@ -42,7 +42,7 @@ class ZobristHashUtil {
 
     private static long nullMoveEP(Chessboard board, long hash) {
         long peekSecondElement = board.moveStackArrayPeek();
-        if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(peekSecondElement)] == ENPASSANTVICTIM) {
+        if (StackDataUtil.getSpecialMove(peekSecondElement) == ENPASSANTVICTIM) {
             hash = hashEP(hash, peekSecondElement);
         }
         return hash;

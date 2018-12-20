@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-public class PerftTestDetail {
+class PerftTestDetail {
     @Test
     void detailTest1(){
         Assert.assertEquals(

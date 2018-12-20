@@ -2,7 +2,7 @@ package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 
-public class Art {
+class Art {
 
     static String boardArt (Chessboard board) {
         StringBuilder s = new StringBuilder();
