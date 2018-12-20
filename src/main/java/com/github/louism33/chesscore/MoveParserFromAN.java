@@ -14,24 +14,6 @@ import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 
 public class MoveParserFromAN {
 
-//    public static void main (String[] args){
-//        Chessboard board = new Chessboard("r3k2r/8/8/8/2pP4/8/B7/R3K2R b KQkq d3 5 3");
-//        System.out.println(board);
-//
-//        int[] moves = board.generateLegalMoves();
-//        MoveParser.printMoves(moves);
-//
-//        String an = "e8g8";
-//        int move = buildMoveFromAN(board, an);
-//        String s = MoveParser.toString(move);
-//        System.out.println("-----> "+ s);
-//
-//        System.out.println("MP : " + MoveParser.isCastlingMove(move));
-//        board.makeMoveAndFlipTurn(move);
-//        System.out.println(board);
-//
-//    }
-
     private static final String boardPattern =
             "([(PNBRQKpnrqk)|a-h]?)" +
                     "([a-h])?" +
@@ -42,9 +24,9 @@ public class MoveParserFromAN {
                     "(\\+)?" +
                     "([nbrqNBRQ])?" +
                     "";
-
+    private static final Pattern r = Pattern.compile(boardPattern);
+    
     public static int buildMoveFromAN(Chessboard board, String an){
-        Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(an);
 
         String sourcePiece = "";
@@ -68,15 +50,6 @@ public class MoveParserFromAN {
             promotionPiece = m.group(8);
         }
 
-//        System.out.println(sourcePiece);
-//        System.out.println(possibleSourceFile);
-//        System.out.println(capture1);
-//        System.out.println(sourceSquareString);
-//        System.out.println(capture2);
-//        System.out.println(destinationString);
-//        System.out.println(checkMove);
-//        System.out.println("prom piece: " + promotionPiece);
-
         Square sourceSquare = null;
         if (sourceSquareString != null){
             sourceSquare = Square.valueOf(sourceSquareString.toUpperCase());
@@ -84,7 +57,6 @@ public class MoveParserFromAN {
 
         Square destinationSquare = Square.valueOf(destinationString.toUpperCase());
 
-//        System.out.println(destinationSquare.ordinal());
         // ep ?
         boolean isCapture = (destinationSquare.toBitboard() & board.allPieces()) != 0;
 

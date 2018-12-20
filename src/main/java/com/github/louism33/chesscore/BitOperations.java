@@ -81,7 +81,7 @@ public class BitOperations {
 
     static long extractRayFromTwoPieces(int pieceOneIndex, int pieceTwoIndex){
         if (!ready){
-            setup();
+            setup(false);
         }
         return BitboardResources.inBetweenSquares[pieceOneIndex][pieceTwoIndex]
                 ^ (BitOperations.newPieceOnSquare(pieceOneIndex) | BitOperations.newPieceOnSquare(pieceTwoIndex));

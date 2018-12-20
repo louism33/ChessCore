@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import static com.github.louism33.chesscore.CheckHelper.*;
 import static com.github.louism33.chesscore.MakeMoveAndHashUpdate.*;
+import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 import static com.github.louism33.chesscore.StackDataUtil.buildStackData;
 
 public class Chessboard implements Cloneable{
@@ -37,7 +38,7 @@ public class Chessboard implements Cloneable{
     public Chessboard() {
         init();
         makeZobrist();
-        Setup.init();
+        Setup.init(false);
     }
 
     /**
@@ -49,7 +50,7 @@ public class Chessboard implements Cloneable{
         makeBoardBasedOnFENSpecific(fen);
 
         this.zobristHash = ZobristHashUtil.boardToHash(this);
-        Setup.init();
+        Setup.init(false);
     }
 
     Chessboard(boolean blank){
@@ -102,7 +103,7 @@ public class Chessboard implements Cloneable{
 
         // this.zobrist = that.zobrist...
         this.makeZobrist();
-        Setup.init();
+        Setup.init(false);
 
     }
 
@@ -375,7 +376,7 @@ public class Chessboard implements Cloneable{
 
 
     private void init(){
-        this.details = new ChessboardDetails();
+        this.details = new ChessboardDetails(true);
     }
 
     void makeZobrist(){
@@ -575,9 +576,9 @@ public class Chessboard implements Cloneable{
     }
 
 
+    private static final String totalMoves = " (.) (\\w+|-) (\\w+|-)";
+    private static final Pattern r = Pattern.compile(totalMoves);
     private static boolean totalMovesSpecific(String fen){
-        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
-        Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(fen);
 
         String epFlags = "";
@@ -592,16 +593,15 @@ public class Chessboard implements Cloneable{
         return !epFlags.equals("-");
     }
 
-
+    private static final String fiftyPattern = " (.) (\\w+|-) (\\w+|-)";
+    private static final Pattern rr = Pattern.compile(fiftyPattern);
     private static boolean fiftyMovesSpecific(String fen){
-        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
+        Matcher mm = rr.matcher(fen);
 
         String epFlags = "";
 
-        if (m.find()){
-            epFlags = m.group(3);
+        if (mm.find()){
+            epFlags = mm.group(3);
         }
         if (epFlags.length() == 0){
             throw new RuntimeException("Could not Parse board rep of fen string");
@@ -610,10 +610,10 @@ public class Chessboard implements Cloneable{
         return !epFlags.equals("-");
     }
 
+    private static final String epFlag = " (.) (\\w+|-) (\\w|-)";
+    private static final Pattern epFlagPattern = Pattern.compile(epFlag);
     private void epFlagSpecific(String fen){
-        String boardPattern = " (.) (\\w+|-) (\\w|-)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
+        Matcher m = epFlagPattern.matcher(fen);
 
         String epFlags = "";
 
@@ -661,14 +661,14 @@ public class Chessboard implements Cloneable{
             default:
                 return;
         }
-        final long item = buildStackData(0, this, 50, epFlag);
+        final long item = buildStackData(0, this, 50, ENPASSANTVICTIM, epFlag);
         this.moveStackArrayPush(item);
     }
 
+    private static final String epFlagSpec = " (.) (\\w+|-) (\\w+|-)";
+    private static final Pattern rEPflagSpec = Pattern.compile(epFlagSpec);
     private static boolean isEPFlagSetSpecific(String fen){
-        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
+        Matcher m = rEPflagSpec.matcher(fen);
 
         String epFlags = "";
 
@@ -682,13 +682,14 @@ public class Chessboard implements Cloneable{
         return !epFlags.equals("-");
     }
 
+    private static final String castleRights = " (.) (\\w+|-)";
+    private static final Pattern rCastleRights = Pattern.compile(castleRights);
     private static boolean[] castlingRightsSpecific(String fen){
         boolean[] castlingRights = {
                 false, false, false, false,
         };
-        String boardPattern = " (.) (\\w+|-)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
+
+        Matcher m = rCastleRights.matcher(fen);
         String castleString = "";
         if (m.find()){
             castleString = m.group(2);
@@ -717,10 +718,10 @@ public class Chessboard implements Cloneable{
         return castlingRights;
     }
 
+    private static final String whiteTurn = " (.)";
+    private static final Pattern rTurn = Pattern.compile(whiteTurn);
     private boolean isItWhitesTurnSpecific(String fen){
-        String boardPattern = " (.)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
+        Matcher m = rTurn.matcher(fen);
         String player = "";
         if (m.find()){
             player = m.group(1);
@@ -800,11 +801,11 @@ public class Chessboard implements Cloneable{
             }
         }
     }
-
+    
+    private static final String boardRepPattern = "^[\\w*/]*";
+    private static final Pattern rBoardRep = Pattern.compile(boardRepPattern);
     private static String boardRepSpecific(String fen){
-        String boardPattern = "^[\\w*/]*";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
+        Matcher m = rBoardRep.matcher(fen);
         String boardRepresentation = "";
         if (m.find()){
             boardRepresentation = m.group();

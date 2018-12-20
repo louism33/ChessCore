@@ -28,7 +28,7 @@ class ChessboardDetails {
         
     }
     
-    ChessboardDetails(){
+    ChessboardDetails(boolean normalBoard){
         init();
     }
     

@@ -88,11 +88,11 @@ class StackDataUtil {
         return (long) castlingRights << smdCastleOffset;
     }
 
-    static long buildStackData(int move, Chessboard board, int fiftyMoveCounter,
-                               int enPassantFile) {
+    static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, 
+                                      long typeOfSpecialMove, int enPassantFile) {
         
         long epFile = smdMakeEPMove(enPassantFile);
-        return buildStackData(move, board, 50, StackDataUtil.ENPASSANTVICTIM) | epFile;
+        return buildStackData(move, board, fiftyMoveCounter, typeOfSpecialMove) | epFile;
     }
     
     static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, long typeOfSpecialMove) {
