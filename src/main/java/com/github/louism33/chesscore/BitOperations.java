@@ -8,7 +8,7 @@ import static com.github.louism33.chesscore.BitboardResources.ROWS;
 import static com.github.louism33.chesscore.Setup.ready;
 import static com.github.louism33.chesscore.Setup.setup;
 
-class BitOperations {
+public class BitOperations {
 
     public static long newPieceOnSquare (int x){
         return 0x0000000000000001L << x;
@@ -81,7 +81,7 @@ class BitOperations {
 
     static long extractRayFromTwoPieces(int pieceOneIndex, int pieceTwoIndex){
         if (!ready){
-            setup(false);
+            setup();
         }
         return BitboardResources.inBetweenSquares[pieceOneIndex][pieceTwoIndex]
                 ^ (BitOperations.newPieceOnSquare(pieceOneIndex) | BitOperations.newPieceOnSquare(pieceTwoIndex));

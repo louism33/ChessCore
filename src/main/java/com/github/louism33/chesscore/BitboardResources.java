@@ -1,10 +1,10 @@
 package com.github.louism33.chesscore;
 
-class BitboardResources {
+public class BitboardResources {
 
     public static final int WHITE = 1, BLACK = 0;
 
-    public static final long[][] inBetweenSquares = new long[64][64];
+    public static long[][] inBetweenSquares = new long[64][64];
 
     public static final long UNIVERSE = 0xffffffffffffffffL;
 
@@ -41,10 +41,10 @@ class BitboardResources {
 
     public static final long FILE_H = 0x0101010101010101L;
     public static final long FILE_G = 0x0202020202020202L;
-    private static final long FILE_F = 0x0404040404040404L;
-    private static final long FILE_E = 0x0808080808080808L;
-    private static final long FILE_D = 0x1010101010101010L;
-    private static final long FILE_C = 0x2020202020202020L;
+    public static final long FILE_F = 0x0404040404040404L;
+    public static final long FILE_E = 0x0808080808080808L;
+    public static final long FILE_D = 0x1010101010101010L;
+    public static final long FILE_C = 0x2020202020202020L;
     public static final long FILE_B = 0x4040404040404040L;
     public static final long FILE_A = 0x8080808080808080L;
 
@@ -72,8 +72,8 @@ class BitboardResources {
 
     public static final long NORTH_WEST = FILE_A | RANK_EIGHT;
     public static final long NORTH_EAST = FILE_H | RANK_EIGHT;
-    private static final long SOUTH_WEST = FILE_A | RANK_ONE;
-    private static final long SOUTH_EAST = FILE_H | RANK_ONE;
+    public static final long SOUTH_WEST = FILE_A | RANK_ONE;
+    public static final long SOUTH_EAST = FILE_H | RANK_ONE;
 
     public static final long NORTH_WEST_CORNER = FILE_A & RANK_EIGHT;
     public static final long NORTH_EAST_CORNER = FILE_H & RANK_EIGHT;
@@ -199,8 +199,8 @@ class BitboardResources {
     };
 
 
-    public static final long[][] rookDatabase = new long[64][];
-    public static final long[][] bishopDatabase = new long[64][];
+    public static long[][] rookDatabase = new long[64][];
+    public static long[][] bishopDatabase = new long[64][];
 
     public static final int[] rookShiftAmounts = new int[]{
             12, 11, 11, 11, 11, 11, 11, 12,

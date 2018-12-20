@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-class NullMoveTest {
+public class NullMoveTest {
 
     @Test
     void tinyDepths() {

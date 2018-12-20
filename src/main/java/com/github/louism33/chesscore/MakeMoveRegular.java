@@ -79,7 +79,7 @@ class MakeMoveRegular {
                 int sourceAsPiece = MoveParser.getSourceIndex(move);
                 int whichFile = 8 - sourceAsPiece % 8;
 
-                final long item = buildStackData(move, board, 50, ENPASSANTVICTIM, whichFile);
+                final long item = buildStackData(move, board, 50, whichFile);
                 board.moveStackArrayPush(item);
                 
                 makeRegularMove(board, move);

@@ -10,17 +10,17 @@ import static com.github.louism33.chesscore.BitboardResources.*;
 class Setup {
 
     public static void main(String[] args){
-        setup(false);
+        setup();
     }
 
-    static void setup(boolean force){
-        init(false);
+    static void setup(){
+        init();
     }
 
     static boolean ready = false;
 
-    static void init(boolean force){
-        if (!ready || force) {
+    static void init(){
+        if (!ready || false) {
             calculateRookDatabase();
             calculateBishopDatabase();
             calculateInBetweenSquares();
@@ -41,7 +41,7 @@ class Setup {
     }
 
     private static List<Long> bishopVariations(Square square) {
-        return singleBishopAllVariations(new Chessboard(true), square.toBitboard(), true, UNIVERSE, 0);
+        return singleBishopAllVariations(new Chessboard(true), square.toBitboard());
     }
 
     private static long[] makeBishopDB(Square square) {
@@ -62,7 +62,7 @@ class Setup {
     }
 
     private static List<Long> rookVariations(Square square) {
-        return singleRookAllVariations(new Chessboard(true), square.toBitboard(), true, UNIVERSE, 0);
+        return singleRookAllVariations(new Chessboard(true), square.toBitboard());
     }
 
     private static long[] makeRookDB(Square square) {
@@ -309,7 +309,7 @@ class Setup {
     }
 
 
-    private static List<Long> singleRookAllVariations(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
+    private static List<Long> singleRookAllVariations(Chessboard board, long piece){
         long allPieces = board.whitePieces() | board.blackPieces();
         long answer = 0;
         long temp = piece;
@@ -543,7 +543,7 @@ class Setup {
         return answer & (legalPushes | legalCaptures);
     }
 
-    private static List<Long> singleBishopAllVariations(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures) {
+    private static List<Long> singleBishopAllVariations(Chessboard board, long piece) {
 
 
         long ALL_PIECES = board.whitePieces() | board.blackPieces(),

@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-class PerftTestsBigDepths {
+public class PerftTestsBigDepths {
 
     @Test
     void bigDepth1() {

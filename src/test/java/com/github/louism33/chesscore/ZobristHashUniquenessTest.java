@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
-class ZobristHashUniquenessTest {
+public class ZobristHashUniquenessTest {
 
     @Test
     void test1() {
@@ -101,7 +101,7 @@ class ZobristHashUniquenessTest {
     }
     
     @AfterAll
-    static void recorder(){
+    public static void recorder(){
         System.out.println("Max array size:                 " + ARRAY_SIZE );
         System.out.println("Total number of hash checks:    " + numberOfHashChecks);
         System.out.println("Same entries:                   " + sameEntry);
@@ -112,9 +112,9 @@ class ZobristHashUniquenessTest {
         System.out.println();
         System.out.println("For size "+ size+", there was a ratio of success to failure of "+(100*(double) checkSuccess/((double) numberOfHashChecks)));
     }
-    private static final int shift = 26; // 26
+    private static int shift = 26; // 26
     
-    private static final int ARRAY_SIZE = 1 << shift;
+    private static int ARRAY_SIZE = 1 << shift;
     
     private static long numberOfHashChecks = 0;
     private static long checkSuccess = 0;
@@ -122,7 +122,7 @@ class ZobristHashUniquenessTest {
     private static long differentEntry = 0;
     private static long checkFail = 0;
     private static long size = 0;
-    private static final long[] hashesSeen = new long[ARRAY_SIZE];
+    private static long[] hashesSeen = new long[ARRAY_SIZE];
     
     private static void verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);

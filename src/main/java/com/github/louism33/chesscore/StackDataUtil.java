@@ -38,11 +38,11 @@ class StackDataUtil {
         return (int) ((stackMoveData & SMD_CASTLE_FLAGS) >> smdCastleOffset);
     }
 
-    private static long smdMakeMove(int move){
+    public static long smdMakeMove(int move){
         return (long) move & SMD_MOVE_MASK;
     }
 
-    private static long smdMakeFiftyPiece(int fifty){
+    public static long smdMakeFiftyPiece(int fifty){
         return (long) fifty << smdFiftyPieceOffset;
     }
 
@@ -50,12 +50,12 @@ class StackDataUtil {
         return (long) turn << smdTurnOffset;
     }
 
-    private static long smdMakeTurn(boolean t){
+    public static long smdMakeTurn(boolean t){
         int turn = t ? 1 : 0;
         return (long) turn << smdTurnOffset;
     }
 
-    private static long smdMakeSpecialMove(long specialMove){
+    public static long smdMakeSpecialMove(long specialMove){
         return specialMove << smdSpecialOffset;
     }
 
@@ -63,11 +63,11 @@ class StackDataUtil {
 //        return (long) specialMove.ordinal() << smdSpecialOffset;
 //    }
 
-    private static long smdMakeEPMove(int epFile){
+    public static long smdMakeEPMove(int epFile){
         return (long) epFile << smdEPOffset;
     }
 
-    private static long smdMakeCastlingRights(Chessboard board){
+    public static long smdMakeCastlingRights(Chessboard board){
         int numTo15 = 0;
         if (board.isWhiteCanCastleK()){
             numTo15 += 1;
@@ -88,11 +88,11 @@ class StackDataUtil {
         return (long) castlingRights << smdCastleOffset;
     }
 
-    static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, 
-                                      long typeOfSpecialMove, int enPassantFile) {
+    static long buildStackData(int move, Chessboard board, int fiftyMoveCounter,
+                               int enPassantFile) {
         
         long epFile = smdMakeEPMove(enPassantFile);
-        return buildStackData(move, board, fiftyMoveCounter, typeOfSpecialMove) | epFile;
+        return buildStackData(move, board, 50, StackDataUtil.ENPASSANTVICTIM) | epFile;
     }
     
     static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, long typeOfSpecialMove) {

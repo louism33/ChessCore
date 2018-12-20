@@ -9,10 +9,10 @@ import java.util.List;
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.Square.*;
 
-class SquareTest {
+public class SquareTest {
 
     @Test
-    void test(){
+    public void test(){
         for (int s = 63; s >= 0; s--){
             Assert.assertEquals(values()[s].toBitboard(), newPieceOnSquare(s));
         }

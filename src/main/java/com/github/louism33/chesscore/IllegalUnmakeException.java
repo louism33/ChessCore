@@ -1,6 +1,6 @@
 package com.github.louism33.chesscore;
 
-class IllegalUnmakeException extends Exception {
+public class IllegalUnmakeException extends Exception {
     
     IllegalUnmakeException(){
         
