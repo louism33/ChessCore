@@ -35,17 +35,17 @@ class PerftTest {
                 3195901860L);
 
 
-//        Assert.assertEquals(
-//                Perft.perftTest(8, new Chessboard(), 84998978956L),
-//                84998978956L);
+        Assert.assertEquals(
+                Perft.perftTest(8, new Chessboard(), 84998978956L),
+                84998978956L);
 
 
-//        Assert.assertEquals(
-//                Perft.runPerftTestWithBoardLong(9, new Chessboard(), 2439530234167L),
-//                2439530234167L);
+        Assert.assertEquals(
+                Perft.perftTest(9, new Chessboard(), 2439530234167L),
+                2439530234167L);
 //
 //        Assert.assertEquals(
-//                Perft.runPerftTestWithBoardLong(10, new Chessboard(), 69352859712417L),
+//                Perft.perftTest(10, new Chessboard(), 69352859712417L),
 //                69352859712417L);
     }
 
