@@ -576,9 +576,9 @@ public class Chessboard implements Cloneable{
     }
 
 
-    private static final String totalMoves = " (.) (\\w+|-) (\\w+|-)";
-    private static final Pattern r = Pattern.compile(totalMoves);
     private static boolean totalMovesSpecific(String fen){
+        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
+        Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(fen);
 
         String epFlags = "";
@@ -593,15 +593,16 @@ public class Chessboard implements Cloneable{
         return !epFlags.equals("-");
     }
 
-    private static final String fiftyPattern = " (.) (\\w+|-) (\\w+|-)";
-    private static final Pattern rr = Pattern.compile(fiftyPattern);
+
     private static boolean fiftyMovesSpecific(String fen){
-        Matcher mm = rr.matcher(fen);
+        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
 
         String epFlags = "";
 
-        if (mm.find()){
-            epFlags = mm.group(3);
+        if (m.find()){
+            epFlags = m.group(3);
         }
         if (epFlags.length() == 0){
             throw new RuntimeException("Could not Parse board rep of fen string");
@@ -610,10 +611,10 @@ public class Chessboard implements Cloneable{
         return !epFlags.equals("-");
     }
 
-    private static final String epFlag = " (.) (\\w+|-) (\\w|-)";
-    private static final Pattern epFlagPattern = Pattern.compile(epFlag);
     private void epFlagSpecific(String fen){
-        Matcher m = epFlagPattern.matcher(fen);
+        String boardPattern = " (.) (\\w+|-) (\\w|-)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
 
         String epFlags = "";
 
@@ -665,10 +666,10 @@ public class Chessboard implements Cloneable{
         this.moveStackArrayPush(item);
     }
 
-    private static final String epFlagSpec = " (.) (\\w+|-) (\\w+|-)";
-    private static final Pattern rEPflagSpec = Pattern.compile(epFlagSpec);
     private static boolean isEPFlagSetSpecific(String fen){
-        Matcher m = rEPflagSpec.matcher(fen);
+        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
 
         String epFlags = "";
 
@@ -682,14 +683,13 @@ public class Chessboard implements Cloneable{
         return !epFlags.equals("-");
     }
 
-    private static final String castleRights = " (.) (\\w+|-)";
-    private static final Pattern rCastleRights = Pattern.compile(castleRights);
     private static boolean[] castlingRightsSpecific(String fen){
         boolean[] castlingRights = {
                 false, false, false, false,
         };
-
-        Matcher m = rCastleRights.matcher(fen);
+        String boardPattern = " (.) (\\w+|-)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
         String castleString = "";
         if (m.find()){
             castleString = m.group(2);
@@ -718,10 +718,10 @@ public class Chessboard implements Cloneable{
         return castlingRights;
     }
 
-    private static final String whiteTurn = " (.)";
-    private static final Pattern rTurn = Pattern.compile(whiteTurn);
     private boolean isItWhitesTurnSpecific(String fen){
-        Matcher m = rTurn.matcher(fen);
+        String boardPattern = " (.)";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
         String player = "";
         if (m.find()){
             player = m.group(1);
@@ -801,11 +801,11 @@ public class Chessboard implements Cloneable{
             }
         }
     }
-    
-    private static final String boardRepPattern = "^[\\w*/]*";
-    private static final Pattern rBoardRep = Pattern.compile(boardRepPattern);
+
     private static String boardRepSpecific(String fen){
-        Matcher m = rBoardRep.matcher(fen);
+        String boardPattern = "^[\\w*/]*";
+        Pattern r = Pattern.compile(boardPattern);
+        Matcher m = r.matcher(fen);
         String boardRepresentation = "";
         if (m.find()){
             boardRepresentation = m.group();

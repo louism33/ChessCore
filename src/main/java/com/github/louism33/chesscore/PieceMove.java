@@ -7,7 +7,7 @@ import static com.github.louism33.chesscore.BitboardResources.*;
 import static com.github.louism33.chesscore.Setup.ready;
 import static com.github.louism33.chesscore.Setup.setup;
 
-class PieceMove {
+public class PieceMove {
 
     public static long singlePawnPushes(Chessboard board, long pawns, boolean white, long legalPushes, long allPieces) {
         final long possiblePawnSinglePushes = white ? pawns << 8 : pawns >>> 8;
@@ -118,7 +118,7 @@ class PieceMove {
     }
 
 
-    private static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
+    public static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
         if (!ready){
             setup(false);
         }
@@ -136,7 +136,7 @@ class PieceMove {
         return legalMoves & legalMovesMask;
     }
 
-    private static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
+    public static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
         if (!ready){
             setup(false);
         }
