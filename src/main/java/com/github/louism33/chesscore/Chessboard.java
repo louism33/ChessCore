@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import static com.github.louism33.chesscore.CheckHelper.*;
 import static com.github.louism33.chesscore.MakeMoveAndHashUpdate.*;
-import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.ENPASSANTVICTIM;
+import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 import static com.github.louism33.chesscore.StackDataUtil.buildStackData;
 
 public class Chessboard implements Cloneable{

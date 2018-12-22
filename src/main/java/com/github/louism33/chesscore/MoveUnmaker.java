@@ -4,8 +4,7 @@ import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveRegular.makeRegularMove;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
 import static com.github.louism33.chesscore.MoveParser.*;
-import static com.github.louism33.chesscore.StackDataUtil.SpecialMove;
-import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.*;
+import static com.github.louism33.chesscore.StackDataUtil.*;
 
 class MoveUnmaker {
 
@@ -30,17 +29,17 @@ class MoveUnmaker {
         int pieceToMoveBack = getDestinationIndex(StackDataUtil.getMove(pop));
         int squareToMoveBackTo = getSourceIndex(StackDataUtil.getMove(pop));
 
-        if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == SpecialMove.BASICQUIETPUSH){
+        if (StackDataUtil.getSpecialMove(pop) == BASICQUIETPUSH){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
-        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == BASICLOUDPUSH){
+        else if (StackDataUtil.getSpecialMove(pop) == BASICLOUDPUSH){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
-        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == BASICCAPTURE){
+        else if (StackDataUtil.getSpecialMove(pop) == BASICCAPTURE){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
 //            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
@@ -51,16 +50,14 @@ class MoveUnmaker {
         }
 
         //double pawn push
-        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == ENPASSANTVICTIM){
+        else if (StackDataUtil.getSpecialMove(pop) == ENPASSANTVICTIM){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
         }
 
-        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == ENPASSANTCAPTURE){
+        else if (StackDataUtil.getSpecialMove(pop) == ENPASSANTCAPTURE){
             int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
             makeRegularMove(board, basicReversedMove);
-//            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
-            int takenPiece = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
             
             if (StackDataUtil.getTurn(pop) == 1) {
                 addRelevantPieceToSquare(board, 7, pieceToMoveBack - 8);
@@ -70,8 +67,7 @@ class MoveUnmaker {
             }
         }
 
-        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == CASTLING){
-            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
+        else if (StackDataUtil.getSpecialMove(pop) == CASTLING){
 
             if (pieceToMoveBack == 1){
                 long originalKing = newPieceOnSquare(squareToMoveBackTo);
@@ -119,7 +115,7 @@ class MoveUnmaker {
 
         }
 
-        else if (SpecialMove.values()[StackDataUtil.getSpecialMove(pop)] == PROMOTION){
+        else if (StackDataUtil.getSpecialMove(pop) == PROMOTION){
             long sourceSquare = newPieceOnSquare(pieceToMoveBack);
             long destinationSquare = newPieceOnSquare(squareToMoveBackTo);
             removePieces(board, sourceSquare, destinationSquare);

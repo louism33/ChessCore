@@ -2,7 +2,6 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,24 +10,23 @@ import static com.github.louism33.chesscore.BitboardResources.UNIVERSE;
 import static com.github.louism33.chesscore.ConstantsMove.*;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.extractFileFromStack;
 import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationSquareCaptureSecure;
-import static com.github.louism33.chesscore.Square.*;
-import static com.github.louism33.chesscore.StackDataUtil.SpecialMove.ENPASSANTVICTIM;
+import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 
 public class MoveParserFromAN {
 
 //    public static void main (String[] args){
-//        Chessboard board = new Chessboard("8/8/8/2k5/2pP4/8/B7/4K3 b - d3 5 3");
+//        Chessboard board = new Chessboard("r3k2r/8/8/8/2pP4/8/B7/R3K2R b KQkq d3 5 3");
 //        System.out.println(board);
 //
 //        int[] moves = board.generateLegalMoves();
 //        MoveParser.printMoves(moves);
 //
-//        String an = "c4d3";
+//        String an = "e8g8";
 //        int move = buildMoveFromAN(board, an);
 //        String s = MoveParser.toString(move);
 //        System.out.println("-----> "+ s);
 //
-//        System.out.println("EP: " + MoveParser.isEnPassantMove(move));
+//        System.out.println("MP : " + MoveParser.isCastlingMove(move));
 //        board.makeMoveAndFlipTurn(move);
 //        System.out.println(board);
 //
@@ -109,7 +107,7 @@ public class MoveParserFromAN {
         }
 
         if (sourceSquare != null){
-            if (isCastle(sourceSquare, destinationSquare, movingPiece)){
+            if (isCastle(board, sourceSquare, destinationSquare, movingPiece)){
                 move |= CASTLING_MASK;
             }
         }
@@ -153,16 +151,15 @@ public class MoveParserFromAN {
         return move;
     }
 
-    private static boolean isCastle(Square sourceSquare, Square destinationSquare, Piece movingPiece){
-        if (movingPiece == null){
-            return false;
-        }
-        if (sourceSquare == Square.E1 && movingPiece == Piece.WHITE_KING){
+    private static boolean isCastle(Chessboard board, Square sourceSquare, Square destinationSquare, Piece movingPiece){
+        if (sourceSquare == Square.E1
+                && ((sourceSquare.toBitboard() & board.getWhiteKing()) != 0)){
             if (destinationSquare == Square.G1 || destinationSquare == Square.C1){
                 return true;
             }
         }
-        if (sourceSquare == Square.E8 && movingPiece == Piece.BLACK_KING){
+        if (sourceSquare == Square.E8
+                && ((sourceSquare.toBitboard() & board.getBlackKing()) != 0)){
             if (destinationSquare == Square.G8 || destinationSquare == Square.C8){
                 return true;
             }
@@ -184,7 +181,7 @@ public class MoveParserFromAN {
 
             long previousMove = board.moveStackArrayPeek();
 
-            if (StackDataUtil.SpecialMove.values()[StackDataUtil.getSpecialMove(previousMove)] != ENPASSANTVICTIM){
+            if (StackDataUtil.getSpecialMove(previousMove) != ENPASSANTVICTIM){
                 return false;
             }
 
