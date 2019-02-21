@@ -5,15 +5,12 @@ import org.junit.Assert;
 import java.util.Random;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
-import static com.github.louism33.chesscore.BitboardResources.INITIAL_BLACK_KING;
-import static com.github.louism33.chesscore.BitboardResources.INITIAL_WHITE_KING;
 import static com.github.louism33.chesscore.ConstantsMove.*;
 import static com.github.louism33.chesscore.MakeMoveRegular.whichIntPieceOnSquare;
-import static com.github.louism33.chesscore.MakeMoveRegular.whichPieceOnSquare;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 import static com.github.louism33.chesscore.StackDataUtil.NULL_MOVE;
 
-class ZobristHashUtil {
+final class ZobristHashUtil {
 
     private static final long initHashSeed = 100;
     private static final long[][] zobristHashPieces = initPieceHash();
@@ -69,42 +66,46 @@ class ZobristHashUtil {
         /*
         if castling rights changed, update hash
         */
-        boardHash ^= postMoveCastlingRights(board);
+        boardHash ^= postMoveCastlingRights(board, move);
 
         return boardHash;
     }
 
-    private static boolean castlingRightsNotAffected (int move){
-        return !(MoveParser.getSourceIndex(move) == 0 ||
-                MoveParser.getSourceIndex(move) == 3 ||
-                MoveParser.getSourceIndex(move) == 7 ||
-                MoveParser.getSourceIndex(move) == 56 ||
-                MoveParser.getSourceIndex(move) == 59 ||
-                MoveParser.getSourceIndex(move) == 63 ||
-                MoveParser.getDestinationIndex(move) == 0 ||
-                MoveParser.getDestinationIndex(move) == 3 ||
-                MoveParser.getDestinationIndex(move) == 7 ||
-                MoveParser.getDestinationIndex(move) == 56 ||
-                MoveParser.getDestinationIndex(move) == 59 ||
-                MoveParser.getDestinationIndex(move) == 63);
+    private static boolean castlingRightsAffectedByMove (int move){
+        switch (MoveParser.getSourceIndex(move)) {
+            case 0:
+            case 3:
+            case 7:
+            case 56:
+            case 59:
+            case 63:
+                return true;
+        }
+        switch (MoveParser.getDestinationIndex(move)) {
+            case 0:
+            case 3:
+            case 7:
+            case 56:
+            case 59:
+            case 63:
+                return true;
+        }
+        return false;
     }
 
-    private static long postMoveCastlingRights(Chessboard board){
+    private static long postMoveCastlingRights(Chessboard board, int move){
         long updatedHashValue = 0;
         final long peek = board.moveStackArrayPeek();
 
         int castlingRights = StackDataUtil.getCastlingRights(peek);
         
-        
-                /*
+        /*
         castling rights may never return, so if 0, no need to update anything
          */
-//        if (castlingRights == 0 || castlingRightsNotAffected(move)) {
-//            return 0;
-//        }
+        if (castlingRights == 0 || !castlingRightsAffectedByMove(move)) {
+            return 0;
+        }
 
-        
-        
         /*
         undo previous castling rights
         */
