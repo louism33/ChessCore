@@ -114,7 +114,8 @@ public class Chessboard implements Cloneable{
         return "not yet";
     }
 
-    /** legal chess move generation
+    /** 
+     * legal chess move generation
      * @return an array of length 128 populated with fully legal chess moves, and 0s. 
      * Only make moves that are not 0!
      * Use @see com.github.louism33.chesscore.MoveParser.class for methods to interpret the move object
@@ -123,7 +124,8 @@ public class Chessboard implements Cloneable{
         return MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn());
     }
 
-    /** legal chess move generation
+    /** 
+     * legal chess move generation
      * @return an array of exactly the right length populated with fully legal chess moves. 
      * easier to use, but a bit slower than @see com.github.louism33.chesscore.generateLegalMoves
      * Use @see com.github.louism33.chesscore.MoveParser for methods to interpret the move object
@@ -420,7 +422,8 @@ public class Chessboard implements Cloneable{
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn
-                ;
+                +"\n" + this.zobristHash
+                +"\n" + this.getZobristHashStack();
     }
 
     public boolean isWhiteCanCastleK() {

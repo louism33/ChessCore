@@ -7,6 +7,7 @@ import static com.github.louism33.chesscore.BitboardResources.FILES;
 import static com.github.louism33.chesscore.BitboardResources.ROWS;
 import static com.github.louism33.chesscore.Setup.ready;
 import static com.github.louism33.chesscore.Setup.setup;
+import static java.lang.Long.*;
 
 public class BitOperations {
 
@@ -41,11 +42,11 @@ public class BitOperations {
     }
     
     public static int getIndexOfFirstPiece (long pieces) {
-        return Long.numberOfTrailingZeros(pieces);
+        return numberOfTrailingZeros(pieces);
     }
 
     public static int populationCount (long pieces) {
-        return Long.bitCount(pieces);
+        return bitCount(pieces);
     }
     
     public static List<Long> getAllPieces(long pieces, long ignoreThesePieces) {
@@ -59,11 +60,11 @@ public class BitOperations {
     }
 
     public static long getFirstPiece(long l) {
-        return Long.lowestOneBit(l);
+        return lowestOneBit(l);
     }
 
     public static long getLastPiece(long l) {
-        return Long.highestOneBit(l);
+        return highestOneBit(l);
     }
 
     static long extractRayFromTwoPieces(Piece pieceOne, Piece pieceTwo){

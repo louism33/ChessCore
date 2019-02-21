@@ -1,10 +1,12 @@
 package com.github.louism33.chesscore;
 
+import com.github.louism33.chesscore.Chessboard;
+
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 
 public class Art {
 
-    static String boardArt (Chessboard board) {
+    public static String boardArt(Chessboard board) {
         StringBuilder s = new StringBuilder();
         s.append("   a b c d e f g h\n");
         s.append("  +---------------+\n");
@@ -24,23 +26,24 @@ public class Art {
     }
 
     private static String pieceByNumberASCII(int s){
-        if (s == 1) return ("P");
-        if (s == 2) return ("N");
-        if (s == 3) return ("B");
-        if (s == 4) return ("R");
-        if (s == 5) return ("Q");
-        if (s == 6) return ("K");
-
-        if (s == 7) return ("p");
-        if (s == 8) return ("n");
-        if (s == 9) return ("b");
-        if (s == 10) return ("r");
-        if (s == 11) return ("q");
-        if (s == 12) return ("k");
-        else return (".");
+        switch (s) {
+            case 1: return ("P");
+            case 2: return ("N");
+            case 3: return ("B");
+            case 4: return ("R");
+            case 5: return ("Q");
+            case 6: return ("K");
+            case 7: return ("p");
+            case 8: return ("n");
+            case 9: return ("b");
+            case 10: return ("r");
+            case 11: return ("q");
+            case 12: return ("k");
+            default: return (".");
+        }
     }
 
-      public static String makeMoveToStringTEMP (int l){
+    public static String makeMoveToStringTEMP (int l){
         String binaryString = Integer.toBinaryString(l);
         int numberOfPaddingZeros = 32 - binaryString.length();
         StringBuilder sb = new StringBuilder();

@@ -2,6 +2,7 @@ package com.github.louism33.chesscore;
 
 class MoveMakingUtilities {
 
+    // todo
     public static void removePieces (Chessboard board, long sourceSquare, long destinationSquare){
         long mask = ~(sourceSquare | destinationSquare);
         board.setWhitePawns(board.getWhitePawns() & mask);

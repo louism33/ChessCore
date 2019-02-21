@@ -9,7 +9,7 @@ import static com.github.louism33.chesscore.StackDataUtil.*;
 class MoveUnmaker {
 
     static void unMakeMoveMaster(Chessboard board) throws IllegalUnmakeException {
-        
+
         if (!board.hasPreviousMove()){
             throw new IllegalUnmakeException("No moves to unmake.");
         }
@@ -18,118 +18,80 @@ class MoveUnmaker {
         board.pinStackArrayPop();
         board.zobristStackArrayPop();
         board.moveStackArrayPop();
-        
+
         long pop = board.moveStackData;
-        
+
         if (StackDataUtil.getMove(pop) == 0){
             board.setWhiteTurn(StackDataUtil.getTurn(pop) == 1);
             return;
         }
 
-        int pieceToMoveBack = getDestinationIndex(StackDataUtil.getMove(pop));
+        int pieceToMoveBackIndex = getDestinationIndex(StackDataUtil.getMove(pop));
         int squareToMoveBackTo = getSourceIndex(StackDataUtil.getMove(pop));
+        int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBackIndex, squareToMoveBackTo);
 
-        if (StackDataUtil.getSpecialMove(pop) == BASICQUIETPUSH){
-            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
-            makeRegularMove(board, basicReversedMove);
-        }
+        switch (StackDataUtil.getSpecialMove(pop)) {
+            //double pawn push
+            case ENPASSANTVICTIM:
+            case BASICQUIETPUSH:
+            case BASICLOUDPUSH:
+                makeRegularMove(board, basicReversedMove);
+                break;
 
-        else if (StackDataUtil.getSpecialMove(pop) == BASICLOUDPUSH){
-            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
-            makeRegularMove(board, basicReversedMove);
-        }
+            case BASICCAPTURE:
+                makeRegularMove(board, basicReversedMove);
+                int takenPiece = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
+                if (MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop)) != 0){
+                    addRelevantPieceToSquare(board, takenPiece, pieceToMoveBackIndex);
+                }
+                break;
 
-        else if (StackDataUtil.getSpecialMove(pop) == BASICCAPTURE){
-            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
-            makeRegularMove(board, basicReversedMove);
-//            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
-            int takenPiece = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
-            if (takenPiece != 0){
-                addRelevantPieceToSquare(board, takenPiece, pieceToMoveBack);
-            }
-        }
+            case ENPASSANTCAPTURE:
+                makeRegularMove(board, basicReversedMove);
+                if (StackDataUtil.getTurn(pop) == 1) {
+                    addRelevantPieceToSquare(board, 7, pieceToMoveBackIndex - 8);
+                }
+                else {
+                    addRelevantPieceToSquare(board, 1, pieceToMoveBackIndex + 8);
+                }
+                break;
 
-        //double pawn push
-        else if (StackDataUtil.getSpecialMove(pop) == ENPASSANTVICTIM){
-            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
-            makeRegularMove(board, basicReversedMove);
-        }
+            case CASTLING:
+                // king moved to:
+                long originalRook, newRook,
+                        originalKing = newPieceOnSquare(squareToMoveBackTo),
+                        newKing = newPieceOnSquare(pieceToMoveBackIndex);
 
-        else if (StackDataUtil.getSpecialMove(pop) == ENPASSANTCAPTURE){
-            int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBack, squareToMoveBackTo);
-            makeRegularMove(board, basicReversedMove);
-            
-            if (StackDataUtil.getTurn(pop) == 1) {
-                addRelevantPieceToSquare(board, 7, pieceToMoveBack - 8);
-            }
-            else {
-                addRelevantPieceToSquare(board, 1, pieceToMoveBack + 8);
-            }
-        }
+                switch (StackDataUtil.getTurn(pop)) {
+                    //white moved
+                    case 1:
+                        originalRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? 0 : 7);
+                        newRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
+                        removePieces(board, newKing, newRook);
+                        board.setWhiteKing(board.getWhiteKing() | originalKing);
+                        board.setWhiteRooks(board.getWhiteRooks() | originalRook);
+                        break;
 
-        else if (StackDataUtil.getSpecialMove(pop) == CASTLING){
+                    default:
+                        originalRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? 56 : 63);
+                        newRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
+                        removePieces(board, newKing, newRook);
+                        board.setBlackKing(board.getBlackKing() | originalKing);
+                        board.setBlackRooks(board.getBlackRooks() | originalRook);
+                        break;
+                }
+                break;
 
-            if (pieceToMoveBack == 1){
-                long originalKing = newPieceOnSquare(squareToMoveBackTo);
-                long originalRook = newPieceOnSquare(0);
-                long newRook = newPieceOnSquare(pieceToMoveBack + 1);
-                long newKing = newPieceOnSquare(pieceToMoveBack);
-
-                removePieces(board, newKing, newRook);
-                board.setWhiteKing(board.getWhiteKing() | originalKing);
-                board.setWhiteRooks(board.getWhiteRooks() | originalRook);
-            }
-
-            else if (pieceToMoveBack == 5){
-                long originalKing = newPieceOnSquare(squareToMoveBackTo);
-                long originalRook = newPieceOnSquare(7);
-                long newRook = newPieceOnSquare(pieceToMoveBack - 1);
-                long newKing = newPieceOnSquare(pieceToMoveBack);
-
-                removePieces(board, newKing, newRook);
-                board.setWhiteKing(board.getWhiteKing() | originalKing);
-                board.setWhiteRooks(board.getWhiteRooks() | originalRook);
-            }
-
-            else if (pieceToMoveBack == 57){
-                long originalKing = newPieceOnSquare(squareToMoveBackTo);
-                long originalRook = newPieceOnSquare(56);
-                long newRook = newPieceOnSquare(pieceToMoveBack + 1);
-                long newKing = newPieceOnSquare(pieceToMoveBack);
-
-                removePieces(board, newKing, newRook);
-                board.setBlackKing(board.getBlackKing() | originalKing);
-                board.setBlackRooks(board.getBlackRooks() | originalRook);
-            }
-
-            else if (pieceToMoveBack == 61){
-                long originalKing = newPieceOnSquare(squareToMoveBackTo);
-                long originalRook = newPieceOnSquare(63);
-                long newRook = newPieceOnSquare(pieceToMoveBack - 1);
-                long newKing = newPieceOnSquare(pieceToMoveBack);
-
-                removePieces(board, newKing, newRook);
-                board.setBlackKing(board.getBlackKing() | originalKing);
-                board.setBlackRooks(board.getBlackRooks() | originalRook);
-            }
-
-        }
-
-        else if (StackDataUtil.getSpecialMove(pop) == PROMOTION){
-            long sourceSquare = newPieceOnSquare(pieceToMoveBack);
-            long destinationSquare = newPieceOnSquare(squareToMoveBackTo);
-            removePieces(board, sourceSquare, destinationSquare);
-            if (StackDataUtil.getTurn(pop) == 1) {
-                addRelevantPieceToSquare(board, 1, squareToMoveBackTo);
-            }
-            else {
-                addRelevantPieceToSquare(board, 7, squareToMoveBackTo);
-            }
-//            int takenPiece = MoveParser.getVictimPiece(StackDataUtil.getMove(pop)).ordinal();
-            int takenPiece = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
-            if (takenPiece > 0){
-                addRelevantPieceToSquare(board, takenPiece, pieceToMoveBack);
-            }
+            case PROMOTION:
+                long sourceSquare = newPieceOnSquare(pieceToMoveBackIndex);
+                long destinationSquare = newPieceOnSquare(squareToMoveBackTo);
+                removePieces(board, sourceSquare, destinationSquare);
+                addRelevantPieceToSquare(board, StackDataUtil.getTurn(pop) == 1 ? 1 : 7, squareToMoveBackTo);
+                int takenPiecePromotion = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
+                if (takenPiecePromotion > 0){
+                    addRelevantPieceToSquare(board, takenPiecePromotion, pieceToMoveBackIndex);
+                }
+                break;
         }
 
         int castlingRights = StackDataUtil.getCastlingRights(pop);
@@ -149,54 +111,53 @@ class MoveUnmaker {
         if (castlingRights >= 1){
             board.setWhiteCanCastleK(true);
         }
-      
+
         board.setWhiteTurn(StackDataUtil.getTurn(pop) == 1);
     }
 
-    
 
     private static void addRelevantPieceToSquare(Chessboard board, int pieceToAdd, int placeToAddIt){
         long placeToAddPiece = newPieceOnSquare(placeToAddIt);
 
-        if (pieceToAdd == 1){
-            board.setWhitePawns(board.getWhitePawns() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 2){
-            board.setWhiteKnights(board.getWhiteKnights() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 3){
-            board.setWhiteBishops(board.getWhiteBishops() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 4){
-            board.setWhiteRooks(board.getWhiteRooks() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 5){
-            board.setWhiteQueen(board.getWhiteQueen() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 6){
-            board.setWhiteKing(board.getWhiteKing() | placeToAddPiece);
-        }
-
-        else if (pieceToAdd == 7){
-            board.setBlackPawns(board.getBlackPawns() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 8){
-            board.setBlackKnights(board.getBlackKnights() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 9){
-            board.setBlackBishops(board.getBlackBishops() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 10){
-            board.setBlackRooks(board.getBlackRooks() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 11){
-            board.setBlackQueen(board.getBlackQueen() | placeToAddPiece);
-        }
-        else if (pieceToAdd == 12){
-            board.setBlackKing(board.getBlackKing() | placeToAddPiece);
-        }
-        else {
-            throw new RuntimeException("problem with putting back a captured piece");
+        switch (pieceToAdd) {
+            case 1:
+                board.setWhitePawns(board.getWhitePawns() | placeToAddPiece);
+                break;
+            case 2:
+                board.setWhiteKnights(board.getWhiteKnights() | placeToAddPiece);
+                break;
+            case 3:
+                board.setWhiteBishops(board.getWhiteBishops() | placeToAddPiece);
+                break;
+            case 4:
+                board.setWhiteRooks(board.getWhiteRooks() | placeToAddPiece);
+                break;
+            case 5:
+                board.setWhiteQueen(board.getWhiteQueen() | placeToAddPiece);
+                break;
+            case 6:
+                board.setWhiteKing(board.getWhiteKing() | placeToAddPiece);
+                break;
+            case 7:
+                board.setBlackPawns(board.getBlackPawns() | placeToAddPiece);
+                break;
+            case 8:
+                board.setBlackKnights(board.getBlackKnights() | placeToAddPiece);
+                break;
+            case 9:
+                board.setBlackBishops(board.getBlackBishops() | placeToAddPiece);
+                break;
+            case 10:
+                board.setBlackRooks(board.getBlackRooks() | placeToAddPiece);
+                break;
+            case 11:
+                board.setBlackQueen(board.getBlackQueen() | placeToAddPiece);
+                break;
+            case 12:
+                board.setBlackKing(board.getBlackKing() | placeToAddPiece);
+                break;
+            default:
+                throw new RuntimeException("problem with putting back a captured piece");
         }
     }
 

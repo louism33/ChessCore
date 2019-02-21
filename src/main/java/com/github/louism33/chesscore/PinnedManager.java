@@ -5,9 +5,9 @@ import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.PieceMove.xrayBishopAttacks;
 import static com.github.louism33.chesscore.PieceMove.xrayRookAttacks;
 
-class PinnedManager {
+public class PinnedManager {
 
-    static long whichPiecesArePinned(Chessboard board, boolean white, long squareOfInterest,
+    public static long whichPiecesArePinned(Chessboard board, boolean white, long squareOfInterest,
                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                      long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                      long enemies, long friends, long allPieces){
@@ -20,7 +20,7 @@ class PinnedManager {
                 enemies, friends, allPieces);
     }
     
-    static long whichPiecesArePinned(Chessboard board, boolean white, Square squareOfInterest,
+    public static long whichPiecesArePinned(Chessboard board, boolean white, Square squareOfInterest,
                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                      long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                      long enemies, long friends, long allPieces){

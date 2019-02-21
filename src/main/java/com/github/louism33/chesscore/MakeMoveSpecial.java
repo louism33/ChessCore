@@ -61,26 +61,49 @@ class MakeMoveSpecial {
     static void castleFlagManager (Chessboard board, int move){
 
         // disable relevant castle flag whenever a piece moves into the relevant square.
-        if (MoveParser.getSourceIndex(move) == 0 || MoveParser.getDestinationIndex(move) == 0){
-            board.setWhiteCanCastleK(false);
+        switch (MoveParser.getSourceIndex(move)) {
+            case 0: 
+                board.setWhiteCanCastleK(false);
+                break;
+            case 3:           
+                board.setWhiteCanCastleK(false);
+                board.setWhiteCanCastleQ(false);
+                break;
+            case 7:
+                board.setWhiteCanCastleQ(false);
+                break;
+            case 56:
+                board.setBlackCanCastleK(false);
+                break;
+            case 59:
+                board.setBlackCanCastleK(false);
+                board.setBlackCanCastleQ(false);
+                break;
+            case 63:
+                board.setBlackCanCastleQ(false);
+                break;
         }
-        if (MoveParser.getSourceIndex(move) == 3 || MoveParser.getDestinationIndex(move) == 3){
-            board.setWhiteCanCastleK(false);
-            board.setWhiteCanCastleQ(false);
-        }
-        if (MoveParser.getSourceIndex(move) == 7 || MoveParser.getDestinationIndex(move) == 7){
-            board.setWhiteCanCastleQ(false);
-        }
-
-        if (MoveParser.getSourceIndex(move) == 56 || MoveParser.getDestinationIndex(move) == 56){
-            board.setBlackCanCastleK(false);
-        }
-        if (MoveParser.getSourceIndex(move) == 59 || MoveParser.getDestinationIndex(move) == 59){
-            board.setBlackCanCastleK(false);
-            board.setBlackCanCastleQ(false);
-        }
-        if (MoveParser.getSourceIndex(move) == 63 || MoveParser.getDestinationIndex(move) == 63){
-            board.setBlackCanCastleQ(false);
+        switch (MoveParser.getDestinationIndex(move)) {
+            case 0:
+                board.setWhiteCanCastleK(false);
+                break;
+            case 3:
+                board.setWhiteCanCastleK(false);
+                board.setWhiteCanCastleQ(false);
+                break;
+            case 7:
+                board.setWhiteCanCastleQ(false);
+                break;
+            case 56:
+                board.setBlackCanCastleK(false);
+                break;
+            case 59:
+                board.setBlackCanCastleK(false);
+                board.setBlackCanCastleQ(false);
+                break;
+            case 63:
+                board.setBlackCanCastleQ(false);
+                break;
         }
     }
 
