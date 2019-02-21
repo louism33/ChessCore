@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.github.louism33.chesscore.BitOperations.*;
-import static com.github.louism33.chesscore.BitboardResources.FILES;
-import static com.github.louism33.chesscore.BitboardResources.ROWS;
+import static com.github.louism33.chesscore.BoardConstants.FILES;
+import static com.github.louism33.chesscore.BoardConstants.ROWS;
 
 public enum Square {
 
@@ -21,10 +21,6 @@ public enum Square {
     H7, G7, F7, E7, D7, C7, B7, A7,
     H8, G8, F8, E8, D8, C8, B8, A8;
 
-    public static boolean squareThreatenend(Chessboard board, boolean white, Square square){
-        return squareThreatenend(board, white, square.toBitboard());
-    }
-    
     public static boolean squareThreatenend(Chessboard board, boolean white, long square){
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
         if (white){
@@ -56,10 +52,6 @@ public enum Square {
                 enemies, friends, board.allPieces()) > 0;
     }
 
-    public boolean squareThreatenend(Chessboard board){
-        return squareThreatenend(board, board.isWhiteTurn(), this);
-    }
-    
     public static Square getSquareOfBitboard(long piece){
         return values()[getIndexOfFirstPiece(piece)];
     }
@@ -96,10 +88,6 @@ public enum Square {
         return newPieceOnSquare(this.ordinal());
     }
     
-    public static long toBitboard (Square square){
-        return newPieceOnSquare(square.ordinal());
-    }
-
     public int getRowNumber(){
         return this.ordinal() / 8;
     }

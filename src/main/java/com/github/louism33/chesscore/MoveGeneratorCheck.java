@@ -1,7 +1,7 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.extractRayFromTwoPiecesBitboard;
-import static com.github.louism33.chesscore.BitboardResources.UNIVERSE;
+import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
 import static com.github.louism33.chesscore.MoveGeneratorPseudo.addAllMovesWithoutKing;
 import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMovesOnly;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.addEnPassantMoves;
@@ -26,7 +26,7 @@ class MoveGeneratorCheck {
             blockingSquaresMask = extractRayFromTwoPiecesBitboard(myKing, slider) & (~slider);
             checkingPieceMask = slider;
         }
-        long PENULTIMATE_RANK = white ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
+        long PENULTIMATE_RANK = white ? BoardConstants.RANK_SEVEN : BoardConstants.RANK_TWO;
         long promotablePawns = myPawns & PENULTIMATE_RANK;
         long piecesToIgnoreAndPromotingPawns = pinnedPieces | promotablePawns;
 

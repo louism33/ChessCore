@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 
 import static com.github.louism33.chesscore.BitOperations.*;
-import static com.github.louism33.chesscore.BitboardResources.*;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.Setup.ready;
 import static com.github.louism33.chesscore.Setup.setup;
 
@@ -11,7 +11,7 @@ public class PieceMove {
 
     public static long singlePawnPushes(Chessboard board, long pawns, boolean white, long legalPushes, long allPieces) {
         final long possiblePawnSinglePushes = white ? pawns << 8 : pawns >>> 8;
-        final long intermediateRank = white ? BitboardResources.RANK_THREE : BitboardResources.RANK_SIX;
+        final long intermediateRank = white ? BoardConstants.RANK_THREE : BoardConstants.RANK_SIX;
         long possibleDoubles = (((possiblePawnSinglePushes & intermediateRank & ~allPieces) ));
         return (possiblePawnSinglePushes | (white ? possibleDoubles << 8 : possibleDoubles >>> 8))
                 & legalPushes & ~allPieces;

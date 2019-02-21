@@ -1,7 +1,7 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.*;
-import static com.github.louism33.chesscore.BitboardResources.UNIVERSE;
+import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveGeneratorCheck.addCheckEvasionMoves;
@@ -108,7 +108,7 @@ class MoveGeneratorMaster {
 
         long emptySquares = ~allPieces;
 
-        long promotablePawns = myPawns & (whiteTurn ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO);
+        long promotablePawns = myPawns & (whiteTurn ? BoardConstants.RANK_SEVEN : BoardConstants.RANK_TWO);
         long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
 
         addCastlingMoves(moves, board, whiteTurn,
@@ -186,7 +186,7 @@ class MoveGeneratorMaster {
                 continue;
             }
             if ((pinnedPiece & myPawns) != 0) {
-                long PENULTIMATE_RANK = whiteTurn ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
+                long PENULTIMATE_RANK = whiteTurn ? BoardConstants.RANK_SEVEN : BoardConstants.RANK_TWO;
                 long allButPinnedFriends = friends & ~pinnedPiece;
 
                 if ((pinnedPiece & PENULTIMATE_RANK) == 0) {

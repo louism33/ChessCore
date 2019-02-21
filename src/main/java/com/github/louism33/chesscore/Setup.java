@@ -3,14 +3,24 @@ package com.github.louism33.chesscore;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.louism33.chesscore.BitOperations.getAllPieces;
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
-import static com.github.louism33.chesscore.BitboardResources.*;
+import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BoardConstants.*;
 
 class Setup {
 
     public static void main(String[] args){
         setup(false);
+
+//        char[] s = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
+//        int z = 0;
+//        for (int i = 1; i <= 8; i++) {
+//            for (int i1 = s.length - 1; i1 >= 0; i1--) {
+//                char c = s[i1];
+//                System.out.print(c + "" + i + " = " + z + ", ");
+//                z++;
+//            }
+//            System.out.println();
+//        }
     }
 
     static void setup(boolean force){
@@ -83,12 +93,12 @@ class Setup {
     }
 
     private static void calculateInBetweenSquares(){
-        final int length = BitboardResources.inBetweenSquares.length;
+        final int length = BoardConstants.inBetweenSquares.length;
         for (int i = 0; i < length; i++){
             long pieceOne = BitOperations.newPieceOnSquare(i);
             for (int j = 0; j < 64; j++){
                 long pieceTwo = BitOperations.newPieceOnSquare(j);
-                BitboardResources.inBetweenSquares[i][j] = extractRayFromTwoPieces(pieceOne, pieceTwo);
+                BoardConstants.inBetweenSquares[i][j] = extractRayFromTwoPieces(pieceOne, pieceTwo);
             }
         }
     }
@@ -106,7 +116,7 @@ class Setup {
         long possibleAnswer = 0;
 
         while (true) {
-            if ((smallPiece & BitboardResources.FILE_A) != 0) {
+            if ((smallPiece & BoardConstants.FILE_A) != 0) {
                 break;
             }
             smallPiece <<= 1;
@@ -136,7 +146,7 @@ class Setup {
         possibleAnswer = 0;
 
         while (true) {
-            if ((smallPiece & BitboardResources.RANK_EIGHT) != 0) {
+            if ((smallPiece & BoardConstants.RANK_EIGHT) != 0) {
                 break;
             }
             smallPiece <<= 8;
@@ -165,10 +175,10 @@ class Setup {
     }
 
     private static long singleBishopAllMovesFromOcc(long blockers, long piece){
-        long NORTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_EIGHT,
-                NORTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_EIGHT,
-                SOUTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_ONE,
-                SOUTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_ONE;
+        long NORTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_EIGHT,
+                NORTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_EIGHT,
+                SOUTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_ONE,
+                SOUTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_ONE;
 
         long answer = 0;
         long temp = piece;
@@ -208,28 +218,28 @@ class Setup {
         long answer = 0;
         long temp = piece;
         while (true) {
-            if ((temp & BitboardResources.FILE_A) != 0) break;
+            if ((temp & BoardConstants.FILE_A) != 0) break;
             temp <<= 1;
             answer |= temp;
             if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.FILE_H) != 0) break;
+            if ((temp & BoardConstants.FILE_H) != 0) break;
             temp >>>= 1;
             answer |= temp;
             if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_EIGHT) != 0) break;
+            if ((temp & BoardConstants.RANK_EIGHT) != 0) break;
             temp <<= 8;
             answer |= temp;
             if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_ONE) != 0) break;
+            if ((temp & BoardConstants.RANK_ONE) != 0) break;
             temp >>>= 8;
             answer |= temp;
             if ((temp & blockers) != 0) break;
@@ -242,28 +252,28 @@ class Setup {
         long answer = 0;
         long temp = piece;
         while (true) {
-            if ((temp & BitboardResources.FILE_A) != 0) break;
+            if ((temp & BoardConstants.FILE_A) != 0) break;
             temp <<= 1;
             answer |= temp;
             if ((temp & allPieces) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.FILE_H) != 0) break;
+            if ((temp & BoardConstants.FILE_H) != 0) break;
             temp >>>= 1;
             answer |= temp;
             if ((temp & allPieces) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_EIGHT) != 0) break;
+            if ((temp & BoardConstants.RANK_EIGHT) != 0) break;
             temp <<= 8;
             answer |= temp;
             if ((temp & allPieces) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_ONE) != 0) break;
+            if ((temp & BoardConstants.RANK_ONE) != 0) break;
             temp >>>= 8;
             answer |= temp;
             if ((temp & allPieces) != 0) break;
@@ -275,32 +285,32 @@ class Setup {
         long answer = 0;
         long temp = piece;
         while (true) {
-            if ((temp & BitboardResources.FILE_A) != 0) break;
-            if ((temp & BitboardResources.FILE_B) != 0) break;
+            if ((temp & BoardConstants.FILE_A) != 0) break;
+            if ((temp & BoardConstants.FILE_B) != 0) break;
             temp <<= 1;
             answer |= temp;
             if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.FILE_H) != 0) break;
-            if ((temp & BitboardResources.FILE_G) != 0) break;
+            if ((temp & BoardConstants.FILE_H) != 0) break;
+            if ((temp & BoardConstants.FILE_G) != 0) break;
             temp >>>= 1;
             answer |= temp;
             if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_EIGHT) != 0) break;
-            if ((temp & BitboardResources.RANK_SEVEN) != 0) break;
+            if ((temp & BoardConstants.RANK_EIGHT) != 0) break;
+            if ((temp & BoardConstants.RANK_SEVEN) != 0) break;
             temp <<= 8;
             answer |= temp;
             if ((temp & blockers) != 0) break;
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_ONE) != 0) break;
-            if ((temp & BitboardResources.RANK_TWO) != 0) break;
+            if ((temp & BoardConstants.RANK_ONE) != 0) break;
+            if ((temp & BoardConstants.RANK_TWO) != 0) break;
             temp >>>= 8;
             answer |= temp;
             if ((temp & blockers) != 0) break;
@@ -317,8 +327,8 @@ class Setup {
         long left = 0, right = 0, up = 0, down = 0;
 
         while (true) {
-            if ((temp & BitboardResources.FILE_A) != 0) break;
-            if ((temp & BitboardResources.FILE_B) != 0) break;
+            if ((temp & BoardConstants.FILE_A) != 0) break;
+            if ((temp & BoardConstants.FILE_B) != 0) break;
             temp <<= 1;
             answer |= temp;
             left |= temp;
@@ -326,8 +336,8 @@ class Setup {
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.FILE_H) != 0) break;
-            if ((temp & BitboardResources.FILE_G) != 0) break;
+            if ((temp & BoardConstants.FILE_H) != 0) break;
+            if ((temp & BoardConstants.FILE_G) != 0) break;
             temp >>>= 1;
             answer |= temp;
             right |= temp;
@@ -335,8 +345,8 @@ class Setup {
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_EIGHT) != 0) break;
-            if ((temp & BitboardResources.RANK_SEVEN) != 0) break;
+            if ((temp & BoardConstants.RANK_EIGHT) != 0) break;
+            if ((temp & BoardConstants.RANK_SEVEN) != 0) break;
             temp <<= 8;
             answer |= temp;
             up |= temp;
@@ -344,8 +354,8 @@ class Setup {
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_ONE) != 0) break;
-            if ((temp & BitboardResources.RANK_TWO) != 0) break;
+            if ((temp & BoardConstants.RANK_ONE) != 0) break;
+            if ((temp & BoardConstants.RANK_TWO) != 0) break;
             temp >>>= 8;
             answer |= temp;
             down |= temp;
@@ -453,10 +463,10 @@ class Setup {
 
     public static long singleBishopAllMoves(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
         long ALL_PIECES = board.whitePieces() | board.blackPieces(),
-                NORTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_EIGHT,
-                NORTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_EIGHT,
-                SOUTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_ONE,
-                SOUTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_ONE;
+                NORTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_EIGHT,
+                NORTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_EIGHT,
+                SOUTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_ONE,
+                SOUTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_ONE;
 
         long answer = 0;
         long temp = piece;
@@ -494,17 +504,17 @@ class Setup {
 
     public static long singleBishopAllMovesCleverer(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
         long ALL_PIECES = board.whitePieces() | board.blackPieces(),
-                NORTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_EIGHT,
-                NORTH_WEST1 = BitboardResources.FILE_B | BitboardResources.RANK_SEVEN,
+                NORTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_EIGHT,
+                NORTH_WEST1 = BoardConstants.FILE_B | BoardConstants.RANK_SEVEN,
 
-                NORTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_EIGHT,
-                NORTH_EAST1 = BitboardResources.FILE_G | BitboardResources.RANK_SEVEN,
+                NORTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_EIGHT,
+                NORTH_EAST1 = BoardConstants.FILE_G | BoardConstants.RANK_SEVEN,
 
-                SOUTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_ONE,
-                SOUTH_WEST1 = BitboardResources.FILE_B | BitboardResources.RANK_TWO,
+                SOUTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_ONE,
+                SOUTH_WEST1 = BoardConstants.FILE_B | BoardConstants.RANK_TWO,
 
-                SOUTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_ONE,
-                SOUTH_EAST1 = BitboardResources.FILE_G | BitboardResources.RANK_TWO;
+                SOUTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_ONE,
+                SOUTH_EAST1 = BoardConstants.FILE_G | BoardConstants.RANK_TWO;
 
         long answer = 0;
         long temp = piece;
@@ -547,17 +557,17 @@ class Setup {
 
 
         long ALL_PIECES = board.whitePieces() | board.blackPieces(),
-                NORTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_EIGHT,
-                NORTH_WEST1 = BitboardResources.FILE_B | BitboardResources.RANK_SEVEN,
+                NORTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_EIGHT,
+                NORTH_WEST1 = BoardConstants.FILE_B | BoardConstants.RANK_SEVEN,
 
-                NORTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_EIGHT,
-                NORTH_EAST1 = BitboardResources.FILE_G | BitboardResources.RANK_SEVEN,
+                NORTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_EIGHT,
+                NORTH_EAST1 = BoardConstants.FILE_G | BoardConstants.RANK_SEVEN,
 
-                SOUTH_WEST = BitboardResources.FILE_A | BitboardResources.RANK_ONE,
-                SOUTH_WEST1 = BitboardResources.FILE_B | BitboardResources.RANK_TWO,
+                SOUTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_ONE,
+                SOUTH_WEST1 = BoardConstants.FILE_B | BoardConstants.RANK_TWO,
 
-                SOUTH_EAST = BitboardResources.FILE_H | BitboardResources.RANK_ONE,
-                SOUTH_EAST1 = BitboardResources.FILE_G | BitboardResources.RANK_TWO;
+                SOUTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_ONE,
+                SOUTH_EAST1 = BoardConstants.FILE_G | BoardConstants.RANK_TWO;
 
         long answer = 0;
         long temp = piece;
@@ -619,8 +629,8 @@ class Setup {
         long left = 0, right = 0, up = 0, down = 0;
 
         while (true) {
-            if ((temp & BitboardResources.FILE_A) != 0) break;
-            if ((temp & BitboardResources.FILE_B) != 0) break;
+            if ((temp & BoardConstants.FILE_A) != 0) break;
+            if ((temp & BoardConstants.FILE_B) != 0) break;
             temp <<= 1;
             answer |= temp;
             left |= temp;
@@ -628,8 +638,8 @@ class Setup {
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.FILE_H) != 0) break;
-            if ((temp & BitboardResources.FILE_G) != 0) break;
+            if ((temp & BoardConstants.FILE_H) != 0) break;
+            if ((temp & BoardConstants.FILE_G) != 0) break;
             temp >>>= 1;
             answer |= temp;
             right |= temp;
@@ -637,8 +647,8 @@ class Setup {
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_EIGHT) != 0) break;
-            if ((temp & BitboardResources.RANK_SEVEN) != 0) break;
+            if ((temp & BoardConstants.RANK_EIGHT) != 0) break;
+            if ((temp & BoardConstants.RANK_SEVEN) != 0) break;
             temp <<= 8;
             answer |= temp;
             up |= temp;
@@ -646,8 +656,8 @@ class Setup {
         }
         temp = piece;
         while (true) {
-            if ((temp & BitboardResources.RANK_ONE) != 0) break;
-            if ((temp & BitboardResources.RANK_TWO) != 0) break;
+            if ((temp & BoardConstants.RANK_ONE) != 0) break;
+            if ((temp & BoardConstants.RANK_TWO) != 0) break;
             temp >>>= 8;
             answer |= temp;
             down |= temp;

@@ -1,6 +1,6 @@
 package com.github.louism33.chesscore;
 
-public class ConstantsMoveStackData {
+public class StackConstants {
     
     // 13 free bits
     /*

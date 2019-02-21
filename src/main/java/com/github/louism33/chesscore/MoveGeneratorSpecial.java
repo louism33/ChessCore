@@ -2,10 +2,10 @@ package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
-import static com.github.louism33.chesscore.BitboardResources.*;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
-import static com.github.louism33.chesscore.ConstantsMove.ENPASSANT_MASK;
+import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterPromotion;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
@@ -53,7 +53,7 @@ class MoveGeneratorSpecial {
 
         int[] temp = new int[8];
 
-        long enPassantTakingRank = white ? BitboardResources.RANK_FIVE : BitboardResources.RANK_FOUR;
+        long enPassantTakingRank = white ? BoardConstants.RANK_FIVE : BoardConstants.RANK_FOUR;
 
         long myPawnsInPosition = myPawns & enPassantTakingRank;
         if (myPawnsInPosition == 0) {
@@ -170,10 +170,10 @@ class MoveGeneratorSpecial {
 
         if (white){
             if(board.isWhiteCanCastleK()){
-                if (areTheseSquaresEmpty(board, BitboardResources.whiteCastleKingEmpties)
-                        && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
-                        && ((board.getWhiteRooks() & BitboardResources.SOUTH_EAST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(board, true, BitboardResources.whiteCastleKingEmpties,
+                if (areTheseSquaresEmpty(board, BoardConstants.whiteCastleKingEmpties)
+                        && ((board.getWhiteKing() & BoardConstants.INITIAL_WHITE_KING) != 0)
+                        && ((board.getWhiteRooks() & BoardConstants.SOUTH_EAST_CORNER) != 0)
+                        && areTheseSquaresUnthreatened(board, true, BoardConstants.whiteCastleKingEmpties,
                         myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                         enemies, friends, allPieces)){
@@ -183,10 +183,10 @@ class MoveGeneratorSpecial {
             }
 
             if(board.isWhiteCanCastleQ()){
-                if (areTheseSquaresEmpty(board, BitboardResources.whiteCastleQueenEmpties)
-                        && ((board.getWhiteKing() & BitboardResources.INITIAL_WHITE_KING) != 0)
-                        && ((board.getWhiteRooks() & BitboardResources.SOUTH_WEST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(board, true, BitboardResources.whiteCastleQueenUnthreateneds,
+                if (areTheseSquaresEmpty(board, BoardConstants.whiteCastleQueenEmpties)
+                        && ((board.getWhiteKing() & BoardConstants.INITIAL_WHITE_KING) != 0)
+                        && ((board.getWhiteRooks() & BoardConstants.SOUTH_WEST_CORNER) != 0)
+                        && areTheseSquaresUnthreatened(board, true, BoardConstants.whiteCastleQueenUnthreateneds,
                         myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                         enemies, friends, allPieces)){
@@ -198,10 +198,10 @@ class MoveGeneratorSpecial {
 
         else {
             if(board.isBlackCanCastleK()){
-                if (areTheseSquaresEmpty(board, BitboardResources.blackCastleKingEmpties)
-                        && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
-                        && ((board.getBlackRooks() & BitboardResources.NORTH_EAST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(board, false, BitboardResources.blackCastleKingEmpties,
+                if (areTheseSquaresEmpty(board, BoardConstants.blackCastleKingEmpties)
+                        && ((board.getBlackKing() & BoardConstants.INITIAL_BLACK_KING) != 0)
+                        && ((board.getBlackRooks() & BoardConstants.NORTH_EAST_CORNER) != 0)
+                        && areTheseSquaresUnthreatened(board, false, BoardConstants.blackCastleKingEmpties,
                         myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                         enemies, friends, allPieces)){
@@ -211,10 +211,10 @@ class MoveGeneratorSpecial {
             }
 
             if(board.isBlackCanCastleQ()){
-                if (areTheseSquaresEmpty(board, BitboardResources.blackCastleQueenEmpties)
-                        && ((board.getBlackKing() & BitboardResources.INITIAL_BLACK_KING) != 0)
-                        && ((board.getBlackRooks() & BitboardResources.NORTH_WEST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(board, false, BitboardResources.blackCastleQueenUnthreateneds,myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                if (areTheseSquaresEmpty(board, BoardConstants.blackCastleQueenEmpties)
+                        && ((board.getBlackKing() & BoardConstants.INITIAL_BLACK_KING) != 0)
+                        && ((board.getBlackRooks() & BoardConstants.NORTH_WEST_CORNER) != 0)
+                        && areTheseSquaresUnthreatened(board, false, BoardConstants.blackCastleQueenUnthreateneds,myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                         enemies, friends, allPieces)){
 

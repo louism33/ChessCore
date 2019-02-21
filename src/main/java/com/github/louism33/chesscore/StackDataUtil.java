@@ -1,15 +1,11 @@
 package com.github.louism33.chesscore;
 
 
-import static com.github.louism33.chesscore.ConstantsMoveStackData.*;
+import static com.github.louism33.chesscore.StackConstants.*;
 
 @SuppressWarnings("CanBeFinal")
 class StackDataUtil {
 
-//    public enum SpecialMove {
-//        NONE, BASICQUIETPUSH, BASICLOUDPUSH, BASICCAPTURE, ENPASSANTVICTIM, ENPASSANTCAPTURE, CASTLING, PROMOTION, NULL_MOVE
-//    }
-    
     public static final int NONE = 0, BASICQUIETPUSH = 1, BASICLOUDPUSH = 2, 
             BASICCAPTURE = 3, ENPASSANTVICTIM = 4, ENPASSANTCAPTURE = 5, 
             CASTLING = 6, PROMOTION = 7, NULL_MOVE = 8;
@@ -88,18 +84,18 @@ class StackDataUtil {
         return (long) castlingRights << smdCastleOffset;
     }
 
-    static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, 
-                                      long typeOfSpecialMove, int enPassantFile) {
+    static long buildStackData(int move, Chessboard board,
+                               long typeOfSpecialMove, int enPassantFile) {
         
         long epFile = smdMakeEPMove(enPassantFile);
-        return buildStackData(move, board, fiftyMoveCounter, typeOfSpecialMove) | epFile;
+        return buildStackData(move, board, typeOfSpecialMove) | epFile;
     }
     
-    static long buildStackData(int move, Chessboard board, int fiftyMoveCounter, long typeOfSpecialMove) {
+    static long buildStackData(int move, Chessboard board, long typeOfSpecialMove) {
         long stackData = 0;
         
         stackData |= smdMakeMove(move);
-        stackData |= smdMakeFiftyPiece(fiftyMoveCounter);
+        stackData |= smdMakeFiftyPiece(board.getFiftyMoveCounter());
         stackData |= smdMakeTurn(board.isWhiteTurn());
         stackData |= smdMakeSpecialMove(typeOfSpecialMove);
         stackData |= smdMakeCastlingRights(board);

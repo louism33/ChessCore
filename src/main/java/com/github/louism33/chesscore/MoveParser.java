@@ -6,10 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
-import static com.github.louism33.chesscore.ConstantsMove.*;
+import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
-import static com.github.louism33.chesscore.Piece.pieceOnSquare;
-import static com.github.louism33.chesscore.Piece.values;
+import static com.github.louism33.chesscore.Piece.*;
 
 public class MoveParser {
 
@@ -64,7 +63,8 @@ public class MoveParser {
         move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
         move |= (d & DESTINATION_MASK);
         
-        move |= (ConstantsMove.SOURCE_PIECE_MASK | whichPieceMask(pieceOnSquare(board, newPieceOnSquare(s)))) << ConstantsMove.SOURCE_PIECE_OFFSET;
+        move |= (MoveConstants.SOURCE_PIECE_MASK 
+                | whichPieceMaskInt(pieceOnSquareInt(board, newPieceOnSquare(s)))) << MoveConstants.SOURCE_PIECE_OFFSET;
         
         return move;
     }
@@ -141,38 +141,73 @@ public class MoveParser {
     }
 
     private static int capturePieceMask(Chessboard board, int destinationIndex) {
-        return whichPieceMask(pieceOnSquare(board, newPieceOnSquare(destinationIndex))) << ConstantsMove.VICTIM_PIECE_OFFSET;
+        return whichPieceMaskInt(pieceOnSquareInt(board, newPieceOnSquare(destinationIndex))) << MoveConstants.VICTIM_PIECE_OFFSET;
     }
 
     private static int whichPieceMask(Piece piece) {
         switch (piece){
 
             case WHITE_PAWN:
-                return ConstantsMove.WHITE_PAWN_MASK;
+                return MoveConstants.WHITE_PAWN_MASK;
             case WHITE_KNIGHT:
-                return ConstantsMove.WHITE_KNIGHT_MASK;
+                return MoveConstants.WHITE_KNIGHT_MASK;
             case WHITE_BISHOP:
-                return ConstantsMove.WHITE_BISHOP_MASK;
+                return MoveConstants.WHITE_BISHOP_MASK;
             case WHITE_ROOK:
-                return ConstantsMove.WHITE_ROOK_MASK;
+                return MoveConstants.WHITE_ROOK_MASK;
             case WHITE_QUEEN:
-                return ConstantsMove.WHITE_QUEEN_MASK;
+                return MoveConstants.WHITE_QUEEN_MASK;
             case WHITE_KING:
-                return ConstantsMove.WHITE_KING_MASK;
+                return MoveConstants.WHITE_KING_MASK;
 
             case BLACK_PAWN:
-                return ConstantsMove.BLACK_PAWN_MASK;
+                return MoveConstants.BLACK_PAWN_MASK;
             case BLACK_KNIGHT:
-                return ConstantsMove.BLACK_KNIGHT_MASK;
+                return MoveConstants.BLACK_KNIGHT_MASK;
             case BLACK_BISHOP:
-                return ConstantsMove.BLACK_BISHOP_MASK;
+                return MoveConstants.BLACK_BISHOP_MASK;
             case BLACK_ROOK:
-                return ConstantsMove.BLACK_ROOK_MASK;
+                return MoveConstants.BLACK_ROOK_MASK;
             case BLACK_QUEEN:
-                return ConstantsMove.BLACK_QUEEN_MASK;
+                return MoveConstants.BLACK_QUEEN_MASK;
             case BLACK_KING:
-                return ConstantsMove.BLACK_KING_MASK;
-                
+                return MoveConstants.BLACK_KING_MASK;
+
+            case NO_PIECE:
+                return 0;
+        }
+        return 0;
+    }
+
+    private static int whichPieceMaskInt(int piece) {
+        switch (piece){
+
+            case WHITE_PAWN:
+                return MoveConstants.WHITE_PAWN_MASK;
+            case WHITE_KNIGHT:
+                return MoveConstants.WHITE_KNIGHT_MASK;
+            case WHITE_BISHOP:
+                return MoveConstants.WHITE_BISHOP_MASK;
+            case WHITE_ROOK:
+                return MoveConstants.WHITE_ROOK_MASK;
+            case WHITE_QUEEN:
+                return MoveConstants.WHITE_QUEEN_MASK;
+            case WHITE_KING:
+                return MoveConstants.WHITE_KING_MASK;
+
+            case BLACK_PAWN:
+                return MoveConstants.BLACK_PAWN_MASK;
+            case BLACK_KNIGHT:
+                return MoveConstants.BLACK_KNIGHT_MASK;
+            case BLACK_BISHOP:
+                return MoveConstants.BLACK_BISHOP_MASK;
+            case BLACK_ROOK:
+                return MoveConstants.BLACK_ROOK_MASK;
+            case BLACK_QUEEN:
+                return MoveConstants.BLACK_QUEEN_MASK;
+            case BLACK_KING:
+                return MoveConstants.BLACK_KING_MASK;
+
             case NO_PIECE:
                 return 0;
         }
@@ -276,15 +311,15 @@ public class MoveParser {
     public static boolean moveIsPawnPushSeven(int move){
         return getMovingPieceInt(move) == WHITE_PAWN
                 & getMovingPieceInt(move) == BLACK_PAWN
-                & (getDestinationLong(move) & BitboardResources.RANK_SEVEN) != 0
-                & (getDestinationLong(move) & BitboardResources.RANK_TWO) != 0;
+                & (getDestinationLong(move) & BoardConstants.RANK_SEVEN) != 0
+                & (getDestinationLong(move) & BoardConstants.RANK_TWO) != 0;
     }
 
     public static boolean moveIsPawnPushSix(int move){
         return getMovingPieceInt(move) == WHITE_PAWN
                 & getMovingPieceInt(move) == BLACK_PAWN
-                & (getDestinationLong(move) & BitboardResources.RANK_SIX) != 0
-                & (getDestinationLong(move) & BitboardResources.RANK_THREE) != 0;
+                & (getDestinationLong(move) & BoardConstants.RANK_SIX) != 0
+                & (getDestinationLong(move) & BoardConstants.RANK_THREE) != 0;
     }
     
     public static boolean equalsANMove(int move, int compareMove){

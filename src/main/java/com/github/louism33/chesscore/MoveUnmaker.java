@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveRegular.makeRegularMove;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
@@ -13,6 +15,8 @@ class MoveUnmaker {
         if (!board.hasPreviousMove()){
             throw new IllegalUnmakeException("No moves to unmake.");
         }
+        
+        Assert.assertTrue(board.hasPreviousMove());
 
         board.checkStackArrayPop();
         board.pinStackArrayPop();

@@ -3,8 +3,8 @@ package com.github.louism33.chesscore;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.louism33.chesscore.BitboardResources.FILES;
-import static com.github.louism33.chesscore.BitboardResources.ROWS;
+import static com.github.louism33.chesscore.BoardConstants.FILES;
+import static com.github.louism33.chesscore.BoardConstants.ROWS;
 import static com.github.louism33.chesscore.Setup.ready;
 import static com.github.louism33.chesscore.Setup.setup;
 import static java.lang.Long.*;
@@ -16,28 +16,28 @@ public class BitOperations {
     }
 
     public static long squareCentredOnIndex(int x){
-        return BitboardResources.immediateAdjacentSquares[x];
+        return BoardConstants.immediateAdjacentSquares[x];
     }
 
     public static long bigSquareCentredOnIndex(int x){
-        return BitboardResources.bigAdjacentSquares[x];
+        return BoardConstants.bigAdjacentSquares[x];
     }
 
     public static long enemyPawnKillZoneCentredOnIndex(int x, boolean myColour){
         if (myColour){
-            return BitboardResources.blackPawnKillZone[x];
+            return BoardConstants.blackPawnKillZone[x];
         }
         else {
-            return BitboardResources.whitePawnKillZone[x];
+            return BoardConstants.whitePawnKillZone[x];
         }
     }
 
     public static long fileForward(int x, boolean white){
         if (white){
-            return BitboardResources.fileForwardWhite[x];
+            return BoardConstants.fileForwardWhite[x];
         }
         else {
-            return BitboardResources.fileForwardBlack[x];
+            return BoardConstants.fileForwardBlack[x];
         }
     }
     
@@ -84,7 +84,7 @@ public class BitOperations {
         if (!ready){
             setup(false);
         }
-        return BitboardResources.inBetweenSquares[pieceOneIndex][pieceTwoIndex]
+        return BoardConstants.inBetweenSquares[pieceOneIndex][pieceTwoIndex]
                 ^ (BitOperations.newPieceOnSquare(pieceOneIndex) | BitOperations.newPieceOnSquare(pieceTwoIndex));
     }
 

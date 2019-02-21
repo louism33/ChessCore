@@ -5,9 +5,9 @@ import org.junit.Assert;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.github.louism33.chesscore.BitboardResources.FILES;
-import static com.github.louism33.chesscore.BitboardResources.UNIVERSE;
-import static com.github.louism33.chesscore.ConstantsMove.*;
+import static com.github.louism33.chesscore.BoardConstants.FILES;
+import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
+import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.extractFileFromStack;
 import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationSquareCaptureSecure;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;

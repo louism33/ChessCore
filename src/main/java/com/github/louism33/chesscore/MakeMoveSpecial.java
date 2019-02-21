@@ -1,6 +1,9 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
+import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
 import static com.github.louism33.chesscore.MoveParser.*;
 
@@ -8,67 +11,50 @@ class MakeMoveSpecial {
 
     static void makeCastlingMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
-        if ((sourcePiece & BitboardResources.INITIAL_WHITE_KING) != 0){
-            if (MoveParser.getDestinationIndex(move) == 1){
-                long originalRook = newPieceOnSquare(0);
-                long newRook = newPieceOnSquare(MoveParser.getDestinationIndex(move) + 1);
-                long newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-                removePieces(board, sourcePiece, originalRook);
-                board.setWhiteKing(board.getWhiteKing() | newKing);
-                board.setWhiteRooks(board.getWhiteRooks() | newRook);
-                board.setWhiteCanCastleK(false);
-                board.setWhiteCanCastleQ(false);
-            }
-            else if (MoveParser.getDestinationIndex(move) == 5){
-                long originalRook = newPieceOnSquare(7);
-                long newRook = newPieceOnSquare(MoveParser.getDestinationIndex(move) - 1);
-                long newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-                removePieces(board, sourcePiece, originalRook);
-                board.setWhiteKing(board.getWhiteKing() | newKing);
-                board.setWhiteRooks(board.getWhiteRooks() | newRook);
-                board.setWhiteCanCastleK(false);
-                board.setWhiteCanCastleQ(false);
-            }
-        }
+        int originalRookIndex = 0, newRookIndex = MoveParser.getDestinationIndex(move) + 1;
+        long newRook, newKing;
 
-        else if ((sourcePiece & BitboardResources.INITIAL_BLACK_KING) != 0){
-            if (MoveParser.getDestinationIndex(move) == 57){
-                long originalRook = newPieceOnSquare(56);
-                long newRook = newPieceOnSquare(MoveParser.getDestinationIndex(move) + 1);
-                long newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-                removePieces(board, sourcePiece, originalRook);
+        switch (MoveParser.getDestinationIndex(move)) {
+            case 1:
+                originalRookIndex = -7;
+                newRookIndex += 2;
+            case 5:
+                originalRookIndex += 7;
+                newRook = newPieceOnSquare(newRookIndex - 2);
+                newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
+
+                board.setWhiteKing(board.getWhiteKing() | newKing);
+                board.setWhiteRooks(board.getWhiteRooks() | newRook);
+                board.setWhiteCanCastleK(false);
+                board.setWhiteCanCastleQ(false);
+                break;
+
+            case 57:
+                originalRookIndex = -7;
+                newRookIndex += 2;
+            case 61:
+                originalRookIndex += 63;
+                newRook = newPieceOnSquare(newRookIndex - 2);
+                newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
+
                 board.setBlackKing(board.getBlackKing() | newKing);
                 board.setBlackRooks(board.getBlackRooks() | newRook);
                 board.setBlackCanCastleK(false);
                 board.setBlackCanCastleQ(false);
-            }
-            else if (MoveParser.getDestinationIndex(move) == 61){
-                long originalRook = newPieceOnSquare(63);
-                long newRook = newPieceOnSquare(MoveParser.getDestinationIndex(move) - 1);
-                long newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-                removePieces(board, sourcePiece, originalRook);
-                board.setBlackKing(board.getBlackKing() | newKing);
-                board.setBlackRooks(board.getBlackRooks() | newRook);
-                board.setBlackCanCastleK(false);
-                board.setBlackCanCastleQ(false);
-            }
+                break;
         }
-        else {
-            throw new RuntimeException("Incorrect call to castling move");
-        }
+        removePieces(board, sourcePiece, newPieceOnSquare(originalRookIndex));
     }
 
-    static void castleFlagManager (Chessboard board, int move){
 
+    static void castleFlagManager (Chessboard board, int move){
         // disable relevant castle flag whenever a piece moves into the relevant square.
         switch (MoveParser.getSourceIndex(move)) {
-            case 0: 
+            case 0:
                 board.setWhiteCanCastleK(false);
                 break;
-            case 3:           
+            case 3:
                 board.setWhiteCanCastleK(false);
-                board.setWhiteCanCastleQ(false);
-                break;
             case 7:
                 board.setWhiteCanCastleQ(false);
                 break;
@@ -77,8 +63,6 @@ class MakeMoveSpecial {
                 break;
             case 59:
                 board.setBlackCanCastleK(false);
-                board.setBlackCanCastleQ(false);
-                break;
             case 63:
                 board.setBlackCanCastleQ(false);
                 break;
@@ -89,8 +73,6 @@ class MakeMoveSpecial {
                 break;
             case 3:
                 board.setWhiteCanCastleK(false);
-                board.setWhiteCanCastleQ(false);
-                break;
             case 7:
                 board.setWhiteCanCastleQ(false);
                 break;
@@ -99,48 +81,48 @@ class MakeMoveSpecial {
                 break;
             case 59:
                 board.setBlackCanCastleK(false);
-                board.setBlackCanCastleQ(false);
-                break;
             case 63:
                 board.setBlackCanCastleQ(false);
                 break;
         }
     }
 
-
     static void makePromotingMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(getSourceIndex(move));
         long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 
-        if ((sourcePiece & board.getWhitePawns()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            if (isPromotionToKnight(move)){
-                board.setWhiteKnights(board.getWhiteKnights() | destinationPiece);
-            }
-            else if (isPromotionToBishop(move)){
-                board.setWhiteBishops(board.getWhiteBishops() | destinationPiece);
-            }
-            else if (isPromotionToRook(move)){
-                board.setWhiteRooks(board.getWhiteRooks() | destinationPiece);
-            }
-            else if (isPromotionToQueen(move)){
-                board.setWhiteQueen(board.getWhiteQueen() | destinationPiece);
+        removePieces(board, sourcePiece, destinationPiece);
+        if (board.isWhiteTurn()){
+            switch (move & WHICH_PROMOTION) {
+                case KNIGHT_PROMOTION_MASK:
+                    board.setWhiteKnights(board.getWhiteKnights() | destinationPiece);
+                    break;
+                case BISHOP_PROMOTION_MASK:
+                    board.setWhiteBishops(board.getWhiteBishops() | destinationPiece);
+                    break;
+                case ROOK_PROMOTION_MASK:
+                    board.setWhiteRooks(board.getWhiteRooks() | destinationPiece);
+                    break;
+                case QUEEN_PROMOTION_MASK:
+                    board.setWhiteQueen(board.getWhiteQueen() | destinationPiece);
+                    break;
             }
         }
 
-        else if ((sourcePiece & board.getBlackPawns()) != 0){
-            removePieces(board, sourcePiece, destinationPiece);
-            if (isPromotionToKnight(move)){
-                board.setBlackKnights(board.getBlackKnights() | destinationPiece);
-            }
-            else if (isPromotionToBishop(move)){
-                board.setBlackBishops(board.getBlackBishops() | destinationPiece);
-            }
-            else if (isPromotionToRook(move)){
-                board.setBlackRooks(board.getBlackRooks() | destinationPiece);
-            }
-            else if (isPromotionToQueen(move)){
-                board.setBlackQueen(board.getBlackQueen() | destinationPiece);
+        else{
+            switch (move & WHICH_PROMOTION) {
+                case KNIGHT_PROMOTION_MASK:
+                    board.setBlackKnights(board.getBlackKnights() | destinationPiece);
+                    break;
+                case BISHOP_PROMOTION_MASK:
+                    board.setBlackBishops(board.getBlackBishops() | destinationPiece);
+                    break;
+                case ROOK_PROMOTION_MASK:
+                    board.setBlackRooks(board.getBlackRooks() | destinationPiece);
+                    break;
+                case QUEEN_PROMOTION_MASK:
+                    board.setBlackQueen(board.getBlackQueen() | destinationPiece);
+                    break;
             }
         }
     }
@@ -149,23 +131,17 @@ class MakeMoveSpecial {
         long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
         long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
-        if ((destinationPiece & board.allPieces()) != 0) {
-            throw new RuntimeException("EP move Problem");
-        }
-
-        if ((sourcePiece & board.getWhitePawns()) != 0){
+        Assert.assertEquals(0, (destinationPiece & board.allPieces()));
+        Assert.assertTrue( ((sourcePiece & board.getWhitePawns()) != 0) 
+                || ((sourcePiece & board.getBlackPawns()) != 0) );
+        
+        if (board.isWhiteTurn()) {
             removePieces(board, sourcePiece, destinationPiece >>> 8);
             board.setWhitePawns(board.getWhitePawns() | destinationPiece);
         }
-
-        else if  ((sourcePiece & board.getBlackPawns()) != 0){
+        else {
             removePieces(board, sourcePiece, destinationPiece << 8);
             board.setBlackPawns(board.getBlackPawns() | destinationPiece);
         }
-        else {
-            throw new RuntimeException("false EP move");
-        }
     }
-
-
 }

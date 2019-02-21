@@ -15,6 +15,16 @@ public class Chessboard implements Cloneable{
 
     private ChessboardDetails details;
 
+    private int fiftyMoveCounter = 0;
+
+    public int getFiftyMoveCounter() {
+        return fiftyMoveCounter;
+    }
+
+    public void setFiftyMoveCounter(int fiftyMoveCounter) {
+        this.fiftyMoveCounter = fiftyMoveCounter;
+    }
+
     private int index = 0;
     private int zobristIndex = 0;
     
@@ -127,7 +137,6 @@ public class Chessboard implements Cloneable{
     /** 
      * legal chess move generation
      * @return an array of exactly the right length populated with fully legal chess moves. 
-     * easier to use, but a bit slower than @see com.github.louism33.chesscore.generateLegalMoves
      * Use @see com.github.louism33.chesscore.MoveParser for methods to interpret the move object
      */
     public int[] generateCleanLegalMoves(){
@@ -152,7 +161,6 @@ public class Chessboard implements Cloneable{
         makeMoveAndHashUpdate(this, move);
         flipTurn();
     }
-
 
     /**
      * Completely undoes the last made move, and changes the side to play
@@ -188,7 +196,6 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     *
      * Tells you if the specified player is in check
      * @param white true if white to play
      * @return true if in check, otherwise false
@@ -226,7 +233,6 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     *
      * @param white the player 
      * @return true if it is a draw by repetition
      */
@@ -235,7 +241,6 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     *
      * @param white the player
      * @return true if draw by repetition
      */
@@ -244,7 +249,6 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     *
      * @param white the player
      * @return true if this side does not have enough pieces to ever win the game
      */
@@ -253,7 +257,6 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     *
      * @return true if in checkmate
      */
     public boolean inCheckmate(){
@@ -264,7 +267,6 @@ public class Chessboard implements Cloneable{
     }
 
     /**
-     *
      * @return true if in stalemate
      */
     public boolean inStalemate(){
@@ -665,7 +667,7 @@ public class Chessboard implements Cloneable{
             default:
                 return;
         }
-        final long item = buildStackData(0, this, 50, ENPASSANTVICTIM, epFlag);
+        final long item = buildStackData(0, this, ENPASSANTVICTIM, epFlag);
         this.moveStackArrayPush(item);
     }
 
