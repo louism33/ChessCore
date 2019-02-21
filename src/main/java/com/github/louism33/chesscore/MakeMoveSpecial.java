@@ -2,16 +2,19 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
+import java.nio.channels.WritePendingException;
+
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MoveConstants.*;
-import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
+import static com.github.louism33.chesscore.MoveMakingUtilities.*;
 import static com.github.louism33.chesscore.MoveParser.*;
 
 class MakeMoveSpecial {
 
     static void makeCastlingMove(Chessboard board, int move){
         long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
-        int originalRookIndex = 0, newRookIndex = MoveParser.getDestinationIndex(move) + 1;
+        int originalRookIndex = 0, newRookIndex = MoveParser.getDestinationIndex(move) + 1,
+                KING = WHITE_KING, ROOK = WHITE_ROOK;
         long newRook, newKing;
 
         switch (MoveParser.getDestinationIndex(move)) {
@@ -41,9 +44,12 @@ class MakeMoveSpecial {
                 board.setBlackRooks(board.getBlackRooks() | newRook);
                 board.setBlackCanCastleK(false);
                 board.setBlackCanCastleQ(false);
+                KING = BLACK_KING;
+                ROOK = BLACK_ROOK;
                 break;
         }
-        removePieces(board, sourcePiece, newPieceOnSquare(originalRookIndex));
+        removePiecesFrom(board, sourcePiece, KING);
+        removePiecesFrom(board, newPieceOnSquare(originalRookIndex), ROOK);
     }
 
 
@@ -91,7 +97,8 @@ class MakeMoveSpecial {
         long sourcePiece = newPieceOnSquare(getSourceIndex(move));
         long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 
-        removePieces(board, sourcePiece, destinationPiece);
+        removePiecesPrecise(board, sourcePiece, destinationPiece, move);
+        
         if (board.isWhiteTurn()){
             switch (move & WHICH_PROMOTION) {
                 case KNIGHT_PROMOTION_MASK:
@@ -136,11 +143,13 @@ class MakeMoveSpecial {
                 || ((sourcePiece & board.getBlackPawns()) != 0) );
         
         if (board.isWhiteTurn()) {
-            removePieces(board, sourcePiece, destinationPiece >>> 8);
+            removePiecesFrom(board, sourcePiece, WHITE_PAWN);
+            removePiecesFrom(board, destinationPiece >>> 8, BLACK_PAWN);
             board.setWhitePawns(board.getWhitePawns() | destinationPiece);
         }
         else {
-            removePieces(board, sourcePiece, destinationPiece << 8);
+            removePiecesFrom(board, sourcePiece, BLACK_PAWN);
+            removePiecesFrom(board, destinationPiece << 8, WHITE_PAWN);
             board.setBlackPawns(board.getBlackPawns() | destinationPiece);
         }
     }

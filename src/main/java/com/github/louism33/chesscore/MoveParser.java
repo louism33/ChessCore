@@ -130,11 +130,6 @@ public class MoveParser {
                 | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
     }
     
-    static int moveFromSourceDestinationSquareCapture(Chessboard board, Square source, Square destinationIndex, boolean capture) {
-        return buildMove(board, source.ordinal(), destinationIndex.ordinal())
-                | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
-    }
-    
     static int moveFromSourceDestinationCapture(Chessboard board, int source, int destinationIndex, boolean capture) {
         return buildMove(board, source, destinationIndex) 
                 | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex)) : 0);

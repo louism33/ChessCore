@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
-import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
+import static com.github.louism33.chesscore.MoveMakingUtilities.removePiecesPrecise;
 import static com.github.louism33.chesscore.MoveParser.*;
 import static com.github.louism33.chesscore.Piece.pieceOnSquareInt;
 import static com.github.louism33.chesscore.StackDataUtil.*;
@@ -94,7 +94,6 @@ class MakeMoveRegular {
     }
 
     static int whichIntPieceOnSquare(Chessboard board, long destinationPiece){
-//        return Piece.pieceOnSquare(board, destinationPiece).ordinal();
         return Piece.pieceOnSquareInt(board, destinationPiece);
     }
 
@@ -108,7 +107,7 @@ class MakeMoveRegular {
             return;
         }
 
-        removePieces(board, sourcePiece, destinationPiece);
+        removePiecesPrecise(board, sourcePiece, destinationPiece, move);
 
         switch (piece) {
             case WHITE_PAWN:

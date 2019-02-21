@@ -4,7 +4,7 @@ import org.junit.Assert;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveRegular.makeRegularMove;
-import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
+import static com.github.louism33.chesscore.MoveMakingUtilities.removePiecesFrom;
 import static com.github.louism33.chesscore.MoveParser.*;
 import static com.github.louism33.chesscore.StackDataUtil.*;
 
@@ -71,7 +71,8 @@ class MoveUnmaker {
                     case 1:
                         originalRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? 0 : 7);
                         newRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
-                        removePieces(board, newKing, newRook);
+                        removePiecesFrom(board, newKing, WHITE_KING);
+                        removePiecesFrom(board, newRook, WHITE_ROOK);
                         board.setWhiteKing(board.getWhiteKing() | originalKing);
                         board.setWhiteRooks(board.getWhiteRooks() | originalRook);
                         break;
@@ -79,7 +80,8 @@ class MoveUnmaker {
                     default:
                         originalRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? 56 : 63);
                         newRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
-                        removePieces(board, newKing, newRook);
+                        removePiecesFrom(board, newKing, BLACK_KING);
+                        removePiecesFrom(board, newRook, BLACK_ROOK);
                         board.setBlackKing(board.getBlackKing() | originalKing);
                         board.setBlackRooks(board.getBlackRooks() | originalRook);
                         break;
@@ -89,8 +91,22 @@ class MoveUnmaker {
             case PROMOTION:
                 long sourceSquare = newPieceOnSquare(pieceToMoveBackIndex);
                 long destinationSquare = newPieceOnSquare(squareToMoveBackTo);
-                removePieces(board, sourceSquare, destinationSquare);
-                addRelevantPieceToSquare(board, StackDataUtil.getTurn(pop) == 1 ? 1 : 7, squareToMoveBackTo);
+                long mask = ~(sourceSquare | destinationSquare);
+                board.setWhitePawns(board.getWhitePawns() & mask);
+                board.setWhiteKnights(board.getWhiteKnights() & mask);
+                board.setWhiteBishops(board.getWhiteBishops() & mask);
+                board.setWhiteRooks(board.getWhiteRooks() & mask);
+                board.setWhiteQueen(board.getWhiteQueen() & mask);
+                board.setWhiteKing(board.getWhiteKing() & mask);
+                board.setBlackPawns(board.getBlackPawns() & mask);
+                board.setBlackKnights(board.getBlackKnights() & mask);
+                board.setBlackBishops(board.getBlackBishops() & mask);
+                board.setBlackRooks(board.getBlackRooks() & mask);
+                board.setBlackQueen(board.getBlackQueen() & mask);
+                board.setBlackKing(board.getBlackKing() & mask);
+                
+                addRelevantPieceToSquare(board, 
+                        StackDataUtil.getTurn(pop) == 1 ? 1 : 7, squareToMoveBackTo);
                 int takenPiecePromotion = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
                 if (takenPiecePromotion > 0){
                     addRelevantPieceToSquare(board, takenPiecePromotion, pieceToMoveBackIndex);
