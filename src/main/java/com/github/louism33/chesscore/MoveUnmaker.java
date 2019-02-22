@@ -84,8 +84,8 @@ class MoveUnmaker {
                         break;
                 }
 
-                board.pieces[StackDataUtil.getTurn(pop)][KING] |= originalKing;
-                board.pieces[StackDataUtil.getTurn(pop)][ROOK] |= originalRook;
+                board.pieces[1 - StackDataUtil.getTurn(pop)][KING] |= originalKing;
+                board.pieces[1 - StackDataUtil.getTurn(pop)][ROOK] |= originalRook;
                 break;
 
             case PROMOTION:
@@ -155,7 +155,7 @@ class MoveUnmaker {
     private static void addRelevantPieceToSquare(Chessboard board, int pieceToAdd, int placeToAddIt){
         long placeToAddPiece = newPieceOnSquare(placeToAddIt);
 
-        board.pieces[pieceToAdd / 7][(pieceToAdd % 7) + 1] |= placeToAddPiece;
+        board.pieces[pieceToAdd / 7][pieceToAdd < 7 ? pieceToAdd : pieceToAdd - 6] |= placeToAddPiece;
 
         switch (pieceToAdd) {
             case 1:

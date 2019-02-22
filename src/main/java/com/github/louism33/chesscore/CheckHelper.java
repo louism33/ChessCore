@@ -5,19 +5,19 @@ import static com.github.louism33.chesscore.PieceMove.*;
 
 class CheckHelper {
 
-    static boolean boardInCheck(Chessboard board, boolean white, long myKing,
+    static boolean boardInCheck(boolean white, long myKing,
                                 long pawns, long knights, long bishops, long rooks, long queens, long king,
-                                long enemies, long friends, long allPiece){
-        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(board, white, myKing,
+                                long allPiece){
+        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(white, myKing,
                 pawns, knights, bishops, rooks, queens, king,
-                enemies, friends, allPiece);
+                allPiece);
         
         return numberOfCheckers > 0;
     }
 
-    static int numberOfPiecesThatLegalThreatenSquare(Chessboard board, boolean myColour, long square,
+    static int numberOfPiecesThatLegalThreatenSquare(boolean myColour, long square,
                                                      long pawns, long knights, long bishops, long rooks, long queens, long king,
-                                                     long enemies, long friends, long allPieces){
+                                                     long allPieces){
         
         int numberOfThreats = 0;
 
@@ -34,19 +34,19 @@ class CheckHelper {
             return numberOfThreats;
         }
         if (bishops != 0) {
-            numberOfThreats += populationCount(singleBishopTable(allPieces, board.isWhiteTurn(), square, bishops));
+            numberOfThreats += populationCount(singleBishopTable(allPieces, square, bishops));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;
         }
         if (rooks != 0) {
-            numberOfThreats += populationCount(singleRookTable(allPieces, myColour, square, rooks));
+            numberOfThreats += populationCount(singleRookTable(allPieces, square, rooks));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;
         }
         if (queens != 0) {
-            numberOfThreats += populationCount(singleQueenTable(allPieces, myColour, square, queens));
+            numberOfThreats += populationCount(singleQueenTable(allPieces, square, queens));
         }
         if (numberOfThreats > 1){
             return numberOfThreats;

@@ -11,7 +11,10 @@ class MoveGeneratorRegular {
 
     static void addPawnPushes(int[] moves, Chessboard board, boolean white,
                               long ignoreThesePieces, long legalCaptures, long legalPushes,
-                              long myPawns, long allPieces){
+                              long allPieces){
+
+        long myPawns = board.pieces[board.turn][PAWN];
+        
         final long homeRank = (white ? RANK_TWO : RANK_SEVEN);
         long allPawnPushes = (white ? myPawns << 8 : myPawns >>> 8) & ~allPieces & legalPushes;
         
@@ -21,7 +24,7 @@ class MoveGeneratorRegular {
                 final int pawnIndex = getIndexOfFirstPiece(pawn);
                 long mySquares;
                 if ((pawn & homeRank) != 0) {
-                    mySquares = singlePawnPushes(board, pawn, white, legalPushes, allPieces);
+                    mySquares = singlePawnPushes(pawn, white, legalPushes, allPieces);
                 }
                 else {
                     mySquares = (allPawnPushes & (white ? PAWN_PUSH_MASK_WHITE[pawnIndex] : PAWN_PUSH_MASK_BLACK[pawnIndex]));
@@ -37,7 +40,7 @@ class MoveGeneratorRegular {
         
     }
 
-    static void addKnightMoves(int[] moves, Chessboard board, boolean white,
+    static void addKnightMoves(int[] moves, Chessboard board,
                                long ignoreThesePieces, long mask, long myKnights){
 
         while (myKnights != 0){
@@ -57,7 +60,7 @@ class MoveGeneratorRegular {
         while (myBishops != 0){
             long bishop = getFirstPiece(myBishops);
             if ((bishop & ignoreThesePieces) == 0) {
-                long slides = singleBishopTable(allPieces, white, bishop, mask);
+                long slides = singleBishopTable(allPieces, bishop, mask);
                 addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(bishop), board);
             }
             myBishops &= (myBishops - 1);
@@ -65,7 +68,7 @@ class MoveGeneratorRegular {
         while (myRooks != 0){
             long rook = getFirstPiece(myRooks);
             if ((rook & ignoreThesePieces) == 0) {
-                long slides = singleRookTable(allPieces, white, rook, mask);
+                long slides = singleRookTable(allPieces, rook, mask);
                 addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(rook), board);
             }
             myRooks &= (myRooks - 1);
@@ -73,7 +76,7 @@ class MoveGeneratorRegular {
         while (myQueens != 0){
             long queen = getFirstPiece(myQueens);
             if ((queen & ignoreThesePieces) == 0) {
-                long slides = singleQueenTable(allPieces, white, queen, mask);
+                long slides = singleQueenTable(allPieces, queen, mask);
                 addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(queen), board);
             }
             myQueens &= (myQueens - 1);
@@ -81,28 +84,28 @@ class MoveGeneratorRegular {
     }
 
     static void addKingLegalMovesOnly(int[] moves, Chessboard board, boolean white,
-                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
+                                      long myBishops, long myQueens, long myKing,
                                       long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                      long enemies, long friends, long allPieces){
+                                      long enemies, long friends){
 
         addMovesFromAttackTableMaster(moves,
                 kingLegalPushAndCaptureTable(board, white,
-                        myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                        myBishops, myQueens, myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends, allPieces),
+                        enemies, friends),
                 getIndexOfFirstPiece(myKing),
                 board);
     }
 
     private static long kingLegalPushAndCaptureTable(Chessboard board, boolean white,
-                                                     long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
+                                                     long myBishops, long myQueens, long myKing,
                                                      long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                                     long enemies, long friends, long allPieces){
+                                                     long enemies, long friends){
 
         long kingSafeSquares = ~kingDangerSquares(board, white,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+                myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing
+        );
 
         long kingSafeCaptures = enemies & kingSafeSquares;
         long kingSafePushes = (~board.allPieces() & kingSafeSquares);
@@ -110,9 +113,8 @@ class MoveGeneratorRegular {
     }
 
     private static long kingDangerSquares(Chessboard board, boolean white,
-                                          long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                          long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                          long enemies, long friends, long allPieces){
+                                          long myKing,
+                                          long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing){
 
         board.pieces[white ? WHITE : BLACK][KING] = 0;
         
@@ -123,10 +125,9 @@ class MoveGeneratorRegular {
             board.setBlackKing(0);
         }
 
-        long kingDangerSquares = generatePseudoCaptureTable(board, !white, 0, UNIVERSE, UNIVERSE,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+        long kingDangerSquares = generatePseudoCaptureTable(!white, 0, UNIVERSE, UNIVERSE,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, board.allPieces());
+                board.allPieces());
 
         board.pieces[white ? WHITE : BLACK][KING] = myKing;
 

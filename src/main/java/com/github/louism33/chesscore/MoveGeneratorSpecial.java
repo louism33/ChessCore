@@ -16,9 +16,8 @@ class MoveGeneratorSpecial {
 
     static void addPromotionMoves(int[] moves, Chessboard board, boolean white,
                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                  long enemies, long friends, long allPieces){
+                                  long myPawns,
+                                  long enemies, long allPieces){
         long penultimateRank;
         long finalRank;
         if (white) {
@@ -34,7 +33,7 @@ class MoveGeneratorSpecial {
 
         while (promotablePawns != 0){
             final long pawn = getFirstPiece(promotablePawns);
-            long pawnMoves = singlePawnPushes(board, pawn, board.isWhiteTurn(), (finalRank & legalPushes), allPieces)
+            long pawnMoves = singlePawnPushes(pawn, board.isWhiteTurn(), (finalRank & legalPushes), allPieces)
                     | singlePawnCaptures(pawn, board.isWhiteTurn(), ((finalRank & enemies) & legalCaptures));
 
             if (pawnMoves != 0) {
@@ -47,9 +46,8 @@ class MoveGeneratorSpecial {
 
     static void addEnPassantMoves(int[] moves, Chessboard board, boolean white,
                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                  long enemies, long friends, long allPieces) {
+                                  long myPawns, long myKing,
+                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing) {
 
         int[] temp = new int[8];
 
@@ -136,9 +134,9 @@ class MoveGeneratorSpecial {
 
             enemyPawns = board.isWhiteTurn() ? board.getWhitePawns() : board.getBlackPawns();
 
-            boolean enPassantWouldLeadToCheck = boardInCheck(board, white, myKing,
+            boolean enPassantWouldLeadToCheck = boardInCheck(white, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    enemies, friends, board.allPieces());
+                    board.allPieces());
 
             board.unMakeMoveAndFlipTurn();
 
@@ -160,19 +158,17 @@ class MoveGeneratorSpecial {
 
     // checking if we are in check happens elsewhere
     static void addCastlingMoves(int[] moves, Chessboard board, boolean white,
-                                 long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                 long enemies, long friends, long allPieces){
+                                 long allPieces){
 
         if (white){
             if(board.isWhiteCanCastleK()){
                 if (areTheseSquaresEmpty(board, BoardConstants.whiteCastleKingEmpties)
                         && ((board.getWhiteKing() & BoardConstants.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BoardConstants.SOUTH_EAST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(board, true, BoardConstants.whiteCastleKingEmpties,
-                        myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                        && areTheseSquaresUnthreatened(true, BoardConstants.whiteCastleKingEmpties,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends, allPieces)){
+                        allPieces)){
 
                     MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 1);
                 }
@@ -182,10 +178,9 @@ class MoveGeneratorSpecial {
                 if (areTheseSquaresEmpty(board, BoardConstants.whiteCastleQueenEmpties)
                         && ((board.getWhiteKing() & BoardConstants.INITIAL_WHITE_KING) != 0)
                         && ((board.getWhiteRooks() & BoardConstants.SOUTH_WEST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(board, true, BoardConstants.whiteCastleQueenUnthreateneds,
-                        myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                        && areTheseSquaresUnthreatened(true, BoardConstants.whiteCastleQueenUnthreateneds,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends, allPieces)){
+                        allPieces)){
 
                     MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 5);
                 }
@@ -197,10 +192,9 @@ class MoveGeneratorSpecial {
                 if (areTheseSquaresEmpty(board, BoardConstants.blackCastleKingEmpties)
                         && ((board.getBlackKing() & BoardConstants.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BoardConstants.NORTH_EAST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(board, false, BoardConstants.blackCastleKingEmpties,
-                        myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                        && areTheseSquaresUnthreatened(false, BoardConstants.blackCastleKingEmpties,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends, allPieces)){
+                        allPieces)){
 
                     MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 57);
                 }
@@ -210,9 +204,9 @@ class MoveGeneratorSpecial {
                 if (areTheseSquaresEmpty(board, BoardConstants.blackCastleQueenEmpties)
                         && ((board.getBlackKing() & BoardConstants.INITIAL_BLACK_KING) != 0)
                         && ((board.getBlackRooks() & BoardConstants.NORTH_WEST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(board, false, BoardConstants.blackCastleQueenUnthreateneds,myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                        && areTheseSquaresUnthreatened(false, BoardConstants.blackCastleQueenUnthreateneds,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends, allPieces)){
+                        allPieces)){
 
                     MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 61);
 
@@ -221,15 +215,14 @@ class MoveGeneratorSpecial {
         }
     }
 
-    private static boolean areTheseSquaresUnthreatened(Chessboard board, boolean white, long squares,
-                                                       long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
+    private static boolean areTheseSquaresUnthreatened(boolean white, long squares,
                                                        long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                                       long enemies, long friends, long allPieces){
+                                                       long allPieces){
         while (squares != 0){
             final long square = BitOperations.getFirstPiece(squares);
-            int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(board, white, square,
+            int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(white, square,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    enemies, friends, allPieces);
+                    allPieces);
             if (numberOfThreats > 0){
                 return false;
             }

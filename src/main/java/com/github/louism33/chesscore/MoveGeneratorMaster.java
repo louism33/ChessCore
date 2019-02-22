@@ -25,34 +25,33 @@ class MoveGeneratorMaster {
         long friends, enemies;
 
         if (white){
-//            myPawns = board.pieces[WHITE][PAWN];
-//            myKnights = board.pieces[WHITE][KNIGHT];
-//            myBishops = board.pieces[WHITE][BISHOP];
-//            myRooks = board.pieces[WHITE][ROOK];
-//            myQueens = board.pieces[WHITE][QUEEN];
-//            myKing = board.pieces[WHITE][KING];
+//            myPawns = board.getWhitePawns();
+//            myKnights = board.getWhiteKnights();
+//            myBishops = board.getWhiteBishops();
+//            myRooks = board.getWhiteRooks();
+//            myQueens = board.getWhiteQueen();
+//            myKing = board.getWhiteKing();
 //
-//            enemyPawns = board.pieces[BLACK][PAWN];
-//            enemyKnights = board.pieces[BLACK][KNIGHT];
-//            enemyBishops = board.pieces[BLACK][BISHOP];
-//            enemyRooks = board.pieces[BLACK][ROOK];
-//            enemyQueens = board.pieces[BLACK][QUEEN];
-//            enemyKing = board.pieces[BLACK][KING];
+//            enemyPawns = board.getBlackPawns();
+//            enemyKnights = board.getBlackKnights();
+//            enemyBishops = board.getBlackBishops();
+//            enemyRooks = board.getBlackRooks();
+//            enemyQueens = board.getBlackQueen();
+//            enemyKing = board.getBlackKing();
 
+            myPawns = board.pieces[WHITE][PAWN];
+            myKnights = board.pieces[WHITE][KNIGHT];
+            myBishops = board.pieces[WHITE][BISHOP];
+            myRooks = board.pieces[WHITE][ROOK];
+            myQueens = board.pieces[WHITE][QUEEN];
+            myKing = board.pieces[WHITE][KING];
 
-            myPawns = board.getWhitePawns();
-            myKnights = board.getWhiteKnights();
-            myBishops = board.getWhiteBishops();
-            myRooks = board.getWhiteRooks();
-            myQueens = board.getWhiteQueen();
-            myKing = board.getWhiteKing();
-
-            enemyPawns = board.getBlackPawns();
-            enemyKnights = board.getBlackKnights();
-            enemyBishops = board.getBlackBishops();
-            enemyRooks = board.getBlackRooks();
-            enemyQueens = board.getBlackQueen();
-            enemyKing = board.getBlackKing();
+            enemyPawns = board.pieces[BLACK][PAWN];
+            enemyKnights = board.pieces[BLACK][KNIGHT];
+            enemyBishops = board.pieces[BLACK][BISHOP];
+            enemyRooks = board.pieces[BLACK][ROOK];
+            enemyQueens = board.pieces[BLACK][QUEEN];
+            enemyKing = board.pieces[BLACK][KING];
 
             
             friends = board.whitePieces();
@@ -73,43 +72,73 @@ class MoveGeneratorMaster {
             enemyQueens = board.getWhiteQueen();
             enemyKing = board.getWhiteKing();
 
+            myPawns = board.pieces[BLACK][PAWN];
+            myKnights = board.pieces[BLACK][KNIGHT];
+            myBishops = board.pieces[BLACK][BISHOP];
+            myRooks = board.pieces[BLACK][ROOK];
+            myQueens = board.pieces[BLACK][QUEEN];
+            myKing = board.pieces[BLACK][KING];
+
+            enemyPawns = board.pieces[WHITE][PAWN];
+            enemyKnights = board.pieces[WHITE][KNIGHT];
+            enemyBishops = board.pieces[WHITE][BISHOP];
+            enemyRooks = board.pieces[WHITE][ROOK];
+            enemyQueens = board.pieces[WHITE][QUEEN];
+            enemyKing = board.pieces[WHITE][KING];
+
             friends = board.blackPieces();
             enemies = board.whitePieces();
         }
 
+        /**
+         * myPawns = board.pieces[turn][PAWN];
+         */
 
-//        if (myPawns != board.pieces[turn][PAWN]) {
+//        if (myRooks != board.pieces[turn][ROOK]) {
 //            System.out.println(board);
 //            System.out.println("turn");
-//            Art.printLong(board.pieces[turn][PAWN]);
+//            Art.printLong(board.pieces[turn][ROOK]);
 //            System.out.println("anti turn");
-//            Art.printLong(board.pieces[1-turn][PAWN]);
+//            Art.printLong(board.pieces[1-turn][ROOK]);
 //            System.out.println("correct: ");
-//            Art.printLong(myPawns);
-//            
-//            Assert.assertEquals(myPawns, board.pieces[turn][PAWN]);
+//            Art.printLong(myRooks);
+//
+//            Assert.assertEquals(myRooks, board.pieces[turn][ROOK]);
 //        }
+
+//        Assert.assertEquals(myPawns, board.pieces[turn][PAWN]);
+//        Assert.assertEquals(myKnights, board.pieces[turn][KNIGHT]);
+//        Assert.assertEquals(myBishops, board.pieces[turn][BISHOP]);
+//        Assert.assertEquals(myRooks, board.pieces[turn][ROOK]);
+//        Assert.assertEquals(myQueens, board.pieces[turn][QUEEN]);
+//        Assert.assertEquals(myKing, board.pieces[turn][KING]);
+//
+//        Assert.assertEquals(enemyPawns, board.pieces[1 - turn][PAWN]);
+//        Assert.assertEquals(enemyKnights, board.pieces[1 - turn][KNIGHT]);
+//        Assert.assertEquals(enemyBishops, board.pieces[1 - turn][BISHOP]);
+//        Assert.assertEquals(enemyRooks, board.pieces[1 - turn][ROOK]);
+//        Assert.assertEquals(enemyQueens, board.pieces[1 - turn][QUEEN]);
+//        Assert.assertEquals(enemyKing, board.pieces[1 - turn][KING]);
 
         long allPieces = friends | enemies;
 
-        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(board, white, myKing,
+        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(white, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+                allPieces);
 
         if (numberOfCheckers > 1){
             board.inCheckRecorder = true;
             
             addKingLegalMovesOnly(moves, board, white,
-                    myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                    myBishops, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    enemies, friends, allPieces);
+                    enemies, friends);
             return;
         }
 
-        long pinnedPieces = whichPiecesArePinned(board, white, myKing,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+        long pinnedPieces = whichPiecesArePinned(myKing,
+                enemyBishops, enemyRooks, enemyQueens,
+                friends, allPieces);
 
         board.pinnedPieces = pinnedPieces;
         
@@ -145,52 +174,47 @@ class MoveGeneratorMaster {
         long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
 
         addCastlingMoves(moves, board, whiteTurn,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+                allPieces);
 
         addKingLegalMovesOnly(moves, board, whiteTurn,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                myBishops, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+                enemies, friends);
 
         if (pinnedPieces == 0){
             addPromotionMoves
                     (moves, board, whiteTurn, 0, emptySquares, enemies,
-                            myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies, friends, allPieces);
+                            myPawns,
+                            enemies, allPieces);
 
             addAllMovesWithoutKing
                     (moves, board, whiteTurn, promotablePawns, emptySquares, enemies,
-                            myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies, friends, allPieces);
+                            myKnights, myBishops, myRooks, myQueens,
+                            allPieces);
 
             addEnPassantMoves
                     (moves, board, whiteTurn, promotablePawns, emptySquares, enemies,
-                            myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies, friends, allPieces);
+                            myPawns, myKing,
+                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing
+                    );
         }
         else {
             addPromotionMoves
                     (moves, board, whiteTurn, pinnedPieces, emptySquares, enemies,
-                            myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies, friends, allPieces);
+                            myPawns,
+                            enemies, allPieces);
 
             addAllMovesWithoutKing
                     (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, ~board.allPieces(), enemies,
-                            myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies, friends, allPieces);
+                            myKnights, myBishops, myRooks, myQueens,
+                            allPieces);
 
             addEnPassantMoves
                     (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, emptySquares, enemies,
-                            myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies, friends, allPieces);
+                            myPawns, myKing,
+                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing
+                    );
 
             addPinnedPiecesMoves(moves, board, whiteTurn, pinnedPieces, myKing,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
@@ -224,42 +248,41 @@ class MoveGeneratorMaster {
 
                 if ((pinnedPiece & PENULTIMATE_RANK) == 0) {
                     addMovesFromAttackTableMaster(moves,
-                            singlePawnPushes(board, pinnedPiece, whiteTurn, pushMask, allPieces)
+                            singlePawnPushes(pinnedPiece, whiteTurn, pushMask, allPieces)
                                     | singlePawnCaptures(pinnedPiece, whiteTurn, pinningPiece),
                             pinnedPieceIndex, board);
 
                     // a pinned pawn may still EP
                     addEnPassantMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, pinningPiece,
-                            myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies, friends, allPieces);
+                            myPawns, myKing,
+                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing
+                    );
                 } else {
                     // a pinned pawn may still promote, through a capture of the pinner
                     addPromotionMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, pinningPiece,
-                            myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                            enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            enemies, friends, allPieces);
+                            myPawns,
+                            enemies, allPieces);
                 }
                 pinnedPieces &= pinnedPieces - 1;
                 continue;
             }
             if ((pinnedPiece & myBishops) != 0) {
                 addMovesFromAttackTableMaster(moves,
-                        singleBishopTable(allPieces, whiteTurn, pinnedPiece, UNIVERSE) & mask,
+                        singleBishopTable(allPieces, pinnedPiece, UNIVERSE) & mask,
                         pinnedPieceIndex, board);
                 pinnedPieces &= pinnedPieces - 1;
                 continue;
             }
             if ((pinnedPiece & myRooks) != 0) {
                 addMovesFromAttackTableMaster(moves,
-                        singleRookTable(allPieces, whiteTurn, pinnedPiece, UNIVERSE) & mask,
+                        singleRookTable(allPieces, pinnedPiece, UNIVERSE) & mask,
                         pinnedPieceIndex, board);
                 pinnedPieces &= pinnedPieces - 1;
                 continue;
             }
             if ((pinnedPiece & myQueens) != 0) {
                 addMovesFromAttackTableMaster(moves,
-                        (singleQueenTable(allPieces, whiteTurn, pinnedPiece, UNIVERSE) & mask),
+                        (singleQueenTable(allPieces, pinnedPiece, UNIVERSE) & mask),
                         pinnedPieceIndex, board);
             }
 

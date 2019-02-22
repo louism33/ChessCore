@@ -47,9 +47,9 @@ public enum Square {
             friends = board.blackPieces();
         }
 
-        return CheckHelper.numberOfPiecesThatLegalThreatenSquare(board, white, square,
+        return CheckHelper.numberOfPiecesThatLegalThreatenSquare(white, square,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                enemies, friends, board.allPieces()) > 0;
+                board.allPieces()) > 0;
     }
 
     public static Square getSquareOfBitboard(long piece){

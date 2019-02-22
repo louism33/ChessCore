@@ -7,23 +7,20 @@ import static com.github.louism33.chesscore.PieceMove.xrayRookAttacks;
 
 public class PinnedManager {
 
-    public static long whichPiecesArePinned(Chessboard board, boolean white, long squareOfInterest,
-                                     long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                     long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                     long enemies, long friends, long allPieces){
+    public static long whichPiecesArePinned(long squareOfInterest,
+                                            long enemyBishops, long enemyRooks, long enemyQueens,
+                                            long friends, long allPieces){
         if (squareOfInterest == 0) {
             return 0;
         }
-        return pinsToSquare(board, white, squareOfInterest,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+        return pinsToSquare(squareOfInterest,
+                enemyBishops, enemyRooks, enemyQueens,
+                friends, allPieces);
     }
     
-    private static long pinsToSquare(Chessboard board, boolean white, long squareOfInterest,
-                                     long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                     long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                     long enemies, long friends, long allPieces) {
+    private static long pinsToSquare(long squareOfInterest,
+                                     long enemyBishops, long enemyRooks, long enemyQueens,
+                                     long friends, long allPieces) {
 
         long pinnedPieces = 0;
 

@@ -7,35 +7,33 @@ class MoveGeneratorPseudo {
 
     public static void addAllMovesWithoutKing(int[] moves, Chessboard board, boolean whiteTurn,
                                               long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                              long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                              long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                              long enemies, long friends, long allPieces){
+                                              long myKnights, long myBishops, long myRooks, long myQueens,
+                                              long allPieces){
 
-        addKnightMoves(moves, board, whiteTurn, ignoreThesePieces, (legalPushes | legalCaptures), 
+        addKnightMoves(moves, board, ignoreThesePieces, (legalPushes | legalCaptures), 
                 myKnights);
         addSlidingMoves(moves, board, whiteTurn, ignoreThesePieces, (legalPushes | legalCaptures),
                 myBishops, myRooks, myQueens, allPieces);
         addPawnPushes(moves, board, whiteTurn, ignoreThesePieces, legalCaptures, legalPushes, 
-                myPawns, allPieces);
+                allPieces);
     }
 
-    public static long generatePseudoCaptureTable(Chessboard board, boolean whiteTurn,
+    public static long generatePseudoCaptureTable(boolean whiteTurn,
                                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                                  long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                                   long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                                  long enemies, long friends, long allPieces){
+                                                  long allPieces){
         long ans = 0;
 
-        ans |= masterAttackTableKing(board, whiteTurn, ignoreThesePieces, legalPushes, legalCaptures,
+        ans |= masterAttackTableKing(ignoreThesePieces, legalPushes, legalCaptures,
                 enemyKing);
 
-        ans |= masterAttackTableKnights(board, whiteTurn, ignoreThesePieces, legalPushes, legalCaptures, 
+        ans |= masterAttackTableKnights(ignoreThesePieces, legalPushes, legalCaptures, 
                 enemyKnights);
 
-        ans |= masterAttackTableSliding(board, whiteTurn, ignoreThesePieces, legalPushes, legalCaptures,
+        ans |= masterAttackTableSliding(ignoreThesePieces, legalPushes, legalCaptures,
                 enemyBishops, enemyRooks, enemyQueens, allPieces);
 
-        ans |= masterPawnCapturesTable(board, whiteTurn, ignoreThesePieces, legalCaptures, enemyPawns);
+        ans |= masterPawnCapturesTable(whiteTurn, ignoreThesePieces, legalCaptures, enemyPawns);
 
         return ans;
     }

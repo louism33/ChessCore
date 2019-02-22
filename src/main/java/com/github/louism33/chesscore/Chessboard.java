@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -69,13 +67,17 @@ public class Chessboard implements Cloneable{
         this.pieces[BLACK][ROOK] = INITIAL_BLACK_ROOKS;
         this.pieces[BLACK][QUEEN] = INITIAL_BLACK_QUEEN;
         this.pieces[BLACK][KING] = INITIAL_BLACK_KING;
-
+        
+        this.pieces[BLACK][ALL_COLOUR_PIECES] = INITIAL_BLACK_PIECES;
+        
         this.pieces[WHITE][PAWN] = INITIAL_WHITE_PAWNS;
         this.pieces[WHITE][KNIGHT] = INITIAL_WHITE_KNIGHTS;
         this.pieces[WHITE][BISHOP] = INITIAL_WHITE_BISHOPS;
         this.pieces[WHITE][ROOK] = INITIAL_WHITE_ROOKS;
         this.pieces[WHITE][QUEEN] = INITIAL_WHITE_QUEEN;
         this.pieces[WHITE][KING] = INITIAL_WHITE_KING;
+
+        this.pieces[WHITE][ALL_COLOUR_PIECES] = INITIAL_WHITE_PIECES;
             
     }
 
@@ -171,9 +173,6 @@ public class Chessboard implements Cloneable{
     public int[] generateLegalMoves() {
         Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
 
-//        MoveGeneratorMaster.generateLegalMoves(this,
-//                this.legalMoveStack[legalMoveStackIndex], isWhiteTurn()); 
-        
         MoveGeneratorMaster.generateLegalMoves(this,
                 this.legalMoveStack[legalMoveStackIndex], turn);
 
@@ -262,9 +261,9 @@ public class Chessboard implements Cloneable{
             friends = blackPieces();
         }
 
-        return boardInCheck(this, white, myKing,
+        return boardInCheck(white, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                enemies, friends, allPieces());
+                allPieces());
 
     }
 
@@ -379,10 +378,9 @@ public class Chessboard implements Cloneable{
             friends = blackPieces();
         }
 
-        return PinnedManager.whichPiecesArePinned(this, white, white ? getWhiteKing() : getBlackKing(),
-                myPawns, myKnights, myBishops, myRooks, myQueen, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                enemies, friends, allPieces());
+        return PinnedManager.whichPiecesArePinned(white ? getWhiteKing() : getBlackKing(),
+                enemyBishops, enemyRooks, enemyQueen,
+                friends, allPieces());
     }
 
     public boolean previousMoveWasPawnPushToSix(){
@@ -883,7 +881,7 @@ public class Chessboard implements Cloneable{
                 default:
                     throw new RuntimeException("Could not parse fen string");
             }
-//            this.pieces[whichPiece / 7][(whichPiece % 7) + 1] |= pieceFromFen;
+            this.pieces[whichPiece / 7][whichPiece < 7 ? whichPiece : whichPiece - 6] |= pieceFromFen;
         }
     }
 

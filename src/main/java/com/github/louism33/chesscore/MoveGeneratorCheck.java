@@ -31,24 +31,22 @@ class MoveGeneratorCheck {
         long piecesToIgnoreAndPromotingPawns = pinnedPieces | promotablePawns;
 
         addPromotionMoves(moves, board, white, pinnedPieces, blockingSquaresMask, checkingPieceMask,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+                myPawns,
+                enemies, allPieces);
 
         addAllMovesWithoutKing (moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+                myKnights, myBishops, myRooks, myQueens,
+                allPieces);
 
         addKingLegalMovesOnly(moves, board, white,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                myBishops, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+                enemies, friends);
 
         addEnPassantMoves(moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
+                myPawns, myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing
+        );
     }
 
     private static long inCheckByAJumper(Chessboard board, boolean white,
@@ -69,15 +67,15 @@ class MoveGeneratorCheck {
                                          long myKing,
                                          long enemyBishops, long enemyRooks, long enemyQueens,
                                          long allPieces){
-        long possibleBishop = singleBishopTable(allPieces, white, myKing, enemyBishops);
+        long possibleBishop = singleBishopTable(allPieces, myKing, enemyBishops);
         if (possibleBishop != 0) {
             return possibleBishop;
         }
-        long possibleRook = singleRookTable(allPieces, white, myKing, enemyRooks);
+        long possibleRook = singleRookTable(allPieces, myKing, enemyRooks);
         if (possibleRook != 0){
             return possibleRook;
         }
-        long possibleQueen = singleQueenTable(allPieces, white, myKing, enemyQueens);
+        long possibleQueen = singleQueenTable(allPieces, myKing, enemyQueens);
         if (possibleQueen != 0){
             return possibleQueen;
         }
