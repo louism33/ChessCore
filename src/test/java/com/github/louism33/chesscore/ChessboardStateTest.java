@@ -104,18 +104,13 @@ class ChessboardStateTest {
 
         Assert.assertEquals(board, initial);
 
-        long ii = 0;
-        try {
-            ii = countFinalNodesAtDepthHelper(board, depth);
-        } catch (IllegalUnmakeException e) {
-            e.printStackTrace();
-        }
+        long ii = countFinalNodesAtDepthHelper(board, depth);
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
 
     }
 
-    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {
+    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){
         long temp = 0;
         if (depth == 0){
             return 1;
@@ -130,14 +125,14 @@ class ChessboardStateTest {
                 Square.getSquareOfBitboard(board.getWhiteKing()) :
                 Square.getSquareOfBitboard(board.getBlackKing());
 
-        
+
         Assert.assertEquals(board.pinnedPieces, board.pinnedPiecesToSquareBitBoard(board.isWhiteTurn(),
                 king));
-        
+
         Assert.assertEquals(board.pinnedPieces, new Chessboard(board).pinnedPiecesToSquareBitBoard(board.isWhiteTurn(),
                 king));
-        
-        
+
+
         if (depth == 1){
             return realMoves(moves);
         }
@@ -151,7 +146,7 @@ class ChessboardStateTest {
             Assert.assertTrue(move < biggestMoveBit);
 
             board.makeMoveAndFlipTurn(move);
-            
+
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;
             board.unMakeMoveAndFlipTurn();

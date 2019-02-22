@@ -26,7 +26,7 @@ public class NullMoveTest {
         verifyHashToDepth(3, new Chessboard("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10"));
 
     }
-    
+
     @Test
     void bigDepth11() {
         verifyHashToDepth(8, new Chessboard("8/5p2/8/2k3P1/p3K3/8/1P6/8 b - -"));
@@ -59,42 +59,33 @@ public class NullMoveTest {
         verifyHashToDepth(6, new Chessboard("8/5k2/8/2Pp4/2B5/1K6/8/8 w - d6 0 1"));
     }
 
-    
-    
+
+
     private static void verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
         Assert.assertEquals(board, initial);
 //        System.out.println(board);
 
-        
+
         board.makeNullMoveAndFlipTurn();
 
-        
+
 //        System.out.println(board);
 //        System.out.println(new Chessboard(board));
-        
+
         Assert.assertEquals(board, new Chessboard(board));
 
-        try {
-            board.unMakeNullMoveAndFlipTurn();
-        } catch (IllegalUnmakeException e) {
-            e.printStackTrace();
-        }
+        board.unMakeNullMoveAndFlipTurn();
         Assert.assertEquals(board, new Chessboard(board));
 
 
-        long ii = 0;
-        try {
-            ii = countFinalNodesAtDepthHelper(board, depth);
-        } catch (IllegalUnmakeException e) {
-            e.printStackTrace();
-        }
+        long ii = countFinalNodesAtDepthHelper(board, depth);
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
 
     }
 
-    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {
+    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){
         long temp = 0;
         if (depth == 0){
             return 1;
@@ -116,7 +107,7 @@ public class NullMoveTest {
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;
-            
+
             board.unMakeNullMoveAndFlipTurn();
             Assert.assertEquals(board, new Chessboard(board));
 

@@ -102,16 +102,10 @@ public class MoveTest {
     private static void verifyMoveToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
 
-        long ii = 0;
-        try {
-            ii = countFinalNodesAtDepthHelper(board, depth);
-        } catch (IllegalUnmakeException e) {
-            e.printStackTrace();
-        }
-
+        long ii = countFinalNodesAtDepthHelper(board, depth);
     }
 
-    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {
+    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){
         long temp = 0;
         if (depth == 0){
             return 1;

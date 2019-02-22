@@ -5,9 +5,9 @@ import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
-import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterPromotion;
+import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
@@ -140,11 +140,7 @@ class MoveGeneratorSpecial {
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     enemies, friends, board.allPieces());
 
-            try {
-                board.unMakeMoveAndFlipTurn();
-            } catch (IllegalUnmakeException e) {
-                e.printStackTrace();
-            }
+            board.unMakeMoveAndFlipTurn();
 
             if (enPassantWouldLeadToCheck) {
                 continue;

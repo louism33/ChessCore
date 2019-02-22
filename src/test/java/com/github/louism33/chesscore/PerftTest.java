@@ -30,11 +30,11 @@ class PerftTest {
                 119060324);
 
 
-//        Assert.assertEquals(
-//                Perft.perftTest(7, new Chessboard(), 3195901860L),
-//                3195901860L);
-
-
+        Assert.assertEquals(
+                Perft.perftTest(7, new Chessboard(), 3195901860L),
+                3195901860L);
+//
+//
 //        Assert.assertEquals(
 //                Perft.perftTest(8, new Chessboard(), 84998978956L),
 //                84998978956L);

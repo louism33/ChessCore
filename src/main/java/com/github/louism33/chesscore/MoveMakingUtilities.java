@@ -3,10 +3,11 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 
 import static com.github.louism33.chesscore.MoveConstants.*;
+import static com.github.louism33.chesscore.MoveParser.*;
 
 class MoveMakingUtilities {
 
-    static void removePiecesPrecise (Chessboard board, long sourceSquare, long victimPieceSquare, int move){
+    static void removePieces(Chessboard board, long sourceSquare, long victimPieceSquare, int move){
         int movingPiece = MoveParser.getMovingPieceInt(move);
 
         Assert.assertTrue(movingPiece > 0);
@@ -30,7 +31,7 @@ class MoveMakingUtilities {
     }
 
 
-    public static void removePiecesFrom (Chessboard board, long removeThis, int thesePieces){
+    static void removePiecesFrom (Chessboard board, long removeThis, int thesePieces){
         switch (thesePieces) {
             case WHITE_PAWN_MASK :
                 board.setWhitePawns(board.getWhitePawns() ^ removeThis);
@@ -68,6 +69,48 @@ class MoveMakingUtilities {
                 break;
             case BLACK_KING_MASK :
                 board.setBlackKing(board.getBlackKing() ^ removeThis);
+                break;
+        }
+    }
+    
+    static void addPieceTo(Chessboard board, long addThis, int toThese){
+        switch (toThese) {
+            case WHITE_PAWN:
+                board.setWhitePawns(board.getWhitePawns() | addThis);
+                break;
+            case WHITE_KNIGHT:
+                board.setWhiteKnights(board.getWhiteKnights() | addThis);
+                break;
+            case WHITE_BISHOP:
+                board.setWhiteBishops(board.getWhiteBishops() | addThis);
+                break;
+            case WHITE_ROOK:
+                board.setWhiteRooks(board.getWhiteRooks() | addThis);
+                break;
+            case WHITE_QUEEN:
+                board.setWhiteQueen(board.getWhiteQueen() | addThis);
+                break;
+            case WHITE_KING:
+                board.setWhiteKing(board.getWhiteKing() | addThis);
+                break;
+
+            case BLACK_PAWN:
+                board.setBlackPawns(board.getBlackPawns() | addThis);
+                break;
+            case BLACK_KNIGHT:
+                board.setBlackKnights(board.getBlackKnights() | addThis);
+                break;
+            case BLACK_BISHOP:
+                board.setBlackBishops(board.getBlackBishops() | addThis);
+                break;
+            case BLACK_ROOK:
+                board.setBlackRooks(board.getBlackRooks() | addThis);
+                break;
+            case BLACK_QUEEN:
+                board.setBlackQueen(board.getBlackQueen() | addThis);
+                break;
+            case BLACK_KING:
+                board.setBlackKing(board.getBlackKing() | addThis);
                 break;
         }
     }

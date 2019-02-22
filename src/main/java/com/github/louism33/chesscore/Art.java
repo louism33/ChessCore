@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import com.github.louism33.chesscore.Chessboard;
-
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 
 public class Art {

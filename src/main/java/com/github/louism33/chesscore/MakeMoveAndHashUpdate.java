@@ -24,7 +24,7 @@ class MakeMoveAndHashUpdate {
         board.setBoardHash(ZobristHashUtil.updateHashPostMove(board, board.getBoardHash(), move));
     }
 
-    static void UnMakeMoveAndHashUpdate(Chessboard board) throws IllegalUnmakeException {
+    static void UnMakeMoveAndHashUpdate(Chessboard board){
         
         unMakeMoveMaster(board);
     }
@@ -45,7 +45,7 @@ class MakeMoveAndHashUpdate {
         board.setBoardHash(ZobristHashUtil.zobristFlipTurn(board.getBoardHash()));
     }
 
-    static void unMakeNullMove(Chessboard board) throws IllegalUnmakeException {
+    static void unMakeNullMove(Chessboard board){
 
         unMakeMoveMaster(board);
     }

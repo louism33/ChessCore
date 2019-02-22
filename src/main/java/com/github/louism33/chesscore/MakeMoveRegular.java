@@ -1,11 +1,12 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
-import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
-import static com.github.louism33.chesscore.MoveMakingUtilities.removePiecesPrecise;
-import static com.github.louism33.chesscore.MoveParser.*;
-import static com.github.louism33.chesscore.Piece.pieceOnSquareInt;
+import static com.github.louism33.chesscore.MoveConstants.*;
+import static com.github.louism33.chesscore.MoveMakingUtilities.addPieceTo;
+import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
+import static com.github.louism33.chesscore.MoveParser.getDestinationIndex;
+import static com.github.louism33.chesscore.MoveParser.getSourceIndex;
 import static com.github.louism33.chesscore.StackDataUtil.*;
 
 class MakeMoveRegular {
@@ -101,53 +102,9 @@ class MakeMoveRegular {
         final long sourcePiece = newPieceOnSquare(getSourceIndex(move));
         final long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 
-        final int piece = pieceOnSquareInt(board, sourcePiece);
+        removePieces(board, sourcePiece, destinationPiece, move);
 
-        if (piece == NO_PIECE){
-            return;
-        }
-
-        removePiecesPrecise(board, sourcePiece, destinationPiece, move);
-
-        switch (piece) {
-            case WHITE_PAWN:
-                board.setWhitePawns(board.getWhitePawns() | destinationPiece);
-                break;
-            case WHITE_KNIGHT:
-                board.setWhiteKnights(board.getWhiteKnights() | destinationPiece);
-                break;
-            case WHITE_BISHOP:
-                board.setWhiteBishops(board.getWhiteBishops() | destinationPiece);
-                break;
-            case WHITE_ROOK:
-                board.setWhiteRooks(board.getWhiteRooks() | destinationPiece);
-                break;
-            case WHITE_QUEEN:
-                board.setWhiteQueen(board.getWhiteQueen() | destinationPiece);
-                break;
-            case WHITE_KING:
-                board.setWhiteKing(board.getWhiteKing() | destinationPiece);
-                break;
-
-            case BLACK_PAWN:
-                board.setBlackPawns(board.getBlackPawns() | destinationPiece);
-                break;
-            case BLACK_KNIGHT:
-                board.setBlackKnights(board.getBlackKnights() | destinationPiece);
-                break;
-            case BLACK_BISHOP:
-                board.setBlackBishops(board.getBlackBishops() | destinationPiece);
-                break;
-            case BLACK_ROOK:
-                board.setBlackRooks(board.getBlackRooks() | destinationPiece);
-                break;
-            case BLACK_QUEEN:
-                board.setBlackQueen(board.getBlackQueen() | destinationPiece);
-                break;
-            case BLACK_KING:
-                board.setBlackKing(board.getBlackKing() | destinationPiece);
-                break;
-        }
+        addPieceTo(board, destinationPiece, MoveParser.getMovingPieceInt(move));
     }
 
 }

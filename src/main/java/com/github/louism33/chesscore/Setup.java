@@ -3,7 +3,8 @@ package com.github.louism33.chesscore;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BitOperations.getAllPieces;
+import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BoardConstants.*;
 
 class Setup {

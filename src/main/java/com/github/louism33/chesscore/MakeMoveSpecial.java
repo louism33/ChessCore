@@ -2,11 +2,10 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import java.nio.channels.WritePendingException;
-
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MoveConstants.*;
-import static com.github.louism33.chesscore.MoveMakingUtilities.*;
+import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
+import static com.github.louism33.chesscore.MoveMakingUtilities.removePiecesFrom;
 import static com.github.louism33.chesscore.MoveParser.*;
 
 class MakeMoveSpecial {
@@ -97,7 +96,7 @@ class MakeMoveSpecial {
         long sourcePiece = newPieceOnSquare(getSourceIndex(move));
         long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 
-        removePiecesPrecise(board, sourcePiece, destinationPiece, move);
+        removePieces(board, sourcePiece, destinationPiece, move);
         
         if (board.isWhiteTurn()){
             switch (move & WHICH_PROMOTION) {

@@ -2,6 +2,7 @@ package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveGeneratorPseudo.generatePseudoCaptureTable;
@@ -12,17 +13,29 @@ class MoveGeneratorRegular {
     static void addPawnPushes(int[] moves, Chessboard board, boolean white,
                               long ignoreThesePieces, long legalCaptures, long legalPushes,
                               long myPawns, long allPieces){
+        final long homeRank = (white ? RANK_TWO : RANK_SEVEN);
+        long allPawnPushes = (white ? myPawns << 8 : myPawns >>> 8) & ~allPieces & legalPushes;
+        
         while (myPawns != 0){
             long pawn = getFirstPiece(myPawns);
             if ((pawn & ignoreThesePieces) == 0){
-                final long multi = singlePawnPushes(board, pawn, white, legalPushes, allPieces);
-                final long pawnCaptures = singlePawnCaptures(pawn, white, legalCaptures);
                 final int pawnIndex = getIndexOfFirstPiece(pawn);
-                addMovesFromAttackTableMaster(moves, multi | pawnCaptures, pawnIndex, board);
+                long mySquares;
+                if ((pawn & homeRank) != 0) {
+                    mySquares = singlePawnPushes(board, pawn, white, legalPushes, allPieces);
+                }
+                else {
+                    mySquares = (allPawnPushes & (white ? PAWN_PUSH_MASK_WHITE[pawnIndex] : PAWN_PUSH_MASK_BLACK[pawnIndex]));
+                }
+                
+                final long pawnCaptures = singlePawnCaptures(pawn, white, legalCaptures);
+                
+                addMovesFromAttackTableMaster(moves, mySquares | pawnCaptures, pawnIndex, board);
             }
             myPawns &= myPawns - 1;
         }
 
+        
     }
 
     static void addKnightMoves(int[] moves, Chessboard board, boolean white,
@@ -67,15 +80,6 @@ class MoveGeneratorRegular {
             myQueens &= (myQueens - 1);
         }
     }
-
-
-
-
-
-
-
-
-
 
     static void addKingLegalMovesOnly(int[] moves, Chessboard board, boolean white,
                                       long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
@@ -132,5 +136,5 @@ class MoveGeneratorRegular {
 
         return kingDangerSquares;
     }
-    
+
 }

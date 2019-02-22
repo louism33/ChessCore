@@ -104,18 +104,13 @@ public class ChessboardHashTest {
         
         Assert.assertEquals(board, initial);
 
-        long ii = 0;
-        try {
-            ii = countFinalNodesAtDepthHelper(board, depth);
-        } catch (IllegalUnmakeException e) {
-            e.printStackTrace();
-        }
+        long ii = countFinalNodesAtDepthHelper(board, depth);
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
 
     }
 
-    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {
+    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){
         long temp = 0;
         if (depth == 0){
             return 1;

@@ -10,10 +10,10 @@ import static com.github.louism33.chesscore.StackDataUtil.*;
 
 class MoveUnmaker {
 
-    static void unMakeMoveMaster(Chessboard board) throws IllegalUnmakeException {
+    static void unMakeMoveMaster(Chessboard board){
 
         if (!board.hasPreviousMove()){
-            throw new IllegalUnmakeException("No moves to unmake.");
+            throw new RuntimeException("no move to unmake");
         }
         
         Assert.assertTrue(board.hasPreviousMove());

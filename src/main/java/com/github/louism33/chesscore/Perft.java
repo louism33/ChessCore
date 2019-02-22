@@ -1,7 +1,7 @@
 package com.github.louism33.chesscore;
 
 public class Perft {
-    
+
     private static long nodesForNps = 0;
 
     public static long perftTest(int d, Chessboard board){
@@ -9,7 +9,7 @@ public class Perft {
         System.out.println(s);
         return runPerftTestWithBoard(d, board);
     }
-    
+
     public static long perftTest(int d, Chessboard board, long correctAnswer){
         String s = Art.boardArt(board);
         System.out.println(s);
@@ -28,11 +28,7 @@ public class Perft {
     private static long countFinalNodesAtDepth(Chessboard board, int depth) {
         long t1 = System.currentTimeMillis();
         long ii = 0;
-        try {
-            ii = Perft.countFinalNodesAtDepthHelper(board, depth);
-        } catch (IllegalUnmakeException e) {
-            e.printStackTrace();
-        }
+        ii = Perft.countFinalNodesAtDepthHelper(board, depth);
         System.out.println("Final Nodes at Depth " + depth + ": " + ii);
         long t2 = System.currentTimeMillis();
         long t = t2 - t1;
@@ -44,7 +40,7 @@ public class Perft {
         return ii;
     }
 
-    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {
+    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){
         long temp = 0;
         if (depth == 0){
             return 1;
@@ -61,7 +57,7 @@ public class Perft {
             if (move == 0) {
                 continue;
             }
-            
+
             board.makeMoveAndFlipTurn(move);
 
             nodesForNps++;
@@ -71,7 +67,7 @@ public class Perft {
         }
         return temp;
     }
-    
+
     private static int realMoves(int[] moves){
         int index = 0;
         while (moves[index] != 0){

@@ -164,9 +164,8 @@ public class Chessboard implements Cloneable{
 
     /**
      * Completely undoes the last made move, and changes the side to play
-     * @throws IllegalUnmakeException don't call this if no moves have been made
      */
-    public void unMakeMoveAndFlipTurn() throws IllegalUnmakeException {
+    public void unMakeMoveAndFlipTurn(){
         UnMakeMoveAndHashUpdate(this);
     }
 
@@ -181,9 +180,8 @@ public class Chessboard implements Cloneable{
 
     /**
      * Unmakes a null move on the board.
-     * @throws IllegalUnmakeException don't call this if no moves have been made
      */
-    public void unMakeNullMoveAndFlipTurn() throws IllegalUnmakeException {
+    public void unMakeNullMoveAndFlipTurn(){
         unMakeNullMove(this);
     }
 
