@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +19,7 @@ public class Chessboard implements Cloneable{
     private ChessboardDetails details;
 
     long[][] pieces = new long[2][7];
+    long[] allPieces = new long[3];
     
     int turn;
 
@@ -168,8 +171,11 @@ public class Chessboard implements Cloneable{
     public int[] generateLegalMoves() {
         Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
 
+//        MoveGeneratorMaster.generateLegalMoves(this,
+//                this.legalMoveStack[legalMoveStackIndex], isWhiteTurn()); 
+        
         MoveGeneratorMaster.generateLegalMoves(this,
-                this.legalMoveStack[legalMoveStackIndex], isWhiteTurn());
+                this.legalMoveStack[legalMoveStackIndex], turn);
 
         return this.legalMoveStack[legalMoveStackIndex];
     }
@@ -418,10 +424,18 @@ public class Chessboard implements Cloneable{
     }
 
     public long whitePieces(){
+//        for (int i = 0; i < 7; i++) {
+//            this.allPieces[WHITE] |= this.pieces[WHITE][i];
+//        }
+//        return this.allPieces[WHITE];
         return getWhitePawns() | getWhiteKnights() | getWhiteBishops() | getWhiteRooks() | getWhiteQueen() | getWhiteKing();
     }
 
     public long blackPieces(){
+//        for (int i = 0; i < 7; i++) {
+//            this.allPieces[BLACK] |= this.pieces[BLACK][i];
+//        }
+//        return this.allPieces[BLACK];
         return getBlackPawns() | getBlackKnights() | getBlackBishops() | getBlackRooks() | getBlackQueen() | getBlackKing();
     }
 
@@ -434,7 +448,11 @@ public class Chessboard implements Cloneable{
         return this.details.whiteTurn;
     }
 
+    public void setTurn(int whiteTurn) {
+        this.turn = whiteTurn;
+    }
     public void setWhiteTurn(boolean whiteTurn) {
+        setTurn(whiteTurn ? WHITE : BLACK);
         this.details.whiteTurn = whiteTurn;
     }
 
@@ -492,6 +510,15 @@ public class Chessboard implements Cloneable{
     }
 
     public long getWhitePawns() {
+//        if (this.details.whitePawns != this.pieces[WHITE][PAWN]) {
+//            System.out.println(this);
+//            
+//            Art.printLong(this.pieces[WHITE][PAWN]);
+//            System.out.println("correct");
+//            Art.printLong(this.details.whitePawns);
+//
+//            Assert.assertEquals(this.details.whitePawns, this.pieces[WHITE][PAWN]);
+//        }
         return this.details.whitePawns;
     }
 
@@ -500,6 +527,7 @@ public class Chessboard implements Cloneable{
     }
 
     public long getWhiteKnights() {
+//        Assert.assertEquals(this.details.whiteKnights, this.pieces[WHITE][KNIGHT]);
         return this.details.whiteKnights;
     }
 
@@ -508,6 +536,7 @@ public class Chessboard implements Cloneable{
     }
 
     public long getWhiteBishops() {
+//        Assert.assertEquals(this.details.whiteBishops, this.pieces[WHITE][BISHOP]);
         return this.details.whiteBishops;
     }
 
@@ -516,6 +545,7 @@ public class Chessboard implements Cloneable{
     }
 
     public long getWhiteRooks() {
+//        Assert.assertEquals(this.details.whiteRooks, this.pieces[WHITE][ROOK]);
         return this.details.whiteRooks;
     }
 
@@ -524,6 +554,7 @@ public class Chessboard implements Cloneable{
     }
 
     public long getWhiteQueen() {
+//        Assert.assertEquals(this.details.whiteQueen, this.pieces[WHITE][QUEEN]);
         return this.details.whiteQueen;
     }
 
@@ -532,6 +563,7 @@ public class Chessboard implements Cloneable{
     }
 
     public long getWhiteKing() {
+//        Assert.assertEquals(this.details.whiteKing, this.pieces[WHITE][KING]);
         return this.details.whiteKing;
     }
 
@@ -540,6 +572,7 @@ public class Chessboard implements Cloneable{
     }
 
     public long getBlackPawns() {
+//        Assert.assertEquals(this.details.blackPawns, this.pieces[BLACK][PAWN]);
         return this.details.blackPawns;
     }
 
@@ -548,6 +581,7 @@ public class Chessboard implements Cloneable{
     }
 
     public long getBlackKnights() {
+//        Assert.assertEquals(this.details.blackKnights, this.pieces[BLACK][KNIGHT]);
         return this.details.blackKnights;
     }
 
@@ -556,6 +590,7 @@ public class Chessboard implements Cloneable{
     }
 
     public long getBlackBishops() {
+//        Assert.assertEquals(this.details.blackBishops, this.pieces[BLACK][BISHOP]);
         return this.details.blackBishops;
     }
 
@@ -848,7 +883,7 @@ public class Chessboard implements Cloneable{
                 default:
                     throw new RuntimeException("Could not parse fen string");
             }
-            this.pieces[whichPiece / 7][whichPiece % 7] |= pieceFromFen;
+//            this.pieces[whichPiece / 7][(whichPiece % 7) + 1] |= pieceFromFen;
         }
     }
 

@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 
 import static com.github.louism33.chesscore.BitOperations.*;
-import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveGeneratorCheck.addCheckEvasionMoves;
@@ -15,19 +15,31 @@ import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
 
 class MoveGeneratorMaster {
 
-    static void generateLegalMoves(Chessboard board, int[] moves, boolean white) {
-//        moves = new int[128];
-
-//        System.out.println(Arrays.toString(moves));
-//        MoveParser.printMoves(moves);
-        
+    static void generateLegalMoves(Chessboard board, int[] moves, int turn) {
         Assert.assertNotNull(moves);
+
+        boolean white = turn == WHITE;
         
         long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
         long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
         long friends, enemies;
 
         if (white){
+//            myPawns = board.pieces[WHITE][PAWN];
+//            myKnights = board.pieces[WHITE][KNIGHT];
+//            myBishops = board.pieces[WHITE][BISHOP];
+//            myRooks = board.pieces[WHITE][ROOK];
+//            myQueens = board.pieces[WHITE][QUEEN];
+//            myKing = board.pieces[WHITE][KING];
+//
+//            enemyPawns = board.pieces[BLACK][PAWN];
+//            enemyKnights = board.pieces[BLACK][KNIGHT];
+//            enemyBishops = board.pieces[BLACK][BISHOP];
+//            enemyRooks = board.pieces[BLACK][ROOK];
+//            enemyQueens = board.pieces[BLACK][QUEEN];
+//            enemyKing = board.pieces[BLACK][KING];
+
+
             myPawns = board.getWhitePawns();
             myKnights = board.getWhiteKnights();
             myBishops = board.getWhiteBishops();
@@ -42,6 +54,7 @@ class MoveGeneratorMaster {
             enemyQueens = board.getBlackQueen();
             enemyKing = board.getBlackKing();
 
+            
             friends = board.whitePieces();
             enemies = board.blackPieces();
         }
@@ -63,6 +76,19 @@ class MoveGeneratorMaster {
             friends = board.blackPieces();
             enemies = board.whitePieces();
         }
+
+
+//        if (myPawns != board.pieces[turn][PAWN]) {
+//            System.out.println(board);
+//            System.out.println("turn");
+//            Art.printLong(board.pieces[turn][PAWN]);
+//            System.out.println("anti turn");
+//            Art.printLong(board.pieces[1-turn][PAWN]);
+//            System.out.println("correct: ");
+//            Art.printLong(myPawns);
+//            
+//            Assert.assertEquals(myPawns, board.pieces[turn][PAWN]);
+//        }
 
         long allPieces = friends | enemies;
 
@@ -100,19 +126,19 @@ class MoveGeneratorMaster {
         
         board.inCheckRecorder = false;
 
-        addNotInCheckMoves(moves, board, white, pinnedPieces,
+        addNotInCheckMoves(moves, board, turn, pinnedPieces,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, friends, allPieces);
 
-        return;
     }
 
-    private static void addNotInCheckMoves(int[] moves, Chessboard board, boolean whiteTurn, long pinnedPieces,
+    private static void addNotInCheckMoves(int[] moves, Chessboard board, int turn, long pinnedPieces,
                                            long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                            long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                            long enemies, long friends, long allPieces){
 
+        boolean whiteTurn = turn == WHITE;
         long emptySquares = ~allPieces;
 
         long promotablePawns = myPawns & (whiteTurn ? BoardConstants.RANK_SEVEN : BoardConstants.RANK_TWO);

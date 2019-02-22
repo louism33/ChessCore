@@ -156,13 +156,16 @@ class MakeMoveSpecial {
         if (board.isWhiteTurn()) {
             removePiecesFrom(board, sourcePiece, WHITE_PAWN);
             removePiecesFrom(board, destinationPiece >>> 8, BLACK_PAWN);
-            board.setWhitePawns(board.getWhitePawns() | destinationPiece);
+
+            long p = board.getWhitePawns();
+            board.setWhitePawns(p | destinationPiece);
             board.pieces[WHITE][PAWN] |= destinationPiece;
         }
         else {
             removePiecesFrom(board, sourcePiece, BLACK_PAWN);
             removePiecesFrom(board, destinationPiece << 8, WHITE_PAWN);
             board.setBlackPawns(board.getBlackPawns() | destinationPiece);
+            board.pieces[BLACK][PAWN] |= destinationPiece;
         }
     }
 }

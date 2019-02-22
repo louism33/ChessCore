@@ -6,6 +6,8 @@ public class BoardConstants {
 
     public static final int WHITE = 0;
     public static final int BLACK = 1;
+    
+    public static final int BOTH = 2;
 
     public static final int PAWN = 1;
     public static final int KNIGHT = 2;

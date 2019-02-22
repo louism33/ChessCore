@@ -99,6 +99,7 @@ class MoveUnmaker {
                 board.pieces[WHITE][ROOK] &= mask;
                 board.pieces[WHITE][QUEEN] &= mask;
                 board.pieces[WHITE][KING] &= mask;
+                
                 board.pieces[BLACK][PAWN] &= mask;
                 board.pieces[BLACK][KNIGHT] &= mask;
                 board.pieces[BLACK][BISHOP] &= mask;
@@ -154,7 +155,7 @@ class MoveUnmaker {
     private static void addRelevantPieceToSquare(Chessboard board, int pieceToAdd, int placeToAddIt){
         long placeToAddPiece = newPieceOnSquare(placeToAddIt);
 
-        board.pieces[pieceToAdd / 7][pieceToAdd % 7] |= placeToAddPiece;
+        board.pieces[pieceToAdd / 7][(pieceToAdd % 7) + 1] |= placeToAddPiece;
 
         switch (pieceToAdd) {
             case 1:
