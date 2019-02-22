@@ -2,8 +2,32 @@ package com.github.louism33.chesscore;
 
 public class BoardConstants {
 
-    public static final int WHITE = 1, BLACK = 0;
+    public static final int NO_PIECE = 0;
 
+    public static final int WHITE = 1;
+    public static final int BLACK = 0;
+
+    public static final int PAWN = 1;
+    public static final int KNIGHT = 2;
+    public static final int BISHOP = 3;
+    public static final int ROOK = 4;
+    public static final int QUEEN = 5;
+    public static final int KING = 6;
+
+    public static final int WHITE_PAWN = 1;
+    public static final int WHITE_KNIGHT = 2;
+    public static final int WHITE_BISHOP = 3;
+    public static final int WHITE_ROOK = 4;
+    public static final int WHITE_QUEEN = 5;
+    public static final int WHITE_KING = 6;
+
+    public static final int BLACK_PAWN = 7;
+    public static final int BLACK_KNIGHT = 8;
+    public static final int BLACK_BISHOP = 9;
+    public static final int BLACK_ROOK = 10;
+    public static final int BLACK_QUEEN = 11;
+    public static final int BLACK_KING = 12;
+    
     public static final int
             H1 = 0, G1 = 1, F1 = 2, E1 = 3, D1 = 4, C1 = 5, B1 = 6, A1 = 7,
             H2 = 8, G2 = 9, F2 = 10, E2 = 11, D2 = 12, C2 = 13, B2 = 14, A2 = 15,

@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.*;
 import static com.github.louism33.chesscore.MakeMoveAndHashUpdate.*;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
@@ -15,6 +16,7 @@ public class Chessboard implements Cloneable{
 
     private ChessboardDetails details;
 
+    long[][] pieces = new long[2][7];
 
     private int fiftyMoveCounter = 0;
     public int getFiftyMoveCounter() {
@@ -55,6 +57,21 @@ public class Chessboard implements Cloneable{
         init();
         makeZobrist();
         Setup.init(false);
+
+        this.pieces[BLACK][PAWN] = INITIAL_BLACK_PAWNS;
+        this.pieces[BLACK][KNIGHT] = INITIAL_BLACK_KNIGHTS;
+        this.pieces[BLACK][BISHOP] = INITIAL_BLACK_BISHOPS;
+        this.pieces[BLACK][ROOK] = INITIAL_BLACK_ROOKS;
+        this.pieces[BLACK][QUEEN] = INITIAL_BLACK_QUEEN;
+        this.pieces[BLACK][KING] = INITIAL_BLACK_KING;
+
+        this.pieces[WHITE][PAWN] = INITIAL_WHITE_PAWNS;
+        this.pieces[WHITE][KNIGHT] = INITIAL_WHITE_KNIGHTS;
+        this.pieces[WHITE][BISHOP] = INITIAL_WHITE_BISHOPS;
+        this.pieces[WHITE][ROOK] = INITIAL_WHITE_ROOKS;
+        this.pieces[WHITE][QUEEN] = INITIAL_WHITE_QUEEN;
+        this.pieces[WHITE][KING] = INITIAL_WHITE_KING;
+            
     }
 
     /**
@@ -96,6 +113,11 @@ public class Chessboard implements Cloneable{
         this.checkIndex = board.checkIndex;
         this.pinIndex = board.pinIndex;
         
+        System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
+        System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
+        
+        
+        
         this.setWhitePawns(board.getWhitePawns());
         this.setWhiteKnights(board.getWhiteKnights());
         this.setWhiteBishops(board.getWhiteBishops());
@@ -109,6 +131,11 @@ public class Chessboard implements Cloneable{
         this.setBlackRooks(board.getBlackRooks());
         this.setBlackQueen(board.getBlackQueen());
         this.setBlackKing(board.getBlackKing());
+        
+        
+        
+        
+        
 
         this.setWhiteCanCastleK(board.isWhiteCanCastleK());
         this.setBlackCanCastleK(board.isBlackCanCastleK());
@@ -763,47 +790,61 @@ public class Chessboard implements Cloneable{
             }
             long pieceFromFen = BitOperations.newPieceOnSquare(square);
             square--;
+            int whichPiece = 0;
             switch (entry) {
                 case "P":
                     this.setWhitePawns(this.getWhitePawns() | pieceFromFen);
+                    whichPiece = WHITE_PAWN;
                     break;
                 case "N":
                     this.setWhiteKnights(this.getWhiteKnights() | pieceFromFen);
+                    whichPiece = WHITE_KNIGHT;
                     break;
                 case "B":
                     this.setWhiteBishops(this.getWhiteBishops() | pieceFromFen);
+                    whichPiece = WHITE_BISHOP;
                     break;
                 case "R":
                     this.setWhiteRooks(this.getWhiteRooks() | pieceFromFen);
+                    whichPiece = WHITE_ROOK;
                     break;
                 case "Q":
                     this.setWhiteQueen(this.getWhiteQueen() | pieceFromFen);
+                    whichPiece = WHITE_QUEEN;
                     break;
                 case "K":
                     this.setWhiteKing(this.getWhiteKing() | pieceFromFen);
+                    whichPiece = WHITE_KING;
                     break;
 
                 case "p":
                     this.setBlackPawns(this.getBlackPawns() | pieceFromFen);
+                    whichPiece = BLACK_PAWN;
                     break;
                 case "n":
                     this.setBlackKnights(this.getBlackKnights() | pieceFromFen);
+                    whichPiece = BLACK_KNIGHT;
                     break;
                 case "b":
                     this.setBlackBishops(this.getBlackBishops() | pieceFromFen);
+                    whichPiece = BLACK_BISHOP;
                     break;
                 case "r":
                     this.setBlackRooks(this.getBlackRooks() | pieceFromFen);
+                    whichPiece = BLACK_ROOK;
                     break;
                 case "q":
                     this.setBlackQueen(this.getBlackQueen() | pieceFromFen);
+                    whichPiece = BLACK_QUEEN;
                     break;
                 case "k":
                     this.setBlackKing(this.getBlackKing() | pieceFromFen);
+                    whichPiece = BLACK_KING;
                     break;
                 default:
                     throw new RuntimeException("Could not parse fen string");
             }
+//            this.pieces[whichPiece / 7][whichPiece & 7] |= pieceFromFen;
         }
     }
 

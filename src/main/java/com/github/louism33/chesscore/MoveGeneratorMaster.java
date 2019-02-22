@@ -2,8 +2,6 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import java.util.Arrays;
-
 import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;

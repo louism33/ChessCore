@@ -3,7 +3,6 @@ package com.github.louism33.chesscore;
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveGeneratorPseudo.generatePseudoCaptureTable;
 import static com.github.louism33.chesscore.PieceMove.*;

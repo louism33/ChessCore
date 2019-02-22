@@ -23,6 +23,8 @@ class ChessboardDetails {
     long blackRooks;
     long blackQueen;
     long blackKing;
+
+
     
     ChessboardDetails(){
         

@@ -3,6 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MakeMoveRegular.makeRegularMove;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePiecesFrom;
 import static com.github.louism33.chesscore.MoveParser.*;
@@ -64,8 +65,7 @@ class MoveUnmaker {
                         newKing = newPieceOnSquare(pieceToMoveBackIndex);
 
                 switch (StackDataUtil.getTurn(pop)) {
-                    //white moved
-                    case 1:
+                    case WHITE:
                         originalRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? 0 : 7);
                         newRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
                         removePiecesFrom(board, newKing, WHITE_KING);

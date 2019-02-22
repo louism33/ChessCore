@@ -2,8 +2,8 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
-import static com.github.louism33.chesscore.MoveParser.*;
 
 class MoveMakingUtilities {
 

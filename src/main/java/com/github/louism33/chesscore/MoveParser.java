@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
 import static com.github.louism33.chesscore.Piece.pieceOnSquareInt;
@@ -20,21 +21,7 @@ public class MoveParser {
     00000000
      */
 
-    public static final int NO_PIECE = 0;
-
-    public static final int WHITE_PAWN = 1;
-    public static final int WHITE_KNIGHT = 2;
-    public static final int WHITE_BISHOP = 3;
-    public static final int WHITE_ROOK = 4;
-    public static final int WHITE_QUEEN = 5;
-    public static final int WHITE_KING = 6;
-
-    public static final int BLACK_PAWN = 7;
-    public static final int BLACK_KNIGHT = 8;
-    public static final int BLACK_BISHOP = 9;
-    public static final int BLACK_ROOK = 10;
-    public static final int BLACK_QUEEN = 11;
-    public static final int BLACK_KING = 12;
+    
     
     public static int newMove(Chessboard board, String algebraicNotation){
         return MoveParserFromAN.buildMoveFromAN(board, algebraicNotation);

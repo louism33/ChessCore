@@ -19,22 +19,22 @@ public enum Piece {
 
     public static int pieceOnSquareInt(Chessboard board, long square){
         if (square == 0){
-            return MoveParser.NO_PIECE;
+            return BoardConstants.NO_PIECE;
         }
-        if ((square & board.getWhitePawns()) != 0) return MoveParser.WHITE_PAWN;
-        if ((square & board.getWhiteKnights()) != 0) return MoveParser.WHITE_KNIGHT;
-        if ((square & board.getWhiteBishops()) != 0) return MoveParser.WHITE_BISHOP;
-        if ((square & board.getWhiteRooks()) != 0) return MoveParser.WHITE_ROOK;
-        if ((square & board.getWhiteQueen()) != 0) return MoveParser.WHITE_QUEEN;
-        if ((square & board.getWhiteKing()) != 0) return MoveParser.WHITE_KING;
+        if ((square & board.getWhitePawns()) != 0) return BoardConstants.WHITE_PAWN;
+        if ((square & board.getWhiteKnights()) != 0) return BoardConstants.WHITE_KNIGHT;
+        if ((square & board.getWhiteBishops()) != 0) return BoardConstants.WHITE_BISHOP;
+        if ((square & board.getWhiteRooks()) != 0) return BoardConstants.WHITE_ROOK;
+        if ((square & board.getWhiteQueen()) != 0) return BoardConstants.WHITE_QUEEN;
+        if ((square & board.getWhiteKing()) != 0) return BoardConstants.WHITE_KING;
 
-        if ((square & board.getBlackPawns()) != 0) return MoveParser.BLACK_PAWN;
-        if ((square & board.getBlackKnights()) != 0) return MoveParser.BLACK_KNIGHT;
-        if ((square & board.getBlackBishops()) != 0)  return MoveParser.BLACK_BISHOP;
-        if ((square & board.getBlackRooks()) != 0) return MoveParser.BLACK_ROOK;
-        if ((square & board.getBlackQueen()) != 0) return MoveParser.BLACK_QUEEN;
-        if ((square & board.getBlackKing()) != 0) return MoveParser.BLACK_KING;
+        if ((square & board.getBlackPawns()) != 0) return BoardConstants.BLACK_PAWN;
+        if ((square & board.getBlackKnights()) != 0) return BoardConstants.BLACK_KNIGHT;
+        if ((square & board.getBlackBishops()) != 0)  return BoardConstants.BLACK_BISHOP;
+        if ((square & board.getBlackRooks()) != 0) return BoardConstants.BLACK_ROOK;
+        if ((square & board.getBlackQueen()) != 0) return BoardConstants.BLACK_QUEEN;
+        if ((square & board.getBlackKing()) != 0) return BoardConstants.BLACK_KING;
 
-        return MoveParser.NO_PIECE;
+        return BoardConstants.NO_PIECE;
     }
 }
