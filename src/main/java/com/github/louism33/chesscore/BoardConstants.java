@@ -4,8 +4,8 @@ public class BoardConstants {
 
     public static final int NO_PIECE = 0;
 
-    public static final int WHITE = 1;
-    public static final int BLACK = 0;
+    public static final int WHITE = 0;
+    public static final int BLACK = 1;
 
     public static final int PAWN = 1;
     public static final int KNIGHT = 2;

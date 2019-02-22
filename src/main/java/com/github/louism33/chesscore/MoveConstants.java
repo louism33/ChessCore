@@ -39,6 +39,7 @@ class MoveConstants {
             BISHOP_PROMOTION_MASK = 0x00004000,
             ROOK_PROMOTION_MASK = 0x00008000,
             QUEEN_PROMOTION_MASK = 0x0000c000,
+            WHICH_PROMOTION_OFFSET = 14,
 
     WHICH_PROMOTION = 0x0000c000,
 

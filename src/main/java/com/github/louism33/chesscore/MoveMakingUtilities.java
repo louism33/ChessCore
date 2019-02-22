@@ -32,6 +32,8 @@ class MoveMakingUtilities {
 
 
     static void removePiecesFrom (Chessboard board, long removeThis, int thesePieces){
+        board.pieces[thesePieces / 7][thesePieces % 7] ^= removeThis;
+        
         switch (thesePieces) {
             case WHITE_PAWN_MASK :
                 board.setWhitePawns(board.getWhitePawns() ^ removeThis);
@@ -74,6 +76,9 @@ class MoveMakingUtilities {
     }
     
     static void addPieceTo(Chessboard board, long addThis, int toThese){
+
+        board.pieces[toThese / 7][toThese % 7] ^= addThis;
+        
         switch (toThese) {
             case WHITE_PAWN:
                 board.setWhitePawns(board.getWhitePawns() | addThis);

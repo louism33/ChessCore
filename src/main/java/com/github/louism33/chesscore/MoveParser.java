@@ -215,6 +215,10 @@ public class MoveParser {
     public static boolean isPromotionMove (int move){
         return (move & SPECIAL_MOVE_MASK) == PROMOTION_MASK;
     }
+    
+    public static int whichPromotion(int move){
+        return (move & WHICH_PROMOTION) >>> WHICH_PROMOTION_OFFSET;
+    }
 
     public static boolean isPromotionToKnight (int move){
         if (!((move & SPECIAL_MOVE_MASK) == PROMOTION_MASK)) return false;

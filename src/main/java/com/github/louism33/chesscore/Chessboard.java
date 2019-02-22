@@ -17,6 +17,8 @@ public class Chessboard implements Cloneable{
     private ChessboardDetails details;
 
     long[][] pieces = new long[2][7];
+    
+    int turn;
 
     private int fiftyMoveCounter = 0;
     public int getFiftyMoveCounter() {
@@ -219,6 +221,7 @@ public class Chessboard implements Cloneable{
      * Changes whose turn it is
      */
     public void flipTurn(){
+        this.turn = 1 - this.turn;
         setWhiteTurn(!isWhiteTurn());
     }
 
@@ -427,6 +430,7 @@ public class Chessboard implements Cloneable{
     }
 
     public boolean isWhiteTurn() {
+//        return this.turn == WHITE;
         return this.details.whiteTurn;
     }
 
@@ -844,7 +848,7 @@ public class Chessboard implements Cloneable{
                 default:
                     throw new RuntimeException("Could not parse fen string");
             }
-//            this.pieces[whichPiece / 7][whichPiece & 7] |= pieceFromFen;
+            this.pieces[whichPiece / 7][whichPiece % 7] |= pieceFromFen;
         }
     }
 
@@ -853,7 +857,7 @@ public class Chessboard implements Cloneable{
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(fen);
         String boardRepresentation = "";
-        if (m.find()){
+        if (m.find()){  
             boardRepresentation = m.group();
         }
         if (boardRepresentation.length() == 0){

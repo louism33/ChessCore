@@ -16,11 +16,11 @@ class MoveUnmaker {
         if (!board.hasPreviousMove()){
             throw new RuntimeException("no move to unmake");
         }
-        
+
         Assert.assertTrue(board.hasPreviousMove());
 
         board.masterStackPop();
-        
+
         long pop = board.moveStackData;
 
         if (StackDataUtil.getMove(pop) == 0){
@@ -65,7 +65,7 @@ class MoveUnmaker {
                         newKing = newPieceOnSquare(pieceToMoveBackIndex);
 
                 switch (StackDataUtil.getTurn(pop)) {
-                    case WHITE:
+                    case BLACK:
                         originalRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? 0 : 7);
                         newRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
                         removePiecesFrom(board, newKing, WHITE_KING);
@@ -83,12 +83,30 @@ class MoveUnmaker {
                         board.setBlackRooks(board.getBlackRooks() | originalRook);
                         break;
                 }
+
+                board.pieces[StackDataUtil.getTurn(pop)][KING] |= originalKing;
+                board.pieces[StackDataUtil.getTurn(pop)][ROOK] |= originalRook;
                 break;
 
             case PROMOTION:
                 long sourceSquare = newPieceOnSquare(pieceToMoveBackIndex);
                 long destinationSquare = newPieceOnSquare(squareToMoveBackTo);
                 long mask = ~(sourceSquare | destinationSquare);
+                
+                board.pieces[WHITE][PAWN] &= mask;
+                board.pieces[WHITE][KNIGHT] &= mask;
+                board.pieces[WHITE][BISHOP] &= mask;
+                board.pieces[WHITE][ROOK] &= mask;
+                board.pieces[WHITE][QUEEN] &= mask;
+                board.pieces[WHITE][KING] &= mask;
+                board.pieces[BLACK][PAWN] &= mask;
+                board.pieces[BLACK][KNIGHT] &= mask;
+                board.pieces[BLACK][BISHOP] &= mask;
+                board.pieces[BLACK][ROOK] &= mask;
+                board.pieces[BLACK][QUEEN] &= mask;
+                board.pieces[BLACK][KING] &= mask;
+                
+                
                 board.setWhitePawns(board.getWhitePawns() & mask);
                 board.setWhiteKnights(board.getWhiteKnights() & mask);
                 board.setWhiteBishops(board.getWhiteBishops() & mask);
@@ -101,8 +119,8 @@ class MoveUnmaker {
                 board.setBlackRooks(board.getBlackRooks() & mask);
                 board.setBlackQueen(board.getBlackQueen() & mask);
                 board.setBlackKing(board.getBlackKing() & mask);
-                
-                addRelevantPieceToSquare(board, 
+
+                addRelevantPieceToSquare(board,
                         StackDataUtil.getTurn(pop) == 1 ? 1 : 7, squareToMoveBackTo);
                 int takenPiecePromotion = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
                 if (takenPiecePromotion > 0){
@@ -135,6 +153,8 @@ class MoveUnmaker {
 
     private static void addRelevantPieceToSquare(Chessboard board, int pieceToAdd, int placeToAddIt){
         long placeToAddPiece = newPieceOnSquare(placeToAddIt);
+
+        board.pieces[pieceToAdd / 7][pieceToAdd % 7] |= placeToAddPiece;
 
         switch (pieceToAdd) {
             case 1:

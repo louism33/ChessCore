@@ -29,6 +29,10 @@ class MakeMoveSpecial {
 
                 board.setWhiteKing(board.getWhiteKing() | newKing);
                 board.setWhiteRooks(board.getWhiteRooks() | newRook);
+
+                board.pieces[WHITE][ROOK] |= newRook;
+                board.pieces[WHITE][KING] |= newKing;
+
                 board.setWhiteCanCastleK(false);
                 board.setWhiteCanCastleQ(false);
                 break;
@@ -43,6 +47,10 @@ class MakeMoveSpecial {
 
                 board.setBlackKing(board.getBlackKing() | newKing);
                 board.setBlackRooks(board.getBlackRooks() | newRook);
+
+                board.pieces[BLACK][ROOK] |= newRook;
+                board.pieces[BLACK][KING] |= newKing;
+
                 board.setBlackCanCastleK(false);
                 board.setBlackCanCastleQ(false);
                 KING = BLACK_KING;
@@ -99,7 +107,9 @@ class MakeMoveSpecial {
         long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 
         removePieces(board, sourcePiece, destinationPiece, move);
-        
+
+        board.pieces[board.turn][MoveParser.whichPromotion(move) + 2] |= destinationPiece;
+
         if (board.isWhiteTurn()){
             switch (move & WHICH_PROMOTION) {
                 case KNIGHT_PROMOTION_MASK:
@@ -140,13 +150,14 @@ class MakeMoveSpecial {
         long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
         Assert.assertEquals(0, (destinationPiece & board.allPieces()));
-        Assert.assertTrue( ((sourcePiece & board.getWhitePawns()) != 0) 
+        Assert.assertTrue( ((sourcePiece & board.getWhitePawns()) != 0)
                 || ((sourcePiece & board.getBlackPawns()) != 0) );
-        
+
         if (board.isWhiteTurn()) {
             removePiecesFrom(board, sourcePiece, WHITE_PAWN);
             removePiecesFrom(board, destinationPiece >>> 8, BLACK_PAWN);
             board.setWhitePawns(board.getWhitePawns() | destinationPiece);
+            board.pieces[WHITE][PAWN] |= destinationPiece;
         }
         else {
             removePiecesFrom(board, sourcePiece, BLACK_PAWN);

@@ -114,6 +114,8 @@ class MoveGeneratorRegular {
                                           long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                           long enemies, long friends, long allPieces){
 
+        board.pieces[white ? WHITE : BLACK][KING] = 0;
+        
         if (white){
             board.setWhiteKing(0);
         }
@@ -125,6 +127,8 @@ class MoveGeneratorRegular {
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, friends, board.allPieces());
+
+        board.pieces[white ? WHITE : BLACK][KING] = myKing;
 
         if (white){
             board.setWhiteKing(myKing);
