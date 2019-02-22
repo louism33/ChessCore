@@ -1,5 +1,9 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
+import java.util.Arrays;
+
 import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
@@ -13,9 +17,14 @@ import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
 
 class MoveGeneratorMaster {
 
-    static int[] generateLegalMoves(Chessboard board, boolean white) {
-        int[] moves = new int[128];
+    static void generateLegalMoves(Chessboard board, int[] moves, boolean white) {
+//        moves = new int[128];
 
+//        System.out.println(Arrays.toString(moves));
+//        MoveParser.printMoves(moves);
+        
+        Assert.assertNotNull(moves);
+        
         long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
         long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
         long friends, enemies;
@@ -70,7 +79,7 @@ class MoveGeneratorMaster {
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     enemies, friends, allPieces);
-            return moves;
+            return;
         }
 
         long pinnedPieces = whichPiecesArePinned(board, white, myKing,
@@ -88,7 +97,7 @@ class MoveGeneratorMaster {
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     enemies, friends, allPieces);
 
-            return moves;
+            return;
         }
         
         board.inCheckRecorder = false;
@@ -98,7 +107,7 @@ class MoveGeneratorMaster {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, friends, allPieces);
 
-        return moves;
+        return;
     }
 
     private static void addNotInCheckMoves(int[] moves, Chessboard board, boolean whiteTurn, long pinnedPieces,

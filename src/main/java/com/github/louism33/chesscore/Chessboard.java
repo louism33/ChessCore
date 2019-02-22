@@ -15,8 +15,8 @@ public class Chessboard implements Cloneable{
 
     private ChessboardDetails details;
 
-    private int fiftyMoveCounter = 0;
 
+    private int fiftyMoveCounter = 0;
     public int getFiftyMoveCounter() {
         return fiftyMoveCounter;
     }
@@ -25,21 +25,27 @@ public class Chessboard implements Cloneable{
         this.fiftyMoveCounter = fiftyMoveCounter;
     }
 
+
     private int index = 0;
     private int zobristIndex = 0;
-    
+
     private long zobristHash;
     long moveStackData;
 
-    private final int arrayLength = 128;
+    private final int maxDepthAndArrayLength = 64;
+    private final int maxNumberOfMovesInAnyPosition = 128;
+
+    int[] moves = new int[maxNumberOfMovesInAnyPosition];
     
-    private long[] zobristHashStack = new long[arrayLength];
-    private long[] moveStackArray = new long[arrayLength];
+    private int[][] legalMoveStack = new int[maxDepthAndArrayLength][maxNumberOfMovesInAnyPosition];
+    
+    private long[] zobristHashStack = new long[maxDepthAndArrayLength];
+    private long[] pastMoveStackArray = new long[maxDepthAndArrayLength];
     
     public boolean inCheckRecorder;
     public long pinnedPieces;
-    public long[] pinnedPiecesArray = new long[arrayLength];
-    public boolean[] checkStack = new boolean[arrayLength];
+    public long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
+    public boolean[] checkStack = new boolean[maxDepthAndArrayLength];
     
     
     /**
@@ -75,7 +81,7 @@ public class Chessboard implements Cloneable{
     public Chessboard(Chessboard board) {
         this.details = new ChessboardDetails();
 
-        System.arraycopy(board.moveStackArray, 0, this.moveStackArray, 0, board.moveStackArray.length);
+        System.arraycopy(board.pastMoveStackArray, 0, this.pastMoveStackArray, 0, board.pastMoveStackArray.length);
         System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
         
         System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
@@ -130,42 +136,38 @@ public class Chessboard implements Cloneable{
      * Only make moves that are not 0!
      * Use @see com.github.louism33.chesscore.MoveParser.class for methods to interpret the move object
      */
-    public int[] generateLegalMoves(){
-        return MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn());
-    }
+    public int[] generateLegalMoves() {
+        Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
 
-    /** 
-     * legal chess move generation
-     * @return an array of exactly the right length populated with fully legal chess moves. 
-     * Use @see com.github.louism33.chesscore.MoveParser for methods to interpret the move object
-     */
-    public int[] generateCleanLegalMoves(){
-        return Arrays.stream(MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn()))
-                .filter(x -> x != 0)
-                .toArray();
-    }
+        MoveGeneratorMaster.generateLegalMoves(this,
+                this.legalMoveStack[legalMoveStackIndex], isWhiteTurn());
 
-    /**
-     * Updates the board with the move you want. Does not flip turn!
-     * @param move the non-0 move you want to make of this board.
-     */
-    public void makeMove(int move){
-        makeMoveAndHashUpdate(this, move);
+        return this.legalMoveStack[legalMoveStackIndex];
     }
-
     /**
      * Updates the board with the move you want.
      * @param move the non-0 move you want to make of this board.
      */
     public void makeMoveAndFlipTurn(int move){
+        this.rotateMoveIndexUp();
         makeMoveAndHashUpdate(this, move);
         flipTurn();
+        
     }
 
+    private void rotateMoveIndexUp(){
+        this.legalMoveStackIndex = (this.legalMoveStackIndex + 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+    }
+
+
+    private void rotateMoveIndexDown(){
+        this.legalMoveStackIndex = (this.legalMoveStackIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+    }
     /**
      * Completely undoes the last made move, and changes the side to play
      */
     public void unMakeMoveAndFlipTurn(){
+        this.rotateMoveIndexDown();
         UnMakeMoveAndHashUpdate(this);
     }
 
@@ -841,6 +843,34 @@ public class Chessboard implements Cloneable{
         this.zobristHash = zobristHash;
     }
 
+
+    void masterStackPush() {
+        this.checkStackArrayPush();
+        this.pinStackArrayPush();
+        this.zobristStackArrayPush(this.getBoardHash());
+    }
+    
+    void masterStackPop(){
+        this.checkStackArrayPop();
+        this.pinStackArrayPop();
+        this.zobristStackArrayPop();
+        this.moveStackArrayPop();
+    }
+    
+    private int legalMoveStackIndex = 0;
+    void legalMoveStackPush(){
+        this.legalMoveStack[legalMoveStackIndex] = this.moves;
+        legalMoveStackIndex++;
+    }
+    
+    void legalMoveStackPop(){
+        if (legalMoveStackIndex < 1) {
+            throw new RuntimeException();
+        }
+        legalMoveStackIndex--;
+        this.moves = this.legalMoveStack[legalMoveStackIndex];
+    }
+    
     void zobristStackArrayPush(long l){
         zobristHashStack[zobristIndex] = l;
 
@@ -872,7 +902,7 @@ public class Chessboard implements Cloneable{
         checkIndex++;
     }
 
-    void checkStackArrayPop(){
+    private void checkStackArrayPop(){
         if (checkIndex < 1){
             throw new RuntimeException("popping an empty array");
         }       
@@ -889,7 +919,7 @@ public class Chessboard implements Cloneable{
         pinIndex++;
     }
 
-    void pinStackArrayPop(){
+    private void pinStackArrayPop(){
         if (pinIndex < 1){
             throw new RuntimeException("popping an empty array");
         } 
@@ -901,29 +931,29 @@ public class Chessboard implements Cloneable{
     
     
     void moveStackArrayPush(long l){
-        moveStackArray[index] = l;
+        pastMoveStackArray[index] = l;
 
         index++;
     }
 
-    void moveStackArrayPop(){
+    private void moveStackArrayPop(){
         if (index < 1){
             throw new RuntimeException("popping an empty array");
         }
-        moveStackArray[index] = 0;
+        pastMoveStackArray[index] = 0;
         index--;
-        moveStackData = moveStackArray[index];
+        moveStackData = pastMoveStackArray[index];
     }
 
     long moveStackArrayPeek(){
         if (index < 1){
             throw new RuntimeException("peeking at empty array");
         }
-        return moveStackArray[index-1];
+        return pastMoveStackArray[index-1];
     }
     
     boolean hasPreviousMove(){
-        return index > 0 && moveStackArray[index - 1] != 0;
+        return index > 0 && pastMoveStackArray[index - 1] != 0;
     }
 
     public long[] getZobristHashStack() {

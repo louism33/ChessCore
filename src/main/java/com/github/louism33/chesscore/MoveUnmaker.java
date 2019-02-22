@@ -18,11 +18,8 @@ class MoveUnmaker {
         
         Assert.assertTrue(board.hasPreviousMove());
 
-        board.checkStackArrayPop();
-        board.pinStackArrayPop();
-        board.zobristStackArrayPop();
-        board.moveStackArrayPop();
-
+        board.masterStackPop();
+        
         long pop = board.moveStackData;
 
         if (StackDataUtil.getMove(pop) == 0){

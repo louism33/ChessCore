@@ -10,17 +10,13 @@ class MakeMoveAndHashUpdate {
     static void makeMoveAndHashUpdate(Chessboard board, int move){
         Assert.assertNotEquals(move, 0);
 
-        
-        board.checkStackArrayPush();
-        board.pinStackArrayPush();
-        
-        board.zobristStackArrayPush(board.getBoardHash());
+        board.masterStackPush();
         
         board.setBoardHash(ZobristHashUtil.updateHashPreMove(board, board.getBoardHash(), move));
         
         
         makeMoveMaster(board, move);
-        
+
         board.setBoardHash(ZobristHashUtil.updateHashPostMove(board, board.getBoardHash(), move));
     }
 
@@ -31,10 +27,7 @@ class MakeMoveAndHashUpdate {
 
     static void makeNullMoveAndHashUpdate(Chessboard board){
 
-        board.zobristStackArrayPush(board.getBoardHash());
-
-        board.checkStackArrayPush();
-        board.pinStackArrayPush();
+        board.masterStackPush();
         
         if (board.hasPreviousMove()){
             board.setBoardHash(ZobristHashUtil.updateWithEPFlags(board, board.getBoardHash()));

@@ -142,6 +142,11 @@ final class ZobristHashUtil {
         int destinationSquareIndex = MoveParser.getDestinationIndex(move);
         int sourcePieceIdentifier = whichIntPieceOnSquare(board, newPieceOnSquare(sourceSquare)) - 1;
 
+//        System.out.println("pre");
+//        System.out.println(board);
+//        System.out.println(MoveParser.toString(move));
+        
+        
         boardHash ^= zobristHashPieces[sourceSquare][sourcePieceIdentifier];
         long destinationZH = zobristHashPieces[destinationSquareIndex][sourcePieceIdentifier];
 
