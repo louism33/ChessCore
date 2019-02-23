@@ -5,6 +5,7 @@ import org.junit.Assert;
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MakeMoveRegular.makeRegularMove;
+import static com.github.louism33.chesscore.MakeMoveRegular.whichIntPieceOnSquare;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePiecesFrom;
 import static com.github.louism33.chesscore.MoveParser.*;
 import static com.github.louism33.chesscore.StackDataUtil.*;
@@ -30,7 +31,7 @@ class MoveUnmaker {
 
         int pieceToMoveBackIndex = getDestinationIndex(StackDataUtil.getMove(pop));
         int squareToMoveBackTo = getSourceIndex(StackDataUtil.getMove(pop));
-        int basicReversedMove = buildMove(board, pieceToMoveBackIndex, squareToMoveBackTo);
+        int basicReversedMove = buildBetterMove(pieceToMoveBackIndex, whichIntPieceOnSquare(board, newPieceOnSquare(pieceToMoveBackIndex)), squareToMoveBackTo, NO_PIECE);
 
         switch (StackDataUtil.getSpecialMove(pop)) {
             //double pawn push

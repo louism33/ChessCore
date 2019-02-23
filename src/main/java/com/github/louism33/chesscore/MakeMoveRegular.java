@@ -14,7 +14,7 @@ class MakeMoveRegular {
 
     static void makeMoveMaster(Chessboard board, int move) {
         if (move == 0){
-            board.moveStackArrayPush(buildStackData(0, board, NULL_MOVE));
+            board.moveStackArrayPush(buildStackDataBetter(0, board.turn, board.getFiftyMoveCounter(), board.castlingRights, NULL_MOVE));
             return;
         }
 
@@ -23,42 +23,42 @@ class MakeMoveRegular {
         if (MoveParser.isSpecialMove(move)) {
             switch (move & SPECIAL_MOVE_MASK) {
                 case CASTLING_MASK:
-                    board.moveStackArrayPush(buildStackData(move, board, CASTLING));
+                    board.moveStackArrayPush(buildStackDataBetter(move, board.turn, board.getFiftyMoveCounter(), board.castlingRights, CASTLING));
                     makeCastlingMove(board, move);
                     break;
 
                 case ENPASSANT_MASK:
-                    board.moveStackArrayPush(buildStackData(move, board, ENPASSANTCAPTURE));
+                    board.moveStackArrayPush(buildStackDataBetter(move, board.turn, board.getFiftyMoveCounter(), board.castlingRights, ENPASSANTCAPTURE));
                     makeEnPassantMove(board, move);
                     break;
 
                 case PROMOTION_MASK:
-                    board.moveStackArrayPush(buildStackData(move, board, PROMOTION));
-                    makePromotingMove(board, move);
+                    board.moveStackArrayPush(buildStackDataBetter(move, board.turn, board.getFiftyMoveCounter(), board.castlingRights, PROMOTION));
+                    makePromotingMove(board.pieces, board.turn, move);
                     break;
             }
         }
 
         else {
             if (MoveParser.isCaptureMove(move)) {
-                board.moveStackArrayPush(buildStackData(move, board, BASICCAPTURE));
+                board.moveStackArrayPush(buildStackDataBetter(move, board.turn, board.getFiftyMoveCounter(), board.castlingRights, BASICCAPTURE));
             }
 
-            else if (enPassantPossibility(board, move)){
+            else if (enPassantPossibility(board.turn, board.pieces[board.turn][PAWN], move)){
                 int whichFile = 8 - MoveParser.getSourceIndex(move) % 8;
-                board.moveStackArrayPush(buildStackData(move, board, ENPASSANTVICTIM, whichFile));
+                board.moveStackArrayPush(buildStackDataBetter(move, board.turn, board.getFiftyMoveCounter(), board.castlingRights, ENPASSANTVICTIM, whichFile));
             }
 
             else {
-                switch (whichIntPieceOnSquare(board, newPieceOnSquare(MoveParser.getSourceIndex(move)))){
-                    case 1: // white pawn
-                    case 7: // black pawn
-                        board.moveStackArrayPush(buildStackData(move, board, BASICLOUDPUSH));
+                switch (Piece.pieceOnSquareInt(board, newPieceOnSquare(MoveParser.getSourceIndex(move)))){
+                    case WHITE_PAWN: // white pawn
+                    case BLACK_PAWN: // black pawn
+                        board.moveStackArrayPush(buildStackDataBetter(move, board.turn, board.getFiftyMoveCounter(), board.castlingRights, BASICLOUDPUSH));
                         break;
                     default:
                         // increment 50 move rule
                         resetFifty = false;
-                        board.moveStackArrayPush(buildStackData(move, board, BASICQUIETPUSH));
+                        board.moveStackArrayPush(buildStackDataBetter(move, board.turn, board.getFiftyMoveCounter(), board.castlingRights, BASICQUIETPUSH));
                 }   
 
             } 
@@ -77,19 +77,18 @@ class MakeMoveRegular {
         castleFlagManager(board, move);
     }
     
-    private static boolean enPassantPossibility(Chessboard board, int move){
+    private static boolean enPassantPossibility(int turn, long myPawns, int move){
         // determine if flag should be added to enable EP on next turn
         long sourceSquare = newPieceOnSquare(MoveParser.getSourceIndex(move));
         long destinationSquare = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-        long HOME_RANK = PENULTIMATE_RANKS[1 - board.turn];
-        long MY_PAWNS = board.pieces[board.turn][PAWN];
-        long enPassantPossibilityRank = ENPASSANT_RANK[board.turn];
+        long HOME_RANK = PENULTIMATE_RANKS[1 - turn];
+        long enPassantPossibilityRank = ENPASSANT_RANK[turn];
 
         if ((sourceSquare & HOME_RANK) == 0){
             return false;
         }
 
-        if ((sourceSquare & MY_PAWNS) == 0){
+        if ((sourceSquare & myPawns) == 0){
             return false;
         }
         return (destinationSquare & enPassantPossibilityRank) != 0;
@@ -103,7 +102,7 @@ class MakeMoveRegular {
         final long sourcePiece = newPieceOnSquare(getSourceIndex(move));
         final long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 
-        removePieces(board, sourcePiece, destinationPiece, move);
+        removePieces(board.pieces, sourcePiece, destinationPiece, move);
 
         addPieceTo(board, destinationPiece, MoveParser.getMovingPieceInt(move));
     }

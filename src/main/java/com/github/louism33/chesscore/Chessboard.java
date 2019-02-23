@@ -12,8 +12,7 @@ import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.*;
 import static com.github.louism33.chesscore.MakeMoveRegular.makeMoveMaster;
 import static com.github.louism33.chesscore.MoveUnmaker.unMakeMoveMaster;
-import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
-import static com.github.louism33.chesscore.StackDataUtil.buildStackData;
+import static com.github.louism33.chesscore.StackDataUtil.*;
 
 public class Chessboard implements Cloneable{
 
@@ -131,7 +130,6 @@ public class Chessboard implements Cloneable{
     /**
      * legal chess move generation
      * @return an array of length 128 populated with fully legal chess moves, and 0s. 
-     * Only make moves that are not 0!
      * Use @see com.github.louism33.chesscore.MoveParser.class for methods to interpret the move object
      */
     public int[] generateLegalMoves() {
@@ -586,7 +584,8 @@ public class Chessboard implements Cloneable{
             default:
                 return;
         }
-        final long item = buildStackData(0, this, ENPASSANTVICTIM, epFlag);
+//        final long item = buildStackData(0, this, ENPASSANTVICTIM, epFlag);
+        final long item = buildStackDataBetter(0, turn, fiftyMoveCounter, castlingRights, ENPASSANTVICTIM, epFlag);
         this.moveStackArrayPush(item);
     }
 

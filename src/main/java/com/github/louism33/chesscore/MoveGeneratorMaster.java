@@ -42,7 +42,6 @@ class MoveGeneratorMaster {
 
         friends = board.getPieces(turn);
         enemies = board.getPieces(1 - turn);
-        
 
         long allPieces = friends | enemies;
 

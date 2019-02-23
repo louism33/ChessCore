@@ -97,13 +97,13 @@ class MakeMoveSpecial {
         }
     }
 
-    static void makePromotingMove(Chessboard board, int move){
+    static void makePromotingMove(long[][] pieces, int turn, int move){
         long sourcePiece = newPieceOnSquare(getSourceIndex(move));
         long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
 
-        removePieces(board, sourcePiece, destinationPiece, move);
+        removePieces(pieces, sourcePiece, destinationPiece, move);
 
-        board.pieces[board.turn][MoveParser.whichPromotion(move) + 2] |= destinationPiece;
+        pieces[turn][MoveParser.whichPromotion(move) + 2] |= destinationPiece;
 
     }
 

@@ -21,11 +21,6 @@ public class MoveParser {
     00000000
      */
 
-    
-    
-    public static int newMove(Chessboard board, String algebraicNotation){
-        return MoveParserFromAN.buildMoveFromAN(board, algebraicNotation);
-    }
 
     public static int numberOfRealMoves(int[] moves){
         int index = 0;
@@ -40,10 +35,6 @@ public class MoveParser {
         System.out.println(Arrays.toString(MoveParser.toString(moves)));
     }
     
-    public static int copyMove(int move){
-        return move;
-    }
-
     static int buildBetterMove(int s, int whichSourcePiece, int d, int victimPiece) {
         Assert.assertTrue(s >= 0 && s < 64 && d >= 0 && d < 64);
 
@@ -60,81 +51,8 @@ public class MoveParser {
 
         return move;
     }
-    
-    static int buildMove(Chessboard board, int s, int d) {
-        Assert.assertTrue(s >= 0 && s < 64 && d >= 0 && d < 64);
-        
-        int move = 0;
-        move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
-        move |= (d & DESTINATION_MASK);
-        
-        move |= (MoveConstants.SOURCE_PIECE_MASK 
-                | (pieceOnSquareInt(board, newPieceOnSquare(s)))) << MoveConstants.SOURCE_PIECE_OFFSET;
-        
-        return move;
-    }
 
-    public static String[] toString(List<Integer> moves){
-        final int number = moves.size();
-        String[] realMoves = new String[number];
-        for (int i = 0; i < number; i ++){
-            realMoves[i] = prettyMove(moves.get(i));
-        }
-        return realMoves;
-    }
 
-    public static String[] toString(int[] moves){
-        final int number = numberOfRealMoves(moves);
-        String[] realMoves = new String[number];
-        for (int i = 0; i < number; i ++){
-            realMoves[i] = prettyMove(moves[i]);
-        }
-        return realMoves;
-    }
-    
-    public static String toString(int move){
-        return move == 0 ? "NULL_MOVE" : prettyMove(move);
-    }
-
-    static int moveFromSourceDestinationSquareCaptureSecure(Chessboard board, Piece movingPiece, 
-                                                            long file, Square source, Square destinationIndex, boolean capture) {
-        if (source == null){
-            int sourceIndex = -1;
-            
-            int[] moves = board.generateLegalMoves();
-            for (int i = 0; i < moves.length; i++){
-                int move = moves[i];
-                if (move == 0){
-                    break;
-                }
-                if ((MoveParser.getSourceLong(move) & file) == 0){
-                    continue;
-                }
-                
-                if (MoveParser.getDestinationIndex(move) == destinationIndex.ordinal()){
-                    if (movingPiece != null && movingPiece != Piece.NO_PIECE){
-                        if (MoveParser.getMovingPiece(move) != movingPiece){
-                            continue;
-                        }
-                    }
-                    sourceIndex = MoveParser.getSourceIndex(move);
-                }
-            }
-            if (sourceIndex == -1){
-                throw new RuntimeException("Could not parse Algebraic notation move");
-            }
-            return buildMove(board, sourceIndex, destinationIndex.ordinal())
-                    | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
-        }
-        
-        return buildMove(board, source.ordinal(), destinationIndex.ordinal())
-                | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
-    }
-    
-    private static int capturePieceMask(Chessboard board, int destinationIndex) {
-        return (pieceOnSquareInt(board, newPieceOnSquare(destinationIndex))) << MoveConstants.VICTIM_PIECE_OFFSET;
-    }
-    
     static int moveFromSourceDestinationCaptureBetter(int source, int sourcePiece,
                                                       int destinationIndex, int victimPiece) {
         
@@ -209,14 +127,6 @@ public class MoveParser {
         return values()[indexOfSourcePiece];
     }
 
-    public static Piece getVictimPiece(int move){
-        if (!isCaptureMove(move)) {
-            return Piece.NO_PIECE;
-        }
-        final int indexOfVictimPiece = (move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
-        return values()[indexOfVictimPiece];
-    }
-
     public static int getMovingPieceInt(int move){
         return (move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
     }
@@ -239,13 +149,6 @@ public class MoveParser {
                 & (getDestinationLong(move) & BoardConstants.RANK_THREE) != 0;
     }
     
-    public static boolean equalsANMove(int move, int compareMove){
-        int destinationIndexMove = getDestinationIndex(move);
-        int destinationIndexCompare = getDestinationIndex(compareMove);
-        
-        return destinationIndexMove == destinationIndexCompare;
-    }
-
     public static boolean verifyMoveCheap(Chessboard board, int move){
         long sourceLong = getSourceLong(move);
         if ((sourceLong & board.allPieces()) == 0){
@@ -273,5 +176,27 @@ public class MoveParser {
         }
         return false;
     }
-    
+
+
+    public static String[] toString(List<Integer> moves){
+        final int number = moves.size();
+        String[] realMoves = new String[number];
+        for (int i = 0; i < number; i ++){
+            realMoves[i] = prettyMove(moves.get(i));
+        }
+        return realMoves;
+    }
+
+    public static String[] toString(int[] moves){
+        final int number = numberOfRealMoves(moves);
+        String[] realMoves = new String[number];
+        for (int i = 0; i < number; i ++){
+            realMoves[i] = prettyMove(moves[i]);
+        }
+        return realMoves;
+    }
+
+    public static String toString(int move){
+        return move == 0 ? "NULL_MOVE" : prettyMove(move);
+    }
 }

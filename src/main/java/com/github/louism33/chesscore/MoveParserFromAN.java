@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.extractFileFromStack;
-import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationSquareCaptureSecure;
+import static com.github.louism33.utils.Parser.moveFromSourceDestinationSquareCaptureSecure;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 
 public class MoveParserFromAN {

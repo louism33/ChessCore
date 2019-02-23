@@ -4,13 +4,13 @@ import org.junit.Assert;
 
 class MoveMakingUtilities {
 
-    static void removePieces(Chessboard board, long sourceSquare, long victimPieceSquare, int move){
+    static void removePieces(long[][] pieces, long sourceSquare, long victimPieceSquare, int move){
         int movingPiece = MoveParser.getMovingPieceInt(move);
 
         Assert.assertTrue(movingPiece > 0);
         Assert.assertTrue(movingPiece < 13);
         
-        removePiecesFrom(board, sourceSquare, movingPiece);
+        togglePiecesFrom(pieces, sourceSquare, movingPiece);
 
         if (victimPieceSquare == 0) {
             return;
@@ -24,10 +24,14 @@ class MoveMakingUtilities {
             return;
         }
         
-        removePiecesFrom(board, victimPieceSquare, victimPiece);
+        togglePiecesFrom(pieces, victimPieceSquare, victimPiece);
     }
 
 
+    static void togglePiecesFrom (long[][] pieces, long removeThis, int thesePieces){
+        pieces[thesePieces / 7][thesePieces < 7 ? thesePieces : thesePieces - 6] ^= removeThis;
+    }
+    
     static void removePiecesFrom (Chessboard board, long removeThis, int thesePieces){
         board.pieces[thesePieces / 7][thesePieces < 7 ? thesePieces : thesePieces - 6] ^= removeThis;
     }
