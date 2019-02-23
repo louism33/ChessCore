@@ -12,7 +12,7 @@ class MoveGeneratorPseudo {
 
         addKnightMoves(moves, board, ignoreThesePieces, (legalPushes | legalCaptures), 
                 myKnights);
-        addSlidingMoves(moves, board, whiteTurn, ignoreThesePieces, (legalPushes | legalCaptures),
+        addSlidingMoves(moves, board, ignoreThesePieces, (legalPushes | legalCaptures),
                 myBishops, myRooks, myQueens, allPieces);
         addPawnPushes(moves, board, whiteTurn, ignoreThesePieces, legalCaptures, legalPushes, 
                 allPieces);

@@ -4,7 +4,8 @@ import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.ALL_COLOUR_PIECES;
 import static com.github.louism33.chesscore.BoardConstants.NO_PIECE;
 import static com.github.louism33.chesscore.MoveConstants.*;
-import static com.github.louism33.chesscore.MoveParser.*;
+import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationCaptureBetter;
+import static com.github.louism33.chesscore.MoveParser.numberOfRealMoves;
 import static com.github.louism33.chesscore.Piece.pieceOnSquareInt;
 
 class MoveAdder {

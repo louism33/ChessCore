@@ -4,7 +4,6 @@ import org.junit.Assert;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePiecesFrom;
 import static com.github.louism33.chesscore.MoveParser.getDestinationIndex;
@@ -27,14 +26,9 @@ class MakeMoveSpecial {
                 newRook = newPieceOnSquare(newRookIndex - 2);
                 newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
-                board.setWhiteKing(board.pieces[WHITE][KING] | newKing);
-                board.setWhiteRooks(board.pieces[WHITE][ROOK] | newRook);
-
                 board.pieces[WHITE][ROOK] |= newRook;
                 board.pieces[WHITE][KING] |= newKing;
 
-                board.setWhiteCanCastleK(false);
-                board.setWhiteCanCastleQ(false);
                 board.castlingRights &= castlingRightsMask[WHITE][K];
                 board.castlingRights &= castlingRightsMask[WHITE][Q];
                 
@@ -48,14 +42,9 @@ class MakeMoveSpecial {
                 newRook = newPieceOnSquare(newRookIndex - 2);
                 newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
-                board.setBlackKing(board.pieces[BLACK][KING] | newKing);
-                board.setBlackRooks(board.pieces[BLACK][ROOK] | newRook);
-
                 board.pieces[BLACK][ROOK] |= newRook;
                 board.pieces[BLACK][KING] |= newKing;
 
-                board.setBlackCanCastleK(false);
-                board.setBlackCanCastleQ(false);
                 board.castlingRights &= castlingRightsMask[BLACK][K];
                 board.castlingRights &= castlingRightsMask[BLACK][Q];
                 
@@ -72,49 +61,37 @@ class MakeMoveSpecial {
         // disable relevant castle flag whenever a piece moves into the relevant square.
         switch (MoveParser.getSourceIndex(move)) {
             case 0:
-                board.setWhiteCanCastleK(false);
                 board.castlingRights &= castlingRightsMask[WHITE][K];
                 break;
             case 3:
-                board.setWhiteCanCastleK(false);
                 board.castlingRights &= castlingRightsMask[WHITE][K];
             case 7:
-                board.setWhiteCanCastleQ(false);
                 board.castlingRights &= castlingRightsMask[WHITE][Q];
                 break;
             case 56:
-                board.setBlackCanCastleK(false);
                 board.castlingRights &= castlingRightsMask[BLACK][K];
                 break;
             case 59:
-                board.setBlackCanCastleK(false);
                 board.castlingRights &= castlingRightsMask[BLACK][K];
             case 63:
-                board.setBlackCanCastleQ(false);
                 board.castlingRights &= castlingRightsMask[BLACK][Q];
                 break;
         }
         switch (MoveParser.getDestinationIndex(move)) {
             case 0:
-                board.setWhiteCanCastleK(false);
                 board.castlingRights &= castlingRightsMask[WHITE][K];
                 break;
             case 3:
-                board.setWhiteCanCastleK(false);
                 board.castlingRights &= castlingRightsMask[WHITE][K];
             case 7:
-                board.setWhiteCanCastleQ(false);
                 board.castlingRights &= castlingRightsMask[WHITE][Q];
                 break;
             case 56:
-                board.setBlackCanCastleK(false);
                 board.castlingRights &= castlingRightsMask[BLACK][K];
                 break;
             case 59:
-                board.setBlackCanCastleK(false);
                 board.castlingRights &= castlingRightsMask[BLACK][K];
             case 63:
-                board.setBlackCanCastleQ(false);
                 board.castlingRights &= castlingRightsMask[BLACK][Q];
                 break;
         }
@@ -128,39 +105,6 @@ class MakeMoveSpecial {
 
         board.pieces[board.turn][MoveParser.whichPromotion(move) + 2] |= destinationPiece;
 
-        if (board.isWhiteTurn()){
-            switch (move & WHICH_PROMOTION) {
-                case KNIGHT_PROMOTION_MASK:
-                    board.setWhiteKnights(board.pieces[WHITE][KNIGHT] | destinationPiece);
-                    break;
-                case BISHOP_PROMOTION_MASK:
-                    board.setWhiteBishops(board.pieces[WHITE][BISHOP] | destinationPiece);
-                    break;
-                case ROOK_PROMOTION_MASK:
-                    board.setWhiteRooks(board.pieces[WHITE][ROOK] | destinationPiece);
-                    break;
-                case QUEEN_PROMOTION_MASK:
-                    board.setWhiteQueen(board.pieces[WHITE][QUEEN] | destinationPiece);
-                    break;
-            }
-        }
-
-        else{
-            switch (move & WHICH_PROMOTION) {
-                case KNIGHT_PROMOTION_MASK:
-                    board.setBlackKnights(board.pieces[BLACK][KNIGHT] | destinationPiece);
-                    break;
-                case BISHOP_PROMOTION_MASK:
-                    board.setBlackBishops(board.pieces[BLACK][BISHOP] | destinationPiece);
-                    break;
-                case ROOK_PROMOTION_MASK:
-                    board.setBlackRooks(board.pieces[BLACK][ROOK] | destinationPiece);
-                    break;
-                case QUEEN_PROMOTION_MASK:
-                    board.setBlackQueen(board.pieces[BLACK][QUEEN] | destinationPiece);
-                    break;
-            }
-        }
     }
 
     static void makeEnPassantMove(Chessboard board, int move){
@@ -176,13 +120,11 @@ class MakeMoveSpecial {
             removePiecesFrom(board, destinationPiece >>> 8, BLACK_PAWN);
 
             long p = board.pieces[WHITE][PAWN];
-            board.setWhitePawns(p | destinationPiece);
             board.pieces[WHITE][PAWN] |= destinationPiece;
         }
         else {
             removePiecesFrom(board, sourcePiece, BLACK_PAWN);
             removePiecesFrom(board, destinationPiece << 8, WHITE_PAWN);
-            board.setBlackPawns(board.pieces[BLACK][PAWN] | destinationPiece);
             board.pieces[BLACK][PAWN] |= destinationPiece;
         }
     }

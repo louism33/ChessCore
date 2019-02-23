@@ -11,17 +11,6 @@ class Setup {
 
     public static void main(String[] args){
         setup(false);
-
-//        char[] s = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
-//        int z = 0;
-//        for (int i = 1; i <= 8; i++) {
-//            for (int i1 = s.length - 1; i1 >= 0; i1--) {
-//                char c = s[i1];
-//                System.out.print(c + "" + i + " = " + z + ", ");
-//                z++;
-//            }
-//            System.out.println();
-//        }
     }
 
     static void setup(boolean force){

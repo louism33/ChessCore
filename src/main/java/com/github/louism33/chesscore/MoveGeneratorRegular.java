@@ -32,7 +32,6 @@ class MoveGeneratorRegular {
                 
                 final long pawnCaptures = singlePawnCaptures(pawn, white, legalCaptures);
                 
-//                addMovesFromAttackTableMaster(moves, mySquares | pawnCaptures, pawnIndex, board);
                 addMovesFromAttackTableMasterBetter(moves, mySquares | pawnCaptures, 
                         pawnIndex, board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board);
             }
@@ -55,10 +54,10 @@ class MoveGeneratorRegular {
         }
     }
 
-    static void addSlidingMoves (int[] moves, Chessboard board, boolean white,
-                                 long ignoreThesePieces, long mask,
-                                 long myBishops, long myRooks, long myQueens,
-                                 long allPieces){
+    static void addSlidingMoves(int[] moves, Chessboard board,
+                                long ignoreThesePieces, long mask,
+                                long myBishops, long myRooks, long myQueens,
+                                long allPieces){
         while (myBishops != 0){
             long bishop = getFirstPiece(myBishops);
             if ((bishop & ignoreThesePieces) == 0) {
@@ -121,25 +120,11 @@ class MoveGeneratorRegular {
 
         board.pieces[white ? WHITE : BLACK][KING] = 0;
         
-        if (white){
-            board.setWhiteKing(0);
-        }
-        else {
-            board.setBlackKing(0);
-        }
-
         long kingDangerSquares = generatePseudoCaptureTable(!white, 0, UNIVERSE, UNIVERSE,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 board.allPieces());
 
         board.pieces[white ? WHITE : BLACK][KING] = myKing;
-
-        if (white){
-            board.setWhiteKing(myKing);
-        }
-        else {
-            board.setBlackKing(myKing);
-        }
 
         return kingDangerSquares;
     }

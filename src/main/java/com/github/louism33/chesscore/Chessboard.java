@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -8,13 +10,12 @@ import java.util.regex.Pattern;
 
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.*;
-import static com.github.louism33.chesscore.MakeMoveAndHashUpdate.*;
+import static com.github.louism33.chesscore.MakeMoveRegular.makeMoveMaster;
+import static com.github.louism33.chesscore.MoveUnmaker.unMakeMoveMaster;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 import static com.github.louism33.chesscore.StackDataUtil.buildStackData;
 
 public class Chessboard implements Cloneable{
-
-    private ChessboardDetails details;
 
     long[][] pieces = new long[2][7];
     // consider int[64] for all pieces + location
@@ -23,7 +24,7 @@ public class Chessboard implements Cloneable{
     castling rights bits:
     BK BA WK WQ
      */
-    int castlingRights = 0xf; 
+    int castlingRights = 0xf;
 
     private int fiftyMoveCounter = 0;
     public int getFiftyMoveCounter() {
@@ -37,34 +38,33 @@ public class Chessboard implements Cloneable{
     private int index = 0;
     private int zobristIndex = 0;
 
-    private long zobristHash;
+    long zobristHash;
     long moveStackData;
 
     private final int maxDepthAndArrayLength = 64;
     private final int maxNumberOfMovesInAnyPosition = 128;
 
     int[] moves = new int[maxNumberOfMovesInAnyPosition];
-    
+
     private int[][] legalMoveStack = new int[maxDepthAndArrayLength][maxNumberOfMovesInAnyPosition];
-    
+
     private long[] zobristHashStack = new long[maxDepthAndArrayLength];
     private long[] pastMoveStackArray = new long[maxDepthAndArrayLength];
-    
+
     public boolean inCheckRecorder;
     public long pinnedPieces;
     public long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
     public boolean[] checkStack = new boolean[maxDepthAndArrayLength];
-    
-    
+
+
     /**
      * A new Chessboard in the starting position, white to play.
      */
     public Chessboard() {
         castlingRights = 0xf;
-        init();
 
-        
-        makeZobrist();
+        ZobristHashUtil.boardToHash(this);
+
         Setup.init(false);
 
         System.arraycopy(INITIAL_PIECES[BLACK], 0, this.pieces[BLACK], 0, INITIAL_PIECES[BLACK].length);
@@ -78,7 +78,6 @@ public class Chessboard implements Cloneable{
      * @param fen the String of pieces turn and castling rights and ep square and counters to make a board from
      */
     public Chessboard(String fen) {
-        details = new ChessboardDetails();
         makeBoardBasedOnFENSpecific(fen);
 
         this.zobristHash = ZobristHashUtil.boardToHash(this);
@@ -86,7 +85,6 @@ public class Chessboard implements Cloneable{
     }
 
     Chessboard(boolean blank){
-        this.details = new ChessboardDetails();
         this.zobristHash = ZobristHashUtil.boardToHash(this);
     }
 
@@ -95,52 +93,30 @@ public class Chessboard implements Cloneable{
      * @param board the chessboard you want an exact copy of
      */
     public Chessboard(Chessboard board) {
-        this.details = new ChessboardDetails();
-
         System.arraycopy(board.pastMoveStackArray, 0, this.pastMoveStackArray, 0, board.pastMoveStackArray.length);
         System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
-        
+
         System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
         System.arraycopy(board.pinnedPiecesArray, 0, this.pinnedPiecesArray, 0, board.pinnedPiecesArray.length);
 
 
         this.inCheckRecorder = board.inCheckRecorder;
         this.pinnedPieces = board.pinnedPieces;
-        
+
         this.index = board.index;
         this.zobristIndex = board.zobristIndex;
         this.checkIndex = board.checkIndex;
         this.pinIndex = board.pinIndex;
-        
+
         System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
-        
-        
-        this.setWhitePawns(board.pieces[WHITE][PAWN]);
-        this.setWhiteKnights(board.pieces[WHITE][KNIGHT]);
-        this.setWhiteBishops(board.pieces[WHITE][BISHOP]);
-        this.setWhiteRooks(board.pieces[WHITE][ROOK]);
-        this.setWhiteQueen(board.pieces[WHITE][QUEEN]);
-        this.setWhiteKing(board.pieces[WHITE][KING]);
-
-        this.setBlackPawns(board.pieces[BLACK][PAWN]);
-        this.setBlackKnights(board.pieces[BLACK][KNIGHT]);
-        this.setBlackBishops(board.pieces[BLACK][BISHOP]);
-        this.setBlackRooks(board.pieces[BLACK][ROOK]);
-        this.setBlackQueen(board.pieces[BLACK][QUEEN]);
-        this.setBlackKing(board.pieces[BLACK][KING]);
 
 
         this.castlingRights = board.castlingRights;
         this.turn = board.turn;
 
-        this.setWhiteCanCastleK(board.isWhiteCanCastleK());
-        this.setBlackCanCastleK(board.isBlackCanCastleK());
-        this.setWhiteCanCastleQ(board.isWhiteCanCastleQ());
-        this.setBlackCanCastleQ(board.isBlackCanCastleQ());
-
-        // this.zobrist = that.zobrist...
-        this.makeZobrist();
+        this.zobristHash = board.zobristHash;
+//        ZobristHashUtil.boardToHash(this);
         Setup.init(false);
 
     }
@@ -152,7 +128,7 @@ public class Chessboard implements Cloneable{
         return "not yet";
     }
 
-    /** 
+    /**
      * legal chess move generation
      * @return an array of length 128 populated with fully legal chess moves, and 0s. 
      * Only make moves that are not 0!
@@ -172,9 +148,18 @@ public class Chessboard implements Cloneable{
      */
     public void makeMoveAndFlipTurn(int move){
         this.rotateMoveIndexUp();
-        makeMoveAndHashUpdate(this, move);
+
+        Assert.assertNotEquals(move, 0);
+
+        masterStackPush();
+
+        zobristHash = ZobristHashUtil.updateHashPreMove(this, zobristHash, move);
+
+        makeMoveMaster(this, move);
+
+        this.setBoardHash(ZobristHashUtil.updateHashPostMove(this, this.getBoardHash(), move));
+
         flipTurn();
-        
     }
 
     private void rotateMoveIndexUp(){
@@ -190,14 +175,24 @@ public class Chessboard implements Cloneable{
      */
     public void unMakeMoveAndFlipTurn(){
         this.rotateMoveIndexDown();
-        UnMakeMoveAndHashUpdate(this);
+        unMakeMoveMaster(this);
     }
 
     /**
      * Makes a null move on the board. Make sure to unmake it afterwards
      */
     public void makeNullMoveAndFlipTurn(){
-        makeNullMoveAndHashUpdate(this);
+
+        masterStackPush();
+
+        if (hasPreviousMove()){
+            zobristHash = (ZobristHashUtil.updateWithEPFlags(this, zobristHash));
+        }
+
+        makeMoveMaster(this, 0);
+
+        zobristHash = ZobristHashUtil.zobristFlipTurn(zobristHash);
+        
         flipTurn();
     }
 
@@ -206,7 +201,9 @@ public class Chessboard implements Cloneable{
      * Unmakes a null move on the board.
      */
     public void unMakeNullMoveAndFlipTurn(){
-        unMakeNullMove(this);
+        Assert.assertTrue(hasPreviousMove());
+        masterStackPop();
+        flipTurn();
     }
 
 
@@ -243,12 +240,12 @@ public class Chessboard implements Cloneable{
             enemyBishops = pieces[BLACK][BISHOP];
             enemyRooks = pieces[BLACK][ROOK];
             enemyQueen = pieces[BLACK][QUEEN];
-            enemyKing = getBlackKing();
+            enemyKing = pieces[BLACK][KING];
 
             enemies = blackPieces();
             friends = whitePieces();
         } else {
-            myKing = getBlackKing();
+            myKing = pieces[BLACK][KING];
             enemyPawns = pieces[WHITE][PAWN];
             enemyKnights = pieces[WHITE][KNIGHT];
             enemyBishops = pieces[WHITE][BISHOP];
@@ -316,7 +313,7 @@ public class Chessboard implements Cloneable{
      * @return a list of squares that have pinned pieces to the king on them
      */
     private List<Square> pinnedPiecesToKing(boolean white){
-        long myKing = white ? pieces[WHITE][KING] : getBlackKing();
+        long myKing = white ? pieces[WHITE][KING] : pieces[BLACK][KING];
         return pinnedPiecesToSquare(white, Square.getSquareOfBitboard(myKing));
     }
 
@@ -354,7 +351,7 @@ public class Chessboard implements Cloneable{
             enemyBishops = pieces[BLACK][BISHOP];
             enemyRooks = pieces[BLACK][ROOK];
             enemyQueen = pieces[BLACK][QUEEN];
-            enemyKing = getBlackKing();
+            enemyKing = pieces[BLACK][KING];
 
             enemies = blackPieces();
             friends = whitePieces();
@@ -364,7 +361,7 @@ public class Chessboard implements Cloneable{
             myBishops = pieces[BLACK][BISHOP];
             myRooks = pieces[BLACK][ROOK];
             myQueen = pieces[BLACK][QUEEN];
-            myKing = getBlackKing();
+            myKing = pieces[BLACK][KING];
 
             enemyPawns = pieces[WHITE][PAWN];
             enemyKnights = pieces[WHITE][KNIGHT];
@@ -377,7 +374,7 @@ public class Chessboard implements Cloneable{
             friends = blackPieces();
         }
 
-        return PinnedManager.whichPiecesArePinned(white ? pieces[WHITE][KING] : getBlackKing(),
+        return PinnedManager.whichPiecesArePinned(white ? pieces[WHITE][KING] : pieces[BLACK][KING],
                 enemyBishops, enemyRooks, enemyQueen,
                 friends, allPieces());
     }
@@ -402,7 +399,7 @@ public class Chessboard implements Cloneable{
         if (!hasPreviousMove()){
             return false;
         }
-        
+
         long peek = moveStackArrayPeek();
         if (StackDataUtil.getMove(peek) == 0){
             return false;
@@ -411,14 +408,6 @@ public class Chessboard implements Cloneable{
         return (MoveParser.getDestinationIndex(move) == previousMoveDestinationIndex);
     }
 
-
-    private void init(){
-        this.details = new ChessboardDetails(true);
-    }
-
-    void makeZobrist(){
-        this.zobristHash = ZobristHashUtil.boardToHash(this);
-    }
 
     public long whitePieces(){
         this.pieces[WHITE][ALL_COLOUR_PIECES] = 0;
@@ -436,14 +425,13 @@ public class Chessboard implements Cloneable{
             return blackPieces();
         }
     }
-    
+
     public long blackPieces(){
         this.pieces[BLACK][ALL_COLOUR_PIECES] = 0;
         for (int i = PAWN; i <= KING; i++) {
             this.pieces[BLACK][ALL_COLOUR_PIECES] |= this.pieces[BLACK][i];
         }
         return this.pieces[BLACK][ALL_COLOUR_PIECES];
-//        return pieces[BLACK][PAWN] | pieces[BLACK][KNIGHT] | pieces[BLACK][BISHOP] | pieces[BLACK][ROOK] | pieces[BLACK][QUEEN] | getBlackKing();
     }
 
     public long allPieces(){
@@ -478,99 +466,18 @@ public class Chessboard implements Cloneable{
         return (this.castlingRights & castlingRightsOn[WHITE][K]) == castlingRightsOn[WHITE][K];
     }
 
-    public void setWhiteCanCastleK(boolean whiteCanCastleK) {
-        this.castlingRights &= castlingRightsMask[WHITE][K];
-        this.castlingRights |= whiteCanCastleK ? castlingRightsOn[WHITE][K] : 0;
-    }
-
     public boolean isWhiteCanCastleQ() {
         return (this.castlingRights & castlingRightsOn[WHITE][Q]) == castlingRightsOn[WHITE][Q];
-    }
-
-    public void setWhiteCanCastleQ(boolean whiteCanCastleQ) {
-        this.castlingRights &= castlingRightsMask[WHITE][Q];
-        this.castlingRights |= whiteCanCastleQ ? castlingRightsOn[WHITE][Q] : 0;
     }
 
     public boolean isBlackCanCastleK() {
         return (this.castlingRights & castlingRightsOn[BLACK][K]) == castlingRightsOn[BLACK][K];
     }
 
-    public void setBlackCanCastleK(boolean blackCanCastleK) {
-        this.castlingRights &= castlingRightsMask[BLACK][K];
-        this.castlingRights |= blackCanCastleK ? castlingRightsOn[BLACK][K] : 0;
-    }
 
     public boolean isBlackCanCastleQ() {
         return (this.castlingRights & castlingRightsOn[BLACK][Q]) == castlingRightsOn[BLACK][Q];
     }
-
-    public void setBlackCanCastleQ(boolean blackCanCastleQ) {
-        this.castlingRights &= castlingRightsMask[BLACK][Q];
-        this.castlingRights |= blackCanCastleQ ? castlingRightsOn[BLACK][Q] : 0;
-    }
-
-
-    public void setWhitePawns(long whitePawns) {
-        this.details.whitePawns = whitePawns;
-    }
-
-    public void setWhiteKnights(long whiteKnights) {
-        this.details.whiteKnights = whiteKnights;
-    }
-
-    public void setWhiteBishops(long whiteBishops) {
-        this.details.whiteBishops = whiteBishops;
-    }
-
-    public void setWhiteRooks(long whiteRooks) {
-        this.details.whiteRooks = whiteRooks;
-    }
-
-    public void setWhiteQueen(long whiteQueen) {
-        this.details.whiteQueen = whiteQueen;
-    }
-
-    public void setWhiteKing(long whiteKing) {
-        this.details.whiteKing = whiteKing;
-    }
-
-    public void setBlackPawns(long blackPawns) {
-        this.details.blackPawns = blackPawns;
-    }
-
-    public void setBlackKnights(long blackKnights) {
-        this.details.blackKnights = blackKnights;
-    }
-
-    public void setBlackBishops(long blackBishops) {
-        this.details.blackBishops = blackBishops;
-    }
-
-    public void setBlackRooks(long blackRooks) {
-        this.details.blackRooks = blackRooks;
-    }
-
-    public void setBlackQueen(long blackQueen) {
-        this.details.blackQueen = blackQueen;
-    }
-
-    public long getBlackKing() {
-        return this.pieces[BLACK][KING];
-//        return this.details.blackKing;
-    }
-
-    public void setBlackKing(long blackKing) {
-        this.details.blackKing = blackKing;
-    }
-
-
-
-
-
-
-
-
 
     private void makeBoardBasedOnFENSpecific(String fen){
         parseFenStringSpecific(fen);
@@ -578,10 +485,13 @@ public class Chessboard implements Cloneable{
         this.turn = isItWhitesTurnSpecific(fen);
 
         boolean[] castlingRights = castlingRightsSpecific(fen);
-        this.setWhiteCanCastleK(castlingRights[0]);
-        this.setWhiteCanCastleQ(castlingRights[1]);
-        this.setBlackCanCastleK(castlingRights[2]);
-        this.setBlackCanCastleQ(castlingRights[3]);
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                this.castlingRights &= castlingRightsMask[i][1-j];
+                this.castlingRights |= castlingRights[i*2+j] ? castlingRightsOn[i][1-j] : 0;
+            }
+        }
 
         if (isEPFlagSetSpecific(fen)){
             epFlagSpecific(fen);
@@ -639,6 +549,7 @@ public class Chessboard implements Cloneable{
         }
 
         int epFlag;
+        // todo replace with char codes
         switch (epFlags) {
             case "a": {
                 epFlag = 1;
@@ -774,52 +685,40 @@ public class Chessboard implements Cloneable{
             int whichPiece = 0;
             switch (entry) {
                 case "P":
-                    this.setWhitePawns(this.pieces[WHITE][PAWN] | pieceFromFen);
                     whichPiece = WHITE_PAWN;
                     break;
                 case "N":
-                    this.setWhiteKnights(this.pieces[WHITE][KNIGHT] | pieceFromFen);
                     whichPiece = WHITE_KNIGHT;
                     break;
                 case "B":
-                    this.setWhiteBishops(this.pieces[WHITE][BISHOP] | pieceFromFen);
                     whichPiece = WHITE_BISHOP;
                     break;
                 case "R":
-                    this.setWhiteRooks(this.pieces[WHITE][ROOK] | pieceFromFen);
                     whichPiece = WHITE_ROOK;
                     break;
                 case "Q":
-                    this.setWhiteQueen(this.pieces[WHITE][QUEEN] | pieceFromFen);
                     whichPiece = WHITE_QUEEN;
                     break;
                 case "K":
-                    this.setWhiteKing(this.pieces[WHITE][KING] | pieceFromFen);
                     whichPiece = WHITE_KING;
                     break;
 
                 case "p":
-                    this.setBlackPawns(this.pieces[BLACK][PAWN] | pieceFromFen);
                     whichPiece = BLACK_PAWN;
                     break;
                 case "n":
-                    this.setBlackKnights(this.pieces[BLACK][KNIGHT] | pieceFromFen);
                     whichPiece = BLACK_KNIGHT;
                     break;
                 case "b":
-                    this.setBlackBishops(this.pieces[BLACK][BISHOP] | pieceFromFen);
                     whichPiece = BLACK_BISHOP;
                     break;
                 case "r":
-                    this.setBlackRooks(this.pieces[BLACK][ROOK] | pieceFromFen);
                     whichPiece = BLACK_ROOK;
                     break;
                 case "q":
-                    this.setBlackQueen(this.pieces[BLACK][QUEEN] | pieceFromFen);
                     whichPiece = BLACK_QUEEN;
                     break;
                 case "k":
-                    this.setBlackKing(this.getBlackKing() | pieceFromFen);
                     whichPiece = BLACK_KING;
                     break;
                 default:
@@ -834,7 +733,7 @@ public class Chessboard implements Cloneable{
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(fen);
         String boardRepresentation = "";
-        if (m.find()){  
+        if (m.find()){
             boardRepresentation = m.group();
         }
         if (boardRepresentation.length() == 0){
@@ -844,14 +743,6 @@ public class Chessboard implements Cloneable{
         return boardRepresentation;
     }
 
-
-    public ChessboardDetails getDetails() {
-        return details;
-    }
-
-    public void setDetails(ChessboardDetails details) {
-        this.details = details;
-    }
 
     public long getBoardHash() {
         return zobristHash;
@@ -871,20 +762,20 @@ public class Chessboard implements Cloneable{
         this.pinStackArrayPush();
         this.zobristStackArrayPush(this.getBoardHash());
     }
-    
+
     void masterStackPop(){
         this.checkStackArrayPop();
         this.pinStackArrayPop();
         this.zobristStackArrayPop();
         this.moveStackArrayPop();
     }
-    
+
     private int legalMoveStackIndex = 0;
     void legalMoveStackPush(){
         this.legalMoveStack[legalMoveStackIndex] = this.moves;
         legalMoveStackIndex++;
     }
-    
+
     void legalMoveStackPop(){
         if (legalMoveStackIndex < 1) {
             throw new RuntimeException();
@@ -892,7 +783,7 @@ public class Chessboard implements Cloneable{
         legalMoveStackIndex--;
         this.moves = this.legalMoveStack[legalMoveStackIndex];
     }
-    
+
     void zobristStackArrayPush(long l){
         zobristHashStack[zobristIndex] = l;
 
@@ -903,11 +794,11 @@ public class Chessboard implements Cloneable{
         if (zobristIndex < 1){
             throw new RuntimeException("popping an empty zobrist array");
         }
-        
+
         zobristIndex--;
         zobristHash = zobristHashStack[zobristIndex];
         zobristHashStack[zobristIndex] = 0;
-        
+
     }
 
     long zobristStackArrayPeek(){
@@ -927,12 +818,12 @@ public class Chessboard implements Cloneable{
     private void checkStackArrayPop(){
         if (checkIndex < 1){
             throw new RuntimeException("popping an empty array");
-        }       
-        checkIndex--; 
+        }
+        checkIndex--;
         inCheckRecorder = checkStack[checkIndex];
         checkStack[checkIndex] = false;
     }
-    
+
 
     private int pinIndex = 0;
     void pinStackArrayPush(){
@@ -944,14 +835,14 @@ public class Chessboard implements Cloneable{
     private void pinStackArrayPop(){
         if (pinIndex < 1){
             throw new RuntimeException("popping an empty array");
-        } 
-        pinIndex--;  
+        }
+        pinIndex--;
         pinnedPieces = pinnedPiecesArray[pinIndex];
         pinnedPiecesArray[pinIndex] = 0;
     }
-    
-    
-    
+
+
+
     void moveStackArrayPush(long l){
         pastMoveStackArray[index] = l;
 
@@ -973,7 +864,7 @@ public class Chessboard implements Cloneable{
         }
         return pastMoveStackArray[index-1];
     }
-    
+
     boolean hasPreviousMove(){
         return index > 0 && pastMoveStackArray[index - 1] != 0;
     }

@@ -64,14 +64,10 @@ public class NullMoveTest {
     private static void verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
         Assert.assertEquals(board, initial);
-//        System.out.println(board);
 
 
         board.makeNullMoveAndFlipTurn();
 
-
-//        System.out.println(board);
-//        System.out.println(new Chessboard(board));
 
         Assert.assertEquals(board, new Chessboard(board));
 
@@ -81,6 +77,7 @@ public class NullMoveTest {
 
         long ii = countFinalNodesAtDepthHelper(board, depth);
         Assert.assertEquals(board, new Chessboard(board));
+
         Assert.assertEquals(board, initial);
 
     }
