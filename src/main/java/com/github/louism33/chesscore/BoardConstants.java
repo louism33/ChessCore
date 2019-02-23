@@ -63,7 +63,28 @@ public class BoardConstants {
     public static final long INITIAL_BLACK_ROOKS = 0x8100000000000000L;
     public static final long INITIAL_BLACK_QUEEN = 0x1000000000000000L;
     public static final long INITIAL_BLACK_KING = 0x0800000000000000L;
+    public static final long[][] INITIAL_PIECES = new long[2][7];
 
+    static {
+        INITIAL_PIECES[WHITE][PAWN] = INITIAL_WHITE_PAWNS;
+        INITIAL_PIECES[WHITE][KNIGHT] = INITIAL_WHITE_KNIGHTS;
+        INITIAL_PIECES[WHITE][BISHOP] = INITIAL_WHITE_BISHOPS;
+        INITIAL_PIECES[WHITE][ROOK] = INITIAL_WHITE_ROOKS;
+        INITIAL_PIECES[WHITE][QUEEN] = INITIAL_WHITE_QUEEN;
+        INITIAL_PIECES[WHITE][KING] = INITIAL_WHITE_KING;
+
+        INITIAL_PIECES[WHITE][ALL_COLOUR_PIECES] = INITIAL_WHITE_PIECES;
+
+        INITIAL_PIECES[BLACK][PAWN] = INITIAL_BLACK_PAWNS;
+        INITIAL_PIECES[BLACK][KNIGHT] = INITIAL_BLACK_KNIGHTS;
+        INITIAL_PIECES[BLACK][BISHOP] = INITIAL_BLACK_BISHOPS;
+        INITIAL_PIECES[BLACK][ROOK] = INITIAL_BLACK_ROOKS;
+        INITIAL_PIECES[BLACK][QUEEN] = INITIAL_BLACK_QUEEN;
+        INITIAL_PIECES[BLACK][KING] = INITIAL_BLACK_KING;
+
+        INITIAL_PIECES[BLACK][ALL_COLOUR_PIECES] = INITIAL_BLACK_PIECES;
+    }
+    
     public static final long WHITE_COLOURED_SQUARES = 0x5555555555555555L;
     public static final long BLACK_COLOURED_SQUARES = 0xAAAAAAAAAAAAAAAAL;
 
@@ -101,6 +122,13 @@ public class BoardConstants {
             0x8080808080808080L,
     };
 
+    public static final long[] PROMOTING_RANKS = new long[2];
+
+    static {
+        PROMOTING_RANKS[WHITE] = RANK_SEVEN;
+        PROMOTING_RANKS[BLACK] = RANK_TWO;
+    }
+    
     public static final long[] ROWS = new long[]{
             0x00000000000000FFL,
             0x000000000000FF00L,
@@ -143,6 +171,35 @@ public class BoardConstants {
 
     public static final long whiteCastleQueenUnthreateneds = 0x0000000000000030L;
     public static final long blackCastleQueenUnthreateneds = 0x3000000000000000L;
+    
+    public static final long[] castleQueenNoThreat = new long[2];
+    public static final long[][] castleEmpties = new long[2][2];
+    public static final int[][] castlingRightsOn = new int[2][2];
+    public static final int[][] castlingRightsMask = new int[2][2];
+    
+    public static final int K = 1, Q = 0;
+    static{
+        castleQueenNoThreat[WHITE] = whiteCastleQueenUnthreateneds;
+        castleQueenNoThreat[BLACK] = blackCastleQueenUnthreateneds;
+
+        castleEmpties[WHITE][Q] = whiteCastleQueenEmpties;
+        castleEmpties[WHITE][K] = whiteCastleKingEmpties;
+        
+        castleEmpties[BLACK][Q] = blackCastleQueenEmpties;
+        castleEmpties[BLACK][K] = blackCastleKingEmpties;
+
+        castlingRightsOn[WHITE][Q] = 0b0001;
+        castlingRightsOn[WHITE][K] = 0b0010;
+                
+        castlingRightsOn[BLACK][Q] = 0b0100;
+        castlingRightsOn[BLACK][K] = 0b1000;
+
+        castlingRightsMask[WHITE][Q] = 0b1110;
+        castlingRightsMask[WHITE][K] = 0b1101;
+        
+        castlingRightsMask[BLACK][Q] = 0b1011;
+        castlingRightsMask[BLACK][K] = 0b0111;
+    }
 
     public final static long[] immediateAdjacentSquares = {
             0x0000000000000302L, 0x0000000000000705L, 0x0000000000000e0aL, 0x0000000000001c14L, 0x0000000000003828L, 0x0000000000007050L, 0x000000000000e0a0L, 0x000000000000c040L,

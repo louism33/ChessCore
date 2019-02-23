@@ -35,6 +35,9 @@ class MakeMoveSpecial {
 
                 board.setWhiteCanCastleK(false);
                 board.setWhiteCanCastleQ(false);
+                board.castlingRights &= castlingRightsMask[WHITE][K];
+                board.castlingRights &= castlingRightsMask[WHITE][Q];
+                
                 break;
 
             case 57:
@@ -53,6 +56,9 @@ class MakeMoveSpecial {
 
                 board.setBlackCanCastleK(false);
                 board.setBlackCanCastleQ(false);
+                board.castlingRights &= castlingRightsMask[BLACK][K];
+                board.castlingRights &= castlingRightsMask[BLACK][Q];
+                
                 KING = BLACK_KING;
                 ROOK = BLACK_ROOK;
                 break;
@@ -67,37 +73,49 @@ class MakeMoveSpecial {
         switch (MoveParser.getSourceIndex(move)) {
             case 0:
                 board.setWhiteCanCastleK(false);
+                board.castlingRights &= castlingRightsMask[WHITE][K];
                 break;
             case 3:
                 board.setWhiteCanCastleK(false);
+                board.castlingRights &= castlingRightsMask[WHITE][K];
             case 7:
                 board.setWhiteCanCastleQ(false);
+                board.castlingRights &= castlingRightsMask[WHITE][Q];
                 break;
             case 56:
                 board.setBlackCanCastleK(false);
+                board.castlingRights &= castlingRightsMask[BLACK][K];
                 break;
             case 59:
                 board.setBlackCanCastleK(false);
+                board.castlingRights &= castlingRightsMask[BLACK][K];
             case 63:
                 board.setBlackCanCastleQ(false);
+                board.castlingRights &= castlingRightsMask[BLACK][Q];
                 break;
         }
         switch (MoveParser.getDestinationIndex(move)) {
             case 0:
                 board.setWhiteCanCastleK(false);
+                board.castlingRights &= castlingRightsMask[WHITE][K];
                 break;
             case 3:
                 board.setWhiteCanCastleK(false);
+                board.castlingRights &= castlingRightsMask[WHITE][K];
             case 7:
                 board.setWhiteCanCastleQ(false);
+                board.castlingRights &= castlingRightsMask[WHITE][Q];
                 break;
             case 56:
                 board.setBlackCanCastleK(false);
+                board.castlingRights &= castlingRightsMask[BLACK][K];
                 break;
             case 59:
                 board.setBlackCanCastleK(false);
+                board.castlingRights &= castlingRightsMask[BLACK][K];
             case 63:
                 board.setBlackCanCastleQ(false);
+                board.castlingRights &= castlingRightsMask[BLACK][Q];
                 break;
         }
     }

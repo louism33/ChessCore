@@ -1,6 +1,7 @@
 package com.github.louism33.chesscore;
 
 
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.StackConstants.*;
 
 @SuppressWarnings("CanBeFinal")
@@ -64,20 +65,7 @@ class StackDataUtil {
     }
 
     public static long smdMakeCastlingRights(Chessboard board){
-        int numTo15 = 0;
-        if (board.isWhiteCanCastleK()){
-            numTo15 += 1;
-        }
-        if (board.isWhiteCanCastleQ()){
-            numTo15 += 2;
-        }
-        if (board.isBlackCanCastleK()){
-            numTo15 += 4;
-        }
-        if (board.isBlackCanCastleQ()){
-            numTo15 += 8;
-        }
-        return smdMakeCastlingRights(numTo15);
+        return smdMakeCastlingRights(board.castlingRights);
     }
 
     private static long smdMakeCastlingRights(int castlingRights){

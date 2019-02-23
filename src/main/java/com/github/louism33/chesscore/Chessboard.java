@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +22,11 @@ public class Chessboard implements Cloneable{
     long[] allPieces = new long[3];
     
     int turn;
+    /*
+    castling rights bits:
+    BK BA WK WQ
+     */
+    int castlingRights = 0xf; 
 
     private int fiftyMoveCounter = 0;
     public int getFiftyMoveCounter() {
@@ -57,28 +64,23 @@ public class Chessboard implements Cloneable{
      * A new Chessboard in the starting position, white to play.
      */
     public Chessboard() {
+        castlingRights = 0xf;
         init();
+
+        
+        Assert.assertEquals(details.whiteCanCastleQ, (this.castlingRights & 0b0001) == 0b0001);
+        Assert.assertEquals(details.whiteCanCastleK, (this.castlingRights & 0b0010) == 0b0010);
+        Assert.assertEquals(details.blackCanCastleQ, (this.castlingRights & 0b0100) == 0b0100);
+        Assert.assertEquals(details.blackCanCastleK, (this.castlingRights & 0b1000) == 0b1000);
+
+
         makeZobrist();
         Setup.init(false);
 
-        this.pieces[BLACK][PAWN] = INITIAL_BLACK_PAWNS;
-        this.pieces[BLACK][KNIGHT] = INITIAL_BLACK_KNIGHTS;
-        this.pieces[BLACK][BISHOP] = INITIAL_BLACK_BISHOPS;
-        this.pieces[BLACK][ROOK] = INITIAL_BLACK_ROOKS;
-        this.pieces[BLACK][QUEEN] = INITIAL_BLACK_QUEEN;
-        this.pieces[BLACK][KING] = INITIAL_BLACK_KING;
-        
-        this.pieces[BLACK][ALL_COLOUR_PIECES] = INITIAL_BLACK_PIECES;
-        
-        this.pieces[WHITE][PAWN] = INITIAL_WHITE_PAWNS;
-        this.pieces[WHITE][KNIGHT] = INITIAL_WHITE_KNIGHTS;
-        this.pieces[WHITE][BISHOP] = INITIAL_WHITE_BISHOPS;
-        this.pieces[WHITE][ROOK] = INITIAL_WHITE_ROOKS;
-        this.pieces[WHITE][QUEEN] = INITIAL_WHITE_QUEEN;
-        this.pieces[WHITE][KING] = INITIAL_WHITE_KING;
+        System.arraycopy(INITIAL_PIECES[BLACK], 0, this.pieces[BLACK], 0, INITIAL_PIECES[BLACK].length);
+        System.arraycopy(INITIAL_PIECES[WHITE], 0, this.pieces[WHITE], 0, INITIAL_PIECES[WHITE].length);
 
-        this.pieces[WHITE][ALL_COLOUR_PIECES] = INITIAL_WHITE_PIECES;
-            
+        turn = WHITE;
     }
 
     /**
@@ -138,11 +140,10 @@ public class Chessboard implements Cloneable{
         this.setBlackRooks(board.getBlackRooks());
         this.setBlackQueen(board.getBlackQueen());
         this.setBlackKing(board.getBlackKing());
-        
-        
-        
-        
-        
+
+
+        this.castlingRights = board.castlingRights;
+        this.turn = board.turn;
 
         this.setWhiteCanCastleK(board.isWhiteCanCastleK());
         this.setBlackCanCastleK(board.isBlackCanCastleK());
@@ -422,19 +423,30 @@ public class Chessboard implements Cloneable{
     }
 
     public long whitePieces(){
-//        for (int i = 0; i < 7; i++) {
-//            this.allPieces[WHITE] |= this.pieces[WHITE][i];
-//        }
-//        return this.allPieces[WHITE];
-        return getWhitePawns() | getWhiteKnights() | getWhiteBishops() | getWhiteRooks() | getWhiteQueen() | getWhiteKing();
+        this.pieces[WHITE][ALL_COLOUR_PIECES] = 0;
+        for (int i = PAWN; i <= KING; i++) {
+            this.pieces[WHITE][ALL_COLOUR_PIECES] |= this.pieces[WHITE][i];
+        }
+        return this.pieces[WHITE][ALL_COLOUR_PIECES];
+//        return getWhitePawns() | getWhiteKnights() | getWhiteBishops() | getWhiteRooks() | getWhiteQueen() | getWhiteKing();
     }
 
+    public long getPieces(int turn){
+        if (turn == WHITE) {
+            return whitePieces();
+        }
+        else {
+            return blackPieces();
+        }
+    }
+    
     public long blackPieces(){
-//        for (int i = 0; i < 7; i++) {
-//            this.allPieces[BLACK] |= this.pieces[BLACK][i];
-//        }
-//        return this.allPieces[BLACK];
-        return getBlackPawns() | getBlackKnights() | getBlackBishops() | getBlackRooks() | getBlackQueen() | getBlackKing();
+        this.pieces[BLACK][ALL_COLOUR_PIECES] = 0;
+        for (int i = PAWN; i <= KING; i++) {
+            this.pieces[BLACK][ALL_COLOUR_PIECES] |= this.pieces[BLACK][i];
+        }
+        return this.pieces[BLACK][ALL_COLOUR_PIECES];
+//        return getBlackPawns() | getBlackKnights() | getBlackBishops() | getBlackRooks() | getBlackQueen() | getBlackKing();
     }
 
     public long allPieces(){
@@ -476,47 +488,61 @@ public class Chessboard implements Cloneable{
     }
 
     public boolean isWhiteCanCastleK() {
-        return this.details.whiteCanCastleK;
+        Assert.assertEquals(
+                (this.castlingRights & castlingRightsOn[WHITE][K]) == castlingRightsOn[WHITE][K], this.details.whiteCanCastleK);
+//        return this.details.whiteCanCastleK;
+        return (this.castlingRights & castlingRightsOn[WHITE][K]) == castlingRightsOn[WHITE][K];
     }
 
     public void setWhiteCanCastleK(boolean whiteCanCastleK) {
+        this.castlingRights &= castlingRightsMask[WHITE][K];
+        this.castlingRights |= whiteCanCastleK ? castlingRightsOn[WHITE][K] : 0;
         this.details.whiteCanCastleK = whiteCanCastleK;
     }
 
     public boolean isWhiteCanCastleQ() {
-        return details.whiteCanCastleQ;
+//        Assert.assertEquals(
+//                (this.castlingRights & castlingRightsOn[WHITE][Q]) == castlingRightsOn[WHITE][Q], this.details.whiteCanCastleQ);
+//        return details.whiteCanCastleQ;
+        return (this.castlingRights & castlingRightsOn[WHITE][Q]) == castlingRightsOn[WHITE][Q];
     }
 
     public void setWhiteCanCastleQ(boolean whiteCanCastleQ) {
+        this.castlingRights &= castlingRightsMask[WHITE][Q];
+        this.castlingRights |= whiteCanCastleQ ? castlingRightsOn[WHITE][Q] : 0;
         this.details.whiteCanCastleQ = whiteCanCastleQ;
     }
 
     public boolean isBlackCanCastleK() {
-        return details.blackCanCastleK;
+        Assert.assertEquals(details.blackCanCastleK, 
+                (this.castlingRights & castlingRightsOn[BLACK][K]) == castlingRightsOn[BLACK][K]);
+//        return details.blackCanCastleK;
+        return (this.castlingRights & castlingRightsOn[BLACK][K]) == castlingRightsOn[BLACK][K];
     }
 
     public void setBlackCanCastleK(boolean blackCanCastleK) {
+        this.castlingRights &= castlingRightsMask[BLACK][K];
+        this.castlingRights |= blackCanCastleK ? castlingRightsOn[BLACK][K] : 0;
         this.details.blackCanCastleK = blackCanCastleK;
     }
 
     public boolean isBlackCanCastleQ() {
-        return details.blackCanCastleQ;
+        Assert.assertEquals(details.blackCanCastleQ, 
+                (this.castlingRights & castlingRightsOn[BLACK][Q]) == castlingRightsOn[BLACK][Q]);
+//        return details.blackCanCastleQ;
+        return (this.castlingRights & castlingRightsOn[BLACK][Q]) == castlingRightsOn[BLACK][Q];
     }
 
     public void setBlackCanCastleQ(boolean blackCanCastleQ) {
+        this.castlingRights &= castlingRightsMask[BLACK][Q];
+        this.castlingRights |= blackCanCastleQ ? castlingRightsOn[BLACK][Q] : 0;
         this.details.blackCanCastleQ = blackCanCastleQ;
     }
+    
+    
+    
 
     public long getWhitePawns() {
-//        if (this.details.whitePawns != this.pieces[WHITE][PAWN]) {
-//            System.out.println(this);
-//            
-//            Art.printLong(this.pieces[WHITE][PAWN]);
-//            System.out.println("correct");
-//            Art.printLong(this.details.whitePawns);
-//
-//            Assert.assertEquals(this.details.whitePawns, this.pieces[WHITE][PAWN]);
-//        }
         return this.details.whitePawns;
     }
 
@@ -525,7 +551,6 @@ public class Chessboard implements Cloneable{
     }
 
     public long getWhiteKnights() {
-//        Assert.assertEquals(this.details.whiteKnights, this.pieces[WHITE][KNIGHT]);
         return this.details.whiteKnights;
     }
 
@@ -534,7 +559,6 @@ public class Chessboard implements Cloneable{
     }
 
     public long getWhiteBishops() {
-//        Assert.assertEquals(this.details.whiteBishops, this.pieces[WHITE][BISHOP]);
         return this.details.whiteBishops;
     }
 

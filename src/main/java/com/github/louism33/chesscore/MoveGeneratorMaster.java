@@ -24,101 +24,23 @@ class MoveGeneratorMaster {
         long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
         long friends, enemies;
 
-        if (white){
-//            myPawns = board.getWhitePawns();
-//            myKnights = board.getWhiteKnights();
-//            myBishops = board.getWhiteBishops();
-//            myRooks = board.getWhiteRooks();
-//            myQueens = board.getWhiteQueen();
-//            myKing = board.getWhiteKing();
-//
-//            enemyPawns = board.getBlackPawns();
-//            enemyKnights = board.getBlackKnights();
-//            enemyBishops = board.getBlackBishops();
-//            enemyRooks = board.getBlackRooks();
-//            enemyQueens = board.getBlackQueen();
-//            enemyKing = board.getBlackKing();
+        myPawns = board.pieces[turn][PAWN];
+        myKnights = board.pieces[turn][KNIGHT];
+        myBishops = board.pieces[turn][BISHOP];
+        myRooks = board.pieces[turn][ROOK];
+        myQueens = board.pieces[turn][QUEEN];
+        myKing = board.pieces[turn][KING];
 
-            myPawns = board.pieces[WHITE][PAWN];
-            myKnights = board.pieces[WHITE][KNIGHT];
-            myBishops = board.pieces[WHITE][BISHOP];
-            myRooks = board.pieces[WHITE][ROOK];
-            myQueens = board.pieces[WHITE][QUEEN];
-            myKing = board.pieces[WHITE][KING];
+        enemyPawns = board.pieces[1 - turn][PAWN];
+        enemyKnights = board.pieces[1 - turn][KNIGHT];
+        enemyBishops = board.pieces[1 - turn][BISHOP];
+        enemyRooks = board.pieces[1 - turn][ROOK];
+        enemyQueens = board.pieces[1 - turn][QUEEN];
+        enemyKing = board.pieces[1 - turn][KING];
 
-            enemyPawns = board.pieces[BLACK][PAWN];
-            enemyKnights = board.pieces[BLACK][KNIGHT];
-            enemyBishops = board.pieces[BLACK][BISHOP];
-            enemyRooks = board.pieces[BLACK][ROOK];
-            enemyQueens = board.pieces[BLACK][QUEEN];
-            enemyKing = board.pieces[BLACK][KING];
-
-            
-            friends = board.whitePieces();
-            enemies = board.blackPieces();
-        }
-        else {
-            myPawns = board.getBlackPawns();
-            myKnights = board.getBlackKnights();
-            myBishops = board.getBlackBishops();
-            myRooks = board.getBlackRooks();
-            myQueens = board.getBlackQueen();
-            myKing = board.getBlackKing();
-
-            enemyPawns = board.getWhitePawns();
-            enemyKnights = board.getWhiteKnights();
-            enemyBishops = board.getWhiteBishops();
-            enemyRooks = board.getWhiteRooks();
-            enemyQueens = board.getWhiteQueen();
-            enemyKing = board.getWhiteKing();
-
-            myPawns = board.pieces[BLACK][PAWN];
-            myKnights = board.pieces[BLACK][KNIGHT];
-            myBishops = board.pieces[BLACK][BISHOP];
-            myRooks = board.pieces[BLACK][ROOK];
-            myQueens = board.pieces[BLACK][QUEEN];
-            myKing = board.pieces[BLACK][KING];
-
-            enemyPawns = board.pieces[WHITE][PAWN];
-            enemyKnights = board.pieces[WHITE][KNIGHT];
-            enemyBishops = board.pieces[WHITE][BISHOP];
-            enemyRooks = board.pieces[WHITE][ROOK];
-            enemyQueens = board.pieces[WHITE][QUEEN];
-            enemyKing = board.pieces[WHITE][KING];
-
-            friends = board.blackPieces();
-            enemies = board.whitePieces();
-        }
-
-        /**
-         * myPawns = board.pieces[turn][PAWN];
-         */
-
-//        if (myRooks != board.pieces[turn][ROOK]) {
-//            System.out.println(board);
-//            System.out.println("turn");
-//            Art.printLong(board.pieces[turn][ROOK]);
-//            System.out.println("anti turn");
-//            Art.printLong(board.pieces[1-turn][ROOK]);
-//            System.out.println("correct: ");
-//            Art.printLong(myRooks);
-//
-//            Assert.assertEquals(myRooks, board.pieces[turn][ROOK]);
-//        }
-
-//        Assert.assertEquals(myPawns, board.pieces[turn][PAWN]);
-//        Assert.assertEquals(myKnights, board.pieces[turn][KNIGHT]);
-//        Assert.assertEquals(myBishops, board.pieces[turn][BISHOP]);
-//        Assert.assertEquals(myRooks, board.pieces[turn][ROOK]);
-//        Assert.assertEquals(myQueens, board.pieces[turn][QUEEN]);
-//        Assert.assertEquals(myKing, board.pieces[turn][KING]);
-//
-//        Assert.assertEquals(enemyPawns, board.pieces[1 - turn][PAWN]);
-//        Assert.assertEquals(enemyKnights, board.pieces[1 - turn][KNIGHT]);
-//        Assert.assertEquals(enemyBishops, board.pieces[1 - turn][BISHOP]);
-//        Assert.assertEquals(enemyRooks, board.pieces[1 - turn][ROOK]);
-//        Assert.assertEquals(enemyQueens, board.pieces[1 - turn][QUEEN]);
-//        Assert.assertEquals(enemyKing, board.pieces[1 - turn][KING]);
+        friends = board.getPieces(turn);
+        enemies = board.getPieces(1 - turn);
+        
 
         long allPieces = friends | enemies;
 
@@ -155,24 +77,25 @@ class MoveGeneratorMaster {
         
         board.inCheckRecorder = false;
 
-        addNotInCheckMoves(moves, board, turn, pinnedPieces,
+        addNotInCheckMoves(moves, board, pinnedPieces,
                 myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, friends, allPieces);
 
     }
 
-    private static void addNotInCheckMoves(int[] moves, Chessboard board, int turn, long pinnedPieces,
+    private static void addNotInCheckMoves(int[] moves, Chessboard board, long pinnedPieces,
                                            long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                            long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                            long enemies, long friends, long allPieces){
 
-        boolean whiteTurn = turn == WHITE;
         long emptySquares = ~allPieces;
 
-        long promotablePawns = myPawns & (whiteTurn ? BoardConstants.RANK_SEVEN : BoardConstants.RANK_TWO);
+        long promotablePawns = myPawns & PROMOTING_RANKS[board.turn];
         long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
 
+        
+        boolean whiteTurn = board.turn == WHITE;
         addCastlingMoves(moves, board, whiteTurn,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 allPieces);

@@ -95,44 +95,21 @@ final class ZobristHashUtil {
 
     private static long postMoveCastlingRights(Chessboard board, int move){
         long updatedHashValue = 0;
-        final long peek = board.moveStackArrayPeek();
 
-        int castlingRights = StackDataUtil.getCastlingRights(peek);
+        final int castlingRights = StackDataUtil.getCastlingRights(board.moveStackArrayPeek());
         
         /*
         castling rights may never return, so if 0, no need to update anything
          */
-        if (castlingRights == 0 || !castlingRightsAffectedByMove(move)) {
+        if (castlingRights == 0 || !castlingRightsAffectedByMove(move) || castlingRights == board.castlingRights) {
             return 0;
         }
 
         /*
-        undo previous castling rights
+        undo previous castling rights and update with new castling rights
         */
-        updatedHashValue ^= zobristHashCastlingRights[castlingRights];
+        updatedHashValue ^= zobristHashCastlingRights[castlingRights ^ board.castlingRights];
         
-        /*
-        update with new castling rights
-        */
-        int numTo15Do = 0;
-        if (board.isWhiteCanCastleK()){
-            numTo15Do  += 1;
-        }
-
-        if (board.isWhiteCanCastleQ()){
-            numTo15Do  += 2;
-        }
-
-        if (board.isBlackCanCastleK()){
-            numTo15Do  += 4;
-        }
-
-        if (board.isBlackCanCastleQ()){
-            numTo15Do  += 8;
-        }
-
-        updatedHashValue ^= zobristHashCastlingRights[numTo15Do];
-
         return updatedHashValue;
     }
 
@@ -142,11 +119,6 @@ final class ZobristHashUtil {
         int destinationSquareIndex = MoveParser.getDestinationIndex(move);
         int sourcePieceIdentifier = whichIntPieceOnSquare(board, newPieceOnSquare(sourceSquare)) - 1;
 
-//        System.out.println("pre");
-//        System.out.println(board);
-//        System.out.println(MoveParser.toString(move));
-        
-        
         boardHash ^= zobristHashPieces[sourceSquare][sourcePieceIdentifier];
         long destinationZH = zobristHashPieces[destinationSquareIndex][sourcePieceIdentifier];
 

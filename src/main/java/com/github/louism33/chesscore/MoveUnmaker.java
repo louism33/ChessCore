@@ -132,20 +132,24 @@ class MoveUnmaker {
 
         int castlingRights = StackDataUtil.getCastlingRights(pop);
 
+        
+        
         if (castlingRights >= 8){
             castlingRights -= 8;
-            board.setBlackCanCastleQ(true);
+//            board.castlingRights &= castlingRightsMask[BLACK][Q];
+            board.setBlackCanCastleK(true);
         }
         if (castlingRights >= 4){
             castlingRights -= 4;
-            board.setBlackCanCastleK(true);
+//            board.castlingRights &= castlingRightsMask[BLACK][K];
+            board.setBlackCanCastleQ(true);
         }
         if (castlingRights >= 2){
             castlingRights -= 2;
-            board.setWhiteCanCastleQ(true);
+            board.setWhiteCanCastleK(true);
         }
         if (castlingRights >= 1){
-            board.setWhiteCanCastleK(true);
+            board.setWhiteCanCastleQ(true);
         }
 
         board.setWhiteTurn(StackDataUtil.getTurn(pop) == 1);

@@ -16,13 +16,13 @@ class MoveGeneratorCheck {
                                      long enemies, long friends, long allPieces){
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
         long blockingSquaresMask, checkingPieceMask;
-        long jumper = inCheckByAJumper(board, white, myKing, enemyPawns, enemyKnights);
+        long jumper = inCheckByAJumper(white, myKing, enemyPawns, enemyKnights);
         if (jumper != 0){
             blockingSquaresMask = 0;
             checkingPieceMask = jumper;
         }
         else {
-            long slider = inCheckByASlider(board, white, myKing, enemyBishops, enemyRooks, enemyQueens, allPieces);
+            long slider = inCheckByASlider(myKing, enemyBishops, enemyRooks, enemyQueens, allPieces);
             blockingSquaresMask = extractRayFromTwoPiecesBitboard(myKing, slider) & (~slider);
             checkingPieceMask = slider;
         }
@@ -49,7 +49,7 @@ class MoveGeneratorCheck {
         );
     }
 
-    private static long inCheckByAJumper(Chessboard board, boolean white,
+    private static long inCheckByAJumper(boolean white,
                                          long myKing, long enemyPawns, long enemyKnights){
         long possiblePawn = singlePawnCaptures(myKing, white, enemyPawns);
         if (possiblePawn != 0) {
@@ -63,8 +63,7 @@ class MoveGeneratorCheck {
         return 0;
     }
 
-    private static long inCheckByASlider(Chessboard board, boolean white,
-                                         long myKing,
+    private static long inCheckByASlider(long myKing,
                                          long enemyBishops, long enemyRooks, long enemyQueens,
                                          long allPieces){
         long possibleBishop = singleBishopTable(allPieces, myKing, enemyBishops);
