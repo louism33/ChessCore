@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +17,6 @@ public class Chessboard implements Cloneable{
     private ChessboardDetails details;
 
     long[][] pieces = new long[2][7];
-    long[] allPieces = new long[3];
     
     int turn;
     /*
@@ -36,7 +33,6 @@ public class Chessboard implements Cloneable{
     public void setFiftyMoveCounter(int fiftyMoveCounter) {
         this.fiftyMoveCounter = fiftyMoveCounter;
     }
-
 
     private int index = 0;
     private int zobristIndex = 0;
@@ -68,12 +64,6 @@ public class Chessboard implements Cloneable{
         init();
 
         
-        Assert.assertEquals(details.whiteCanCastleQ, (this.castlingRights & 0b0001) == 0b0001);
-        Assert.assertEquals(details.whiteCanCastleK, (this.castlingRights & 0b0010) == 0b0010);
-        Assert.assertEquals(details.blackCanCastleQ, (this.castlingRights & 0b0100) == 0b0100);
-        Assert.assertEquals(details.blackCanCastleK, (this.castlingRights & 0b1000) == 0b1000);
-
-
         makeZobrist();
         Setup.init(false);
 
@@ -126,7 +116,6 @@ public class Chessboard implements Cloneable{
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
         
         
-        
         this.setWhitePawns(board.getWhitePawns());
         this.setWhiteKnights(board.getWhiteKnights());
         this.setWhiteBishops(board.getWhiteBishops());
@@ -149,8 +138,6 @@ public class Chessboard implements Cloneable{
         this.setBlackCanCastleK(board.isBlackCanCastleK());
         this.setWhiteCanCastleQ(board.isWhiteCanCastleQ());
         this.setBlackCanCastleQ(board.isBlackCanCastleQ());
-
-        this.setWhiteTurn(board.isWhiteTurn());
 
         // this.zobrist = that.zobrist...
         this.makeZobrist();
@@ -228,7 +215,18 @@ public class Chessboard implements Cloneable{
      */
     public void flipTurn(){
         this.turn = 1 - this.turn;
-        setWhiteTurn(!isWhiteTurn());
+    }
+
+    public boolean isWhiteTurn() {
+        return this.turn == WHITE;
+    }
+
+    public void setTurn(int whiteTurn) {
+        this.turn = whiteTurn;
+    }
+
+    public void setWhiteTurn(boolean whiteTurn) {
+        setTurn(whiteTurn ? WHITE : BLACK);
     }
 
     /**
@@ -453,18 +451,7 @@ public class Chessboard implements Cloneable{
         return whitePieces() | blackPieces();
     }
 
-    public boolean isWhiteTurn() {
-//        return this.turn == WHITE;
-        return this.details.whiteTurn;
-    }
 
-    public void setTurn(int whiteTurn) {
-        this.turn = whiteTurn;
-    }
-    public void setWhiteTurn(boolean whiteTurn) {
-        setTurn(whiteTurn ? WHITE : BLACK);
-        this.details.whiteTurn = whiteTurn;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -472,6 +459,7 @@ public class Chessboard implements Cloneable{
         if (o == null || getClass() != o.getClass()) return false;
         Chessboard that = (Chessboard) o;
         return Objects.equals(details, that.details)
+                && this.castlingRights == that.castlingRights
                 && Objects.equals(zobristHash, that.zobristHash)
                 && Arrays.equals(zobristHashStack, that.zobristHashStack)
                 && Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray)
@@ -488,55 +476,39 @@ public class Chessboard implements Cloneable{
     }
 
     public boolean isWhiteCanCastleK() {
-        Assert.assertEquals(
-                (this.castlingRights & castlingRightsOn[WHITE][K]) == castlingRightsOn[WHITE][K], this.details.whiteCanCastleK);
-//        return this.details.whiteCanCastleK;
         return (this.castlingRights & castlingRightsOn[WHITE][K]) == castlingRightsOn[WHITE][K];
     }
 
     public void setWhiteCanCastleK(boolean whiteCanCastleK) {
         this.castlingRights &= castlingRightsMask[WHITE][K];
         this.castlingRights |= whiteCanCastleK ? castlingRightsOn[WHITE][K] : 0;
-        this.details.whiteCanCastleK = whiteCanCastleK;
     }
 
     public boolean isWhiteCanCastleQ() {
-//        Assert.assertEquals(
-//                (this.castlingRights & castlingRightsOn[WHITE][Q]) == castlingRightsOn[WHITE][Q], this.details.whiteCanCastleQ);
-//        return details.whiteCanCastleQ;
         return (this.castlingRights & castlingRightsOn[WHITE][Q]) == castlingRightsOn[WHITE][Q];
     }
 
     public void setWhiteCanCastleQ(boolean whiteCanCastleQ) {
         this.castlingRights &= castlingRightsMask[WHITE][Q];
         this.castlingRights |= whiteCanCastleQ ? castlingRightsOn[WHITE][Q] : 0;
-        this.details.whiteCanCastleQ = whiteCanCastleQ;
     }
 
     public boolean isBlackCanCastleK() {
-        Assert.assertEquals(details.blackCanCastleK, 
-                (this.castlingRights & castlingRightsOn[BLACK][K]) == castlingRightsOn[BLACK][K]);
-//        return details.blackCanCastleK;
         return (this.castlingRights & castlingRightsOn[BLACK][K]) == castlingRightsOn[BLACK][K];
     }
 
     public void setBlackCanCastleK(boolean blackCanCastleK) {
         this.castlingRights &= castlingRightsMask[BLACK][K];
         this.castlingRights |= blackCanCastleK ? castlingRightsOn[BLACK][K] : 0;
-        this.details.blackCanCastleK = blackCanCastleK;
     }
 
     public boolean isBlackCanCastleQ() {
-        Assert.assertEquals(details.blackCanCastleQ, 
-                (this.castlingRights & castlingRightsOn[BLACK][Q]) == castlingRightsOn[BLACK][Q]);
-//        return details.blackCanCastleQ;
         return (this.castlingRights & castlingRightsOn[BLACK][Q]) == castlingRightsOn[BLACK][Q];
     }
 
     public void setBlackCanCastleQ(boolean blackCanCastleQ) {
         this.castlingRights &= castlingRightsMask[BLACK][Q];
         this.castlingRights |= blackCanCastleQ ? castlingRightsOn[BLACK][Q] : 0;
-        this.details.blackCanCastleQ = blackCanCastleQ;
     }
     
     
@@ -567,7 +539,6 @@ public class Chessboard implements Cloneable{
     }
 
     public long getWhiteRooks() {
-//        Assert.assertEquals(this.details.whiteRooks, this.pieces[WHITE][ROOK]);
         return this.details.whiteRooks;
     }
 
@@ -655,7 +626,7 @@ public class Chessboard implements Cloneable{
     private void makeBoardBasedOnFENSpecific(String fen){
         parseFenStringSpecific(fen);
 
-        this.setWhiteTurn(isItWhitesTurnSpecific(fen));
+        this.turn = isItWhitesTurnSpecific(fen);
 
         boolean[] castlingRights = castlingRightsSpecific(fen);
         this.setWhiteCanCastleK(castlingRights[0]);
@@ -811,7 +782,7 @@ public class Chessboard implements Cloneable{
         return castlingRights;
     }
 
-    private boolean isItWhitesTurnSpecific(String fen){
+    private int isItWhitesTurnSpecific(String fen){
         String boardPattern = " (.)";
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(fen);
@@ -822,7 +793,7 @@ public class Chessboard implements Cloneable{
         if (player.length() == 0){
             throw new RuntimeException("Could not Parse board rep of fen string");
         }
-        return player.equals("w");
+        return player.equals("w") ? WHITE : BLACK;
     }
 
     private void parseFenStringSpecific (String fen){

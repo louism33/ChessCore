@@ -174,10 +174,12 @@ public class BoardConstants {
     
     public static final long[] castleQueenNoThreat = new long[2];
     public static final long[][] castleEmpties = new long[2][2];
+
     public static final int[][] castlingRightsOn = new int[2][2];
-    public static final int[][] castlingRightsMask = new int[2][2];
     
-    public static final int K = 1, Q = 0;
+    public static final int[][] castlingRightsMask = new int[2][3];
+    
+    public static final int KQ = 2, K = 1, Q = 0;
     static{
         castleQueenNoThreat[WHITE] = whiteCastleQueenUnthreateneds;
         castleQueenNoThreat[BLACK] = blackCastleQueenUnthreateneds;
@@ -190,15 +192,17 @@ public class BoardConstants {
 
         castlingRightsOn[WHITE][Q] = 0b0001;
         castlingRightsOn[WHITE][K] = 0b0010;
-                
+
         castlingRightsOn[BLACK][Q] = 0b0100;
         castlingRightsOn[BLACK][K] = 0b1000;
 
         castlingRightsMask[WHITE][Q] = 0b1110;
         castlingRightsMask[WHITE][K] = 0b1101;
-        
+        castlingRightsMask[WHITE][KQ] = castlingRightsMask[WHITE][K] ^ castlingRightsMask[WHITE][Q];
+
         castlingRightsMask[BLACK][Q] = 0b1011;
         castlingRightsMask[BLACK][K] = 0b0111;
+        castlingRightsMask[BLACK][KQ] = castlingRightsMask[BLACK][K] ^ castlingRightsMask[BLACK][Q];
     }
 
     public final static long[] immediateAdjacentSquares = {

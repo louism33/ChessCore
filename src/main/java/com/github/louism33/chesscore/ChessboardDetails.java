@@ -1,14 +1,6 @@
 package com.github.louism33.chesscore;
 
-import java.util.Objects;
-
 class ChessboardDetails {
-
-    boolean whiteTurn = true;
-    boolean whiteCanCastleK = true;
-    boolean whiteCanCastleQ = true;
-    boolean blackCanCastleK = true;
-    boolean blackCanCastleQ = true;
 
     long whitePawns;
     long whiteKnights;
@@ -23,8 +15,6 @@ class ChessboardDetails {
     long blackRooks;
     long blackQueen;
     long blackKing;
-
-
     
     ChessboardDetails(){
         
@@ -55,11 +45,7 @@ class ChessboardDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessboardDetails that = (ChessboardDetails) o;
-        return whiteTurn == that.whiteTurn &&
-                whiteCanCastleK == that.whiteCanCastleK &&
-                whiteCanCastleQ == that.whiteCanCastleQ &&
-                blackCanCastleK == that.blackCanCastleK &&
-                blackCanCastleQ == that.blackCanCastleQ &&
+        return 
                 whitePawns == that.whitePawns &&
                 whiteKnights == that.whiteKnights &&
                 whiteBishops == that.whiteBishops &&
@@ -74,8 +60,4 @@ class ChessboardDetails {
                 blackKing == that.blackKing;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(whiteTurn, whiteCanCastleK, whiteCanCastleQ, blackCanCastleK, blackCanCastleQ, whitePawns, whiteKnights, whiteBishops, whiteRooks, whiteQueen, whiteKing, blackPawns, blackKnights, blackBishops, blackRooks, blackQueen, blackKing);
-    }
 }

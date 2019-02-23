@@ -1,7 +1,10 @@
 package com.github.louism33.chesscore;
 
 
-import static com.github.louism33.chesscore.BoardConstants.*;
+import org.junit.Assert;
+
+import static com.github.louism33.chesscore.BoardConstants.BLACK;
+import static com.github.louism33.chesscore.BoardConstants.WHITE;
 import static com.github.louism33.chesscore.StackConstants.*;
 
 @SuppressWarnings("CanBeFinal")
@@ -44,12 +47,7 @@ class StackDataUtil {
     }
 
     public static long smdMakeTurn(int turn){
-        return (long) turn << smdTurnOffset;
-    }
-
-    public static long smdMakeTurn(boolean t){
-        int turn = t ? 1 : 0;
-        return (long) turn << smdTurnOffset;
+        return (long) (1 - turn) << smdTurnOffset;
     }
 
     public static long smdMakeSpecialMove(long specialMove){
@@ -81,10 +79,12 @@ class StackDataUtil {
     
     static long buildStackData(int move, Chessboard board, long typeOfSpecialMove) {
         long stackData = 0;
+
+        Assert.assertTrue(board.isWhiteTurn() ? board.turn == WHITE : board.turn == BLACK);
         
         stackData |= smdMakeMove(move);
         stackData |= smdMakeFiftyPiece(board.getFiftyMoveCounter());
-        stackData |= smdMakeTurn(board.isWhiteTurn());
+        stackData |= smdMakeTurn(board.turn);
         stackData |= smdMakeSpecialMove(typeOfSpecialMove);
         stackData |= smdMakeCastlingRights(board);
 

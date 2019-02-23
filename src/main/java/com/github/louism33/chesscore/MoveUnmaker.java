@@ -24,7 +24,7 @@ class MoveUnmaker {
         long pop = board.moveStackData;
 
         if (StackDataUtil.getMove(pop) == 0){
-            board.setWhiteTurn(StackDataUtil.getTurn(pop) == 1);
+            board.turn = StackDataUtil.getTurn(pop);
             return;
         }
 
@@ -50,11 +50,11 @@ class MoveUnmaker {
 
             case ENPASSANTCAPTURE:
                 makeRegularMove(board, basicReversedMove);
-                if (StackDataUtil.getTurn(pop) == 1) {
-                    addRelevantPieceToSquare(board, 7, pieceToMoveBackIndex - 8);
+                if (StackDataUtil.getTurn(pop) == BLACK) {
+                    addRelevantPieceToSquare(board, BLACK_PAWN, pieceToMoveBackIndex - 8);
                 }
                 else {
-                    addRelevantPieceToSquare(board, 1, pieceToMoveBackIndex + 8);
+                    addRelevantPieceToSquare(board, WHITE_PAWN, pieceToMoveBackIndex + 8);
                 }
                 break;
 
@@ -132,7 +132,7 @@ class MoveUnmaker {
 
         int castlingRights = StackDataUtil.getCastlingRights(pop);
 
-        
+        board.castlingRights = castlingRights;
         
         if (castlingRights >= 8){
             castlingRights -= 8;

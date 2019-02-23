@@ -44,7 +44,20 @@ public class MoveParser {
         return move;
     }
 
-    private static int buildMove(Chessboard board, int s, int d) {
+    static int buildBetterMove(int s, int whichSourcePiece, int d) {
+        Assert.assertTrue(s >= 0 && s < 64 && d >= 0 && d < 64);
+
+        int move = 0;
+        move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
+        move |= (d & DESTINATION_MASK);
+
+        move |= (MoveConstants.SOURCE_PIECE_MASK
+                | (whichSourcePiece << MoveConstants.SOURCE_PIECE_OFFSET));
+
+        return move;
+    }
+    
+    static int buildMove(Chessboard board, int s, int d) {
         Assert.assertTrue(s >= 0 && s < 64 && d >= 0 && d < 64);
         
         int move = 0;
@@ -52,7 +65,7 @@ public class MoveParser {
         move |= (d & DESTINATION_MASK);
         
         move |= (MoveConstants.SOURCE_PIECE_MASK 
-                | whichPieceMaskInt(pieceOnSquareInt(board, newPieceOnSquare(s)))) << MoveConstants.SOURCE_PIECE_OFFSET;
+                | (pieceOnSquareInt(board, newPieceOnSquare(s)))) << MoveConstants.SOURCE_PIECE_OFFSET;
         
         return move;
     }
@@ -118,6 +131,13 @@ public class MoveParser {
                 | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
     }
     
+    static int moveFromSourceDestinationCaptureBetter(Chessboard board, int source, int sourcePiece,
+                                                      int destinationIndex, boolean capture) {
+        
+        return buildBetterMove(source, sourcePiece, destinationIndex)
+                | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex)) : 0);
+    }
+    
     static int moveFromSourceDestinationCapture(Chessboard board, int source, int destinationIndex, boolean capture) {
         return buildMove(board, source, destinationIndex) 
                 | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex)) : 0);
@@ -129,57 +149,10 @@ public class MoveParser {
 
 
     private static int whichPieceMaskInt(int piece) {
-        switch (piece){
-
-            case WHITE_PAWN:
-                return MoveConstants.WHITE_PAWN_MASK;
-            case WHITE_KNIGHT:
-                return MoveConstants.WHITE_KNIGHT_MASK;
-            case WHITE_BISHOP:
-                return MoveConstants.WHITE_BISHOP_MASK;
-            case WHITE_ROOK:
-                return MoveConstants.WHITE_ROOK_MASK;
-            case WHITE_QUEEN:
-                return MoveConstants.WHITE_QUEEN_MASK;
-            case WHITE_KING:
-                return MoveConstants.WHITE_KING_MASK;
-
-            case BLACK_PAWN:
-                return MoveConstants.BLACK_PAWN_MASK;
-            case BLACK_KNIGHT:
-                return MoveConstants.BLACK_KNIGHT_MASK;
-            case BLACK_BISHOP:
-                return MoveConstants.BLACK_BISHOP_MASK;
-            case BLACK_ROOK:
-                return MoveConstants.BLACK_ROOK_MASK;
-            case BLACK_QUEEN:
-                return MoveConstants.BLACK_QUEEN_MASK;
-            case BLACK_KING:
-                return MoveConstants.BLACK_KING_MASK;
-
-            case NO_PIECE:
-                return 0;
-        }
-        return 0;
+        return piece;
     }
     
     
-    public static int makeSpecialMove(Chessboard board, int source, int destinationIndex, boolean castling, boolean enPassant, boolean promotion,
-                                      boolean promoteToKnight, boolean promoteToBishop, boolean promoteToRook, boolean promoteToQueen) {
-
-        int move = buildMove(board, source, destinationIndex);
-
-        if (castling) move |= CASTLING_MASK;
-        if (enPassant) move |= ENPASSANT_MASK;
-        if (promotion) {
-            if (promoteToKnight) move |= KNIGHT_PROMOTION_MASK;
-            else if (promoteToBishop) move |= BISHOP_PROMOTION_MASK;
-            else if (promoteToRook) move |= ROOK_PROMOTION_MASK;
-            else if (promoteToQueen) move |= QUEEN_PROMOTION_MASK;
-        }
-        return move;
-    }
-
     public static int getSourceIndex(int move) {
         return ((move & SOURCE_MASK) >>> SOURCE_OFFSET);
     }

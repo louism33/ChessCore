@@ -17,6 +17,8 @@ class MoveGeneratorMaster {
 
     static void generateLegalMoves(Chessboard board, int[] moves, int turn) {
         Assert.assertNotNull(moves);
+        
+        Assert.assertTrue(board.isWhiteTurn() ? turn == WHITE : turn == BLACK);
 
         boolean white = turn == WHITE;
         
@@ -96,7 +98,7 @@ class MoveGeneratorMaster {
 
         
         boolean whiteTurn = board.turn == WHITE;
-        addCastlingMoves(moves, board, whiteTurn,
+        addCastlingMoves(moves, board.turn, board.castlingRights, 
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 allPieces);
 
@@ -170,6 +172,7 @@ class MoveGeneratorMaster {
                 long allButPinnedFriends = friends & ~pinnedPiece;
 
                 if ((pinnedPiece & PENULTIMATE_RANK) == 0) {
+
                     addMovesFromAttackTableMaster(moves,
                             singlePawnPushes(pinnedPiece, whiteTurn, pushMask, allPieces)
                                     | singlePawnCaptures(pinnedPiece, whiteTurn, pinningPiece),

@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BoardConstants.*;
@@ -9,7 +7,9 @@ import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterPromotion;
+import static com.github.louism33.chesscore.MoveConstants.CASTLING_MASK;
 import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
+import static com.github.louism33.chesscore.MoveParser.*;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
@@ -53,7 +53,7 @@ class MoveGeneratorSpecial {
 
         int[] temp = new int[8];
 
-        long enPassantTakingRank = white ? BoardConstants.RANK_FIVE : BoardConstants.RANK_FOUR;
+        long enPassantTakingRank = white ? RANK_FIVE : RANK_FOUR;
 
         long myPawnsInPosition = myPawns & enPassantTakingRank;
         if (myPawnsInPosition == 0) {
@@ -156,139 +156,111 @@ class MoveGeneratorSpecial {
         return FILES[8-file];
     }
 
-
-
-//    // checking if we are in check happens elsewhere
-//    static void addCastlingMoves(int[] moves, Chessboard board, boolean whiteX,
-//                                 long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-//                                 long allPieces){
-//
-////        Assert.assertTrue(white ? board.turn == WHITE : board.turn == BLACK);
-//
-//        boolean white = board.turn == WHITE;
-//        if (white){
-//            if (board.isWhiteCanCastleK()){
-//                if (areTheseSquaresEmpty(board, BoardConstants.whiteCastleKingEmpties)
-//                        && ((board.getWhiteKing() & BoardConstants.INITIAL_WHITE_KING) != 0)
-//                        && ((board.getWhiteRooks() & BoardConstants.SOUTH_EAST_CORNER) != 0)
-//                        && areTheseSquaresUnthreatened(true, BoardConstants.whiteCastleKingEmpties,
-//                        enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-//                        allPieces)){
-//
-//                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 1);
-//                }
-//            }
-//
-//            if(board.isWhiteCanCastleQ()){
-//                if (areTheseSquaresEmpty(board, BoardConstants.whiteCastleQueenEmpties)
-//                        && ((board.getWhiteKing() & BoardConstants.INITIAL_WHITE_KING) != 0)
-//                        && ((board.getWhiteRooks() & BoardConstants.SOUTH_WEST_CORNER) != 0)
-//                        && areTheseSquaresUnthreatened(true, BoardConstants.whiteCastleQueenUnthreateneds,
-//                        enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-//                        allPieces)){
-//
-//                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 5);
-//                }
-//            }
-//        }
-//
-//        else {
-//            if(board.isBlackCanCastleK()){
-//                if (areTheseSquaresEmpty(board, BoardConstants.blackCastleKingEmpties)
-//                        && ((board.getBlackKing() & BoardConstants.INITIAL_BLACK_KING) != 0)
-//                        && ((board.getBlackRooks() & BoardConstants.NORTH_EAST_CORNER) != 0)
-//                        && areTheseSquaresUnthreatened(false, BoardConstants.blackCastleKingEmpties,
-//                        enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-//                        allPieces)){
-//
-//                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 57);
-//                }
-//            }
-//
-//            if(board.isBlackCanCastleQ()){
-//                if (areTheseSquaresEmpty(board, BoardConstants.blackCastleQueenEmpties)
-//                        && ((board.getBlackKing() & BoardConstants.INITIAL_BLACK_KING) != 0)
-//                        && ((board.getBlackRooks() & BoardConstants.NORTH_WEST_CORNER) != 0)
-//                        && areTheseSquaresUnthreatened(false, BoardConstants.blackCastleQueenUnthreateneds,
-//                        enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-//                        allPieces)){
-//
-//                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 61);
-//
-//                }
-//            }
-//        }
-//    }
-
-
     // checking if we are in check happens elsewhere
-    static void addCastlingMoves(int[] moves, Chessboard board, boolean whiteX,
+    static void addCastlingMoves(int[] moves, int turn, int castlingRights,
                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                  long allPieces){
 
-//        Assert.assertTrue(white ? board.turn == WHITE : board.turn == BLACK);
 
-        boolean white = board.turn == WHITE;
-        if (white){
-            if (board.isWhiteCanCastleK()){
-                if (areTheseSquaresEmpty(board, BoardConstants.whiteCastleKingEmpties)
-                        && ((board.getWhiteKing() & BoardConstants.INITIAL_WHITE_KING) != 0)
-                        && ((board.getWhiteRooks() & BoardConstants.SOUTH_EAST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(true, BoardConstants.whiteCastleKingEmpties,
-                        enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        allPieces)){
-
-                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 1);
-                }
-            }
-
-            if(board.isWhiteCanCastleQ()){
-                if (areTheseSquaresEmpty(board, BoardConstants.whiteCastleQueenEmpties)
-                        && ((board.getWhiteKing() & BoardConstants.INITIAL_WHITE_KING) != 0)
-                        && ((board.getWhiteRooks() & BoardConstants.SOUTH_WEST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(true, castleQueenNoThreat[WHITE],
-                        enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        allPieces)){
-
-                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 3, 5);
-                }
-            }
+        if (castlingRights == 0) {
+            return;
         }
 
-        else {
-            if(board.isBlackCanCastleK()){
-                if (areTheseSquaresEmpty(board, BoardConstants.blackCastleKingEmpties)
-                        && ((board.getBlackKing() & BoardConstants.INITIAL_BLACK_KING) != 0)
-                        && ((board.getBlackRooks() & BoardConstants.NORTH_EAST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(false, BoardConstants.blackCastleKingEmpties,
-                        enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        allPieces)){
+        switch (turn) {
+            case WHITE:
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 57);
+                if ((castlingRights & castlingRightsMask[WHITE][KQ]) == 0) {
+                    break;
                 }
-            }
 
-            if(board.isBlackCanCastleQ()){
-                if (areTheseSquaresEmpty(board, BoardConstants.blackCastleQueenEmpties)
-                        && ((board.getBlackKing() & BoardConstants.INITIAL_BLACK_KING) != 0)
-                        && ((board.getBlackRooks() & BoardConstants.NORTH_WEST_CORNER) != 0)
-                        && areTheseSquaresUnthreatened(false, castleQueenNoThreat[BLACK],
-                        enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        allPieces)){
+                switch (castlingRights & castlingRightsMask[WHITE][KQ]) {
+                    case 0b0001:// Q
 
-                    MoveAdder.addMovesFromAttackTableMasterCastling(board, moves, 59, 61);
+                        if (areTheseSquaresEmpty(allPieces, castleEmpties[WHITE][Q])
+                                && areTheseSquaresUnthreatened(turn, castleQueenNoThreat[WHITE],
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                                allPieces)){
 
+                            moves[numberOfRealMoves(moves)] = 
+                                    buildBetterMove(3, WHITE_KING, 5) | CASTLING_MASK;
+                        }
+
+                        break;
+
+                    case 0b0011:
+
+                        if (areTheseSquaresEmpty(allPieces, castleEmpties[WHITE][Q])
+                                && areTheseSquaresUnthreatened(turn, castleQueenNoThreat[WHITE],
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                                allPieces)){
+
+                            moves[numberOfRealMoves(moves)] = buildBetterMove(3, WHITE_KING, 5) | CASTLING_MASK;
+                        }
+
+                    case 0b0010:// K
+
+                        if (areTheseSquaresEmpty(allPieces, castleEmpties[WHITE][K])
+                                && areTheseSquaresUnthreatened(turn, castleEmpties[WHITE][K],
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                                allPieces)){
+
+
+                            moves[numberOfRealMoves(moves)] = buildBetterMove(3, WHITE_KING,1) | CASTLING_MASK;
+                        }
+
+                        break;
                 }
-            }
+
+                break;
+
+
+            case BLACK:
+                switch ((castlingRights & castlingRightsMask[BLACK][KQ])) {
+                    case 0b0100:// Q
+                        if (areTheseSquaresEmpty(allPieces, castleEmpties[BLACK][Q])
+                                && areTheseSquaresUnthreatened(turn, castleQueenNoThreat[BLACK],
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                                allPieces)){
+
+                            moves[numberOfRealMoves(moves)] = buildBetterMove(59, BLACK_KING, 61) | CASTLING_MASK;
+                        }
+                        break;
+                        
+                    case 0b1100:
+
+                        if (areTheseSquaresEmpty(allPieces, castleEmpties[BLACK][Q])
+                                && areTheseSquaresUnthreatened(turn, castleQueenNoThreat[BLACK],
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                                allPieces)){
+
+                            moves[numberOfRealMoves(moves)] = buildBetterMove(59, BLACK_KING, 61) | CASTLING_MASK;
+                        }
+
+                    case 0b1000:// K
+
+                        if (areTheseSquaresEmpty(allPieces, castleEmpties[BLACK][K])
+                                && areTheseSquaresUnthreatened(turn, castleEmpties[BLACK][K],
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                                allPieces)){
+
+                            moves[numberOfRealMoves(moves)] = buildBetterMove( 59, BLACK_KING, 57) | CASTLING_MASK;
+                        }
+                        break;
+                }
+                break;
         }
+
     }
 
-    
-    
 
-    private static boolean areTheseSquaresUnthreatened(boolean white, long squares,
+
+
+    private static boolean areTheseSquaresUnthreatened(int turn, long squares,
                                                        long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                                        long allPieces){
+
+        boolean white = turn == WHITE;
+
         while (squares != 0){
             final long square = BitOperations.getFirstPiece(squares);
             int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(white, square,
@@ -302,8 +274,8 @@ class MoveGeneratorSpecial {
         return true;
     }
 
-    private static boolean areTheseSquaresEmpty(Chessboard board, long squares){
-        return ((board.allPieces() & squares) == 0);
+    private static boolean areTheseSquaresEmpty(long allPieces, long squares){
+        return ((allPieces & squares) == 0);
     }
 
 }
