@@ -27,8 +27,8 @@ class MakeMoveSpecial {
                 newRook = newPieceOnSquare(newRookIndex - 2);
                 newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
-                board.setWhiteKing(board.getWhiteKing() | newKing);
-                board.setWhiteRooks(board.getWhiteRooks() | newRook);
+                board.setWhiteKing(board.pieces[WHITE][KING] | newKing);
+                board.setWhiteRooks(board.pieces[WHITE][ROOK] | newRook);
 
                 board.pieces[WHITE][ROOK] |= newRook;
                 board.pieces[WHITE][KING] |= newKing;
@@ -48,8 +48,8 @@ class MakeMoveSpecial {
                 newRook = newPieceOnSquare(newRookIndex - 2);
                 newKing = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
-                board.setBlackKing(board.getBlackKing() | newKing);
-                board.setBlackRooks(board.getBlackRooks() | newRook);
+                board.setBlackKing(board.pieces[BLACK][KING] | newKing);
+                board.setBlackRooks(board.pieces[BLACK][ROOK] | newRook);
 
                 board.pieces[BLACK][ROOK] |= newRook;
                 board.pieces[BLACK][KING] |= newKing;
@@ -131,16 +131,16 @@ class MakeMoveSpecial {
         if (board.isWhiteTurn()){
             switch (move & WHICH_PROMOTION) {
                 case KNIGHT_PROMOTION_MASK:
-                    board.setWhiteKnights(board.getWhiteKnights() | destinationPiece);
+                    board.setWhiteKnights(board.pieces[WHITE][KNIGHT] | destinationPiece);
                     break;
                 case BISHOP_PROMOTION_MASK:
-                    board.setWhiteBishops(board.getWhiteBishops() | destinationPiece);
+                    board.setWhiteBishops(board.pieces[WHITE][BISHOP] | destinationPiece);
                     break;
                 case ROOK_PROMOTION_MASK:
-                    board.setWhiteRooks(board.getWhiteRooks() | destinationPiece);
+                    board.setWhiteRooks(board.pieces[WHITE][ROOK] | destinationPiece);
                     break;
                 case QUEEN_PROMOTION_MASK:
-                    board.setWhiteQueen(board.getWhiteQueen() | destinationPiece);
+                    board.setWhiteQueen(board.pieces[WHITE][QUEEN] | destinationPiece);
                     break;
             }
         }
@@ -148,16 +148,16 @@ class MakeMoveSpecial {
         else{
             switch (move & WHICH_PROMOTION) {
                 case KNIGHT_PROMOTION_MASK:
-                    board.setBlackKnights(board.getBlackKnights() | destinationPiece);
+                    board.setBlackKnights(board.pieces[BLACK][KNIGHT] | destinationPiece);
                     break;
                 case BISHOP_PROMOTION_MASK:
-                    board.setBlackBishops(board.getBlackBishops() | destinationPiece);
+                    board.setBlackBishops(board.pieces[BLACK][BISHOP] | destinationPiece);
                     break;
                 case ROOK_PROMOTION_MASK:
-                    board.setBlackRooks(board.getBlackRooks() | destinationPiece);
+                    board.setBlackRooks(board.pieces[BLACK][ROOK] | destinationPiece);
                     break;
                 case QUEEN_PROMOTION_MASK:
-                    board.setBlackQueen(board.getBlackQueen() | destinationPiece);
+                    board.setBlackQueen(board.pieces[BLACK][QUEEN] | destinationPiece);
                     break;
             }
         }
@@ -168,21 +168,21 @@ class MakeMoveSpecial {
         long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
         Assert.assertEquals(0, (destinationPiece & board.allPieces()));
-        Assert.assertTrue( ((sourcePiece & board.getWhitePawns()) != 0)
-                || ((sourcePiece & board.getBlackPawns()) != 0) );
+        Assert.assertTrue( ((sourcePiece & board.pieces[WHITE][PAWN]) != 0)
+                || ((sourcePiece & board.pieces[BLACK][PAWN]) != 0) );
 
         if (board.isWhiteTurn()) {
             removePiecesFrom(board, sourcePiece, WHITE_PAWN);
             removePiecesFrom(board, destinationPiece >>> 8, BLACK_PAWN);
 
-            long p = board.getWhitePawns();
+            long p = board.pieces[WHITE][PAWN];
             board.setWhitePawns(p | destinationPiece);
             board.pieces[WHITE][PAWN] |= destinationPiece;
         }
         else {
             removePiecesFrom(board, sourcePiece, BLACK_PAWN);
             removePiecesFrom(board, destinationPiece << 8, WHITE_PAWN);
-            board.setBlackPawns(board.getBlackPawns() | destinationPiece);
+            board.setBlackPawns(board.pieces[BLACK][PAWN] | destinationPiece);
             board.pieces[BLACK][PAWN] |= destinationPiece;
         }
     }

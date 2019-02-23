@@ -141,20 +141,20 @@ class MoveGeneratorMaster {
                             enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing
                     );
 
-            addPinnedPiecesMoves(moves, board, whiteTurn, pinnedPieces, myKing,
+            addPinnedPiecesMoves(moves, board, board.turn, pinnedPieces, myKing,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     enemies, friends, allPieces);
         }
     }
 
-    private static void addPinnedPiecesMoves(int[] moves, Chessboard board, boolean whiteTurn,
+    private static void addPinnedPiecesMoves(int[] moves, Chessboard board, int turn,
                                              long pinnedPieces, long squareWeArePinnedTo,
                                              long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                              long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                              long enemies, long friends, long allPieces){
 
-        Assert.assertTrue(whiteTurn ? board.turn ==  WHITE : board.turn == BLACK);
+        boolean whiteTurn = turn == WHITE;
         
         while (pinnedPieces != 0){
             long pinnedPiece = getFirstPiece(pinnedPieces);
@@ -171,10 +171,9 @@ class MoveGeneratorMaster {
                 continue;
             }
             if ((pinnedPiece & myPawns) != 0) {
-                long PENULTIMATE_RANK = whiteTurn ? BoardConstants.RANK_SEVEN : BoardConstants.RANK_TWO;
                 long allButPinnedFriends = friends & ~pinnedPiece;
 
-                if ((pinnedPiece & PENULTIMATE_RANK) == 0) {
+                if ((pinnedPiece & PENULTIMATE_RANKS[turn]) == 0) {
 
                     addMovesFromAttackTableMasterBetter(moves,
                             singlePawnPushes(pinnedPiece, whiteTurn, pushMask, allPieces)

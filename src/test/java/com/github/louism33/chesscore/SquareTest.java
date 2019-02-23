@@ -7,7 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.Square.*;
+import static com.github.louism33.chesscore.Square.A1;
+import static com.github.louism33.chesscore.Square.A7;
+import static com.github.louism33.chesscore.Square.A8;
+import static com.github.louism33.chesscore.Square.B7;
+import static com.github.louism33.chesscore.Square.C7;
+import static com.github.louism33.chesscore.Square.D7;
+import static com.github.louism33.chesscore.Square.E1;
+import static com.github.louism33.chesscore.Square.E7;
+import static com.github.louism33.chesscore.Square.F7;
+import static com.github.louism33.chesscore.Square.G7;
+import static com.github.louism33.chesscore.Square.H1;
+import static com.github.louism33.chesscore.Square.H7;
+import static com.github.louism33.chesscore.Square.H8;
 
 public class SquareTest {
 
@@ -21,14 +35,14 @@ public class SquareTest {
     @Test
     void getPieceOnSquare() {
         Chessboard board = new Chessboard();
-        final Square pieceOnSquare = Square.getSquareOfBitboard(board.getWhiteKing());
+        final Square pieceOnSquare = Square.getSquareOfBitboard(board.pieces[WHITE][KING]);
         Assert.assertEquals(pieceOnSquare, E1);
     }
 
     @Test
     void getPiecesOnSquare() {
         Chessboard board = new Chessboard();
-        final List<Square> piecesOnSquare = Square.getPiecesOnSquare(board.getBlackPawns());
+        final List<Square> piecesOnSquare = Square.getPiecesOnSquare(board.pieces[BLACK][PAWN]);
         List<Square> blackPawns = new ArrayList<>();
         blackPawns.add(A7);
         blackPawns.add(B7);
@@ -51,14 +65,14 @@ public class SquareTest {
     @Test
     void squaresFromBitboard() {
         Chessboard newBoard = new Chessboard();
-        final List<Square> squares = Square.squaresFromBitboard(newBoard.getWhiteRooks());
+        final List<Square> squares = Square.squaresFromBitboard(newBoard.pieces[WHITE][ROOK]);
         List<Square> initialWhiteRooks = new ArrayList<>();
         initialWhiteRooks.add(A1);
         initialWhiteRooks.add(H1);
 
         Assert.assertTrue(squares.containsAll(initialWhiteRooks));
 
-        final List<Square> squares2 = Square.squaresFromBitboard(newBoard.getBlackRooks());
+        final List<Square> squares2 = Square.squaresFromBitboard(newBoard.pieces[BLACK][ROOK]);
         List<Square> initialWhiteRooks2 = new ArrayList<>();
         initialWhiteRooks2.add(A8);
         initialWhiteRooks2.add(H8);

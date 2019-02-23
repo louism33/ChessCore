@@ -125,6 +125,7 @@ public class BoardConstants {
     public static final long[] PENULTIMATE_RANKS = new long[2];
     public static final long[] FINAL_RANKS = new long[2];
     public static final long[] INTERMEDIATE_RANKS = new long[2];
+    public static final long[] ENPASSANT_RANK = new long[2];
 
     static {
         PENULTIMATE_RANKS[WHITE] = RANK_SEVEN;
@@ -135,6 +136,9 @@ public class BoardConstants {
 
         INTERMEDIATE_RANKS[WHITE] = RANK_THREE;
         INTERMEDIATE_RANKS[BLACK] = RANK_SIX;
+
+        ENPASSANT_RANK[WHITE] = RANK_FOUR;
+        ENPASSANT_RANK[BLACK] = RANK_FIVE;
     }
     
     public static final long[] ROWS = new long[]{

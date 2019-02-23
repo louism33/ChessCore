@@ -130,27 +130,19 @@ public class MoveParser {
         return buildMove(board, source.ordinal(), destinationIndex.ordinal())
                 | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
     }
-
-    static int moveFromSourceDestinationCaptureBetter(Chessboard board, int source, int sourcePiece, 
-                                                      int destinationIndex, boolean capture) {
-        
-        return buildBetterMove(source, sourcePiece, destinationIndex, NO_PIECE)
-                | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex)) : 0);
-    }
-    static int moveFromSourceDestinationCapture(Chessboard board, int source, int destinationIndex, boolean capture) {
-        return buildMove(board, source, destinationIndex) 
-                | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex)) : 0);
-    }
-
+    
     private static int capturePieceMask(Chessboard board, int destinationIndex) {
-        return whichPieceMaskInt(pieceOnSquareInt(board, newPieceOnSquare(destinationIndex))) << MoveConstants.VICTIM_PIECE_OFFSET;
-    }
-
-
-    private static int whichPieceMaskInt(int piece) {
-        return piece;
+        return (pieceOnSquareInt(board, newPieceOnSquare(destinationIndex))) << MoveConstants.VICTIM_PIECE_OFFSET;
     }
     
+    static int moveFromSourceDestinationCaptureBetter(int source, int sourcePiece,
+                                                      int destinationIndex, int victimPiece) {
+        
+        return buildBetterMove(source, sourcePiece, destinationIndex, NO_PIECE)
+                | (victimPiece != NO_PIECE ? (CAPTURE_MOVE_MASK | (victimPiece << VICTIM_PIECE_OFFSET)) : 0);
+    }
+
+ 
     
     public static int getSourceIndex(int move) {
         return ((move & SOURCE_MASK) >>> SOURCE_OFFSET);

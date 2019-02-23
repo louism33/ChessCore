@@ -1,6 +1,7 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveMakingUtilities.addPieceTo;
@@ -80,9 +81,9 @@ class MakeMoveRegular {
         // determine if flag should be added to enable EP on next turn
         long sourceSquare = newPieceOnSquare(MoveParser.getSourceIndex(move));
         long destinationSquare = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-        long HOME_RANK = (board.isWhiteTurn()) ? BoardConstants.RANK_TWO : BoardConstants.RANK_SEVEN;
-        long MY_PAWNS = (board.isWhiteTurn()) ? board.getWhitePawns() : board.getBlackPawns();
-        long enPassantPossibilityRank = (board.isWhiteTurn()) ? BoardConstants.RANK_FOUR : BoardConstants.RANK_FIVE;
+        long HOME_RANK = PENULTIMATE_RANKS[1 - board.turn];
+        long MY_PAWNS = board.pieces[board.turn][PAWN];
+        long enPassantPossibilityRank = ENPASSANT_RANK[board.turn];
 
         if ((sourceSquare & HOME_RANK) == 0){
             return false;

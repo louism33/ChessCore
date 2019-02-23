@@ -17,7 +17,7 @@ public class Chessboard implements Cloneable{
     private ChessboardDetails details;
 
     long[][] pieces = new long[2][7];
-    
+    // consider int[64] for all pieces + location
     int turn;
     /*
     castling rights bits:
@@ -116,19 +116,19 @@ public class Chessboard implements Cloneable{
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
         
         
-        this.setWhitePawns(board.getWhitePawns());
-        this.setWhiteKnights(board.getWhiteKnights());
-        this.setWhiteBishops(board.getWhiteBishops());
-        this.setWhiteRooks(board.getWhiteRooks());
-        this.setWhiteQueen(board.getWhiteQueen());
-        this.setWhiteKing(board.getWhiteKing());
+        this.setWhitePawns(board.pieces[WHITE][PAWN]);
+        this.setWhiteKnights(board.pieces[WHITE][KNIGHT]);
+        this.setWhiteBishops(board.pieces[WHITE][BISHOP]);
+        this.setWhiteRooks(board.pieces[WHITE][ROOK]);
+        this.setWhiteQueen(board.pieces[WHITE][QUEEN]);
+        this.setWhiteKing(board.pieces[WHITE][KING]);
 
-        this.setBlackPawns(board.getBlackPawns());
-        this.setBlackKnights(board.getBlackKnights());
-        this.setBlackBishops(board.getBlackBishops());
-        this.setBlackRooks(board.getBlackRooks());
-        this.setBlackQueen(board.getBlackQueen());
-        this.setBlackKing(board.getBlackKing());
+        this.setBlackPawns(board.pieces[BLACK][PAWN]);
+        this.setBlackKnights(board.pieces[BLACK][KNIGHT]);
+        this.setBlackBishops(board.pieces[BLACK][BISHOP]);
+        this.setBlackRooks(board.pieces[BLACK][ROOK]);
+        this.setBlackQueen(board.pieces[BLACK][QUEEN]);
+        this.setBlackKing(board.pieces[BLACK][KING]);
 
 
         this.castlingRights = board.castlingRights;
@@ -237,24 +237,24 @@ public class Chessboard implements Cloneable{
     public boolean inCheck(boolean white){
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
         if (white){
-            myKing = getWhiteKing();
-            enemyPawns = getBlackPawns();
-            enemyKnights = getBlackKnights();
-            enemyBishops = getBlackBishops();
-            enemyRooks = getBlackRooks();
-            enemyQueen = getBlackQueen();
+            myKing = pieces[WHITE][KING];
+            enemyPawns = pieces[BLACK][PAWN];
+            enemyKnights = pieces[BLACK][KNIGHT];
+            enemyBishops = pieces[BLACK][BISHOP];
+            enemyRooks = pieces[BLACK][ROOK];
+            enemyQueen = pieces[BLACK][QUEEN];
             enemyKing = getBlackKing();
 
             enemies = blackPieces();
             friends = whitePieces();
         } else {
             myKing = getBlackKing();
-            enemyPawns = getWhitePawns();
-            enemyKnights = getWhiteKnights();
-            enemyBishops = getWhiteBishops();
-            enemyRooks = getWhiteRooks();
-            enemyQueen = getWhiteQueen();
-            enemyKing = getWhiteKing();
+            enemyPawns = pieces[WHITE][PAWN];
+            enemyKnights = pieces[WHITE][KNIGHT];
+            enemyBishops = pieces[WHITE][BISHOP];
+            enemyRooks = pieces[WHITE][ROOK];
+            enemyQueen = pieces[WHITE][QUEEN];
+            enemyKing = pieces[WHITE][KING];
 
             enemies = whitePieces();
             friends = blackPieces();
@@ -316,7 +316,7 @@ public class Chessboard implements Cloneable{
      * @return a list of squares that have pinned pieces to the king on them
      */
     private List<Square> pinnedPiecesToKing(boolean white){
-        long myKing = white ? getWhiteKing() : getBlackKing();
+        long myKing = white ? pieces[WHITE][KING] : getBlackKing();
         return pinnedPiecesToSquare(white, Square.getSquareOfBitboard(myKing));
     }
 
@@ -342,42 +342,42 @@ public class Chessboard implements Cloneable{
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
                 enemies, friends;
         if (isWhiteTurn()){
-            myPawns = getWhitePawns();
-            myKnights = getWhiteKnights();
-            myBishops = getWhiteBishops();
-            myRooks = getWhiteRooks();
-            myQueen = getWhiteQueen();
-            myKing = getWhiteKing();
+            myPawns = pieces[WHITE][PAWN];
+            myKnights = pieces[WHITE][KNIGHT];
+            myBishops = pieces[WHITE][BISHOP];
+            myRooks = pieces[WHITE][ROOK];
+            myQueen = pieces[WHITE][QUEEN];
+            myKing = pieces[WHITE][KING];
 
-            enemyPawns = getBlackPawns();
-            enemyKnights = getBlackKnights();
-            enemyBishops = getBlackBishops();
-            enemyRooks = getBlackRooks();
-            enemyQueen = getBlackQueen();
+            enemyPawns = pieces[BLACK][PAWN];
+            enemyKnights = pieces[BLACK][KNIGHT];
+            enemyBishops = pieces[BLACK][BISHOP];
+            enemyRooks = pieces[BLACK][ROOK];
+            enemyQueen = pieces[BLACK][QUEEN];
             enemyKing = getBlackKing();
 
             enemies = blackPieces();
             friends = whitePieces();
         } else {
-            myPawns = getBlackPawns();
-            myKnights = getBlackKnights();
-            myBishops = getBlackBishops();
-            myRooks = getBlackRooks();
-            myQueen = getBlackQueen();
+            myPawns = pieces[BLACK][PAWN];
+            myKnights = pieces[BLACK][KNIGHT];
+            myBishops = pieces[BLACK][BISHOP];
+            myRooks = pieces[BLACK][ROOK];
+            myQueen = pieces[BLACK][QUEEN];
             myKing = getBlackKing();
 
-            enemyPawns = getWhitePawns();
-            enemyKnights = getWhiteKnights();
-            enemyBishops = getWhiteBishops();
-            enemyRooks = getWhiteRooks();
-            enemyQueen = getWhiteQueen();
-            enemyKing = getWhiteKing();
+            enemyPawns = pieces[WHITE][PAWN];
+            enemyKnights = pieces[WHITE][KNIGHT];
+            enemyBishops = pieces[WHITE][BISHOP];
+            enemyRooks = pieces[WHITE][ROOK];
+            enemyQueen = pieces[WHITE][QUEEN];
+            enemyKing = pieces[WHITE][KING];
 
             enemies = whitePieces();
             friends = blackPieces();
         }
 
-        return PinnedManager.whichPiecesArePinned(white ? getWhiteKing() : getBlackKing(),
+        return PinnedManager.whichPiecesArePinned(white ? pieces[WHITE][KING] : getBlackKing(),
                 enemyBishops, enemyRooks, enemyQueen,
                 friends, allPieces());
     }
@@ -426,7 +426,6 @@ public class Chessboard implements Cloneable{
             this.pieces[WHITE][ALL_COLOUR_PIECES] |= this.pieces[WHITE][i];
         }
         return this.pieces[WHITE][ALL_COLOUR_PIECES];
-//        return getWhitePawns() | getWhiteKnights() | getWhiteBishops() | getWhiteRooks() | getWhiteQueen() | getWhiteKing();
     }
 
     public long getPieces(int turn){
@@ -444,7 +443,7 @@ public class Chessboard implements Cloneable{
             this.pieces[BLACK][ALL_COLOUR_PIECES] |= this.pieces[BLACK][i];
         }
         return this.pieces[BLACK][ALL_COLOUR_PIECES];
-//        return getBlackPawns() | getBlackKnights() | getBlackBishops() | getBlackRooks() | getBlackQueen() | getBlackKing();
+//        return pieces[BLACK][PAWN] | pieces[BLACK][KNIGHT] | pieces[BLACK][BISHOP] | pieces[BLACK][ROOK] | pieces[BLACK][QUEEN] | getBlackKing();
     }
 
     public long allPieces(){
@@ -458,7 +457,7 @@ public class Chessboard implements Cloneable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Chessboard that = (Chessboard) o;
-        return Objects.equals(details, that.details)
+        return this.turn == that.turn
                 && this.castlingRights == that.castlingRights
                 && Objects.equals(zobristHash, that.zobristHash)
                 && Arrays.equals(zobristHashStack, that.zobristHashStack)
@@ -510,97 +509,46 @@ public class Chessboard implements Cloneable{
         this.castlingRights &= castlingRightsMask[BLACK][Q];
         this.castlingRights |= blackCanCastleQ ? castlingRightsOn[BLACK][Q] : 0;
     }
-    
-    
-    
 
-    public long getWhitePawns() {
-        return this.details.whitePawns;
-    }
 
     public void setWhitePawns(long whitePawns) {
         this.details.whitePawns = whitePawns;
-    }
-
-    public long getWhiteKnights() {
-        return this.details.whiteKnights;
     }
 
     public void setWhiteKnights(long whiteKnights) {
         this.details.whiteKnights = whiteKnights;
     }
 
-    public long getWhiteBishops() {
-        return this.details.whiteBishops;
-    }
-
     public void setWhiteBishops(long whiteBishops) {
         this.details.whiteBishops = whiteBishops;
-    }
-
-    public long getWhiteRooks() {
-        return this.details.whiteRooks;
     }
 
     public void setWhiteRooks(long whiteRooks) {
         this.details.whiteRooks = whiteRooks;
     }
 
-    public long getWhiteQueen() {
-//        Assert.assertEquals(this.details.whiteQueen, this.pieces[WHITE][QUEEN]);
-        return this.details.whiteQueen;
-    }
-
     public void setWhiteQueen(long whiteQueen) {
         this.details.whiteQueen = whiteQueen;
-    }
-
-    public long getWhiteKing() {
-//        Assert.assertEquals(this.details.whiteKing, this.pieces[WHITE][KING]);
-        return this.details.whiteKing;
     }
 
     public void setWhiteKing(long whiteKing) {
         this.details.whiteKing = whiteKing;
     }
 
-    public long getBlackPawns() {
-//        Assert.assertEquals(this.details.blackPawns, this.pieces[BLACK][PAWN]);
-        return this.details.blackPawns;
-    }
-
     public void setBlackPawns(long blackPawns) {
         this.details.blackPawns = blackPawns;
-    }
-
-    public long getBlackKnights() {
-//        Assert.assertEquals(this.details.blackKnights, this.pieces[BLACK][KNIGHT]);
-        return this.details.blackKnights;
     }
 
     public void setBlackKnights(long blackKnights) {
         this.details.blackKnights = blackKnights;
     }
 
-    public long getBlackBishops() {
-//        Assert.assertEquals(this.details.blackBishops, this.pieces[BLACK][BISHOP]);
-        return this.details.blackBishops;
-    }
-
     public void setBlackBishops(long blackBishops) {
         this.details.blackBishops = blackBishops;
     }
 
-    public long getBlackRooks() {
-        return this.details.blackRooks;
-    }
-
     public void setBlackRooks(long blackRooks) {
         this.details.blackRooks = blackRooks;
-    }
-
-    public long getBlackQueen() {
-        return this.details.blackQueen;
     }
 
     public void setBlackQueen(long blackQueen) {
@@ -608,7 +556,8 @@ public class Chessboard implements Cloneable{
     }
 
     public long getBlackKing() {
-        return this.details.blackKing;
+        return this.pieces[BLACK][KING];
+//        return this.details.blackKing;
     }
 
     public void setBlackKing(long blackKing) {
@@ -825,48 +774,48 @@ public class Chessboard implements Cloneable{
             int whichPiece = 0;
             switch (entry) {
                 case "P":
-                    this.setWhitePawns(this.getWhitePawns() | pieceFromFen);
+                    this.setWhitePawns(this.pieces[WHITE][PAWN] | pieceFromFen);
                     whichPiece = WHITE_PAWN;
                     break;
                 case "N":
-                    this.setWhiteKnights(this.getWhiteKnights() | pieceFromFen);
+                    this.setWhiteKnights(this.pieces[WHITE][KNIGHT] | pieceFromFen);
                     whichPiece = WHITE_KNIGHT;
                     break;
                 case "B":
-                    this.setWhiteBishops(this.getWhiteBishops() | pieceFromFen);
+                    this.setWhiteBishops(this.pieces[WHITE][BISHOP] | pieceFromFen);
                     whichPiece = WHITE_BISHOP;
                     break;
                 case "R":
-                    this.setWhiteRooks(this.getWhiteRooks() | pieceFromFen);
+                    this.setWhiteRooks(this.pieces[WHITE][ROOK] | pieceFromFen);
                     whichPiece = WHITE_ROOK;
                     break;
                 case "Q":
-                    this.setWhiteQueen(this.getWhiteQueen() | pieceFromFen);
+                    this.setWhiteQueen(this.pieces[WHITE][QUEEN] | pieceFromFen);
                     whichPiece = WHITE_QUEEN;
                     break;
                 case "K":
-                    this.setWhiteKing(this.getWhiteKing() | pieceFromFen);
+                    this.setWhiteKing(this.pieces[WHITE][KING] | pieceFromFen);
                     whichPiece = WHITE_KING;
                     break;
 
                 case "p":
-                    this.setBlackPawns(this.getBlackPawns() | pieceFromFen);
+                    this.setBlackPawns(this.pieces[BLACK][PAWN] | pieceFromFen);
                     whichPiece = BLACK_PAWN;
                     break;
                 case "n":
-                    this.setBlackKnights(this.getBlackKnights() | pieceFromFen);
+                    this.setBlackKnights(this.pieces[BLACK][KNIGHT] | pieceFromFen);
                     whichPiece = BLACK_KNIGHT;
                     break;
                 case "b":
-                    this.setBlackBishops(this.getBlackBishops() | pieceFromFen);
+                    this.setBlackBishops(this.pieces[BLACK][BISHOP] | pieceFromFen);
                     whichPiece = BLACK_BISHOP;
                     break;
                 case "r":
-                    this.setBlackRooks(this.getBlackRooks() | pieceFromFen);
+                    this.setBlackRooks(this.pieces[BLACK][ROOK] | pieceFromFen);
                     whichPiece = BLACK_ROOK;
                     break;
                 case "q":
-                    this.setBlackQueen(this.getBlackQueen() | pieceFromFen);
+                    this.setBlackQueen(this.pieces[BLACK][QUEEN] | pieceFromFen);
                     whichPiece = BLACK_QUEEN;
                     break;
                 case "k":

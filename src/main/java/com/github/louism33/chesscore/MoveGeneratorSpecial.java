@@ -108,12 +108,8 @@ class MoveGeneratorSpecial {
             if ((pawn & ignoreThesePieces) == 0) {
                 long pawnEnPassantCapture = singlePawnCaptures(pawn, white, enemyTakingSpots);
                 
-                
                 addMovesFromAttackTableMasterBetter(temp, pawnEnPassantCapture, getIndexOfFirstPiece(pawn), 
                         board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board);
-
-                        
-                        
             }
             myPawnsInPosition &= myPawnsInPosition - 1;
         }
@@ -135,7 +131,7 @@ class MoveGeneratorSpecial {
 
             board.makeMoveAndFlipTurn(move);
 
-            enemyPawns = board.isWhiteTurn() ? board.getWhitePawns() : board.getBlackPawns();
+            enemyPawns = board.isWhiteTurn() ? board.pieces[WHITE][PAWN] : board.pieces[BLACK][PAWN];
 
             boolean enPassantWouldLeadToCheck = boardInCheck(white, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,

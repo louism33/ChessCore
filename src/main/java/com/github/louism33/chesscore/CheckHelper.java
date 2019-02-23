@@ -1,6 +1,7 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.populationCount;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.PieceMove.*;
 
 class CheckHelper {
@@ -78,10 +79,10 @@ class CheckHelper {
                 drawByMaterial = true;
                 break;
             case 3:
-                if (populationCount(board.getBlackBishops())
-                        + populationCount(board.getWhiteBishops())
-                        + populationCount(board.getBlackKnights())
-                        +populationCount(board.getWhiteKnights()) != 0) {
+                if (populationCount(board.pieces[BLACK][BISHOP])
+                        + populationCount(board.pieces[WHITE][BISHOP])
+                        + populationCount(board.pieces[BLACK][KNIGHT])
+                        +populationCount(board.pieces[WHITE][KNIGHT]) != 0) {
                     
                     drawByMaterial = true;
                 }
@@ -102,10 +103,10 @@ class CheckHelper {
                 drawByMaterial = true;
                 break;
             case 3:
-                if (populationCount(board.getBlackBishops())
-                        + populationCount(board.getWhiteBishops())
-                        + populationCount(board.getBlackKnights())
-                        +populationCount(board.getWhiteKnights()) != 0) {
+                if (populationCount(board.pieces[BLACK][BISHOP])
+                        + populationCount(board.pieces[WHITE][BISHOP])
+                        + populationCount(board.pieces[BLACK][KNIGHT])
+                        +populationCount(board.pieces[WHITE][KNIGHT]) != 0) {
 
                     drawByMaterial = true;
                 }

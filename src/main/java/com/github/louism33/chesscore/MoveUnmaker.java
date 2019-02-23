@@ -70,8 +70,8 @@ class MoveUnmaker {
                         newRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
                         removePiecesFrom(board, newKing, WHITE_KING);
                         removePiecesFrom(board, newRook, WHITE_ROOK);
-                        board.setWhiteKing(board.getWhiteKing() | originalKing);
-                        board.setWhiteRooks(board.getWhiteRooks() | originalRook);
+                        board.setWhiteKing(board.pieces[WHITE][KING] | originalKing);
+                        board.setWhiteRooks(board.pieces[WHITE][ROOK] | originalRook);
                         break;
 
                     default:
@@ -79,8 +79,8 @@ class MoveUnmaker {
                         newRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
                         removePiecesFrom(board, newKing, BLACK_KING);
                         removePiecesFrom(board, newRook, BLACK_ROOK);
-                        board.setBlackKing(board.getBlackKing() | originalKing);
-                        board.setBlackRooks(board.getBlackRooks() | originalRook);
+                        board.setBlackKing(board.pieces[BLACK][KING] | originalKing);
+                        board.setBlackRooks(board.pieces[BLACK][ROOK] | originalRook);
                         break;
                 }
 
@@ -108,18 +108,18 @@ class MoveUnmaker {
                 board.pieces[BLACK][KING] &= mask;
                 
                 
-                board.setWhitePawns(board.getWhitePawns() & mask);
-                board.setWhiteKnights(board.getWhiteKnights() & mask);
-                board.setWhiteBishops(board.getWhiteBishops() & mask);
-                board.setWhiteRooks(board.getWhiteRooks() & mask);
-                board.setWhiteQueen(board.getWhiteQueen() & mask);
-                board.setWhiteKing(board.getWhiteKing() & mask);
-                board.setBlackPawns(board.getBlackPawns() & mask);
-                board.setBlackKnights(board.getBlackKnights() & mask);
-                board.setBlackBishops(board.getBlackBishops() & mask);
-                board.setBlackRooks(board.getBlackRooks() & mask);
-                board.setBlackQueen(board.getBlackQueen() & mask);
-                board.setBlackKing(board.getBlackKing() & mask);
+                board.setWhitePawns(board.pieces[WHITE][PAWN] & mask);
+                board.setWhiteKnights(board.pieces[WHITE][KNIGHT] & mask);
+                board.setWhiteBishops(board.pieces[WHITE][BISHOP] & mask);
+                board.setWhiteRooks(board.pieces[WHITE][ROOK] & mask);
+                board.setWhiteQueen(board.pieces[WHITE][QUEEN] & mask);
+                board.setWhiteKing(board.pieces[WHITE][KING] & mask);
+                board.setBlackPawns(board.pieces[BLACK][PAWN] & mask);
+                board.setBlackKnights(board.pieces[BLACK][KNIGHT] & mask);
+                board.setBlackBishops(board.pieces[BLACK][BISHOP] & mask);
+                board.setBlackRooks(board.pieces[BLACK][ROOK] & mask);
+                board.setBlackQueen(board.pieces[BLACK][QUEEN] & mask);
+                board.setBlackKing(board.pieces[BLACK][KING] & mask);
 
                 addRelevantPieceToSquare(board,
                         StackDataUtil.getTurn(pop) == 1 ? 1 : 7, squareToMoveBackTo);
@@ -163,40 +163,40 @@ class MoveUnmaker {
 
         switch (pieceToAdd) {
             case 1:
-                board.setWhitePawns(board.getWhitePawns() | placeToAddPiece);
+                board.setWhitePawns(board.pieces[WHITE][PAWN] | placeToAddPiece);
                 break;
             case 2:
-                board.setWhiteKnights(board.getWhiteKnights() | placeToAddPiece);
+                board.setWhiteKnights(board.pieces[WHITE][KNIGHT] | placeToAddPiece);
                 break;
             case 3:
-                board.setWhiteBishops(board.getWhiteBishops() | placeToAddPiece);
+                board.setWhiteBishops(board.pieces[WHITE][BISHOP] | placeToAddPiece);
                 break;
             case 4:
-                board.setWhiteRooks(board.getWhiteRooks() | placeToAddPiece);
+                board.setWhiteRooks(board.pieces[WHITE][ROOK] | placeToAddPiece);
                 break;
             case 5:
-                board.setWhiteQueen(board.getWhiteQueen() | placeToAddPiece);
+                board.setWhiteQueen(board.pieces[WHITE][QUEEN] | placeToAddPiece);
                 break;
             case 6:
-                board.setWhiteKing(board.getWhiteKing() | placeToAddPiece);
+                board.setWhiteKing(board.pieces[WHITE][KING] | placeToAddPiece);
                 break;
             case 7:
-                board.setBlackPawns(board.getBlackPawns() | placeToAddPiece);
+                board.setBlackPawns(board.pieces[BLACK][PAWN] | placeToAddPiece);
                 break;
             case 8:
-                board.setBlackKnights(board.getBlackKnights() | placeToAddPiece);
+                board.setBlackKnights(board.pieces[BLACK][KNIGHT] | placeToAddPiece);
                 break;
             case 9:
-                board.setBlackBishops(board.getBlackBishops() | placeToAddPiece);
+                board.setBlackBishops(board.pieces[BLACK][BISHOP] | placeToAddPiece);
                 break;
             case 10:
-                board.setBlackRooks(board.getBlackRooks() | placeToAddPiece);
+                board.setBlackRooks(board.pieces[BLACK][ROOK] | placeToAddPiece);
                 break;
             case 11:
-                board.setBlackQueen(board.getBlackQueen() | placeToAddPiece);
+                board.setBlackQueen(board.pieces[BLACK][QUEEN] | placeToAddPiece);
                 break;
             case 12:
-                board.setBlackKing(board.getBlackKing() | placeToAddPiece);
+                board.setBlackKing(board.pieces[BLACK][KING] | placeToAddPiece);
                 break;
             default:
                 throw new RuntimeException("problem with putting back a captured piece");

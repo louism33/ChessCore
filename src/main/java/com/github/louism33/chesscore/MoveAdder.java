@@ -1,9 +1,11 @@
 package com.github.louism33.chesscore;
 
-import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BoardConstants.ALL_COLOUR_PIECES;
+import static com.github.louism33.chesscore.BoardConstants.NO_PIECE;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveParser.*;
+import static com.github.louism33.chesscore.Piece.pieceOnSquareInt;
 
 class MoveAdder {
 
@@ -12,13 +14,16 @@ class MoveAdder {
         
         int index = numberOfRealMoves(moves);
 
-        long enemyPieces = board.isWhiteTurn() ? board.blackPieces() : board.whitePieces();
+        long enemyPieces = board.pieces[1 - board.turn][ALL_COLOUR_PIECES];
 
         while (attackBoard != 0){
             final long destination = getFirstPiece(attackBoard);
+            int destinationIndex = getIndexOfFirstPiece(destination);
 
-            moves[index] = moveFromSourceDestinationCaptureBetter(board, source, sourcePiece, getIndexOfFirstPiece(destination),
-                    ((destination & enemyPieces) != 0));
+            int victimPiece = ((destination & enemyPieces) != 0) ? whichPieceOnSquare(board, destinationIndex) : NO_PIECE;
+            
+            moves[index] = moveFromSourceDestinationCaptureBetter(source, sourcePiece, 
+                    getIndexOfFirstPiece(destination), victimPiece);
 
             index++;
 
@@ -32,9 +37,13 @@ class MoveAdder {
             int index = numberOfRealMoves(moves);
             
             final long destination = getFirstPiece(attackBoard);
-            final boolean capture = (destination & enemyPieces) != 0;
-            final int move = moveFromSourceDestinationCaptureBetter(board, source, movingPiece, 
-                    getIndexOfFirstPiece(destination), capture) | PROMOTION_MASK;
+
+            int destinationIndex = getIndexOfFirstPiece(destination);
+
+            int victimPiece = ((destination & enemyPieces) != 0) ? whichPieceOnSquare(board, destinationIndex) : NO_PIECE;
+            
+            final int move = moveFromSourceDestinationCaptureBetter(source, movingPiece, 
+                    getIndexOfFirstPiece(destination), victimPiece) | PROMOTION_MASK;
             
             moves[index] = move | KNIGHT_PROMOTION_MASK;
             moves[index+1] = move | BISHOP_PROMOTION_MASK;
@@ -44,5 +53,8 @@ class MoveAdder {
             attackBoard &= attackBoard - 1;
         }
     }
-    
+
+    static int whichPieceOnSquare(Chessboard board, int destinationIndex) {
+        return pieceOnSquareInt(board, newPieceOnSquare(destinationIndex));
+    }
 }

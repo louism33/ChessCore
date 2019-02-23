@@ -40,24 +40,5 @@ class ChessboardDetails {
         blackKing = 0x0800000000000000L;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChessboardDetails that = (ChessboardDetails) o;
-        return 
-                whitePawns == that.whitePawns &&
-                whiteKnights == that.whiteKnights &&
-                whiteBishops == that.whiteBishops &&
-                whiteRooks == that.whiteRooks &&
-                whiteQueen == that.whiteQueen &&
-                whiteKing == that.whiteKing &&
-                blackPawns == that.blackPawns &&
-                blackKnights == that.blackKnights &&
-                blackBishops == that.blackBishops &&
-                blackRooks == that.blackRooks &&
-                blackQueen == that.blackQueen &&
-                blackKing == that.blackKing;
-    }
 
 }

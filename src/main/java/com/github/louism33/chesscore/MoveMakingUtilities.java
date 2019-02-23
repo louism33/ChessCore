@@ -37,41 +37,41 @@ class MoveMakingUtilities {
         
         switch (thesePieces) {
             case WHITE_PAWN_MASK :
-                board.setWhitePawns(board.getWhitePawns() ^ removeThis);
+                board.setWhitePawns(board.pieces[WHITE][PAWN] ^ removeThis);
                 break;
             case WHITE_KNIGHT_MASK :
-                board.setWhiteKnights(board.getWhiteKnights() ^ removeThis);
+                board.setWhiteKnights(board.pieces[WHITE][KNIGHT] ^ removeThis);
                 break;
             case WHITE_BISHOP_MASK :
-                board.setWhiteBishops(board.getWhiteBishops() ^ removeThis);
+                board.setWhiteBishops(board.pieces[WHITE][BISHOP] ^ removeThis);
                 break;
             case WHITE_ROOK_MASK :
-                board.setWhiteRooks(board.getWhiteRooks() ^ removeThis);
+                board.setWhiteRooks(board.pieces[WHITE][ROOK] ^ removeThis);
                 break;
             case WHITE_QUEEN_MASK :
-                board.setWhiteQueen(board.getWhiteQueen() ^ removeThis);
+                board.setWhiteQueen(board.pieces[WHITE][QUEEN] ^ removeThis);
                 break;
             case WHITE_KING_MASK :
-                board.setWhiteKing(board.getWhiteKing() ^ removeThis);
+                board.setWhiteKing(board.pieces[WHITE][KING] ^ removeThis);
                 break;
 
             case BLACK_PAWN_MASK :
-                board.setBlackPawns(board.getBlackPawns() ^ removeThis);
+                board.setBlackPawns(board.pieces[BLACK][PAWN] ^ removeThis);
                 break;
             case BLACK_KNIGHT_MASK :
-                board.setBlackKnights(board.getBlackKnights() ^ removeThis);
+                board.setBlackKnights(board.pieces[BLACK][KNIGHT] ^ removeThis);
                 break;
             case BLACK_BISHOP_MASK :
-                board.setBlackBishops(board.getBlackBishops() ^ removeThis);
+                board.setBlackBishops(board.pieces[BLACK][BISHOP] ^ removeThis);
                 break;
             case BLACK_ROOK_MASK :
-                board.setBlackRooks(board.getBlackRooks() ^ removeThis);
+                board.setBlackRooks(board.pieces[BLACK][ROOK] ^ removeThis);
                 break;
             case BLACK_QUEEN_MASK :
-                board.setBlackQueen(board.getBlackQueen() ^ removeThis);
+                board.setBlackQueen(board.pieces[BLACK][QUEEN] ^ removeThis);
                 break;
             case BLACK_KING_MASK :
-                board.setBlackKing(board.getBlackKing() ^ removeThis);
+                board.setBlackKing(board.pieces[BLACK][KING] ^ removeThis);
                 break;
         }
     }
@@ -82,41 +82,41 @@ class MoveMakingUtilities {
         
         switch (toThese) {
             case WHITE_PAWN:
-                board.setWhitePawns(board.getWhitePawns() | addThis);
+                board.setWhitePawns(board.pieces[WHITE][PAWN] | addThis);
                 break;
             case WHITE_KNIGHT:
-                board.setWhiteKnights(board.getWhiteKnights() | addThis);
+                board.setWhiteKnights(board.pieces[WHITE][KNIGHT] | addThis);
                 break;
             case WHITE_BISHOP:
-                board.setWhiteBishops(board.getWhiteBishops() | addThis);
+                board.setWhiteBishops(board.pieces[WHITE][BISHOP] | addThis);
                 break;
             case WHITE_ROOK:
-                board.setWhiteRooks(board.getWhiteRooks() | addThis);
+                board.setWhiteRooks(board.pieces[WHITE][ROOK] | addThis);
                 break;
             case WHITE_QUEEN:
-                board.setWhiteQueen(board.getWhiteQueen() | addThis);
+                board.setWhiteQueen(board.pieces[WHITE][QUEEN] | addThis);
                 break;
             case WHITE_KING:
-                board.setWhiteKing(board.getWhiteKing() | addThis);
+                board.setWhiteKing(board.pieces[WHITE][KING] | addThis);
                 break;
 
             case BLACK_PAWN:
-                board.setBlackPawns(board.getBlackPawns() | addThis);
+                board.setBlackPawns(board.pieces[BLACK][PAWN] | addThis);
                 break;
             case BLACK_KNIGHT:
-                board.setBlackKnights(board.getBlackKnights() | addThis);
+                board.setBlackKnights(board.pieces[BLACK][KNIGHT] | addThis);
                 break;
             case BLACK_BISHOP:
-                board.setBlackBishops(board.getBlackBishops() | addThis);
+                board.setBlackBishops(board.pieces[BLACK][BISHOP] | addThis);
                 break;
             case BLACK_ROOK:
-                board.setBlackRooks(board.getBlackRooks() | addThis);
+                board.setBlackRooks(board.pieces[BLACK][ROOK] | addThis);
                 break;
             case BLACK_QUEEN:
-                board.setBlackQueen(board.getBlackQueen() | addThis);
+                board.setBlackQueen(board.pieces[BLACK][QUEEN] | addThis);
                 break;
             case BLACK_KING:
-                board.setBlackKing(board.getBlackKing() | addThis);
+                board.setBlackKing(board.pieces[BLACK][KING] | addThis);
                 break;
         }
     }

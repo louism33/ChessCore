@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.github.louism33.chesscore.BitOperations.*;
-import static com.github.louism33.chesscore.BoardConstants.FILES;
-import static com.github.louism33.chesscore.BoardConstants.ROWS;
+import static com.github.louism33.chesscore.BoardConstants.*;
 
 public enum Square {
 
@@ -24,24 +23,24 @@ public enum Square {
     public static boolean squareThreatenend(Chessboard board, boolean white, long square){
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
         if (white){
-            myKing = board.getWhiteKing();
-            enemyPawns = board.getBlackPawns();
-            enemyKnights = board.getBlackKnights();
-            enemyBishops = board.getBlackBishops();
-            enemyRooks = board.getBlackRooks();
-            enemyQueen = board.getBlackQueen();
-            enemyKing = board.getBlackKing();
+            myKing = board.pieces[WHITE][KING];
+            enemyPawns = board.pieces[BLACK][PAWN];
+            enemyKnights = board.pieces[BLACK][KNIGHT];
+            enemyBishops = board.pieces[BLACK][BISHOP];
+            enemyRooks = board.pieces[BLACK][ROOK];
+            enemyQueen = board.pieces[BLACK][QUEEN];
+            enemyKing = board.pieces[BLACK][KING];
 
             enemies = board.blackPieces();
             friends = board.whitePieces();
         } else {
-            myKing = board.getBlackKing();
-            enemyPawns = board.getWhitePawns();
-            enemyKnights = board.getWhiteKnights();
-            enemyBishops = board.getWhiteBishops();
-            enemyRooks = board.getWhiteRooks();
-            enemyQueen = board.getWhiteQueen();
-            enemyKing = board.getWhiteKing();
+            myKing = board.pieces[BLACK][KING];
+            enemyPawns = board.pieces[WHITE][PAWN];
+            enemyKnights = board.pieces[WHITE][KNIGHT];
+            enemyBishops = board.pieces[WHITE][BISHOP];
+            enemyRooks = board.pieces[WHITE][ROOK];
+            enemyQueen = board.pieces[WHITE][QUEEN];
+            enemyKing = board.pieces[WHITE][KING];
 
             enemies = board.whitePieces();
             friends = board.blackPieces();

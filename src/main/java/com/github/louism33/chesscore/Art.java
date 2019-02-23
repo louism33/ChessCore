@@ -1,6 +1,7 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
+import static com.github.louism33.chesscore.BoardConstants.*;
 
 public class Art {
 
@@ -77,19 +78,19 @@ public class Art {
     private static int pieceOnSquare(Chessboard board, int s){
         long square = newPieceOnSquare(s);
 
-        if ((square & board.getWhitePawns()) != 0) return 1;
-        if ((square & board.getWhiteKnights()) != 0) return 2;
-        if ((square & board.getWhiteBishops()) != 0) return 3;
-        if ((square & board.getWhiteRooks()) != 0) return 4;
-        if ((square & board.getWhiteQueen()) != 0) return 5;
-        if ((square & board.getWhiteKing()) != 0) return 6;
+        if ((square & board.pieces[WHITE][PAWN]) != 0) return 1;
+        if ((square & board.pieces[WHITE][KNIGHT]) != 0) return 2;
+        if ((square & board.pieces[WHITE][BISHOP]) != 0) return 3;
+        if ((square & board.pieces[WHITE][ROOK]) != 0) return 4;
+        if ((square & board.pieces[WHITE][QUEEN]) != 0) return 5;
+        if ((square & board.pieces[WHITE][KING]) != 0) return 6;
 
-        if ((square & board.getBlackPawns()) != 0) return 7;
-        if ((square & board.getBlackKnights()) != 0) return 8;
-        if ((square & board.getBlackBishops()) != 0)  return 9;
-        if ((square & board.getBlackRooks()) != 0) return 10;
-        if ((square & board.getBlackQueen()) != 0) return 11;
-        if ((square & board.getBlackKing()) != 0) return 12;
+        if ((square & board.pieces[BLACK][PAWN]) != 0) return 7;
+        if ((square & board.pieces[BLACK][KNIGHT]) != 0) return 8;
+        if ((square & board.pieces[BLACK][BISHOP]) != 0)  return 9;
+        if ((square & board.pieces[BLACK][ROOK]) != 0) return 10;
+        if ((square & board.pieces[BLACK][QUEEN]) != 0) return 11;
+        if ((square & board.pieces[BLACK][KING]) != 0) return 12;
 
         else return 0;
     }

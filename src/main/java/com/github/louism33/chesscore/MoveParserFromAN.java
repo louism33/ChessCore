@@ -5,8 +5,7 @@ import org.junit.Assert;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.github.louism33.chesscore.BoardConstants.FILES;
-import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.extractFileFromStack;
 import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationSquareCaptureSecure;
@@ -153,13 +152,13 @@ public class MoveParserFromAN {
 
     private static boolean isCastle(Chessboard board, Square sourceSquare, Square destinationSquare, Piece movingPiece){
         if (sourceSquare == Square.E1
-                && ((sourceSquare.toBitboard() & board.getWhiteKing()) != 0)){
+                && ((sourceSquare.toBitboard() & board.pieces[WHITE][KING]) != 0)){
             if (destinationSquare == Square.G1 || destinationSquare == Square.C1){
                 return true;
             }
         }
         if (sourceSquare == Square.E8
-                && ((sourceSquare.toBitboard() & board.getBlackKing()) != 0)){
+                && ((sourceSquare.toBitboard() & board.pieces[BLACK][KING]) != 0)){
             if (destinationSquare == Square.G8 || destinationSquare == Square.C8){
                 return true;
             }
@@ -191,7 +190,7 @@ public class MoveParserFromAN {
                 return false;
             }
 
-            if ((sourceSquare.toBitboard() & (board.getWhitePawns() | board.getBlackPawns())) == 0){
+            if ((sourceSquare.toBitboard() & (board.pieces[WHITE][PAWN] | board.pieces[BLACK][PAWN])) == 0){
                 return false;
             }
 
