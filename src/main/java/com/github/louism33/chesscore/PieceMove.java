@@ -9,6 +9,14 @@ import static com.github.louism33.chesscore.Setup.setup;
 
 class PieceMove {
 
+    static long singlePawnPushes(long pawns, int turn, long legalPushes, long allPieces) {
+        final long possiblePawnSinglePushes = turn == WHITE ? pawns << 8 : pawns >>> 8;
+        final long intermediateRank = INTERMEDIATE_RANKS[turn];
+        long possibleDoubles = (((possiblePawnSinglePushes & intermediateRank & ~allPieces) ));
+        return (possiblePawnSinglePushes | (turn == WHITE ? possibleDoubles << 8 : possibleDoubles >>> 8))
+                & legalPushes & ~allPieces;
+    }
+    
     static long singlePawnPushes(long pawns, boolean white, long legalPushes, long allPieces) {
         final long possiblePawnSinglePushes = white ? pawns << 8 : pawns >>> 8;
         final long intermediateRank = white ? BoardConstants.RANK_THREE : BoardConstants.RANK_SIX;
@@ -17,6 +25,11 @@ class PieceMove {
                 & legalPushes & ~allPieces;
     }
 
+    static long singlePawnCaptures(long piece, int turn, long legalCaptures) {
+        Assert.assertTrue(getIndexOfFirstPiece(piece) > 0 || getIndexOfFirstPiece(piece) <= 63);
+        return legalCaptures & (PAWN_CAPTURE_TABLE[turn][getIndexOfFirstPiece(piece)]);
+    }
+    
     static long singlePawnCaptures(long piece, boolean white, long legalCaptures) {
         Assert.assertTrue(getIndexOfFirstPiece(piece) > 0 || getIndexOfFirstPiece(piece) <= 63);
         return legalCaptures & (white

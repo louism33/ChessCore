@@ -39,9 +39,9 @@ class MoveGeneratorCheck {
                 allPieces);
 
         addKingLegalMovesOnly(moves, board, white,
-                myBishops, myQueens, myKing,
+                myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends);
+                enemies);
 
         addEnPassantMoves(moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
                 myPawns, myKing,

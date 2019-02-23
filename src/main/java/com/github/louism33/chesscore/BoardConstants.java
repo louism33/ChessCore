@@ -122,11 +122,19 @@ public class BoardConstants {
             0x8080808080808080L,
     };
 
-    public static final long[] PROMOTING_RANKS = new long[2];
+    public static final long[] PENULTIMATE_RANKS = new long[2];
+    public static final long[] FINAL_RANKS = new long[2];
+    public static final long[] INTERMEDIATE_RANKS = new long[2];
 
     static {
-        PROMOTING_RANKS[WHITE] = RANK_SEVEN;
-        PROMOTING_RANKS[BLACK] = RANK_TWO;
+        PENULTIMATE_RANKS[WHITE] = RANK_SEVEN;
+        PENULTIMATE_RANKS[BLACK] = RANK_TWO;
+
+        FINAL_RANKS[WHITE] = RANK_EIGHT;
+        FINAL_RANKS[BLACK] = RANK_ONE;
+
+        INTERMEDIATE_RANKS[WHITE] = RANK_THREE;
+        INTERMEDIATE_RANKS[BLACK] = RANK_SIX;
     }
     
     public static final long[] ROWS = new long[]{
@@ -300,7 +308,8 @@ public class BoardConstants {
             144115188075855872L, 288230376151711744L, 576460752303423488L, 1152921504606846976L, 2305843009213693952L, 4611686018427387904L, -9223372036854775808L, 0L,
             0L, 0L, 0L, 0L, 0L, 0L, 0L,
     };
-    
+
+   
     public static final long[] PAWN_CAPTURE_TABLE_WHITE = {
             0x200L, 0x500L, 0xa00L, 0x1400L, 0x2800L, 0x5000L, 0xa000L, 0x4000L,
             0x20000L, 0x50000L, 0xa0000L, 0x140000L, 0x280000L, 0x500000L, 0xa00000L, 0x400000L,
@@ -323,6 +332,11 @@ public class BoardConstants {
             0x2000000000000L, 0x5000000000000L, 0xa000000000000L, 0x14000000000000L, 0x28000000000000L, 0x50000000000000L, 0xa0000000000000L, 0x40000000000000L,
     };
 
+    public static final long[][] PAWN_CAPTURE_TABLE = new long[2][PAWN_CAPTURE_TABLE_WHITE.length];
+    static{
+        PAWN_CAPTURE_TABLE[WHITE] = PAWN_CAPTURE_TABLE_WHITE;
+        PAWN_CAPTURE_TABLE[BLACK] = PAWN_CAPTURE_TABLE_BLACK;
+    }
 
     public static long[][] rookDatabase = new long[64][];
     public static long[][] bishopDatabase = new long[64][];

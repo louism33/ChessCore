@@ -1,12 +1,13 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
-import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
-import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterPromotion;
+import static com.github.louism33.chesscore.MoveAdder.*;
 import static com.github.louism33.chesscore.MoveConstants.CASTLING_MASK;
 import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.MoveParser.*;
@@ -20,26 +21,20 @@ class MoveGeneratorSpecial {
                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
                                   long myPawns,
                                   long enemies, long allPieces){
-        long penultimateRank;
-        long finalRank;
-        if (white) {
-            penultimateRank = RANK_SEVEN;
-            finalRank = RANK_EIGHT;
-        }
-        else {
-            penultimateRank = RANK_TWO;
-            finalRank = RANK_ONE;
-        }
+        int turn = white ? WHITE : BLACK;
 
-        long promotablePawns = myPawns & penultimateRank & ~ignoreThesePieces;
+        long promotablePawns = myPawns & PENULTIMATE_RANKS[turn] & ~ignoreThesePieces;
+        
+        Assert.assertEquals(board.isWhiteTurn(), white);
 
         while (promotablePawns != 0){
             final long pawn = getFirstPiece(promotablePawns);
-            long pawnMoves = singlePawnPushes(pawn, board.isWhiteTurn(), (finalRank & legalPushes), allPieces)
-                    | singlePawnCaptures(pawn, board.isWhiteTurn(), ((finalRank & enemies) & legalCaptures));
+            long pawnMoves = singlePawnPushes(pawn, board.turn, (FINAL_RANKS[turn] & legalPushes), allPieces)
+                    | singlePawnCaptures(pawn, board.isWhiteTurn(), ((FINAL_RANKS[turn] & enemies) & legalCaptures));
 
             if (pawnMoves != 0) {
-                addMovesFromAttackTableMasterPromotion(board, moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn), enemies);
+                addMovesFromAttackTableMasterPromotion(board, moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn), 
+                        board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, enemies);
 
             }
             promotablePawns &= promotablePawns - 1;
@@ -112,7 +107,13 @@ class MoveGeneratorSpecial {
             final long pawn = getFirstPiece(myPawnsInPosition);
             if ((pawn & ignoreThesePieces) == 0) {
                 long pawnEnPassantCapture = singlePawnCaptures(pawn, white, enemyTakingSpots);
-                addMovesFromAttackTableMaster(temp, pawnEnPassantCapture, getIndexOfFirstPiece(pawn), board);
+                
+                
+                addMovesFromAttackTableMasterBetter(temp, pawnEnPassantCapture, getIndexOfFirstPiece(pawn), 
+                        board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board);
+
+                        
+                        
             }
             myPawnsInPosition &= myPawnsInPosition - 1;
         }
@@ -182,7 +183,7 @@ class MoveGeneratorSpecial {
                                 allPieces)){
 
                             moves[numberOfRealMoves(moves)] = 
-                                    buildBetterMove(3, WHITE_KING, 5) | CASTLING_MASK;
+                                    buildBetterMove(3, WHITE_KING, 5, NO_PIECE) | CASTLING_MASK;
                         }
 
                         break;
@@ -194,7 +195,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[numberOfRealMoves(moves)] = buildBetterMove(3, WHITE_KING, 5) | CASTLING_MASK;
+                            moves[numberOfRealMoves(moves)] = buildBetterMove(3, WHITE_KING, 5, NO_PIECE) | CASTLING_MASK;
                         }
 
                     case 0b0010:// K
@@ -205,7 +206,7 @@ class MoveGeneratorSpecial {
                                 allPieces)){
 
 
-                            moves[numberOfRealMoves(moves)] = buildBetterMove(3, WHITE_KING,1) | CASTLING_MASK;
+                            moves[numberOfRealMoves(moves)] = buildBetterMove(3, WHITE_KING,1, NO_PIECE) | CASTLING_MASK;
                         }
 
                         break;
@@ -222,7 +223,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[numberOfRealMoves(moves)] = buildBetterMove(59, BLACK_KING, 61) | CASTLING_MASK;
+                            moves[numberOfRealMoves(moves)] = buildBetterMove(59, BLACK_KING, 61, NO_PIECE) | CASTLING_MASK;
                         }
                         break;
                         
@@ -233,7 +234,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[numberOfRealMoves(moves)] = buildBetterMove(59, BLACK_KING, 61) | CASTLING_MASK;
+                            moves[numberOfRealMoves(moves)] = buildBetterMove(59, BLACK_KING, 61, NO_PIECE) | CASTLING_MASK;
                         }
 
                     case 0b1000:// K
@@ -243,7 +244,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[numberOfRealMoves(moves)] = buildBetterMove( 59, BLACK_KING, 57) | CASTLING_MASK;
+                            moves[numberOfRealMoves(moves)] = buildBetterMove( 59, BLACK_KING, 57, NO_PIECE) | CASTLING_MASK;
                         }
                         break;
                 }

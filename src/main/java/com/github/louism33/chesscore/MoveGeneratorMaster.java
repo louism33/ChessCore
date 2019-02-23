@@ -5,7 +5,7 @@ import org.junit.Assert;
 import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
-import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
+import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterBetter;
 import static com.github.louism33.chesscore.MoveGeneratorCheck.addCheckEvasionMoves;
 import static com.github.louism33.chesscore.MoveGeneratorPseudo.addAllMovesWithoutKing;
 import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMovesOnly;
@@ -54,9 +54,9 @@ class MoveGeneratorMaster {
             board.inCheckRecorder = true;
             
             addKingLegalMovesOnly(moves, board, white,
-                    myBishops, myQueens, myKing,
+                    myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    enemies, friends);
+                    enemies);
             return;
         }
 
@@ -93,7 +93,7 @@ class MoveGeneratorMaster {
 
         long emptySquares = ~allPieces;
 
-        long promotablePawns = myPawns & PROMOTING_RANKS[board.turn];
+        long promotablePawns = myPawns & PENULTIMATE_RANKS[board.turn];
         long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
 
         
@@ -103,9 +103,9 @@ class MoveGeneratorMaster {
                 allPieces);
 
         addKingLegalMovesOnly(moves, board, whiteTurn,
-                myBishops, myQueens, myKing,
+                myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends);
+                enemies);
 
         if (pinnedPieces == 0){
             addPromotionMoves
@@ -153,6 +153,9 @@ class MoveGeneratorMaster {
                                              long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
                                              long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                              long enemies, long friends, long allPieces){
+
+        Assert.assertTrue(whiteTurn ? board.turn ==  WHITE : board.turn == BLACK);
+        
         while (pinnedPieces != 0){
             long pinnedPiece = getFirstPiece(pinnedPieces);
             long pinningPiece = xrayQueenAttacks(allPieces, pinnedPiece, squareWeArePinnedTo) & enemies;
@@ -173,10 +176,10 @@ class MoveGeneratorMaster {
 
                 if ((pinnedPiece & PENULTIMATE_RANK) == 0) {
 
-                    addMovesFromAttackTableMaster(moves,
+                    addMovesFromAttackTableMasterBetter(moves,
                             singlePawnPushes(pinnedPiece, whiteTurn, pushMask, allPieces)
                                     | singlePawnCaptures(pinnedPiece, whiteTurn, pinningPiece),
-                            pinnedPieceIndex, board);
+                            pinnedPieceIndex, board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board);
 
                     // a pinned pawn may still EP
                     addEnPassantMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, pinningPiece,
@@ -193,23 +196,23 @@ class MoveGeneratorMaster {
                 continue;
             }
             if ((pinnedPiece & myBishops) != 0) {
-                addMovesFromAttackTableMaster(moves,
+                addMovesFromAttackTableMasterBetter(moves,
                         singleBishopTable(allPieces, pinnedPiece, UNIVERSE) & mask,
-                        pinnedPieceIndex, board);
+                        pinnedPieceIndex, board.turn == WHITE ? WHITE_BISHOP : BLACK_BISHOP, board);
                 pinnedPieces &= pinnedPieces - 1;
                 continue;
             }
             if ((pinnedPiece & myRooks) != 0) {
-                addMovesFromAttackTableMaster(moves,
+                addMovesFromAttackTableMasterBetter(moves,
                         singleRookTable(allPieces, pinnedPiece, UNIVERSE) & mask,
-                        pinnedPieceIndex, board);
+                        pinnedPieceIndex,  board.turn == WHITE ? WHITE_ROOK : BLACK_ROOK, board);
                 pinnedPieces &= pinnedPieces - 1;
                 continue;
             }
             if ((pinnedPiece & myQueens) != 0) {
-                addMovesFromAttackTableMaster(moves,
+                addMovesFromAttackTableMasterBetter(moves,
                         (singleQueenTable(allPieces, pinnedPiece, UNIVERSE) & mask),
-                        pinnedPieceIndex, board);
+                        pinnedPieceIndex, board.turn == WHITE ? WHITE_QUEEN : BLACK_QUEEN, board);
             }
 
             pinnedPieces &= pinnedPieces - 1;

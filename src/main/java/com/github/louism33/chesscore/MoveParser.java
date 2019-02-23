@@ -44,7 +44,7 @@ public class MoveParser {
         return move;
     }
 
-    static int buildBetterMove(int s, int whichSourcePiece, int d) {
+    static int buildBetterMove(int s, int whichSourcePiece, int d, int victimPiece) {
         Assert.assertTrue(s >= 0 && s < 64 && d >= 0 && d < 64);
 
         int move = 0;
@@ -52,7 +52,11 @@ public class MoveParser {
         move |= (d & DESTINATION_MASK);
 
         move |= (MoveConstants.SOURCE_PIECE_MASK
-                | (whichSourcePiece << MoveConstants.SOURCE_PIECE_OFFSET));
+                & (whichSourcePiece << MoveConstants.SOURCE_PIECE_OFFSET));
+
+        if (victimPiece != NO_PIECE) {
+            move |= (CAPTURE_MOVE_MASK | (victimPiece << MoveConstants.VICTIM_PIECE_OFFSET));
+        }
 
         return move;
     }
@@ -92,10 +96,6 @@ public class MoveParser {
         return move == 0 ? "NULL_MOVE" : prettyMove(move);
     }
 
-    public static int moveFromSourceDestination(Chessboard board, int source, int destinationIndex) {
-        return buildMove(board, source, destinationIndex);
-    }
-
     static int moveFromSourceDestinationSquareCaptureSecure(Chessboard board, Piece movingPiece, 
                                                             long file, Square source, Square destinationIndex, boolean capture) {
         if (source == null){
@@ -130,14 +130,13 @@ public class MoveParser {
         return buildMove(board, source.ordinal(), destinationIndex.ordinal())
                 | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex.ordinal())) : 0);
     }
-    
-    static int moveFromSourceDestinationCaptureBetter(Chessboard board, int source, int sourcePiece,
+
+    static int moveFromSourceDestinationCaptureBetter(Chessboard board, int source, int sourcePiece, 
                                                       int destinationIndex, boolean capture) {
         
-        return buildBetterMove(source, sourcePiece, destinationIndex)
+        return buildBetterMove(source, sourcePiece, destinationIndex, NO_PIECE)
                 | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex)) : 0);
     }
-    
     static int moveFromSourceDestinationCapture(Chessboard board, int source, int destinationIndex, boolean capture) {
         return buildMove(board, source, destinationIndex) 
                 | (capture ? (CAPTURE_MOVE_MASK | capturePieceMask(board, destinationIndex)) : 0);

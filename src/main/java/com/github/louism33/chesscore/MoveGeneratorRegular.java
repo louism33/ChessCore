@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
+import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterBetter;
 import static com.github.louism33.chesscore.MoveGeneratorPseudo.generatePseudoCaptureTable;
 import static com.github.louism33.chesscore.PieceMove.*;
 
@@ -32,7 +32,9 @@ class MoveGeneratorRegular {
                 
                 final long pawnCaptures = singlePawnCaptures(pawn, white, legalCaptures);
                 
-                addMovesFromAttackTableMaster(moves, mySquares | pawnCaptures, pawnIndex, board);
+//                addMovesFromAttackTableMaster(moves, mySquares | pawnCaptures, pawnIndex, board);
+                addMovesFromAttackTableMasterBetter(moves, mySquares | pawnCaptures, 
+                        pawnIndex, board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board);
             }
             myPawns &= myPawns - 1;
         }
@@ -47,7 +49,7 @@ class MoveGeneratorRegular {
             final long knight = getFirstPiece(myKnights);
             if ((knight & ignoreThesePieces) == 0) {
                 long jumps = singleKnightTable(knight, mask);
-                addMovesFromAttackTableMaster(moves, jumps, getIndexOfFirstPiece(knight), board);
+                addMovesFromAttackTableMasterBetter(moves, jumps, getIndexOfFirstPiece(knight), board.turn == WHITE ? WHITE_KNIGHT : BLACK_KNIGHT, board);
             }
             myKnights &= (myKnights - 1);
         }
@@ -61,7 +63,7 @@ class MoveGeneratorRegular {
             long bishop = getFirstPiece(myBishops);
             if ((bishop & ignoreThesePieces) == 0) {
                 long slides = singleBishopTable(allPieces, bishop, mask);
-                addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(bishop), board);
+                addMovesFromAttackTableMasterBetter(moves, slides, getIndexOfFirstPiece(bishop), board.turn == WHITE ? WHITE_BISHOP : BLACK_BISHOP, board);
             }
             myBishops &= (myBishops - 1);
         }
@@ -69,7 +71,7 @@ class MoveGeneratorRegular {
             long rook = getFirstPiece(myRooks);
             if ((rook & ignoreThesePieces) == 0) {
                 long slides = singleRookTable(allPieces, rook, mask);
-                addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(rook), board);
+                addMovesFromAttackTableMasterBetter(moves, slides, getIndexOfFirstPiece(rook), board.turn == WHITE ? WHITE_ROOK : BLACK_ROOK, board);
             }
             myRooks &= (myRooks - 1);
         }
@@ -77,30 +79,31 @@ class MoveGeneratorRegular {
             long queen = getFirstPiece(myQueens);
             if ((queen & ignoreThesePieces) == 0) {
                 long slides = singleQueenTable(allPieces, queen, mask);
-                addMovesFromAttackTableMaster(moves, slides, getIndexOfFirstPiece(queen), board);
+                addMovesFromAttackTableMasterBetter(moves, slides, getIndexOfFirstPiece(queen), board.turn == WHITE ? WHITE_QUEEN : BLACK_QUEEN, board);
             }
             myQueens &= (myQueens - 1);
         }
     }
 
     static void addKingLegalMovesOnly(int[] moves, Chessboard board, boolean white,
-                                      long myBishops, long myQueens, long myKing,
+                                      long myKing,
                                       long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                      long enemies, long friends){
+                                      long enemies){
 
-        addMovesFromAttackTableMaster(moves,
+        addMovesFromAttackTableMasterBetter(moves,
                 kingLegalPushAndCaptureTable(board, white,
-                        myBishops, myQueens, myKing,
+                        myKing,
                         enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, friends),
+                        enemies),
                 getIndexOfFirstPiece(myKing),
+                board.turn == WHITE ? WHITE_KING : BLACK_KING,
                 board);
     }
 
     private static long kingLegalPushAndCaptureTable(Chessboard board, boolean white,
-                                                     long myBishops, long myQueens, long myKing,
+                                                     long myKing,
                                                      long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                                     long enemies, long friends){
+                                                     long enemies){
 
         long kingSafeSquares = ~kingDangerSquares(board, white,
                 myKing,

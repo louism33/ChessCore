@@ -30,7 +30,7 @@ class MoveUnmaker {
 
         int pieceToMoveBackIndex = getDestinationIndex(StackDataUtil.getMove(pop));
         int squareToMoveBackTo = getSourceIndex(StackDataUtil.getMove(pop));
-        int basicReversedMove = moveFromSourceDestination(board, pieceToMoveBackIndex, squareToMoveBackTo);
+        int basicReversedMove = buildMove(board, pieceToMoveBackIndex, squareToMoveBackTo);
 
         switch (StackDataUtil.getSpecialMove(pop)) {
             //double pawn push
