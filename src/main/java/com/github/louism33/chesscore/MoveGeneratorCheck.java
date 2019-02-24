@@ -34,14 +34,14 @@ class MoveGeneratorCheck {
                 myPawns,
                 enemies, allPieces);
 
-        addAllMovesWithoutKing (moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
+        addAllMovesWithoutKing (moves, board.pieces, board.turn, board.pieceSquareTable, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
                 myKnights, myBishops, myRooks, myQueens,
                 allPieces);
 
-        addKingLegalMovesOnly(moves, board, white,
+        addKingLegalMovesOnly(moves, board,
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies);
+                enemies, allPieces);
 
         addEnPassantMoves(moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
                 myPawns, myKing,

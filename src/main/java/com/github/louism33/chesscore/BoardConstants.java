@@ -31,6 +31,23 @@ public class BoardConstants {
     public static final int BLACK_ROOK = 10;
     public static final int BLACK_QUEEN = 11;
     public static final int BLACK_KING = 12;
+
+    public static final int[][] PIECE = new int[2][7];
+    static{
+        PIECE[WHITE][PAWN] = WHITE_PAWN;
+        PIECE[WHITE][KNIGHT] = WHITE_KNIGHT;
+        PIECE[WHITE][BISHOP] = WHITE_BISHOP;
+        PIECE[WHITE][ROOK] = WHITE_ROOK;
+        PIECE[WHITE][QUEEN] = WHITE_QUEEN;
+        PIECE[WHITE][KING] = WHITE_KING;
+
+        PIECE[BLACK][PAWN] = BLACK_PAWN;
+        PIECE[BLACK][KNIGHT] = BLACK_KNIGHT;
+        PIECE[BLACK][BISHOP] = BLACK_BISHOP;
+        PIECE[BLACK][ROOK] = BLACK_ROOK;
+        PIECE[BLACK][QUEEN] = BLACK_QUEEN;
+        PIECE[BLACK][KING] = BLACK_KING;
+    }
     
     public static final int
             H1 = 0, G1 = 1, F1 = 2, E1 = 3, D1 = 4, C1 = 5, B1 = 6, A1 = 7,
@@ -326,6 +343,7 @@ public class BoardConstants {
             0L, 0L, 0L, 0L, 0L, 0L, 0L
     };
     
+   
     public static final long[] PAWN_PUSH_MASK_WHITE = {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 16842752L,
             33685504L, 67371008L, 134742016L, 269484032L, 538968064L, 1077936128L, 2155872256L, 16777216L,
@@ -337,6 +355,11 @@ public class BoardConstants {
             0L, 0L, 0L, 0L, 0L, 0L, 0L,
     };
 
+    public static final long[][] PAWN_PUSH_MASK = new long[2][PAWN_PUSH_MASK_WHITE.length];
+    static {
+        PAWN_PUSH_MASK[WHITE] = PAWN_PUSH_MASK_WHITE;
+        PAWN_PUSH_MASK[BLACK] = PAWN_PUSH_MASK_BLACK;
+    }
    
     public static final long[] PAWN_CAPTURE_TABLE_WHITE = {
             0x200L, 0x500L, 0xa00L, 0x1400L, 0x2800L, 0x5000L, 0xa000L, 0x4000L,

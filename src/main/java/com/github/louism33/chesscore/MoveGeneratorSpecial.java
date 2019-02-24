@@ -35,7 +35,7 @@ class MoveGeneratorSpecial {
                     | singlePawnCaptures(pawn, board.isWhiteTurn(), ((FINAL_RANKS[turn] & enemies) & legalCaptures));
 
             if (pawnMoves != 0) {
-                addMovesFromAttackTableMasterPromotion(board, moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn), 
+                addMovesFromAttackTableMasterPromotion(board.pieceSquareTable, moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn), 
                         board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN);
 
             }

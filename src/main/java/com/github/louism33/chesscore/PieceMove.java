@@ -37,34 +37,8 @@ class PieceMove {
                 : PAWN_CAPTURE_TABLE_BLACK[getIndexOfFirstPiece(piece)]);
     }
 
-    static long masterPawnCapturesTable(boolean white, long ignoreThesePieces, long legalCaptures, long pawns){
-        long ans = 0;
-        while (pawns != 0){
-            final long pawn = BitOperations.getFirstPiece(pawns);
-            if ((pawn & ignoreThesePieces) == 0) {
-                ans |= singlePawnCaptures(pawn, white, legalCaptures);
-            }
-            pawns &= pawns - 1;
-        }
-        return ans;
-    }
-
-
     static long singleKnightTable(long piece, long mask){
         return KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
-    }
-
-    public static long masterAttackTableKnights(long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                                long knights){
-        long ans = 0;
-        while (knights != 0) {
-            final long knight = getFirstPiece(knights);
-            if ((knight & ignoreThesePieces) == 0) {
-                ans |= singleKnightTable(knight, legalPushes | legalCaptures);
-            }
-            knights &= knights - 1;
-        }
-        return ans;
     }
 
     public static long singleBishopTable(long occupancy, long piece, long legalCaptures){
@@ -77,38 +51,6 @@ class PieceMove {
 
     public static long singleQueenTable(long occupancy, long piece, long mask){
         return singleBishopMagicMoves(occupancy, piece, mask) | singleRookMagicMoves(occupancy, piece, mask);
-    }
-
-    public static long masterAttackTableSliding(long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                                long bishops, long rooks, long queens, long allPieces){
-        long mask = legalPushes | legalCaptures;
-        long ans = 0;
-        
-        while (bishops != 0){
-            final long bishop = getFirstPiece(bishops);
-            if ((bishop & ignoreThesePieces) == 0) {
-                ans |= singleBishopTable(allPieces, getFirstPiece(bishops), mask);
-            }
-            bishops &= bishops - 1;
-        }
-
-        while (rooks != 0){
-            final long rook = getFirstPiece(rooks);
-            if ((rook & ignoreThesePieces) == 0) {
-                ans |= singleRookTable(allPieces, getFirstPiece(rooks), mask);
-            }
-            rooks &= rooks - 1;
-        }
-
-        while (queens != 0){
-            final long queen = getFirstPiece(queens);
-            if ((queen & ignoreThesePieces) == 0) {
-                ans |= singleQueenTable(allPieces, getFirstPiece(queens), mask);
-            }
-            queens &= queens - 1;
-        }
-
-        return ans;
     }
 
     public static long xrayQueenAttacks(long allPieces, long blockers, long queen){
@@ -129,9 +71,6 @@ class PieceMove {
 
 
     public static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
-        if (!ready){
-            setup(false);
-        }
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(rook), 1);
 
@@ -147,9 +86,6 @@ class PieceMove {
     }
 
     public static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
-        if (!ready){
-            setup(false);
-        }
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(bishop), 1);
 
@@ -169,18 +105,4 @@ class PieceMove {
         return KING_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
     }
 
-    public static long masterAttackTableKing(long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                             long kings){
-
-        long ans = 0;
-        while (kings != 0) {
-            final long king = BitOperations.getFirstPiece(kings);
-            if ((king & ignoreThesePieces) == 0) {
-                ans |= singleKingTable(king, legalPushes | legalCaptures);
-            }
-            kings &= kings - 1;
-        }
-        return ans;
-    }
-    
 }

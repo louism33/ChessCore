@@ -52,10 +52,10 @@ class MoveGeneratorMaster {
         if (numberOfCheckers > 1){
             board.inCheckRecorder = true;
             
-            addKingLegalMovesOnly(moves, board, white,
+            addKingLegalMovesOnly(moves, board,
                     myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    enemies);
+                    enemies, allPieces);
             return;
         }
 
@@ -101,10 +101,10 @@ class MoveGeneratorMaster {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 allPieces);
 
-        addKingLegalMovesOnly(moves, board, whiteTurn,
+        addKingLegalMovesOnly(moves, board,
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies);
+                enemies, allPieces);
 
         if (pinnedPieces == 0){
             addPromotionMoves
@@ -113,7 +113,7 @@ class MoveGeneratorMaster {
                             enemies, allPieces);
 
             addAllMovesWithoutKing
-                    (moves, board, whiteTurn, promotablePawns, emptySquares, enemies,
+                    (moves, board.pieces, board.turn, board.pieceSquareTable, promotablePawns, emptySquares, enemies,
                             myKnights, myBishops, myRooks, myQueens,
                             allPieces);
 
@@ -130,7 +130,7 @@ class MoveGeneratorMaster {
                             enemies, allPieces);
 
             addAllMovesWithoutKing
-                    (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, ~board.allPieces(), enemies,
+                    (moves, board.pieces, board.turn, board.pieceSquareTable, pinnedPiecesAndPromotingPawns, ~board.allPieces(), enemies,
                             myKnights, myBishops, myRooks, myQueens,
                             allPieces);
 

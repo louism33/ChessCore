@@ -26,7 +26,7 @@ class MoveAdder {
         }
     }
 
-    public static void addMovesFromAttackTableMasterPromotion(Chessboard board, int[] moves, long attackBoard,
+    public static void addMovesFromAttackTableMasterPromotion(int[] pieceSquareTable, int[] moves, long attackBoard,
                                                               int source, int movingPiece) {
         while (attackBoard != 0){
             int index = numberOfRealMoves(moves);
@@ -37,7 +37,7 @@ class MoveAdder {
 
             final int move = moveFromSourceDestinationCaptureBetter(source, movingPiece, 
                     getIndexOfFirstPiece(destination),
-                    board.pieceSquareTable[destinationIndex]) | PROMOTION_MASK;
+                    pieceSquareTable[destinationIndex]) | PROMOTION_MASK;
             
             moves[index] = move | KNIGHT_PROMOTION_MASK;
             moves[index+1] = move | BISHOP_PROMOTION_MASK;
