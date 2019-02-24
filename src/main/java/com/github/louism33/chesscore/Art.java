@@ -95,4 +95,18 @@ public class Art {
         else return 0;
     }
 
+    public static String printPieceSquareTable(int[] pieceSquareTable){
+        StringBuilder s = new StringBuilder();
+        for (int i = 7; i >= 0; i--) {
+            s.append("   ");
+            for (int j = 7; j >= 0; j--) {
+                int i1 = pieceSquareTable[i * 8 + j];
+                String str = i1 == 0 ? "." : Integer.toHexString(i1);
+                s.append(str).append(" ");
+//                System.out.print(String.format("%4d", INITIAL_PIECE_SQUARES[i * 8 + j]));
+            }
+            s.append("\n");
+        }
+        return s.toString();
+    }
 }

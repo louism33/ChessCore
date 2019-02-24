@@ -10,18 +10,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c35fe9c9-175e-43e1-b3c4-5d6bc53ba64a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/BoardConstantsTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/CheckHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/CheckHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Art.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Art.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BoardConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BoardConstants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Chessboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Chessboard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveRegular.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveRegular.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveSpecial.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveSpecial.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveAdder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveAdder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorMaster.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorMaster.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorRegular.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorRegular.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorSpecial.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorSpecial.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveMakingUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveMakingUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveUnmaker.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/StackDataUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/StackDataUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ZobristHashUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ZobristHashUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ZobristHashUniquenessTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ZobristHashUniquenessTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/A.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardHashTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardHashTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardStateTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardStateTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/NullMoveTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/NullMoveTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/../Axolotl/target/" />
@@ -42,24 +47,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Chessboard.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveAdder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="78" selection-start-line="78" selection-end-line="78" />
+            <state relative-caret-position="150">
+              <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ZobristHashUtil.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorMaster.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8">
-              <caret line="24" column="47" lean-forward="true" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="47" />
+            <state relative-caret-position="367">
+              <caret line="212" column="113" selection-start-line="212" selection-start-column="113" selection-end-line="212" selection-end-column="113" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#872#873#0" expanded="true" />
-                <element signature="e#924#925#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -76,42 +82,38 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getWhiteQueen()</find>
-      <find>getWhiteRooks()</find>
-      <find>getWhiteBishops()</find>
-      <find>getWhiteKnights()</find>
-      <find>getWhitePawns()</find>
-      <find>PENU</find>
-      <find>overr</find>
-      <find>getBlackKing()</find>
-      <find>setBlack</find>
-      <find>setWhiteCanCastleK</find>
-      <find>setW</find>
-      <find>setwhitec</find>
-      <find>get</find>
-      <find>nullM</find>
-      <find>max arra</find>
-      <find>build</find>
-      <find>which</find>
-      <find>Ches</find>
-      <find>Chessboard b</find>
-      <find>gener</find>
-      <find>makem</find>
-      <find>board</find>
-      <find>addr</find>
-      <find>ep</find>
-      <find>epf</find>
-      <find>getBoardHash()</find>
-      <find>flip</find>
-      <find>flipTurn()</find>
-      <find>lip</find>
-      <find>board.</find>
+      <find>toStr</find>
+      <find>legalMove</find>
+      <find>legalMoveS</find>
+      <find>@equals</find>
+      <find>legal</find>
+      <find>Chessboard</find>
+      <find>Chessboard(</find>
+      <find>WHITE</find>
+      <find>=</find>
+      <find>INI</find>
+      <find>==</find>
+      <find>pieceSq</find>
+      <find>makemo</find>
+      <find>equals</find>
+      <find>enpassan</find>
+      <find>fen</find>
+      <find>generati</find>
+      <find>pieceonS</find>
+      <find>toString</find>
+      <find>piece</find>
+      <find>promo</find>
+      <find>pieces[</find>
+      <find>pieces</find>
+      <find>pieces\[.*\].*=</find>
+      <find>kingleg</find>
+      <find>pieceSquareTable.*turn</find>
+      <find>unm</find>
+      <find>pieceSquareTable</find>
+      <find>promotio</find>
+      <find>pieceSq.*ROOK</find>
     </findStrings>
     <replaceStrings>
-      <replace>;</replace>
-      <replace>getDestinationIndex</replace>
-      <replace>return MoveParser.</replace>
-      <replace>^</replace>
       <replace>removeThis</replace>
       <replace>addThis</replace>
       <replace>BoardConstants</replace>
@@ -135,16 +137,20 @@
       <replace>pieces[WHITE][KNIGHT]</replace>
       <replace>pieces[WHITE][PAWN]</replace>
       <replace>pieces[BLACK][KING]</replace>
-      <replace>BLACK</replace>
       <replace>this</replace>
       <replace>zobristHash</replace>
+      <replace>&quot;\n</replace>
+      <replace>BLACK</replace>
+      <replace>==</replace>
+      <replace>Assert.assertEquals(INI</replace>
+      <replace>,</replace>
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src</dir>
       <dir>$PROJECT_DIR$/src/main/java</dir>
       <dir>$PROJECT_DIR$/src/main</dir>
-      <dir>$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore</dir>
       <dir>$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl</dir>
+      <dir>$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -153,16 +159,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/Helpers/Art.java" />
-        <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/evaluation/Misc.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/evaluation/Pawns.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/PinnedManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ConstantsMove.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ConstantsMoveStackData.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/StackConstants.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/A.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Perft.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardHashTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ZobristHashUniquenessTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/MoveTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/moveordering/MoveOrdererTest.java" />
@@ -179,31 +181,35 @@
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorPseudo.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorCheck.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/PieceMove.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveAdder.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorSpecial.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Square.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Piece.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Art.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardStateTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/SquareTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BoardConstants.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ChessboardDetails.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorRegular.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Setup.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/NullMoveTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveAndHashUpdate.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/StackDataUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/utils/Parser.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorMaster.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveSpecial.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveUnmaker.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveRegular.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveMakingUtilities.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/CheckHelper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveRegular.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ZobristHashUtil.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/A.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/BoardConstants.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BoardConstants.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/BoardConstantsTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Art.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveMakingUtilities.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardHashTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorRegular.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveSpecial.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Chessboard.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardStateTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/NullMoveTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveAdder.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorMaster.java" />
       </list>
     </option>
   </component>
@@ -222,7 +228,7 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-1" />
-    <option name="width" value="831" />
+    <option name="width" value="814" />
     <option name="height" value="741" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -281,15 +287,6 @@
               <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
               <item name="ChessCore" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="louism33" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ChessCore" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -317,7 +314,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551001828476" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551019076545" />
     <property name="last.edited.regexp" value="Rg1" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../lmu" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -353,7 +350,7 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.PerftTest">
-    <configuration name="NullMoveTest (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ChessboardStateTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="chesscore" />
       <extension name="coverage">
         <pattern>
@@ -362,13 +359,13 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.github.louism33.chesscore" />
-      <option name="MAIN_CLASS_NAME" value="com.github.louism33.chesscore.NullMoveTest" />
+      <option name="MAIN_CLASS_NAME" value="com.github.louism33.chesscore.ChessboardStateTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NullMoveTest.tinyDepths" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ChessboardStateTest,bigDepth4 and 1 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="chesscore" />
       <extension name="coverage">
         <pattern>
@@ -377,9 +374,28 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.github.louism33.chesscore" />
-      <option name="MAIN_CLASS_NAME" value="com.github.louism33.chesscore.NullMoveTest" />
-      <option name="METHOD_NAME" value="tinyDepths" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="pattern" />
+      <patterns>
+        <pattern testClass="com.github.louism33.chesscore.ChessboardStateTest,bigDepth4" />
+        <pattern testClass="com.github.louism33.chesscore.ChessboardStateTest,bigDepth5" />
+      </patterns>
+      <uniqueIds>
+        <uniqueId value="[engine:junit-jupiter]/[class:com.github.louism33.chesscore.ChessboardStateTest]" />
+      </uniqueIds>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NullMoveTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="chesscore" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.github.louism33.chesscore.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.github.louism33.chesscore" />
+      <option name="TEST_OBJECT" value="uniqueId" />
       <uniqueIds>
         <uniqueId value="[engine:junit-jupiter]/[class:com.github.louism33.chesscore.NullMoveTest]" />
       </uniqueIds>
@@ -402,7 +418,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PerftTestTinyDepths" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="com.github.louism33.chesscore in chesscore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="chesscore" />
       <extension name="coverage">
         <pattern>
@@ -411,42 +427,25 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.github.louism33.chesscore" />
-      <option name="MAIN_CLASS_NAME" value="com.github.louism33.chesscore.PerftTestTinyDepths" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PerftTest.PromoteOutOfCheck" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="chesscore" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.github.louism33.chesscore.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.github.louism33.chesscore" />
-      <option name="MAIN_CLASS_NAME" value="com.github.louism33.chesscore.PerftTest" />
-      <option name="METHOD_NAME" value="PromoteOutOfCheck" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.NullMoveTest.tinyDepths" />
-      <item itemvalue="JUnit.NullMoveTest (1)" />
-      <item itemvalue="JUnit.PerftTestTinyDepths" />
+      <item itemvalue="JUnit.com.github.louism33.chesscore in chesscore" />
+      <item itemvalue="JUnit.ChessboardStateTest,bigDepth4 and 1 more" />
+      <item itemvalue="JUnit.ChessboardStateTest" />
+      <item itemvalue="JUnit.NullMoveTest" />
       <item itemvalue="JUnit.PerftTest" />
-      <item itemvalue="JUnit.PerftTest.PromoteOutOfCheck" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.PerftTest" />
-        <item itemvalue="JUnit.PerftTestTinyDepths" />
-        <item itemvalue="JUnit.PerftTest.PromoteOutOfCheck" />
-        <item itemvalue="JUnit.NullMoveTest (1)" />
-        <item itemvalue="JUnit.NullMoveTest.tinyDepths" />
+        <item itemvalue="JUnit.com.github.louism33.chesscore in chesscore" />
+        <item itemvalue="JUnit.NullMoveTest" />
+        <item itemvalue="JUnit.ChessboardStateTest" />
+        <item itemvalue="JUnit.ChessboardStateTest,bigDepth4 and 1 more" />
       </list>
     </recent_temporary>
   </component>
@@ -503,7 +502,7 @@
       <workItem from="1550001102304" duration="980000" />
       <workItem from="1550699423815" duration="628000" />
       <workItem from="1550738448522" duration="56416000" />
-      <workItem from="1550917511487" duration="45360000" />
+      <workItem from="1550917511487" duration="62305000" />
     </task>
     <task id="LOCAL-00001" summary="assert problem">
       <created>1544084102963</created>
@@ -827,43 +826,50 @@
       <option name="project" value="LOCAL" />
       <updated>1550960281594</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="cleaning up code">
+      <created>1551001846858</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1551001846858</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="PerftTest - 2019.02.24 at 10h 40m 39s.xml">
+    <history-entry file="ChessboardStateTest_(1) - 2019.02.24 at 15h 26m 26s.xml">
+      <configuration name="ChessboardStateTest (1)" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="ChessboardStateTest_(1) - 2019.02.24 at 15h 27m 14s.xml">
+      <configuration name="ChessboardStateTest (1)" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="ChessboardStateTest_(1) - 2019.02.24 at 15h 29m 03s.xml">
+      <configuration name="ChessboardStateTest (1)" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="ChessboardStateTest,bigDepth4_and_1_more - 2019.02.24 at 15h 29m 51s.xml">
+      <configuration name="ChessboardStateTest,bigDepth4 and 1 more" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="ChessboardStateTest - 2019.02.24 at 15h 30m 54s.xml">
+      <configuration name="ChessboardStateTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="NullMoveTest - 2019.02.24 at 15h 31m 53s.xml">
+      <configuration name="NullMoveTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="PerftTest - 2019.02.24 at 15h 33m 51s.xml">
       <configuration name="PerftTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="PerftTest - 2019.02.24 at 10h 41m 19s.xml">
+    <history-entry file="PerftTest - 2019.02.24 at 15h 34m 38s.xml">
       <configuration name="PerftTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="PerftTest - 2019.02.24 at 10h 42m 46s.xml">
+    <history-entry file="PerftTest - 2019.02.24 at 15h 35m 24s.xml">
       <configuration name="PerftTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="PerftTest - 2019.02.24 at 10h 43m 51s.xml">
-      <configuration name="PerftTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="PerftTest - 2019.02.24 at 10h 44m 57s.xml">
-      <configuration name="PerftTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="PerftTest - 2019.02.24 at 10h 45m 03s.xml">
-      <configuration name="PerftTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="PerftTest - 2019.02.24 at 10h 45m 31s.xml">
-      <configuration name="PerftTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="PerftTest - 2019.02.24 at 10h 45m 59s.xml">
-      <configuration name="PerftTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="PerftTest - 2019.02.24 at 10h 48m 02s.xml">
-      <configuration name="PerftTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="PerftTest - 2019.02.24 at 10h 49m 52s.xml">
-      <configuration name="PerftTest" configurationId="JUnit" />
+    <history-entry file="com_github_louism33_chesscore_in_chesscore - 2019.02.24 at 15h 36m 17s.xml">
+      <configuration name="com.github.louism33.chesscore in chesscore" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="257826000" />
+    <option name="totallyTimeSpent" value="274771000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -878,7 +884,7 @@
     <frame x="-1" y="0" width="1368" height="741" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49815497" visible="true" weight="0.14545454" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49815497" visible="true" weight="0.23787878" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -888,7 +894,7 @@
       <window_info id="Favorites" order="7" sideWeight="0.501845" side_tool="true" weight="0.17045455" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Message" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49924242" visible="true" weight="0.07754443" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49924242" visible="true" weight="0.15508886" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3990307" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -899,7 +905,7 @@
       <window_info anchor="bottom" id="Statistic" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5007576" side_tool="true" weight="0.32956383" />
       <window_info anchor="bottom" id="Terminal" order="12" weight="0.048465267" />
-      <window_info anchor="bottom" id="Messages" order="13" weight="0.048465267" />
+      <window_info anchor="bottom" id="Messages" order="13" weight="0.24394184" />
       <window_info anchor="bottom" id="Run with VisualVM" order="14" weight="0.20193861" />
       <window_info anchor="bottom" id="Debug with VisualVM" order="15" />
       <window_info anchor="bottom" id="Inspection Results" order="16" weight="0.57350564" />
@@ -916,7 +922,7 @@
       <window_info anchor="right" id="Maven Projects" order="9" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49815497" visible="true" weight="0.16818182" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49815497" visible="true" weight="0.49213836" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -926,21 +932,21 @@
       <window_info id="Favorites" order="7" sideWeight="0.501845" side_tool="true" weight="0.17045455" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Message" order="1" />
-      <window_info anchor="bottom" id="Find" order="2" weight="0.39256865" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.49924242" visible="true" weight="0.25686592" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.3990307" />
-      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49924242" weight="0.51857835" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49924242" visible="true" weight="0.36672053" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3990307" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Find" order="6" weight="0.8739903" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49924242" weight="0.17932148" />
       <window_info anchor="bottom" id="TODO" order="8" weight="0.048465267" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5007576" side_tool="true" weight="0.32956383" />
       <window_info anchor="bottom" id="Terminal" order="12" weight="0.048465267" />
-      <window_info anchor="bottom" id="Messages" order="13" weight="0.048465267" />
+      <window_info anchor="bottom" id="Messages" order="13" weight="0.24394184" />
       <window_info anchor="bottom" id="Run with VisualVM" order="14" weight="0.20193861" />
       <window_info anchor="bottom" id="Debug with VisualVM" order="15" />
-      <window_info anchor="bottom" id="Inspection Results" order="16" weight="0.51373184" />
+      <window_info anchor="bottom" id="Inspection Results" order="16" weight="0.57350564" />
       <window_info anchor="bottom" id="CPU Profiler" order="17" weight="0.32956383" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -968,48 +974,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="cleaning up code" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ZobristHashUniquenessTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="139" column="81" selection-start-line="139" selection-start-column="81" selection-end-line="139" selection-end-column="81" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/MoveTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="104" column="19" lean-forward="true" selection-start-line="104" selection-start-column="19" selection-end-line="104" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-150">
-          <caret line="68" column="5" lean-forward="true" selection-start-line="68" selection-start-column="5" selection-end-line="68" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/moveordering/MoveOrdererTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="28" column="31" lean-forward="true" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/PVLine.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="47" column="5" lean-forward="true" selection-start-line="47" selection-start-column="5" selection-end-line="47" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Perft.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="47" column="36" lean-forward="true" selection-start-line="47" selection-start-column="36" selection-end-line="47" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/standalone/StandAlone.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
@@ -1059,13 +1023,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/PerftTestTinyDepths.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="56">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/StackConstants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
@@ -1097,16 +1054,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Art.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="91" column="46" selection-start-line="91" selection-start-column="46" selection-end-line="91" selection-end-column="46" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="179">
@@ -1114,13 +1061,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardStateTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="126" column="60" lean-forward="true" selection-start-line="126" selection-start-column="60" selection-end-line="126" selection-end-column="60" />
         </state>
       </provider>
     </entry>
@@ -1138,24 +1078,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BoardConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="191" column="32" selection-start-line="191" selection-start-column="32" selection-end-line="191" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorCheck.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="218">
           <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorPseudo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="35" column="22" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -1166,13 +1092,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorRegular.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="34" column="44" lean-forward="true" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Setup.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="62">
@@ -1180,20 +1099,6 @@
           <folding>
             <element signature="e#364#365#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ExtendedPositionDescriptionParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/NullMoveTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="78">
-          <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
         </state>
       </provider>
     </entry>
@@ -1224,16 +1129,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="675">
           <caret line="45" column="21" selection-start-line="45" selection-start-column="21" selection-end-line="45" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveAdder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="13" column="83" lean-forward="true" selection-start-line="13" selection-start-column="83" selection-end-line="13" selection-end-column="83" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1355,56 +1250,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorMaster.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="77">
-          <caret line="17" column="40" lean-forward="true" selection-start-line="17" selection-start-column="40" selection-end-line="17" selection-end-column="40" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Piece.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="21" column="70" lean-forward="true" selection-start-line="21" selection-start-column="70" selection-end-line="21" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveSpecial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="97" column="7" lean-forward="true" selection-start-line="59" selection-start-column="7" selection-end-line="97" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveUnmaker.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="12" column="11" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BitOperations.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="13" column="33" lean-forward="true" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
-          <folding>
-            <element signature="e#447#448#0" expanded="true" />
-            <element signature="e#494#495#0" expanded="true" />
-            <element signature="e#1279#1280#0" expanded="true" />
-            <element signature="e#1331#1332#0" expanded="true" />
-            <element signature="e#1386#1387#0" expanded="true" />
-            <element signature="e#1425#1426#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveRegular.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="26" column="37" selection-start-line="26" selection-start-column="37" selection-end-line="26" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -1419,13 +1268,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveMakingUtilities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="26" column="60" selection-start-line="26" selection-start-column="60" selection-end-line="26" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/utils/Parser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="536">
@@ -1436,29 +1278,209 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ExtendedPositionDescriptionParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/CheckHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="63" column="43" selection-start-line="63" selection-start-column="43" selection-end-line="63" selection-end-column="43" />
+        <state relative-caret-position="-1102">
+          <caret line="22" column="17" lean-forward="true" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveRegular.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.13-beta-2/junit-4.13-beta-2.jar!/org/junit/Assert.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="73" column="29" selection-start-line="73" selection-start-column="29" selection-end-line="73" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Perft.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/PerftTestTinyDepths.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="10" column="27" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/ZobristHashUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8">
-          <caret line="24" column="47" lean-forward="true" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="47" />
+        <state relative-caret-position="117">
+          <caret line="59" selection-start-line="59" selection-end-line="59" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="e#872#873#0" expanded="true" />
             <element signature="e#924#925#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BoardConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="66" column="45" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BitOperations.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="13" column="23" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
+          <folding>
+            <element signature="e#447#448#0" expanded="true" />
+            <element signature="e#494#495#0" expanded="true" />
+            <element signature="e#1279#1280#0" expanded="true" />
+            <element signature="e#1331#1332#0" expanded="true" />
+            <element signature="e#1386#1387#0" expanded="true" />
+            <element signature="e#1425#1426#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/BoardConstantsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="12" selection-start-line="12" selection-end-line="19" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Art.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="100" column="28" selection-start-line="100" selection-start-column="28" selection-end-line="100" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Piece.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="21" column="32" selection-start-line="21" selection-start-column="32" selection-end-line="21" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorPseudo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveMakingUtilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="393">
+          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorRegular.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7">
+          <caret line="132" column="8" lean-forward="true" selection-start-line="132" selection-start-column="8" selection-end-line="132" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MakeMoveSpecial.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="77">
+          <caret line="73" column="99" selection-start-line="73" selection-start-column="99" selection-end-line="73" selection-end-column="99" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ZobristHashUniquenessTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-648">
+          <caret line="134" selection-start-line="134" selection-end-line="134" />
+          <folding>
+            <element signature="e#2875#2876#0" expanded="true" />
+            <element signature="e#2963#2964#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardHashTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-130">
+          <caret line="77" column="50" lean-forward="true" selection-start-line="77" selection-start-column="50" selection-end-line="77" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/ChessboardStateTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-59">
+          <caret line="89" column="16" selection-start-line="89" selection-start-column="16" selection-end-line="89" selection-end-column="16" />
+          <folding>
+            <element signature="e#2360#2361#0" expanded="true" />
+            <element signature="e#2464#2465#0" expanded="true" />
+            <element signature="e#2498#2499#0" expanded="true" />
+            <element signature="e#2594#2595#0" expanded="true" />
+            <element signature="e#2780#2781#0" expanded="true" />
+            <element signature="e#2874#2875#0" expanded="true" />
+            <element signature="e#2910#2911#0" expanded="true" />
+            <element signature="e#2999#3000#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/CloneTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/NullMoveTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="72" lean-forward="true" selection-start-line="72" selection-end-line="72" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Chessboard.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="78" selection-start-line="78" selection-end-line="78" />
+        <state relative-caret-position="105">
+          <caret line="25" column="21" selection-start-line="25" selection-start-column="21" selection-end-line="25" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveAdder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveGeneratorMaster.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="212" column="113" selection-start-line="212" selection-start-column="113" selection-end-line="212" selection-end-column="113" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

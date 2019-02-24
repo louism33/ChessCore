@@ -36,16 +36,16 @@ class ChessboardStateTest {
 
     @Test
     void regularBoard() {
-        verifyStateToDepth(5, new Chessboard());
+        verifyStateToDepth(4, new Chessboard());
 
-        verifyStateToDepth(6, new Chessboard());
+        verifyStateToDepth(5, new Chessboard());
     }
 
     @Test
     void AvoidIllegalEPCapture() {
-        verifyStateToDepth(6, new Chessboard("8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"));
+        verifyStateToDepth(5, new Chessboard("8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"));
 
-        verifyStateToDepth(6, new Chessboard("8/8/1k6/8/2pP4/8/5BK1/8 b - d3 0 1"));
+        verifyStateToDepth(5, new Chessboard("8/8/1k6/8/2pP4/8/5BK1/8 b - d3 0 1"));
     }
 
 
@@ -66,39 +66,39 @@ class ChessboardStateTest {
 
     @Test
     void longCastlingGivesCheck() {
-        verifyStateToDepth(6, new Chessboard("3k4/8/8/8/8/8/8/R3K3 w Q - 0 1"));
+        verifyStateToDepth(4, new Chessboard("3k4/8/8/8/8/8/8/R3K3 w Q - 0 1"));
 
-        verifyStateToDepth(6, new Chessboard("r3k3/8/8/8/8/8/8/3K4 b q - 0 1"));
+        verifyStateToDepth(5, new Chessboard("r3k3/8/8/8/8/8/8/3K4 b q - 0 1"));
     }
 
     @Test
     void bigDepth3() {
-        verifyStateToDepth(6, new Chessboard("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28"));
+        verifyStateToDepth(5, new Chessboard("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28"));
     }
 
     @Test
     void bigDepth4() {
-        verifyStateToDepth(7, new Chessboard("8/3K4/2p5/p2b2r1/5k2/8/8/1q6 b - - 1 67"));
+        verifyStateToDepth(5, new Chessboard("8/3K4/2p5/p2b2r1/5k2/8/8/1q6 b - - 1 67"));
     }
     @Test
     void bigDepth5() {
-        verifyStateToDepth(6, new Chessboard("rnbqkb1r/ppppp1pp/7n/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3"));
+        verifyStateToDepth(4, new Chessboard("rnbqkb1r/ppppp1pp/7n/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3"));
     }
 
     @Test
     void bigDepth10() {
-        verifyStateToDepth(7, new Chessboard("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -"));
+        verifyStateToDepth(5, new Chessboard("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -"));
     }
 
 
     @Test
     void bigDepth11() {
-        verifyStateToDepth(8, new Chessboard("8/5p2/8/2k3P1/p3K3/8/1P6/8 b - -"));
+        verifyStateToDepth(5, new Chessboard("8/5p2/8/2k3P1/p3K3/8/1P6/8 b - -"));
     }
 
     @Test
     void bigDepth12() {
-        verifyStateToDepth(5, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
+        verifyStateToDepth(3, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
     }
 
     private static void verifyStateToDepth(int depth, Chessboard board) {

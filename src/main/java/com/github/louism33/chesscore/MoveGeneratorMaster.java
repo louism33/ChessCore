@@ -177,7 +177,7 @@ class MoveGeneratorMaster {
                     addMovesFromAttackTableMasterBetter(moves,
                             singlePawnPushes(pinnedPiece, whiteTurn, pushMask, allPieces)
                                     | singlePawnCaptures(pinnedPiece, whiteTurn, pinningPiece),
-                            pinnedPieceIndex, board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board);
+                            pinnedPieceIndex, board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board.pieceSquareTable);
 
                     // a pinned pawn may still EP
                     addEnPassantMoves(moves, board, whiteTurn, allButPinnedFriends, pushMask, pinningPiece,
@@ -196,21 +196,21 @@ class MoveGeneratorMaster {
             if ((pinnedPiece & myBishops) != 0) {
                 addMovesFromAttackTableMasterBetter(moves,
                         singleBishopTable(allPieces, pinnedPiece, UNIVERSE) & mask,
-                        pinnedPieceIndex, board.turn == WHITE ? WHITE_BISHOP : BLACK_BISHOP, board);
+                        pinnedPieceIndex, board.turn == WHITE ? WHITE_BISHOP : BLACK_BISHOP, board.pieceSquareTable);
                 pinnedPieces &= pinnedPieces - 1;
                 continue;
             }
             if ((pinnedPiece & myRooks) != 0) {
                 addMovesFromAttackTableMasterBetter(moves,
                         singleRookTable(allPieces, pinnedPiece, UNIVERSE) & mask,
-                        pinnedPieceIndex,  board.turn == WHITE ? WHITE_ROOK : BLACK_ROOK, board);
+                        pinnedPieceIndex,  board.turn == WHITE ? WHITE_ROOK : BLACK_ROOK, board.pieceSquareTable);
                 pinnedPieces &= pinnedPieces - 1;
                 continue;
             }
             if ((pinnedPiece & myQueens) != 0) {
                 addMovesFromAttackTableMasterBetter(moves,
                         (singleQueenTable(allPieces, pinnedPiece, UNIVERSE) & mask),
-                        pinnedPieceIndex, board.turn == WHITE ? WHITE_QUEEN : BLACK_QUEEN, board);
+                        pinnedPieceIndex, board.turn == WHITE ? WHITE_QUEEN : BLACK_QUEEN, board.pieceSquareTable);
             }
 
             pinnedPieces &= pinnedPieces - 1;

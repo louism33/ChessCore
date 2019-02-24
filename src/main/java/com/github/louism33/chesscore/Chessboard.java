@@ -8,13 +8,14 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.*;
-import static com.github.louism33.chesscore.MakeMoveRegular.makeRegularMove;
 import static com.github.louism33.chesscore.MakeMoveRegular.whichIntPieceOnSquare;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
+import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
 import static com.github.louism33.chesscore.MoveMakingUtilities.togglePiecesFrom;
 import static com.github.louism33.chesscore.MoveParser.*;
 import static com.github.louism33.chesscore.StackDataUtil.*;
@@ -22,7 +23,7 @@ import static com.github.louism33.chesscore.StackDataUtil.*;
 public class Chessboard implements Cloneable{
 
     long[][] pieces = new long[2][7];
-    // consider int[64] for all pieces + location
+    int[] pieceSquareTable = new int[64];
     int turn;
     /*
     castling rights bits:
@@ -67,6 +68,8 @@ public class Chessboard implements Cloneable{
         System.arraycopy(INITIAL_PIECES[BLACK], 0, this.pieces[BLACK], 0, INITIAL_PIECES[BLACK].length);
         System.arraycopy(INITIAL_PIECES[WHITE], 0, this.pieces[WHITE], 0, INITIAL_PIECES[WHITE].length);
 
+        System.arraycopy(INITIAL_PIECE_SQUARES, 0, pieceSquareTable, 0, pieceSquareTable.length);
+
         turn = WHITE;
     }
 
@@ -88,28 +91,33 @@ public class Chessboard implements Cloneable{
      * Copy Constructor
      * @param board the chessboard you want an exact copy of
      */
+
     public Chessboard(Chessboard board) {
-        System.arraycopy(board.pastMoveStackArray, 0, this.pastMoveStackArray, 0, board.pastMoveStackArray.length);
-        System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
-
-        System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
-        System.arraycopy(board.pinnedPiecesArray, 0, this.pinnedPiecesArray, 0, board.pinnedPiecesArray.length);
-
-
+        this.turn = board.turn;
+        this.castlingRights = board.castlingRights;
+        this.fiftyMoveCounter = board.fiftyMoveCounter;
+        this.zobristHash = board.zobristHash;
+        this.moveStackData = board.moveStackData;
         this.inCheckRecorder = board.inCheckRecorder;
         this.pinnedPieces = board.pinnedPieces;
-
-        this.moveStackIndex = board.moveStackIndex;
+        this.legalMoveStackIndex = board.legalMoveStackIndex;
         this.masterIndex = board.masterIndex;
-
+        this.moveStackIndex = board.moveStackIndex;
         System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
+        System.arraycopy(board.moves, 0, this.moves, 0, board.moves.length);
 
+        for (int i = 0; i < board.legalMoveStack.length; i++) {
+            System.arraycopy(board.legalMoveStack[i], 0, this.legalMoveStack[i], 0, board.legalMoveStack[i].length);
+        }
 
-        this.castlingRights = board.castlingRights;
-        this.turn = board.turn;
+        System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
+        System.arraycopy(board.pastMoveStackArray, 0, this.pastMoveStackArray, 0, board.pastMoveStackArray.length);
+        System.arraycopy(board.pinnedPiecesArray, 0, this.pinnedPiecesArray, 0, board.pinnedPiecesArray.length);
+        System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
 
-        this.zobristHash = board.zobristHash;
+        System.arraycopy(board.pieceSquareTable, 0, pieceSquareTable, 0, board.pieceSquareTable.length);
+
         Setup.init(false);
     }
 
@@ -157,17 +165,17 @@ public class Chessboard implements Cloneable{
             switch (move & SPECIAL_MOVE_MASK) {
                 case CASTLING_MASK:
                     moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, CASTLING));
-                    castlingRights = makeCastlingMove(castlingRights, pieces, move);
+                    castlingRights = makeCastlingMove(castlingRights, pieces, pieceSquareTable, move);
                     break;
 
                 case ENPASSANT_MASK:
                     moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, ENPASSANTCAPTURE));
-                    makeEnPassantMove(pieces, turn, move);
+                    makeEnPassantMove(pieces, pieceSquareTable, turn, move);
                     break;
 
                 case PROMOTION_MASK:
                     moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, PROMOTION));
-                    makePromotingMove(pieces, turn, move);
+                    makePromotingMove(pieces, pieceSquareTable, turn, move);
                     break;
             }
         }
@@ -195,7 +203,7 @@ public class Chessboard implements Cloneable{
                 }
 
             }
-            makeRegularMove(pieces, move);
+            makeRegularMove(pieces, pieceSquareTable, move);
         }
 
         // todo update unmake move to compensate
@@ -209,7 +217,12 @@ public class Chessboard implements Cloneable{
 
         castleFlagManager(move);
 
-        zobristHash = (ZobristHashUtil.updateHashPostMove(this, zobristHash, move));
+        Assert.assertTrue(hasPreviousMove());
+        zobristHash = (ZobristHashUtil.updateHashPostMove(moveStackArrayPeek(), castlingRights, zobristHash, move));
+
+        if (zobristHash == 0) {
+//            throw new RuntimeException();
+        }
 
         this.turn = 1 - this.turn;
     }
@@ -305,24 +318,24 @@ public class Chessboard implements Cloneable{
             case ENPASSANTVICTIM:
             case BASICQUIETPUSH:
             case BASICLOUDPUSH:
-                makeRegularMove(this, basicReversedMove);
+                makeRegularMove(pieces, pieceSquareTable, basicReversedMove);
                 break;
 
             case BASICCAPTURE:
-                makeRegularMove(this, basicReversedMove);
+                makeRegularMove(pieces, pieceSquareTable, basicReversedMove);
                 int takenPiece = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
                 if (MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop)) != 0){
-                    togglePiecesFrom(pieces, newPieceOnSquare(pieceToMoveBackIndex), takenPiece);
+                    togglePiecesFrom(pieces, pieceSquareTable, newPieceOnSquare(pieceToMoveBackIndex), takenPiece);
                 }
                 break;
 
             case ENPASSANTCAPTURE:
-                makeRegularMove(this, basicReversedMove);
+                makeRegularMove(pieces, pieceSquareTable, basicReversedMove);
                 if (StackDataUtil.getTurn(pop) == BLACK) {
-                    togglePiecesFrom(pieces, newPieceOnSquare(pieceToMoveBackIndex - 8), BLACK_PAWN);
+                    togglePiecesFrom(pieces, pieceSquareTable, newPieceOnSquare(pieceToMoveBackIndex - 8), BLACK_PAWN);
                 }
                 else {
-                    togglePiecesFrom(pieces, newPieceOnSquare(pieceToMoveBackIndex + 8), WHITE_PAWN);
+                    togglePiecesFrom(pieces, pieceSquareTable, newPieceOnSquare(pieceToMoveBackIndex + 8), WHITE_PAWN);
                 }
                 break;
 
@@ -336,20 +349,23 @@ public class Chessboard implements Cloneable{
                     case BLACK:
                         originalRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? 0 : 7);
                         newRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
-                        togglePiecesFrom(pieces, newKing, WHITE_KING);
-                        togglePiecesFrom(pieces, newRook, WHITE_ROOK);
+                        togglePiecesFrom(pieces, pieceSquareTable, newKing, WHITE_KING);
+                        togglePiecesFrom(pieces, pieceSquareTable, newRook, WHITE_ROOK);
                         break;
 
                     default:
                         originalRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? 56 : 63);
                         newRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
-                        togglePiecesFrom(pieces, newKing, BLACK_KING);
-                        togglePiecesFrom(pieces, newRook, BLACK_ROOK);
+                        togglePiecesFrom(pieces, pieceSquareTable, newKing, BLACK_KING);
+                        togglePiecesFrom(pieces, pieceSquareTable, newRook, BLACK_ROOK);
                         break;
                 }
 
                 pieces[1 - StackDataUtil.getTurn(pop)][KING] |= originalKing;
                 pieces[1 - StackDataUtil.getTurn(pop)][ROOK] |= originalRook;
+                
+                pieceSquareTable[squareToMoveBackTo] = WHITE_KING + (1 - StackDataUtil.getTurn(pop)) * 6;
+                pieceSquareTable[getIndexOfFirstPiece(originalRook)] = WHITE_ROOK + (1 - StackDataUtil.getTurn(pop)) * 6;
                 break;
 
             case PROMOTION:
@@ -371,17 +387,28 @@ public class Chessboard implements Cloneable{
                 pieces[BLACK][QUEEN] &= mask;
                 pieces[BLACK][KING] &= mask;
 
-                togglePiecesFrom(pieces, destinationSquare, 
+                pieceSquareTable[pieceToMoveBackIndex] = 0;
+                pieceSquareTable[squareToMoveBackTo] = 0;
+                        
+                togglePiecesFrom(pieces, pieceSquareTable, destinationSquare,
                         StackDataUtil.getTurn(pop) == 1 ? WHITE_PAWN : BLACK_PAWN);
                 int takenPiecePromotion = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
                 if (takenPiecePromotion > 0){
-                    togglePiecesFrom(pieces, sourceSquare, takenPiecePromotion);
+                    togglePiecesFrom(pieces, pieceSquareTable, sourceSquare, takenPiecePromotion);
                 }
                 break;
         }
 
         castlingRights = StackDataUtil.getCastlingRights(pop);
         turn = 1 - turn;
+    }
+
+    private static void makeRegularMove(long[][] pieces, int[] pieceSquareTable, int move) {
+        final long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
+
+        removePieces(pieces, pieceSquareTable, newPieceOnSquare(getSourceIndex(move)), destinationPiece, move);
+
+        togglePiecesFrom(pieces, pieceSquareTable, destinationPiece, MoveParser.getMovingPieceInt(move));
     }
 
     /**
@@ -391,7 +418,7 @@ public class Chessboard implements Cloneable{
         masterStackPush();
 
         if (hasPreviousMove()){
-            zobristHash = (ZobristHashUtil.updateWithEPFlags(this, zobristHash));
+            zobristHash = (ZobristHashUtil.updateWithEPFlags(moveStackArrayPeek(), zobristHash));
         }
 
         moveStackArrayPush(buildStackDataBetter(0, turn, getFiftyMoveCounter(), castlingRights, NULL_MOVE));
@@ -629,23 +656,44 @@ public class Chessboard implements Cloneable{
 
     @Override
     public boolean equals(Object o) {
+        // we do not check equality for fields that change during move gen
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Chessboard that = (Chessboard) o;
-        return this.turn == that.turn
-                && this.castlingRights == that.castlingRights
-                && Objects.equals(zobristHash, that.zobristHash)
-                && Arrays.equals(zobristHashStack, that.zobristHashStack)
-                && Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray)
-                && Arrays.equals(checkStack, that.checkStack)
+        this.whitePieces();
+        this.blackPieces();
+        that.whitePieces();
+        that.blackPieces();
+        return turn == that.turn &&
+                castlingRights == that.castlingRights &&
+                fiftyMoveCounter == that.fiftyMoveCounter &&
+                zobristHash == that.zobristHash &&
+                masterIndex == that.masterIndex &&
+                Arrays.deepEquals(pieces, that.pieces) &&
+                Arrays.equals(zobristHashStack, that.zobristHashStack) &&
+                Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray) &&
+                Arrays.equals(checkStack, that.checkStack) &&
+                Arrays.equals(pieceSquareTable, that.pieceSquareTable)
                 ;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(turn, castlingRights, fiftyMoveCounter, zobristHash, moveStackData, maxDepthAndArrayLength, maxNumberOfMovesInAnyPosition, inCheckRecorder, pinnedPieces, legalMoveStackIndex, masterIndex, moveStackIndex);
+        result = 31 * result + Arrays.hashCode(pieces);
+        result = 31 * result + Arrays.hashCode(moves);
+        result = 31 * result + Arrays.hashCode(legalMoveStack);
+        result = 31 * result + Arrays.hashCode(zobristHashStack);
+        result = 31 * result + Arrays.hashCode(pastMoveStackArray);
+        result = 31 * result + Arrays.hashCode(pinnedPiecesArray);
+        result = 31 * result + Arrays.hashCode(checkStack);
+        return result;
     }
 
     @Override
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
         return "\n" + Art.boardArt(this) + "\n" + turn
-                +"\n" + this.zobristHash
                 ;
     }
 
@@ -686,7 +734,7 @@ public class Chessboard implements Cloneable{
     }
 
     long moveStackArrayPeek(){
-        return pastMoveStackArray[moveStackIndex -1];
+        return pastMoveStackArray[moveStackIndex - 1];
     }
 
     boolean hasPreviousMove(){
@@ -907,6 +955,7 @@ public class Chessboard implements Cloneable{
                     throw new RuntimeException("Could not parse fen string");
             }
             this.pieces[whichPiece / 7][whichPiece < 7 ? whichPiece : whichPiece - 6] |= pieceFromFen;
+            pieceSquareTable[square+1] = whichPiece;
         }
     }
 

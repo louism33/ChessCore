@@ -22,26 +22,21 @@ final class ZobristHashUtil {
         return hash ^ zobristHashColourBlack;
     }
 
-    static long updateWithEPFlags(Chessboard board, long hash){
-        Assert.assertTrue(board.hasPreviousMove());
-
-        long peek = board.moveStackArrayPeek();
-
-        if (StackDataUtil.getSpecialMove(peek) == ENPASSANTVICTIM) {
-            hash = hashEP(hash, peek);
+    static long updateWithEPFlags(long moveStackPeek, long hash){
+        if (StackDataUtil.getSpecialMove(moveStackPeek) == ENPASSANTVICTIM) {
+            hash = hashEP(hash, moveStackPeek);
         }
 
-        if (StackDataUtil.getSpecialMove(peek) == NULL_MOVE && board.hasPreviousMove()){
-            hash = nullMoveEP(board, hash);
+        if (StackDataUtil.getSpecialMove(moveStackPeek) == NULL_MOVE){
+            hash = nullMoveEP(moveStackPeek, hash);
         }
 
         return hash;
     }
 
-    private static long nullMoveEP(Chessboard board, long hash) {
-        long peekSecondElement = board.moveStackArrayPeek();
-        if (StackDataUtil.getSpecialMove(peekSecondElement) == ENPASSANTVICTIM) {
-            hash = hashEP(hash, peekSecondElement);
+    private static long nullMoveEP(long moveStackPeek, long hash) {
+        if (StackDataUtil.getSpecialMove(moveStackPeek) == ENPASSANTVICTIM) {
+            hash = hashEP(hash, moveStackPeek);
         }
         return hash;
     }
@@ -50,23 +45,39 @@ final class ZobristHashUtil {
         return hash ^ zobristHashEPFiles[StackDataUtil.getEPMove(peek) - 1];
     }
 
-    static long updateHashPostMove(Chessboard board, long boardHash, int move){
-        /*
-        invert colour
-        */
+    static long updateHashPostMove(long moveStackPeek, int castlingRights, long boardHash, int move){
         boardHash = zobristFlipTurn(boardHash);
 
-        Assert.assertTrue(board.hasPreviousMove());
-        
         /*
         if move we just made raised EP flag, update hash
         */
-        boardHash = updateWithEPFlags(board, boardHash);
+        boardHash = updateWithEPFlags(moveStackPeek, boardHash);
 
         /*
         if castling rights changed, update hash
         */
-        boardHash ^= postMoveCastlingRights(board, move);
+        boardHash ^= postMoveCastlingRights(moveStackPeek, castlingRights, move);
+
+//        long updatedHashValue = 0;
+//
+//        final int peekCastlingRights = StackDataUtil.getCastlingRights(moveStackPeek);
+//        
+//        /*
+//        castling rights may never return, so if 0, no need to update anything
+//         */
+//        if (peekCastlingRights == 0 || !castlingRightsAffectedByMove(move) || peekCastlingRights == castlingRights) {
+////            throw new RuntimeException();
+//            return boardHash;
+////            return 0;
+//        }
+//
+//        /*
+//        undo previous castling rights and update with new castling rights
+//        */
+//        updatedHashValue ^= zobristHashCastlingRights[peekCastlingRights ^ castlingRights];
+//
+//        boardHash ^= updatedHashValue;
+        
 
         return boardHash;
     }
@@ -93,22 +104,22 @@ final class ZobristHashUtil {
         return false;
     }
 
-    private static long postMoveCastlingRights(Chessboard board, int move){
+    private static long postMoveCastlingRights(long moveStackPeek, int castlingRights, int move){
         long updatedHashValue = 0;
 
-        final int castlingRights = StackDataUtil.getCastlingRights(board.moveStackArrayPeek());
+        final int peekCastlingRights = StackDataUtil.getCastlingRights(moveStackPeek);
         
         /*
         castling rights may never return, so if 0, no need to update anything
          */
-        if (castlingRights == 0 || !castlingRightsAffectedByMove(move) || castlingRights == board.castlingRights) {
+        if (peekCastlingRights == 0 || !castlingRightsAffectedByMove(move) || peekCastlingRights == castlingRights) {
             return 0;
         }
 
         /*
         undo previous castling rights and update with new castling rights
         */
-        updatedHashValue ^= zobristHashCastlingRights[castlingRights ^ board.castlingRights];
+        updatedHashValue ^= zobristHashCastlingRights[peekCastlingRights ^ castlingRights];
         
         return updatedHashValue;
     }
@@ -141,7 +152,7 @@ final class ZobristHashUtil {
         "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
         */
         if (board.hasPreviousMove()){
-            boardHash = updateWithEPFlags(board, boardHash);
+            boardHash = updateWithEPFlags(board.moveStackArrayPeek(), boardHash);
         }
 
         long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
@@ -234,7 +245,7 @@ final class ZobristHashUtil {
         }
 
         if (board.hasPreviousMove()){
-            hash = updateWithEPFlags(board, hash);
+            hash = updateWithEPFlags(board.moveStackArrayPeek(), hash);
         }
 
         return hash;

@@ -36,7 +36,7 @@ class MoveGeneratorSpecial {
 
             if (pawnMoves != 0) {
                 addMovesFromAttackTableMasterPromotion(board, moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn), 
-                        board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, enemies);
+                        board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN);
 
             }
             promotablePawns &= promotablePawns - 1;
@@ -111,7 +111,7 @@ class MoveGeneratorSpecial {
                 long pawnEnPassantCapture = singlePawnCaptures(pawn, white, enemyTakingSpots);
                 
                 addMovesFromAttackTableMasterBetter(temp, pawnEnPassantCapture, getIndexOfFirstPiece(pawn), 
-                        board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board);
+                        board.turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board.pieceSquareTable);
             }
             myPawnsInPosition &= myPawnsInPosition - 1;
         }
