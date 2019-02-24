@@ -152,22 +152,22 @@ public class ZobristHashUniquenessTest {
             }
             board.makeMoveAndFlipTurn(move);
 
-            int index = (int) (board.getBoardHash() >>> (64-shift));
+            int index = (int) (board.zobristHash >>> (64-shift));
             long entry = hashesSeen[index];
             numberOfHashChecks++;
             if (entry == 0){
-                hashesSeen[index] = board.getBoardHash();
+                hashesSeen[index] = board.zobristHash;
                 size++;
             } else{
                 
-                if (entry == board.getBoardHash()){
+                if (entry == board.zobristHash){
                     checkSuccess++;
                 }
                 else {
                     checkFail++;
                 }
                 
-                if (hashesSeen[index] == board.getBoardHash()){
+                if (hashesSeen[index] == board.zobristHash){
                     sameEntry++;
                 } else {
                     differentEntry++;

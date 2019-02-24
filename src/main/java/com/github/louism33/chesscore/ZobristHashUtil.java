@@ -227,7 +227,7 @@ final class ZobristHashUtil {
             }
         }
 
-        hash ^= castlingRightsToHash(board);
+        hash ^= zobristHashCastlingRights[board.castlingRights];
 
         if (!board.isWhiteTurn()){
             hash = zobristFlipTurn(hash);
@@ -238,24 +238,6 @@ final class ZobristHashUtil {
         }
 
         return hash;
-    }
-
-    private static long castlingRightsToHash(Chessboard board){
-        int numTo15 = 0;
-        if (board.isWhiteCanCastleK()){
-            numTo15 += 1;
-        }
-        if (board.isWhiteCanCastleQ()){
-            numTo15 += 2;
-        }
-        if (board.isBlackCanCastleK()){
-            numTo15 += 4;
-        }
-        if (board.isBlackCanCastleQ()){
-            numTo15 += 8;
-        }
-
-        return zobristHashCastlingRights[numTo15];
     }
 
     /*

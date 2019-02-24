@@ -5,11 +5,9 @@ import org.junit.Assert;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
-import static com.github.louism33.chesscore.Piece.pieceOnSquareInt;
 import static com.github.louism33.chesscore.Piece.values;
 
 public class MoveParser {

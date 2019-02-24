@@ -61,9 +61,9 @@ class CheckHelper {
 
     static boolean isDrawByRepetition(Chessboard board){
         int limit = 25;
-        long currentZob = board.getBoardHash();
+        long currentZob = board.zobristHash;
         for (int i = 0; i < limit; i++) {
-            if (board.getZobristHashStack()[i] == currentZob){
+            if (board.zobristHashStack[i] == currentZob){
                 return true;
             }
         }

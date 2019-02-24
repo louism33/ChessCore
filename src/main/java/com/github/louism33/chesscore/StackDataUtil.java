@@ -1,10 +1,6 @@
 package com.github.louism33.chesscore;
 
 
-import org.junit.Assert;
-
-import static com.github.louism33.chesscore.BoardConstants.BLACK;
-import static com.github.louism33.chesscore.BoardConstants.WHITE;
 import static com.github.louism33.chesscore.StackConstants.*;
 
 @SuppressWarnings("CanBeFinal")
