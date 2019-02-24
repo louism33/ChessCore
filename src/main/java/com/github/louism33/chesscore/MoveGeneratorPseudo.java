@@ -8,7 +8,7 @@ import static com.github.louism33.chesscore.PieceMove.*;
 
 class MoveGeneratorPseudo {
 
-    static void addAllMovesWitashoutKing(int[] moves, long[][] pieces, int turn, int[] pieceSquareTable,
+    static void addAllMovesWithoutKing(int[] moves, long[][] pieces, int turn, int[] pieceSquareTable,
                                               long ignoreThesePieces, long legalPushes, long legalCaptures,
                                               long myKnights, long myBishops, long myRooks, long myQueens,
                                               long allPieces){

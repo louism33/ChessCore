@@ -93,7 +93,7 @@ public class NullMoveTest {
         }
         for (int move : moves) {
             if (move == 0){
-                continue;
+                break;
             }
             board.makeMoveAndFlipTurn(move);
             Assert.assertEquals(board, new Chessboard(board));

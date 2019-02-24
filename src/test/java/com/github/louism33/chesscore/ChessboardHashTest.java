@@ -96,7 +96,7 @@ public class ChessboardHashTest {
         }
         for (int move : moves) {
             if (move == 0){
-                continue;
+                break;
             }
             board.makeMoveAndFlipTurn(move);
             

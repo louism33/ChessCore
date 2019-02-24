@@ -3,6 +3,9 @@ package com.github.louism33.chesscore;
 class MovePrettifier {
 
     static String prettyMove(int move){
+        if (move == 0) {
+            return ".";
+        }
         int sourceAsPiece = MoveParser.getSourceIndex(move);
         String file = getFile(sourceAsPiece);
         String rank = getRank(sourceAsPiece);

@@ -140,7 +140,7 @@ class ChessboardStateTest {
         }
         for (int move : moves) {
             if (move == 0){
-                continue;
+                break;
             }
 
             long biggestMoveBit = 0x02000000L;

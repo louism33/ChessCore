@@ -116,7 +116,7 @@ public class MoveTest {
         }
         for (int move : moves) {
             if (move == 0){
-                continue;
+                break;
             }
 
 //            final Piece movingPiece = MoveParser.getMovingPiece(move);

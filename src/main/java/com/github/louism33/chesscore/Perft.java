@@ -55,7 +55,7 @@ public class Perft {
         for (int i = 0; i < moves.length; i++) {
             int move = moves[i];
             if (move == 0) {
-                continue;
+                break;
             }
 
             board.makeMoveAndFlipTurn(move);

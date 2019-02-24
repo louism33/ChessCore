@@ -9,31 +9,15 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 class MoveGeneratorRegular {
 
-    static void addKingLegalMovesOnly(int[] moves, Chessboard board,
-                                      long myKing,
+    static void addKingLegalMovesOnly(int[] moves, int turn, long[][] pieces, int[] pieceSquareTable, long myKing,
                                       long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                       long enemies, long allPieces){
 
-        addMovesFromAttackTableMasterBetter(moves,
-                kingLegalPushAndCaptureTable(board, board.turn,
-                        myKing,
-                        enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                        enemies, allPieces),
-                getIndexOfFirstPiece(myKing),
-                PIECE[board.turn][KING],
-                board.pieceSquareTable);
-    }
-
-    private static long kingLegalPushAndCaptureTable(Chessboard board, int turn,
-                                                     long myKing,
-                                                     long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                                     long enemies, long allPieces){
-
-        board.pieces[turn][KING] = 0;
+        pieces[turn][KING] = 0;
 
         allPieces ^= myKing;
 
-        long kingDangerSquares = 0; 
+        long kingDangerSquares = 0;
 
         while (enemyKing != 0) {
             kingDangerSquares |= KING_MOVE_TABLE[numberOfTrailingZeros(enemyKing)];
@@ -65,14 +49,19 @@ class MoveGeneratorRegular {
             enemyPawns &= enemyPawns - 1;
         }
 
-
-        board.pieces[turn][KING] = myKing;
+        pieces[turn][KING] = myKing;
 
         long kingSafeSquares = ~kingDangerSquares;
 
         long kingSafeCaptures = enemies & kingSafeSquares;
-        long kingSafePushes = (~board.allPieces() & kingSafeSquares);
-        return KING_MOVE_TABLE[numberOfTrailingZeros(myKing)] & (kingSafePushes | kingSafeCaptures);
+        long kingSafePushes = (~allPieces & kingSafeSquares);
+        long table = KING_MOVE_TABLE[numberOfTrailingZeros(myKing)] & (kingSafePushes | kingSafeCaptures);
+        
+        
+        addMovesFromAttackTableMasterBetter(moves, table,
+                getIndexOfFirstPiece(myKing),
+                PIECE[turn][KING],
+                pieceSquareTable);
     }
 
 }

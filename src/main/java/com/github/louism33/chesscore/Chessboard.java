@@ -43,7 +43,7 @@ public class Chessboard implements Cloneable{
     private final int maxNumberOfMovesInAnyPosition = 128;
 
     int[] moves = new int[maxNumberOfMovesInAnyPosition];
-
+    
     private int[][] legalMoveStack = new int[maxDepthAndArrayLength][maxNumberOfMovesInAnyPosition];
 
     long[] zobristHashStack = new long[maxDepthAndArrayLength];
@@ -203,6 +203,7 @@ public class Chessboard implements Cloneable{
                 }
 
             }
+            
             makeRegularMove(pieces, pieceSquareTable, move);
         }
 

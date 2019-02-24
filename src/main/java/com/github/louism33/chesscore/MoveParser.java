@@ -21,12 +21,7 @@ public class MoveParser {
 
 
     public static int numberOfRealMoves(int[] moves){
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-
-        return index;
+        return moves[moves.length - 1];
     }
     
     public static void printMoves(int[] moves){
@@ -186,7 +181,8 @@ public class MoveParser {
     }
 
     public static String[] toString(int[] moves){
-        final int number = numberOfRealMoves(moves);
+        int number = numberOfRealMoves(moves);
+        number = moves.length;
         String[] realMoves = new String[number];
         for (int i = 0; i < number; i ++){
             realMoves[i] = prettyMove(moves[i]);

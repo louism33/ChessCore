@@ -30,7 +30,7 @@ class MoveGeneratorCheck {
         long promotablePawns = myPawns & PENULTIMATE_RANK;
         long piecesToIgnoreAndPromotingPawns = pinnedPieces | promotablePawns;
 
-        addPromotionMoves(moves, board, white, pinnedPieces, blockingSquaresMask, checkingPieceMask,
+        addPromotionMoves(moves, board.turn, board.pieceSquareTable, pinnedPieces, blockingSquaresMask, checkingPieceMask,
                 myPawns,
                 enemies, allPieces);
 
@@ -38,7 +38,7 @@ class MoveGeneratorCheck {
                 myKnights, myBishops, myRooks, myQueens,
                 allPieces);
 
-        addKingLegalMovesOnly(moves, board,
+        addKingLegalMovesOnly(moves, board.turn, board.pieces, board.pieceSquareTable,
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, allPieces);
