@@ -312,7 +312,7 @@ public class Chessboard implements Cloneable{
 
         int pieceToMoveBackIndex = getDestinationIndex(StackDataUtil.getMove(pop));
         int squareToMoveBackTo = getSourceIndex(StackDataUtil.getMove(pop));
-        int basicReversedMove = buildBetterMove(pieceToMoveBackIndex, whichIntPieceOnSquare(this, newPieceOnSquare(pieceToMoveBackIndex)), squareToMoveBackTo, NO_PIECE);
+        int basicReversedMove = buildMove(pieceToMoveBackIndex, whichIntPieceOnSquare(this, newPieceOnSquare(pieceToMoveBackIndex)), squareToMoveBackTo, NO_PIECE);
 
         switch (StackDataUtil.getSpecialMove(pop)) {
             //double pawn push

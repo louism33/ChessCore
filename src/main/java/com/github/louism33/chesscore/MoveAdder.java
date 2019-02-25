@@ -5,19 +5,18 @@ import org.junit.Assert;
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.MoveConstants.*;
-import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationCaptureBetter;
-import static com.github.louism33.chesscore.MoveParser.numberOfRealMoves;
-import static java.lang.Long.*;
+import static com.github.louism33.chesscore.MoveParser.buildMove;
+import static java.lang.Long.numberOfTrailingZeros;
 
 class MoveAdder {
 
-    public static void addMovesFromAttackTableMasterBetter(int[] moves, long attackBoard, int source, 
+    static void addMovesFromAttackTableMasterBetter(int[] moves, long attackBoard, int source, 
                                                            int sourcePiece, int[] pieceSquareTable) {
         
         while (attackBoard != 0){
             final long destination = getFirstPiece(attackBoard);
 
-            moves[moves[moves.length - 1]] = moveFromSourceDestinationCaptureBetter(source, sourcePiece, 
+            moves[moves[moves.length - 1]] = buildMove(source, sourcePiece, 
                     getIndexOfFirstPiece(destination), pieceSquareTable[numberOfTrailingZeros(destination)]);
 
             moves[moves.length - 1]++;
@@ -26,7 +25,7 @@ class MoveAdder {
         }
     }
 
-    public static void addMovesFromAttackTableMasterPromotion(int[] pieceSquareTable, int[] moves, long attackBoard,
+    static void addMovesFromAttackTableMasterPromotion(int[] pieceSquareTable, int[] moves, long attackBoard,
                                                               int source, int movingPiece) {
         
         while (attackBoard != 0){
@@ -38,7 +37,7 @@ class MoveAdder {
 
             int destinationIndex = getIndexOfFirstPiece(destination);
 
-            final int move = moveFromSourceDestinationCaptureBetter(source, movingPiece, 
+            final int move = buildMove(source, movingPiece, 
                     getIndexOfFirstPiece(destination),
                     pieceSquareTable[destinationIndex]) | PROMOTION_MASK;
             

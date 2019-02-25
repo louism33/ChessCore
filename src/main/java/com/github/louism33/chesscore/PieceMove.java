@@ -2,10 +2,10 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.Setup.ready;
-import static com.github.louism33.chesscore.Setup.setup;
 
 class PieceMove {
 

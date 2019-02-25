@@ -28,12 +28,12 @@ public class MoveParser {
         System.out.println(Arrays.toString(MoveParser.toString(moves)));
     }
     
-    static int buildBetterMove(int s, int whichSourcePiece, int d, int victimPiece) {
-        Assert.assertTrue(s >= 0 && s < 64 && d >= 0 && d < 64);
+    static int buildMove(int source, int whichSourcePiece, int destinationIndex, int victimPiece) {
+        Assert.assertTrue(source >= 0 && source < 64 && destinationIndex >= 0 && destinationIndex < 64);
 
         int move = 0;
-        move |= ((s << SOURCE_OFFSET) & SOURCE_MASK);
-        move |= (d & DESTINATION_MASK);
+        move |= ((source << SOURCE_OFFSET) & SOURCE_MASK);
+        move |= (destinationIndex & DESTINATION_MASK);
 
         move |= (MoveConstants.SOURCE_PIECE_MASK
                 & (whichSourcePiece << MoveConstants.SOURCE_PIECE_OFFSET));
@@ -45,16 +45,6 @@ public class MoveParser {
         return move;
     }
 
-
-    static int moveFromSourceDestinationCaptureBetter(int source, int sourcePiece,
-                                                      int destinationIndex, int victimPiece) {
-        
-        return buildBetterMove(source, sourcePiece, destinationIndex, NO_PIECE)
-                | (victimPiece != NO_PIECE ? (CAPTURE_MOVE_MASK | (victimPiece << VICTIM_PIECE_OFFSET)) : 0);
-    }
-
- 
-    
     public static int getSourceIndex(int move) {
         return ((move & SOURCE_MASK) >>> SOURCE_OFFSET);
     }

@@ -1,18 +1,15 @@
 package com.github.louism33.chesscore;
 
-import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
-import static com.github.louism33.chesscore.BoardConstants.*;
-
 public class Art {
 
-    public static String boardArt(Chessboard board) {
+    static String boardArt(Chessboard board) {
         StringBuilder s = new StringBuilder();
         s.append("   a b c d e f g h\n");
         s.append("  +---------------+\n");
         for (int y = 7; y >= 0; y--) {
             s.append(y + 1).append(" |");
             for (int x = 7; x >= 0; x--) {
-                s.append(pieceByNumberASCII(pieceOnSquare(board, x + y * 8)));
+                s.append(pieceByNumberASCII(board.pieceSquareTable[x + y * 8]));
                 if (x>0) s.append(" ");
             }
             s.append("| ").append(y + 1);
@@ -73,26 +70,6 @@ public class Art {
             System.out.println();
         }
         System.out.println("---");
-    }
-
-    private static int pieceOnSquare(Chessboard board, int s){
-        long square = newPieceOnSquare(s);
-
-        if ((square & board.pieces[WHITE][PAWN]) != 0) return 1;
-        if ((square & board.pieces[WHITE][KNIGHT]) != 0) return 2;
-        if ((square & board.pieces[WHITE][BISHOP]) != 0) return 3;
-        if ((square & board.pieces[WHITE][ROOK]) != 0) return 4;
-        if ((square & board.pieces[WHITE][QUEEN]) != 0) return 5;
-        if ((square & board.pieces[WHITE][KING]) != 0) return 6;
-
-        if ((square & board.pieces[BLACK][PAWN]) != 0) return 7;
-        if ((square & board.pieces[BLACK][KNIGHT]) != 0) return 8;
-        if ((square & board.pieces[BLACK][BISHOP]) != 0)  return 9;
-        if ((square & board.pieces[BLACK][ROOK]) != 0) return 10;
-        if ((square & board.pieces[BLACK][QUEEN]) != 0) return 11;
-        if ((square & board.pieces[BLACK][KING]) != 0) return 12;
-
-        else return 0;
     }
 
     public static String printPieceSquareTable(int[] pieceSquareTable){

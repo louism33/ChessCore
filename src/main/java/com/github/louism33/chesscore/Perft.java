@@ -48,7 +48,7 @@ public class Perft {
         int[] moves = board.generateLegalMoves();
 
         if (depth == 1){
-            final int size = realMoves(moves);
+            final int size = moves[moves.length - 1];
             nodesForNps += size;
             return size;
         }
@@ -66,14 +66,6 @@ public class Perft {
             board.unMakeMoveAndFlipTurn();
         }
         return temp;
-    }
-
-    private static int realMoves(int[] moves){
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-        return index;
     }
 
     private static void reset(){

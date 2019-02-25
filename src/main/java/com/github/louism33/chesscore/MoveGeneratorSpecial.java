@@ -11,8 +11,7 @@ import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMas
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterPromotion;
 import static com.github.louism33.chesscore.MoveConstants.CASTLING_MASK;
 import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
-import static com.github.louism33.chesscore.MoveParser.buildBetterMove;
-import static com.github.louism33.chesscore.MoveParser.numberOfRealMoves;
+import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
@@ -182,7 +181,7 @@ class MoveGeneratorSpecial {
                                 allPieces)){
 
                             moves[moves[moves.length - 1]] = 
-                                    buildBetterMove(3, WHITE_KING, 5, NO_PIECE) | CASTLING_MASK;
+                                    buildMove(3, WHITE_KING, 5, NO_PIECE) | CASTLING_MASK;
                             moves[moves.length - 1]++;
 
                         }
@@ -196,7 +195,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[moves[moves.length - 1]] = buildBetterMove(3, WHITE_KING, 5, NO_PIECE) | CASTLING_MASK;
+                            moves[moves[moves.length - 1]] = buildMove(3, WHITE_KING, 5, NO_PIECE) | CASTLING_MASK;
                             moves[moves.length - 1]++;
                         }
 
@@ -208,7 +207,7 @@ class MoveGeneratorSpecial {
                                 allPieces)){
 
 
-                            moves[moves[moves.length - 1]] = buildBetterMove(3, WHITE_KING,1, NO_PIECE) | CASTLING_MASK;
+                            moves[moves[moves.length - 1]] = buildMove(3, WHITE_KING,1, NO_PIECE) | CASTLING_MASK;
                             moves[moves.length - 1]++;
                         }
 
@@ -226,7 +225,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[moves[moves.length - 1]] = buildBetterMove(59, BLACK_KING, 61, NO_PIECE) | CASTLING_MASK;
+                            moves[moves[moves.length - 1]] = buildMove(59, BLACK_KING, 61, NO_PIECE) | CASTLING_MASK;
                             moves[moves.length - 1]++;
                         }
                         break;
@@ -238,7 +237,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[moves[moves.length - 1]] = buildBetterMove(59, BLACK_KING, 61, NO_PIECE) | CASTLING_MASK;
+                            moves[moves[moves.length - 1]] = buildMove(59, BLACK_KING, 61, NO_PIECE) | CASTLING_MASK;
                             moves[moves.length - 1]++;
                         }
 
@@ -249,7 +248,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[moves[moves.length - 1]] = buildBetterMove( 59, BLACK_KING, 57, NO_PIECE) | CASTLING_MASK;
+                            moves[moves[moves.length - 1]] = buildMove( 59, BLACK_KING, 57, NO_PIECE) | CASTLING_MASK;
                             moves[moves.length - 1]++;
                         }
                         break;

@@ -1,10 +1,11 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.louism33.chesscore.BitOperations.getAllPieces;
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.*;
 
 class Setup {
@@ -21,36 +22,31 @@ class Setup {
 
     static void init(boolean force){
         if (!ready || force) {
-            calculateRookDatabase();
-            calculateBishopDatabase();
+            calculateDatabases();
             calculateInBetweenSquares();
         }
         ready = true;
     }
 
-    private static void calculateRookDatabase(){
-        for (Square square : Square.values()) {
-            rookDatabase[square.ordinal()] = makeRookDB(square);
+    private static void calculateDatabases(){
+        for (int i = 0; i < 64; i++) {
+            rookDatabase[i] = makeRookDB(i);
+            bishopDatabase[i] = makeBishopDB(i);
         }
     }
 
-    private static void calculateBishopDatabase(){
-        for (Square square : Square.values()) {
-            bishopDatabase[square.ordinal()] = makeBishopDB(square);
-        }
+    private static List<Long> bishopVariations(long square) {
+        return singleBishopAllVariations(new Chessboard(true), square, true, UNIVERSE, 0);
     }
 
-    private static List<Long> bishopVariations(Square square) {
-        return singleBishopAllVariations(new Chessboard(true), square.toBitboard(), true, UNIVERSE, 0);
-    }
+    private static long[] makeBishopDB(int squareIndex) {
+        int length = bishopShiftAmounts[squareIndex];
+        long magic = bishopMagicNumbers[squareIndex];
 
-    private static long[] makeBishopDB(Square square) {
-        int length = bishopShiftAmounts[square.ordinal()];
-        long magic = bishopMagicNumbers[square.ordinal()];
+        long sq = newPieceOnSquare(squareIndex);
+        List<Long> bishopVariations = bishopVariations(sq);
 
-        List<Long> bishopVariations = bishopVariations(square);
-        long sq = square.toBitboard();
-        long[] db = new long[(int) Math.pow(2, length)];
+        long[] db = new long[1 << length];
 
         for (Long variation : bishopVariations) {
             long correctBishopMovesResultBitboard = singleBishopAllMovesFromOcc(variation, sq);
@@ -61,19 +57,18 @@ class Setup {
         return db;
     }
 
-    private static List<Long> rookVariations(Square square) {
-        return singleRookAllVariations(new Chessboard(true), square.toBitboard(), true, UNIVERSE, 0);
-    }
+    private static long[] makeRookDB(int squareIndex) {
+        int length = rookShiftAmounts[squareIndex];
+        long magic = rookMagicNumbers[squareIndex];
 
-    private static long[] makeRookDB(Square square) {
-        int length = rookShiftAmounts[square.ordinal()];
-        long magic = rookMagicNumbers[square.ordinal()];
+        long sq = newPieceOnSquare(squareIndex);
+        long[] rookVariations = singleRookAllVariations(sq, length);
+        long[] db = new long[1 << length];
 
-        List<Long> rookVariations = rookVariations(square);
-        long sq = square.toBitboard();
-        long[] db = new long[(int) Math.pow(2, length)];
+        Assert.assertEquals(db.length, 1 << length);
 
-        for (Long variation : rookVariations) {
+        for (int i = 0; i < rookVariations.length; i++) {
+            long variation = rookVariations[i];
             long correctRookMovesResultBitboard = singleRookAllMovesFromOcc(variation, sq);
             long mult = (magic * variation);
             int index = (int) (mult >>> (64 - length));
@@ -309,9 +304,7 @@ class Setup {
     }
 
 
-    private static List<Long> singleRookAllVariations(Chessboard board, long piece, boolean white, long legalPushes, long legalCaptures){
-        long allPieces = board.whitePieces() | board.blackPieces();
-        long answer = 0;
+    private static long[] singleRookAllVariations(long piece, int length){
         long temp = piece;
 
         long left = 0, right = 0, up = 0, down = 0;
@@ -320,36 +313,28 @@ class Setup {
             if ((temp & BoardConstants.FILE_A) != 0) break;
             if ((temp & BoardConstants.FILE_B) != 0) break;
             temp <<= 1;
-            answer |= temp;
             left |= temp;
-            if ((temp & allPieces) != 0) break;
         }
         temp = piece;
         while (true) {
             if ((temp & BoardConstants.FILE_H) != 0) break;
             if ((temp & BoardConstants.FILE_G) != 0) break;
             temp >>>= 1;
-            answer |= temp;
             right |= temp;
-            if ((temp & allPieces) != 0) break;
         }
         temp = piece;
         while (true) {
             if ((temp & BoardConstants.RANK_EIGHT) != 0) break;
             if ((temp & BoardConstants.RANK_SEVEN) != 0) break;
             temp <<= 8;
-            answer |= temp;
             up |= temp;
-            if ((temp & allPieces) != 0) break;
         }
         temp = piece;
         while (true) {
             if ((temp & BoardConstants.RANK_ONE) != 0) break;
             if ((temp & BoardConstants.RANK_TWO) != 0) break;
             temp >>>= 8;
-            answer |= temp;
             down |= temp;
-            if ((temp & allPieces) != 0) break;
         }
 
         final List<Long> allLeft = getAllPieces(left, 0);
@@ -357,9 +342,18 @@ class Setup {
         final List<Long> allUp = getAllPieces(up, 0);
         final List<Long> allDown = getAllPieces(down, 0);
 
-        return permuteRook(allLeft, allRight, allDown, allUp);
+        return permuteRook(allLeft, allRight, allDown, allUp, length);
     }
 
+    private static long[] getAllPiecesX(long pieces) {
+        long[] indexes = new long[BitOperations.populationCount(pieces)];
+        int index = 0;
+        while (pieces != 0) {
+            indexes[index] = getFirstPiece(pieces);
+            pieces &= pieces - 1;
+        }
+        return indexes;
+    }
 
     private static List<Long> permuteBishop(List<Long> allLeft, List<Long> allRight, List<Long> allDown, List<Long> allUp){
         final List<Long> allMasks = new ArrayList<>();
@@ -413,16 +407,17 @@ class Setup {
         return allMasks;
     }
 
-    private static List<Long> permuteRook(List<Long> allLeft, List<Long> allRight, List<Long> allDown, List<Long> allUp){
-        final List<Long> allMasks = new ArrayList<>();
+    private static long[] permuteRook(List<Long> allLeft, List<Long> allRight, List<Long> allDown, List<Long> allUp, int length){
+        long[] answers = new long[1 << length];
+        
+        
         final List<Long> allPieces = new ArrayList<>();
         allPieces.addAll(allLeft);
         allPieces.addAll(allRight);
         allPieces.addAll(allUp);
         allPieces.addAll(allDown);
 
-        final int LIMIT = allPieces.size();
-        final double size = Math.pow(2, LIMIT);
+        final double size = 1 << length;
 
         for (int t = 0; t < size; t++){
             long mask = 0;
@@ -436,15 +431,16 @@ class Setup {
             if ((t & 128) == 0) mask |= allPieces.get(7);
             if ((t & 256) == 0) mask |= allPieces.get(8);
             if ((t & 512) == 0) mask |= allPieces.get(9);
-            if (LIMIT > 10) {
+            if (length > 10) {
                 if ((t & 1024) == 0) mask |= allPieces.get(10);
             }
-            if (LIMIT > 11) {
+            if (length > 11) {
                 if ((t & 2048) == 0) mask |= allPieces.get(11);
             }
-            allMasks.add(mask);
+            answers[t] = mask;
         }
-        return allMasks;
+
+        return answers;
     }
 
 

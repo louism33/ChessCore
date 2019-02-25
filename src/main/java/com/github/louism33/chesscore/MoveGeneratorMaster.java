@@ -10,7 +10,6 @@ import static com.github.louism33.chesscore.MoveGeneratorCheck.addCheckEvasionMo
 import static com.github.louism33.chesscore.MoveGeneratorPseudo.addAllMovesWithoutKing;
 import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMovesOnly;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.*;
-import static com.github.louism33.chesscore.MoveParser.numberOfRealMoves;
 import static com.github.louism33.chesscore.PieceMove.*;
 import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
 
