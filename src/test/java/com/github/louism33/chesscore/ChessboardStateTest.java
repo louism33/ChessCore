@@ -3,8 +3,6 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import static com.github.louism33.chesscore.BoardConstants.*;
-
 class ChessboardStateTest {
 
     @Test
@@ -122,17 +120,6 @@ class ChessboardStateTest {
         Assert.assertEquals(board.inCheckRecorder, board.inCheck(board.isWhiteTurn()));
         Assert.assertEquals(board.inCheckRecorder, new Chessboard(board).inCheck(board.isWhiteTurn()));
 
-
-        Square king = board.isWhiteTurn() ?
-                Square.getSquareOfBitboard(board.pieces[WHITE][KING]) :
-                Square.getSquareOfBitboard(board.pieces[BLACK][KING]);
-
-
-        Assert.assertEquals(board.pinnedPieces, board.pinnedPiecesToSquareBitBoard(board.isWhiteTurn(),
-                king));
-
-        Assert.assertEquals(board.pinnedPieces, new Chessboard(board).pinnedPiecesToSquareBitBoard(board.isWhiteTurn(),
-                king));
 
 
         if (depth == 1){

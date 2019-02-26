@@ -1,8 +1,5 @@
 package com.github.louism33.chesscore;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.github.louism33.chesscore.BoardConstants.FILES;
 import static com.github.louism33.chesscore.BoardConstants.ROWS;
 import static com.github.louism33.chesscore.Setup.ready;
@@ -48,13 +45,13 @@ public class BitOperations {
     public static int populationCount (long pieces) {
         return bitCount(pieces);
     }
-    
-    public static List<Long> getAllPieces(long pieces, long ignoreThesePieces) {
-        List<Long> indexes = new ArrayList<>();
-        long temp = pieces & (~ignoreThesePieces);
-        while (temp != 0) {
-            indexes.add(getFirstPiece(temp));
-            temp &= temp - 1;
+
+    private static long[] getAllPiecesBetter(long pieces) {
+        long[] indexes = new long[BitOperations.populationCount(pieces)];
+        int index = 0;
+        while (pieces != 0) {
+            indexes[index] = getFirstPiece(pieces);
+            pieces &= pieces - 1;
         }
         return indexes;
     }

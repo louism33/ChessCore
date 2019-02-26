@@ -6,7 +6,39 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExtendedPositionDescriptionParser {
+    /*
+            private final Chessboard board;
+        private final List<Integer> bestMoves;
+        private final List<Integer> avoidMoves;
+        private final String id;
+        private final String boardFen;
+     */
     
+    
+    static String example = "2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - - bm Qg6; id \"WAC.001\";";
+
+    static String masterPattern = "([/|\\w]* [wb] [-|\\w]* [-|\\w] )";
+    
+    public static EPDObject parseEDPPositionBetter(String edpPosition){
+        
+        String fen = "";
+
+        Pattern p = Pattern.compile(masterPattern);
+        Matcher m = p.matcher(edpPosition);
+
+
+        if (m.find()) {
+            System.out.println(m.group());
+        }
+        
+        Chessboard board = new Chessboard(m.group());
+        
+        
+        
+        return new EPDObject(board, null, "", "", null);
+    }
+    
+            
     private static final String pattern = "" +
             "([/|\\w]* )" +
             "(bm ([\\w| |+]*);)" +
