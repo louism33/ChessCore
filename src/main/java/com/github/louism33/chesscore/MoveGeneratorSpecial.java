@@ -42,164 +42,23 @@ class MoveGeneratorSpecial {
 
 
     // board.turn, board.pieceSquareTable, board.moveStackArrayPeek()
-    static void addEnPassantMoves(int[] moves, Chessboard board, boolean white,
+    static void addEnPassantMoves(int[] moves, long previousMove, int turn, Chessboard board, boolean white,
                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
                                   long myPawns, long myKing,
-                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing) {
+                                  long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks,
+                                  long enemyQueens, long enemyKing, long allPieces) {
 
 
-        if (!board.hasPreviousMove()){
-            return;
-        }
-
-        long previousMove = board.moveStackArrayPeek();
-                
         /**
          * int turn, int[] pieceSquareTable, long previousMove
          * allPieces
          */
-        int turn = board.turn;
-        
+
         Assert.assertTrue(white ? turn == WHITE : turn == BLACK);
 
         int[] temp = new int[8];
 
         long enPassantTakingRank = ENPASSANT_RANK[1 - turn];
-
-        long myPawnsInPosition = myPawns & enPassantTakingRank;
-        if (myPawnsInPosition == 0) {
-            return;
-        }
-
-        long enemyPawnsInPosition = enemyPawns & enPassantTakingRank;
-        if (enemyPawnsInPosition == 0) {
-            return;
-        }
-
-;
-
-        if (StackDataUtil.getSpecialMove(previousMove) != ENPASSANTVICTIM){
-            return;
-        }
-
-        long FILE = extractFileFromStack(StackDataUtil.getEPMove(previousMove));
-
-        long enemyTakingSpots = 0;
-
-        while (enemyPawnsInPosition != 0){
-            long enemyPawn = BitOperations.getFirstPiece(enemyPawnsInPosition);
-
-            if ((enemyPawn & ignoreThesePieces) == 0){
-                long takingSpot = white ? enemyPawn << 8 : enemyPawn >>> 8;
-                long potentialTakingSpot = takingSpot & FILE;
-
-                if ((potentialTakingSpot & board.allPieces()) != 0){
-                    enemyPawnsInPosition &= enemyPawnsInPosition - 1;
-                    continue;
-                }
-
-                if (((enemyPawn & legalCaptures) == 0) && ((potentialTakingSpot & legalPushes) == 0)) {
-                    enemyPawnsInPosition &= enemyPawnsInPosition - 1;
-                    continue;
-                }
-                enemyTakingSpots |= potentialTakingSpot;
-            }
-            enemyPawnsInPosition &= enemyPawnsInPosition - 1;
-        }
-
-        if (enemyTakingSpots == 0){
-            return;
-        }
-
-        
-        while (myPawnsInPosition != 0){
-            final long pawn = getFirstPiece(myPawnsInPosition);
-            if ((pawn & ignoreThesePieces) == 0) {
-                long pawnEnPassantCapture = singlePawnCaptures(pawn, white, enemyTakingSpots);
-
-                addMovesFromAttackTableMasterBetter(temp, pawnEnPassantCapture, getIndexOfFirstPiece(pawn),
-                        turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board.pieceSquareTable);
-            }
-            myPawnsInPosition &= myPawnsInPosition - 1;
-        }
-
-
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-
-        Assert.assertEquals(index, moves[moves.length - 1]);
-
-        // remove moves that would leave us in check
-        for (int i = 0; i < temp.length; i++) {
-            int move = temp[i];
-
-            if (move == 0){
-                break;
-            }
-
-            move |= ENPASSANT_MASK;
-
-            long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
-            long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
-
-            switch (turn) {
-                case WHITE:
-                    togglePiecesFrom(board.pieces, board.pieceSquareTable, sourcePiece, WHITE_PAWN);
-                    togglePiecesFrom(board.pieces, board.pieceSquareTable, destinationPiece >>> 8, BLACK_PAWN);
-                    board.pieces[WHITE][PAWN] |= destinationPiece;
-                    board.pieceSquareTable[MoveParser.getDestinationIndex(move)] = WHITE_PAWN;
-                    break;
-
-                case BLACK:
-                    togglePiecesFrom(board.pieces, board.pieceSquareTable, sourcePiece, BLACK_PAWN);
-                    togglePiecesFrom(board.pieces, board.pieceSquareTable, destinationPiece << 8, WHITE_PAWN);
-                    board.pieces[BLACK][PAWN] |= destinationPiece;
-                    board.pieceSquareTable[MoveParser.getDestinationIndex(move)] = BLACK_PAWN;
-            }
-
-            enemyPawns = board.pieces[1 - turn][PAWN];
-
-            boolean enPassantWouldLeadToCheck = boardInCheck(white, myKing,
-                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    board.allPieces());
-
-            switch (turn) {
-                case WHITE:
-                    togglePiecesFrom(board.pieces, board.pieceSquareTable, sourcePiece, WHITE_PAWN);
-                    togglePiecesFrom(board.pieces, board.pieceSquareTable, destinationPiece >>> 8, BLACK_PAWN);
-                    board.pieces[WHITE][PAWN] ^= destinationPiece;
-                    board.pieceSquareTable[MoveParser.getDestinationIndex(move)] = NO_PIECE;
-                    break;
-
-                case BLACK:
-                    togglePiecesFrom(board.pieces, board.pieceSquareTable, sourcePiece, BLACK_PAWN);
-                    togglePiecesFrom(board.pieces, board.pieceSquareTable, destinationPiece << 8, WHITE_PAWN);
-                    board.pieces[BLACK][PAWN] ^= destinationPiece;
-                    board.pieceSquareTable[MoveParser.getDestinationIndex(move)] = NO_PIECE;
-            }
-
-            if (enPassantWouldLeadToCheck) {
-                continue;
-            }
-            moves[index + i] = move;
-            moves[moves.length - 1]++;
-        }
-    }
-
-
-    static void addEnPassantMovesBetter(int[] moves, int turn, int[] pieceSquareTable, long previousMove, boolean white,
-                                        long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                        long myPawns, long myKing,
-                                        long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks,
-                                        long enemyQueens, long enemyKing, long allPieces) {
-
-        int[] temp = new int[8];
-        
-        Assert.assertTrue(allPieces != 0);
-
-        long enPassantTakingRank = white ? RANK_FIVE : RANK_FOUR;
 
         long myPawnsInPosition = myPawns & enPassantTakingRank;
         if (myPawnsInPosition == 0) {
@@ -244,25 +103,20 @@ class MoveGeneratorSpecial {
             return;
         }
 
+
         while (myPawnsInPosition != 0){
             final long pawn = getFirstPiece(myPawnsInPosition);
             if ((pawn & ignoreThesePieces) == 0) {
                 long pawnEnPassantCapture = singlePawnCaptures(pawn, white, enemyTakingSpots);
 
                 addMovesFromAttackTableMasterBetter(temp, pawnEnPassantCapture, getIndexOfFirstPiece(pawn),
-                        turn == WHITE ? WHITE_PAWN : BLACK_PAWN, pieceSquareTable);
+                        turn == WHITE ? WHITE_PAWN : BLACK_PAWN, board.pieceSquareTable);
             }
             myPawnsInPosition &= myPawnsInPosition - 1;
         }
 
-
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-
-        Assert.assertEquals(index, moves[moves.length - 1]);
-
+        long ap = allPieces;
+        long enemyPawnsAreAwesome;
         // remove moves that would leave us in check
         for (int i = 0; i < temp.length; i++) {
             int move = temp[i];
@@ -276,23 +130,27 @@ class MoveGeneratorSpecial {
             long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
             long destinationPiece = newPieceOnSquare(MoveParser.getDestinationIndex(move));
 
-            // in case more than one ep to check
-            long enemyPawnsTemp = enemyPawns, allPiecesTemp = allPieces;
-            enemyPawnsTemp ^= (turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8);
-            allPiecesTemp ^= sourcePiece;
-            allPiecesTemp |= destinationPiece;
+            allPieces = ap;
+            enemyPawnsAreAwesome = enemyPawns;
 
+            long token = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
+            allPieces ^= token;
+            enemyPawnsAreAwesome ^= token;
+            allPieces ^= sourcePiece;
+            allPieces ^= destinationPiece;
+            
             boolean enPassantWouldLeadToCheck = boardInCheck(white, myKing,
-                    enemyPawnsTemp, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    allPiecesTemp);
+                    enemyPawnsAreAwesome, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                    allPieces);
 
             if (enPassantWouldLeadToCheck) {
                 continue;
             }
-            moves[index + i] = move;
-            moves[moves.length - 1]++;
+            
+            moves[moves[moves.length - 1]++] = move;
         }
     }
+
 
     static long extractFileFromStack(int file){
         if (file == 0){
