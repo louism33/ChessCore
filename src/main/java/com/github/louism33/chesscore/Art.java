@@ -2,7 +2,7 @@ package com.github.louism33.chesscore;
 
 public class Art {
 
-    static String boardArt(Chessboard board) {
+    public static String boardArt(Chessboard board) {
         StringBuilder s = new StringBuilder();
         s.append("   a b c d e f g h\n");
         s.append("  +---------------+\n");
@@ -72,7 +72,7 @@ public class Art {
         System.out.println("---");
     }
 
-    public static String printPieceSquareTable(int[] pieceSquareTable){
+    public static String pieceSquareTable(int[] pieceSquareTable){
         StringBuilder s = new StringBuilder();
         for (int i = 7; i >= 0; i--) {
             s.append("   ");

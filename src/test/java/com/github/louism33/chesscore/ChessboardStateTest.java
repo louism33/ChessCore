@@ -134,7 +134,7 @@ class ChessboardStateTest {
 
             Assert.assertTrue(move < biggestMoveBit);
 
-            board.makeMoveAndFlipTurn(move);
+            board.makeMoveAndFlipTurnBetter(move);
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;

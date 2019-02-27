@@ -150,7 +150,7 @@ public class ZobristHashUniquenessTest {
             if (move == 0){
                 break;
             }
-            board.makeMoveAndFlipTurn(move);
+            board.makeMoveAndFlipTurnBetter(move);
 
             int index = (int) (board.zobristHash >>> (64-shift));
             long entry = hashesSeen[index];

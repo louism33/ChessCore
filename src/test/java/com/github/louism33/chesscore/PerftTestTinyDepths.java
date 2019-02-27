@@ -1,5 +1,6 @@
 package com.github.louism33.chesscore;
 
+import com.github.louism33.utils.Perft;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 

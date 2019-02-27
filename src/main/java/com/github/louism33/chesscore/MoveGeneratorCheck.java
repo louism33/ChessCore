@@ -43,10 +43,13 @@ class MoveGeneratorCheck {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, allPieces);
 
-        addEnPassantMoves(moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
-                myPawns, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing
-        );
+        if (board.hasPreviousMove()) {
+            addEnPassantMoves(moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
+                    myPawns, myKing,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing
+            );
+
+        }
     }
 
     private static long inCheckByAJumper(boolean white,

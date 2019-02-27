@@ -133,6 +133,7 @@ class MoveGeneratorMaster {
                             myKnights, myBishops, myRooks, myQueens,
                             allPieces);
 
+            
             addEnPassantMoves
                     (moves, board, whiteTurn, pinnedPiecesAndPromotingPawns, emptySquares, enemies,
                             myPawns, myKing,

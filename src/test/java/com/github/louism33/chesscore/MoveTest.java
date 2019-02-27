@@ -128,7 +128,7 @@ public class MoveTest {
 //            Assert.assertEquals(movingPiece, source);
 //            Assert.assertEquals(victimPiece, dest);
 
-            board.makeMoveAndFlipTurn(move);
+            board.makeMoveAndFlipTurnBetter(move);
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;

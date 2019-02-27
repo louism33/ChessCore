@@ -98,7 +98,8 @@ public class ChessboardHashTest {
             if (move == 0){
                 break;
             }
-            board.makeMoveAndFlipTurn(move);
+//            board.makeMoveAndFlipTurnBetter(move);
+            board.makeMoveAndFlipTurnBetter(move);
             
             Assert.assertEquals(board, new Chessboard(board));
             

@@ -14,6 +14,7 @@ import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
 import static com.github.louism33.chesscore.MoveMakingUtilities.togglePiecesFrom;
 import static com.github.louism33.chesscore.MoveParser.*;
 import static com.github.louism33.chesscore.StackDataUtil.*;
+import static com.github.louism33.chesscore.ZobristHashUtil.*;
 
 public class Chessboard {
 
@@ -34,8 +35,8 @@ public class Chessboard {
         int destinationSquareIndex = getDestinationIndex(move);
         int sourcePieceIdentifier = pieceSquareTable[sourceSquare] - 1;
 
-        zobristHash ^= ZobristHashUtil.zobristHashPieces[sourceSquare][sourcePieceIdentifier];
-        long destinationZH = ZobristHashUtil.zobristHashPieces[destinationSquareIndex][sourcePieceIdentifier];
+        zobristHash ^= zobristHashPieces[sourceSquare][sourcePieceIdentifier];
+        long destinationZH = zobristHashPieces[destinationSquareIndex][sourcePieceIdentifier];
 
         zobristHash ^= destinationZH;
 
@@ -47,7 +48,7 @@ public class Chessboard {
             /*
             remove taken piece from hash
             */
-            long victimZH = ZobristHashUtil.zobristHashPieces[destinationSquareIndex][destinationPieceIdentifier];
+            long victimZH = zobristHashPieces[destinationSquareIndex][destinationPieceIdentifier];
             zobristHash ^= victimZH;
         }
 
@@ -55,7 +56,7 @@ public class Chessboard {
         "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
         */
         if (hasPreviousMove()){
-            zobristHash = ZobristHashUtil.updateWithEPFlags(moveStackArrayPeek(), zobristHash);
+            zobristHash = updateWithEPFlags(moveStackArrayPeek(), zobristHash);
         }
 
         long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
@@ -84,13 +85,13 @@ public class Chessboard {
                 }
 
                 int myRook = pieceSquareTable[originalRookIndex] - 1;
-                zobristHash ^= ZobristHashUtil.zobristHashPieces[originalRookIndex][myRook];
-                zobristHash ^= ZobristHashUtil.zobristHashPieces[newRookIndex][myRook];
+                zobristHash ^= zobristHashPieces[originalRookIndex][myRook];
+                zobristHash ^= zobristHashPieces[newRookIndex][myRook];
             }
 
             else if (isEnPassantMove(move)){
                 long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
-                zobristHash ^= ZobristHashUtil.zobristHashPieces
+                zobristHash ^= zobristHashPieces
                         [BitOperations.getIndexOfFirstPiece(victimPawn)]
                         [pieceSquareTable[getIndexOfFirstPiece(victimPawn)] - 1];
             }
@@ -119,7 +120,7 @@ public class Chessboard {
                 zobristHash ^= destinationZH;
 
                 Assert.assertTrue(whichPromotingPiece != 0);
-                long promotionZH = ZobristHashUtil.zobristHashPieces[destinationSquareIndex][whichPromotingPiece - 1];
+                long promotionZH = zobristHashPieces[destinationSquareIndex][whichPromotingPiece - 1];
                 zobristHash ^= promotionZH;
             }
         }
@@ -132,18 +133,18 @@ public class Chessboard {
             long pieceOnSquare = newPieceOnSquare(sq);
             int pieceIndex = pieceSquareTable[getIndexOfFirstPiece(pieceOnSquare)] - 1;
             if (pieceIndex != -1) {
-                hash ^= ZobristHashUtil.zobristHashPieces[sq][pieceIndex];
+                hash ^= zobristHashPieces[sq][pieceIndex];
             }
         }
 
-        hash ^= ZobristHashUtil.zobristHashCastlingRights[castlingRights];
+        hash ^= zobristHashCastlingRights[castlingRights];
 
         if (!isWhiteTurn()){
-            hash = ZobristHashUtil.zobristFlipTurn(hash);
+            hash = zobristFlipTurn(hash);
         }
 
         if (hasPreviousMove()){
-            hash = ZobristHashUtil.updateWithEPFlags(moveStackArrayPeek(), hash);
+            hash = updateWithEPFlags(moveStackArrayPeek(), hash);
         }
 
         return hash;
@@ -246,14 +247,31 @@ public class Chessboard {
      * Updates the board with the move you want.
      * @param move the non-0 move you want to make of this board.
      */
-    public void makeMoveAndFlipTurn(int move) {
+    public void makeMoveAndFlipTurnBetter(int move) {
         this.rotateMoveIndexUp();
-
         Assert.assertNotEquals(move, 0);
-
         masterStackPush();
 
-        updateHashPreMove(move);
+        int sourceSquare = getSourceIndex(move);
+        int destinationIndex = getDestinationIndex(move);
+        int sourcePieceIdentifier = pieceSquareTable[sourceSquare] - 1;
+        boolean captureMove = isCaptureMove(move);
+        long destinationPiece = newPieceOnSquare(destinationIndex);
+        long destinationZH = zobristHashPieces[destinationIndex][sourcePieceIdentifier];
+
+        zobristHash ^= zobristHashPieces[sourceSquare][sourcePieceIdentifier];
+        zobristHash ^= destinationZH;
+
+        if (captureMove){
+            zobristHash ^= zobristHashPieces[destinationIndex][pieceSquareTable[destinationIndex] - 1];
+        }
+
+        /* 
+        "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
+        */
+        if (hasPreviousMove()){
+            zobristHash = updateWithEPFlags(moveStackArrayPeek(), zobristHash);
+        }
 
         if (move == 0) {
             moveStackArrayPush(buildStackDataBetter(0, turn, getFiftyMoveCounter(), castlingRights, NULL_MOVE));
@@ -262,31 +280,87 @@ public class Chessboard {
 
         boolean resetFifty = true;
 
-        if (MoveParser.isSpecialMove(move)) {
+        if (isSpecialMove(move)) {
             switch (move & SPECIAL_MOVE_MASK) {
                 case CASTLING_MASK:
+                    int originalRookIndex = 0;
+                    int newRookIndex = 0;
+                    switch (destinationIndex) {
+                        case 1:
+                            originalRookIndex = 0;
+                            newRookIndex = destinationIndex + 1;
+                            break;
+                        case 5:
+                            originalRookIndex = 7;
+                            newRookIndex = destinationIndex - 1;
+                            break;
+                        case 57:
+                            originalRookIndex = 56;
+                            newRookIndex = destinationIndex + 1;
+                            break;
+                        case 61:
+                            originalRookIndex = 63;
+                            newRookIndex = destinationIndex - 1;
+                            break;
+                    }
+
+                    int myRook = pieceSquareTable[originalRookIndex] - 1;
+                    zobristHash ^= zobristHashPieces[originalRookIndex][myRook];
+                    zobristHash ^= zobristHashPieces[newRookIndex][myRook];
+                    
                     moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, CASTLING));
                     castlingRights = makeCastlingMove(castlingRights, pieces, pieceSquareTable, move);
                     break;
 
                 case ENPASSANT_MASK:
+                    long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
+                    zobristHash ^= zobristHashPieces
+                            [BitOperations.getIndexOfFirstPiece(victimPawn)]
+                            [pieceSquareTable[getIndexOfFirstPiece(victimPawn)] - 1];
+                    
                     moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, ENPASSANTCAPTURE));
                     makeEnPassantMove(pieces, pieceSquareTable, turn, move);
                     break;
 
                 case PROMOTION_MASK:
+                    int whichPromotingPiece = 0;
+
+                    switch (move & WHICH_PROMOTION){
+                        case KNIGHT_PROMOTION_MASK:
+                            whichPromotingPiece = 2 + (turn) * 6;
+                            break;
+                        case BISHOP_PROMOTION_MASK:
+                            whichPromotingPiece = 3 + (turn) * 6;
+                            break;
+                        case ROOK_PROMOTION_MASK:
+                            whichPromotingPiece = 4 + (turn) * 6;
+                            break;
+                        case QUEEN_PROMOTION_MASK:
+                            whichPromotingPiece = 5 + (turn) * 6;
+                            break;
+                    }
+
+                /*
+                remove my pawn from zh
+                 */
+                    zobristHash ^= destinationZH;
+
+                    Assert.assertTrue(whichPromotingPiece != 0);
+                    long promotionZH = zobristHashPieces[destinationIndex][whichPromotingPiece - 1];
+                    zobristHash ^= promotionZH;
+                    
                     moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, PROMOTION));
                     makePromotingMove(pieces, pieceSquareTable, turn, move);
                     break;
             }
         } else {
-            if (MoveParser.isCaptureMove(move)) {
+            if (captureMove) {
                 moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, BASICCAPTURE));
             } else if (enPassantPossibility(turn, pieces[turn][PAWN], move)) {
-                int whichFile = 8 - MoveParser.getSourceIndex(move) % 8;
+                int whichFile = 8 - getSourceIndex(move) % 8;
                 moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, ENPASSANTVICTIM, whichFile));
             } else {
-                switch (pieceSquareTable[MoveParser.getSourceIndex(move)]) {
+                switch (pieceSquareTable[getSourceIndex(move)]) {
                     case WHITE_PAWN: // white pawn
                     case BLACK_PAWN: // black pawn
                         moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, BASICLOUDPUSH));
@@ -314,14 +388,14 @@ public class Chessboard {
         castleFlagManager(move);
 
         Assert.assertTrue(hasPreviousMove());
-        zobristHash = (ZobristHashUtil.updateHashPostMove(moveStackArrayPeek(), castlingRights, zobristHash));
+        zobristHash = (updateHashPostMove(moveStackArrayPeek(), castlingRights, zobristHash));
 
         this.turn = 1 - this.turn;
     }
 
     private void castleFlagManager(int move) {
         // disable relevant castle flag whenever a piece moves into the relevant square.
-        switch (MoveParser.getSourceIndex(move)) {
+        switch (getSourceIndex(move)) {
             case 0:
                 castlingRights &= castlingRightsMask[WHITE][K];
                 break;
@@ -339,7 +413,7 @@ public class Chessboard {
                 castlingRights &= castlingRightsMask[BLACK][Q];
                 break;
         }
-        switch (MoveParser.getDestinationIndex(move)) {
+        switch (getDestinationIndex(move)) {
             case 0:
                 castlingRights &= castlingRightsMask[WHITE][K];
                 break;
@@ -361,8 +435,8 @@ public class Chessboard {
 
     private static boolean enPassantPossibility(int turn, long myPawns, int move) {
         // determine if flag should be added to enable EP on next turn
-        long sourceSquare = newPieceOnSquare(MoveParser.getSourceIndex(move));
-        long destinationSquare = newPieceOnSquare(MoveParser.getDestinationIndex(move));
+        long sourceSquare = newPieceOnSquare(getSourceIndex(move));
+        long destinationSquare = newPieceOnSquare(getDestinationIndex(move));
         long HOME_RANK = PENULTIMATE_RANKS[1 - turn];
         long enPassantPossibilityRank = ENPASSANT_RANK[turn];
 
@@ -417,8 +491,8 @@ public class Chessboard {
 
             case BASICCAPTURE:
                 makeRegularMove(pieces, pieceSquareTable, basicReversedMove);
-                int takenPiece = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
-                if (MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop)) != 0) {
+                int takenPiece = getVictimPieceInt(StackDataUtil.getMove(pop));
+                if (getVictimPieceInt(StackDataUtil.getMove(pop)) != 0) {
                     togglePiecesFrom(pieces, pieceSquareTable, newPieceOnSquare(pieceToMoveBackIndex), takenPiece);
                 }
                 break;
@@ -485,7 +559,7 @@ public class Chessboard {
 
                 togglePiecesFrom(pieces, pieceSquareTable, destinationSquare,
                         StackDataUtil.getTurn(pop) == 1 ? WHITE_PAWN : BLACK_PAWN);
-                int takenPiecePromotion = MoveParser.getVictimPieceInt(StackDataUtil.getMove(pop));
+                int takenPiecePromotion = getVictimPieceInt(StackDataUtil.getMove(pop));
                 if (takenPiecePromotion > 0) {
                     togglePiecesFrom(pieces, pieceSquareTable, sourceSquare, takenPiecePromotion);
                 }
@@ -496,10 +570,10 @@ public class Chessboard {
         turn = 1 - turn;
     }
 
-    private static void makeRegularMove(long[][] pieces, int[] pieceSquareTable, int move) {
+    static void makeRegularMove(long[][] pieces, int[] pieceSquareTable, int move) {
         final long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
         removePieces(pieces, pieceSquareTable, newPieceOnSquare(getSourceIndex(move)), destinationPiece, move);
-        togglePiecesFrom(pieces, pieceSquareTable, destinationPiece, MoveParser.getMovingPieceInt(move));
+        togglePiecesFrom(pieces, pieceSquareTable, destinationPiece, getMovingPieceInt(move));
     }
 
     /**
@@ -509,12 +583,12 @@ public class Chessboard {
         masterStackPush();
 
         if (hasPreviousMove()) {
-            zobristHash = (ZobristHashUtil.updateWithEPFlags(moveStackArrayPeek(), zobristHash));
+            zobristHash = (updateWithEPFlags(moveStackArrayPeek(), zobristHash));
         }
 
         moveStackArrayPush(buildStackDataBetter(0, turn, getFiftyMoveCounter(), castlingRights, NULL_MOVE));
 
-        zobristHash = ZobristHashUtil.zobristFlipTurn(zobristHash);
+        zobristHash = zobristFlipTurn(zobristHash);
 
         this.turn = 1 - this.turn;
     }
@@ -620,7 +694,7 @@ public class Chessboard {
             return false;
         }
         long peek = moveStackArrayPeek();
-        return MoveParser.moveIsPawnPushSix(StackDataUtil.getMove(peek));
+        return moveIsPawnPushSix(StackDataUtil.getMove(peek));
     }
 
     public boolean previousMoveWasPawnPushToSeven() {
@@ -628,7 +702,7 @@ public class Chessboard {
             return false;
         }
         long peek = moveStackArrayPeek();
-        return MoveParser.moveIsPawnPushSeven(StackDataUtil.getMove(peek));
+        return moveIsPawnPushSeven(StackDataUtil.getMove(peek));
     }
 
     public boolean moveIsCaptureOfLastMovePiece(int move) {
@@ -640,8 +714,8 @@ public class Chessboard {
         if (StackDataUtil.getMove(peek) == 0) {
             return false;
         }
-        int previousMoveDestinationIndex = MoveParser.getDestinationIndex(StackDataUtil.getMove(peek));
-        return (MoveParser.getDestinationIndex(move) == previousMoveDestinationIndex);
+        int previousMoveDestinationIndex = getDestinationIndex(StackDataUtil.getMove(peek));
+        return (getDestinationIndex(move) == previousMoveDestinationIndex);
     }
 
 

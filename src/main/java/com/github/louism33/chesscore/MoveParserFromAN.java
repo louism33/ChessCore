@@ -26,7 +26,7 @@ public class MoveParserFromAN {
 //        System.out.println("-----> "+ s);
 //
 //        System.out.println("MP : " + MoveParser.isCastlingMove(move));
-//        board.makeMoveAndFlipTurn(move);
+//        board.makeMoveAndFlipTurnBetter(move);
 //        System.out.println(board);
 //
 //    }

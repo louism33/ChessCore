@@ -1,6 +1,6 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
+import com.github.louism33.utils.Perft;
 import org.junit.jupiter.api.Test;
 
 public class A {
@@ -21,4 +21,5 @@ public class A {
 //        Assert.assertEquals(epdObject.getBoard(), epdObjectCorrect.getBoard());
 //        Assert.assertEquals(epdObjectCorrect, epdObject);
     }
+    
 }

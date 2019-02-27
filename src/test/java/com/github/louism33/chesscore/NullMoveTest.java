@@ -95,7 +95,7 @@ public class NullMoveTest {
             if (move == 0){
                 break;
             }
-            board.makeMoveAndFlipTurn(move);
+            board.makeMoveAndFlipTurnBetter(move);
             Assert.assertEquals(board, new Chessboard(board));
 
             board.makeNullMoveAndFlipTurn();
