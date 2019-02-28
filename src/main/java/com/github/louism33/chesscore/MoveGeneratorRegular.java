@@ -57,7 +57,6 @@ class MoveGeneratorRegular {
         long kingSafePushes = (~allPieces & kingSafeSquares);
         long table = KING_MOVE_TABLE[numberOfTrailingZeros(myKing)] & (kingSafePushes | kingSafeCaptures);
         
-        
         addMovesFromAttackTableMasterBetter(moves, table,
                 getIndexOfFirstPiece(myKing),
                 PIECE[turn][KING],

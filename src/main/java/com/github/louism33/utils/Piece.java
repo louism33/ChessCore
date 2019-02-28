@@ -1,4 +1,7 @@
-package com.github.louism33.chesscore;
+package com.github.louism33.utils;
+
+import com.github.louism33.chesscore.BoardConstants;
+import com.github.louism33.chesscore.Chessboard;
 
 import static com.github.louism33.chesscore.BoardConstants.*;
 

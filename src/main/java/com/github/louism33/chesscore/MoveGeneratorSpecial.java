@@ -37,7 +37,6 @@ class MoveGeneratorSpecial {
     }
 
 
-    // board.turn, board.pieceSquareTable, board.moveStackArrayPeek()
     static void addEnPassantMoves(int[] moves, long previousMove, int turn,
                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
                                   long myPawns, long myKing,

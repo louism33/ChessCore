@@ -1,5 +1,6 @@
 package com.github.louism33.chesscore;
 
+import com.github.louism33.utils.Piece;
 import org.junit.Assert;
 
 import java.util.Arrays;
@@ -8,7 +9,7 @@ import java.util.List;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
-import static com.github.louism33.chesscore.Piece.values;
+import static com.github.louism33.utils.Piece.values;
 
 public class MoveParser {
 

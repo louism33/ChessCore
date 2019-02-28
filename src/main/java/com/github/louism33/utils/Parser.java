@@ -1,11 +1,14 @@
 package com.github.louism33.utils;
 
-import com.github.louism33.chesscore.*;
+import com.github.louism33.chesscore.Chessboard;
+import com.github.louism33.chesscore.MoveConstants;
+import com.github.louism33.chesscore.MoveParser;
+import com.github.louism33.chesscore.MoveParserFromAN;
 import org.junit.Assert;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MoveConstants.*;
-import static com.github.louism33.chesscore.Piece.pieceOnSquareInt;
+import static com.github.louism33.utils.Piece.pieceOnSquareInt;
 
 public class Parser {
     public static int moveFromSourceDestinationSquareCaptureSecure(Chessboard board, Piece movingPiece,

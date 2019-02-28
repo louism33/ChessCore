@@ -4,21 +4,27 @@ import org.junit.Assert;
 
 import java.util.Arrays;
 
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
-import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
+import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.*;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
+import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterBetter;
 import static com.github.louism33.chesscore.MoveConstants.*;
+import static com.github.louism33.chesscore.MoveGeneratorCheck.addCheckEvasionMoves;
+import static com.github.louism33.chesscore.MoveGeneratorPseudo.addAllMovesWithoutKing;
+import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMovesOnly;
+import static com.github.louism33.chesscore.MoveGeneratorSpecial.*;
 import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
 import static com.github.louism33.chesscore.MoveMakingUtilities.togglePiecesFrom;
 import static com.github.louism33.chesscore.MoveParser.*;
+import static com.github.louism33.chesscore.PieceMove.*;
+import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
 import static com.github.louism33.chesscore.StackDataUtil.*;
 import static com.github.louism33.chesscore.ZobristHashUtil.*;
 
 public class Chessboard {
 
-    long[][] pieces = new long[2][7];
+    public long[][] pieces = new long[2][7];
     
     int[] pieceSquareTable = new int[64];
     int turn;
@@ -237,9 +243,191 @@ public class Chessboard {
     public int[] generateLegalMoves() {
         Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
 
-        MoveGeneratorMaster.generateLegalMoves(this, turn,
-                pieces, castlingRights, pieceSquareTable, hasPreviousMove(), moveStackArrayPeek(),
-                this.legalMoveStack[legalMoveStackIndex]);
+        Assert.assertNotNull(this.legalMoveStack[legalMoveStackIndex]);
+
+        long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
+        long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
+        long friends, enemies;
+
+        myPawns = pieces[turn][PAWN];
+        myKnights = pieces[turn][KNIGHT];
+        myBishops = pieces[turn][BISHOP];
+        myRooks = pieces[turn][ROOK];
+        myQueens = pieces[turn][QUEEN];
+        myKing = pieces[turn][KING];
+
+        enemyPawns = pieces[1 - turn][PAWN];
+        enemyKnights = pieces[1 - turn][KNIGHT];
+        enemyBishops = pieces[1 - turn][BISHOP];
+        enemyRooks = pieces[1 - turn][ROOK];
+        enemyQueens = pieces[1 - turn][QUEEN];
+        enemyKing = pieces[1 - turn][KING];
+
+        friends = getPieces(turn);
+        enemies = getPieces(1 - turn);
+
+        long allPieces = friends | enemies;
+
+
+        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(turn == WHITE, myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                allPieces);
+
+        if (numberOfCheckers > 1) {
+            inCheckRecorder = true;
+
+            addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, pieces, pieceSquareTable,
+                    myKing,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                    enemies, allPieces);
+            return this.legalMoveStack[legalMoveStackIndex];
+        }
+
+        Assert.assertEquals(allPieces, allPieces());
+
+
+        long currentPinnedPieces = whichPiecesArePinned(myKing,
+                enemyBishops, enemyRooks, enemyQueens,
+                friends, allPieces);
+
+        pinnedPieces = currentPinnedPieces;
+
+        if (numberOfCheckers == 1) {
+            inCheckRecorder = true;
+
+            addCheckEvasionMoves(this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable, 
+                    pieces, hasPreviousMove(), moveStackArrayPeek(), turn == WHITE, currentPinnedPieces,
+                    myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                    enemies, friends, allPieces);
+
+            return this.legalMoveStack[legalMoveStackIndex];
+        }
+
+        inCheckRecorder = false;
+
+        Assert.assertEquals(allPieces, allPieces());
+
+        long pinnedPieces = currentPinnedPieces;
+
+        // not in check moves
+        long emptySquares = ~allPieces;
+
+        long promotablePawns = myPawns & PENULTIMATE_RANKS[turn];
+        long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
+
+        addCastlingMoves(this.legalMoveStack[legalMoveStackIndex], turn, castlingRights,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                allPieces);
+
+        addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, pieces, pieceSquareTable,
+                myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                enemies, allPieces);
+
+        if (pinnedPieces == 0) {
+            addPromotionMoves
+                    (this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable, 0, emptySquares, enemies,
+                            myPawns,
+                            enemies, allPieces);
+
+            addAllMovesWithoutKing
+                    (this.legalMoveStack[legalMoveStackIndex], pieces, turn, pieceSquareTable, promotablePawns, emptySquares, enemies,
+                            myKnights, myBishops, myRooks, myQueens,
+                            allPieces);
+
+            if (hasPreviousMove()) {
+                addEnPassantMoves
+                        (this.legalMoveStack[legalMoveStackIndex], moveStackArrayPeek(), turn, promotablePawns, emptySquares, enemies,
+                                myPawns, myKing,
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
+                        );
+            }
+        } else {
+            addPromotionMoves
+                    (this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable, pinnedPieces, emptySquares, enemies,
+                            myPawns,
+                            enemies, allPieces);
+
+            addAllMovesWithoutKing
+                    (this.legalMoveStack[legalMoveStackIndex], pieces, turn, pieceSquareTable, pinnedPiecesAndPromotingPawns, ~allPieces, enemies,
+                            myKnights, myBishops, myRooks, myQueens,
+                            allPieces);
+
+            if (hasPreviousMove()) {
+                addEnPassantMoves
+                        (this.legalMoveStack[legalMoveStackIndex], moveStackArrayPeek(), turn, pinnedPiecesAndPromotingPawns, emptySquares, enemies,
+                                myPawns, myKing,
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
+                        );
+            }
+
+            // pinned pieces moves
+            while (pinnedPieces != 0) {
+                long pinnedPiece = getFirstPiece(pinnedPieces);
+                long pinningPiece = xrayQueenAttacks(allPieces, pinnedPiece, myKing) & enemies;
+                long pushMask = extractRayFromTwoPiecesBitboardInclusive(myKing, pinningPiece)
+                        ^ (pinningPiece | myKing);
+
+                final int pinnedPieceIndex = getIndexOfFirstPiece(pinnedPiece);
+                final long mask = (pushMask | pinningPiece);
+
+                if ((pinnedPiece & myKnights) != 0) {
+                    // knights cannot move cardinally or diagonally, and so cannot move while pinned
+                    pinnedPieces &= pinnedPieces - 1;
+                    continue;
+                }
+                if ((pinnedPiece & myPawns) != 0) {
+                    long allButPinnedFriends = friends & ~pinnedPiece;
+
+                    if ((pinnedPiece & PENULTIMATE_RANKS[turn]) == 0) {
+
+                        addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                                singlePawnPushes(pinnedPiece, turn, pushMask, allPieces)
+                                        | singlePawnCaptures(pinnedPiece, turn, pinningPiece),
+                                pinnedPieceIndex, PIECE[turn][PAWN], pieceSquareTable);
+
+                        // a pinned pawn may still EP
+                        if (hasPreviousMove()) {
+                            addEnPassantMoves(this.legalMoveStack[legalMoveStackIndex], 
+                                    moveStackArrayPeek(), turn, allButPinnedFriends, pushMask, pinningPiece,
+                                    myPawns, myKing,
+                                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
+                            );
+                        }
+                    } else {
+                        // a pinned pawn may still promote, through a capture of the pinner
+                        addPromotionMoves(this.legalMoveStack[legalMoveStackIndex], turn, 
+                                pieceSquareTable, allButPinnedFriends, pushMask, pinningPiece,
+                                myPawns,
+                                enemies, allPieces);
+                    }
+                    pinnedPieces &= pinnedPieces - 1;
+                    continue;
+                }
+                if ((pinnedPiece & myBishops) != 0) {
+                    addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                            singleBishopTable(allPieces, pinnedPiece, UNIVERSE) & mask,
+                            pinnedPieceIndex, PIECE[turn][BISHOP], pieceSquareTable);
+                    pinnedPieces &= pinnedPieces - 1;
+                    continue;
+                }
+                if ((pinnedPiece & myRooks) != 0) {
+                    addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                            singleRookTable(allPieces, pinnedPiece, UNIVERSE) & mask,
+                            pinnedPieceIndex, PIECE[turn][ROOK], pieceSquareTable);
+                    pinnedPieces &= pinnedPieces - 1;
+                    continue;
+                }
+                if ((pinnedPiece & myQueens) != 0) {
+                    addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                            (singleQueenTable(allPieces, pinnedPiece, UNIVERSE) & mask),
+                            pinnedPieceIndex, PIECE[turn][QUEEN], pieceSquareTable);
+                }
+
+                pinnedPieces &= pinnedPieces - 1;
+            }
+        }
 
         return this.legalMoveStack[legalMoveStackIndex];
     }

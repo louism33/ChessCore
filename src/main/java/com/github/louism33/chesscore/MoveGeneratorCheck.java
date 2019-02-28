@@ -10,9 +10,10 @@ import static com.github.louism33.chesscore.PieceMove.*;
 
 class MoveGeneratorCheck {
 
-    static void addCheckEvasionMoves(int[] moves, Chessboard board, boolean white, long pinnedPieces,
+    static void addCheckEvasionMoves(int[] moves, int turn, int[] pieceSquareTable, long[][] pieces,
+                                     boolean hasPreviousMove, long peek, boolean white, long pinnedPieces,
                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                     long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing, 
+                                     long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                      long enemies, long friends, long allPieces){
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
         long blockingSquaresMask, checkingPieceMask;
@@ -30,21 +31,21 @@ class MoveGeneratorCheck {
         long promotablePawns = myPawns & PENULTIMATE_RANK;
         long piecesToIgnoreAndPromotingPawns = pinnedPieces | promotablePawns;
 
-        addPromotionMoves(moves, board.turn, board.pieceSquareTable, pinnedPieces, blockingSquaresMask, checkingPieceMask,
+        addPromotionMoves(moves, turn, pieceSquareTable, pinnedPieces, blockingSquaresMask, checkingPieceMask,
                 myPawns,
                 enemies, allPieces);
 
-        addAllMovesWithoutKing (moves, board.pieces, board.turn, board.pieceSquareTable, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
+        addAllMovesWithoutKing (moves, pieces, turn, pieceSquareTable, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
                 myKnights, myBishops, myRooks, myQueens,
                 allPieces);
 
-        addKingLegalMovesOnly(moves, board.turn, board.pieces, board.pieceSquareTable,
+        addKingLegalMovesOnly(moves, turn, pieces, pieceSquareTable,
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, allPieces);
 
-        if (board.hasPreviousMove()) {
-            addEnPassantMoves(moves, board.moveStackArrayPeek(), board.turn, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
+        if (hasPreviousMove) {
+            addEnPassantMoves(moves, peek, turn, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
                     myPawns, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
             );

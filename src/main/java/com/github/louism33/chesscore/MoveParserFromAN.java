@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import com.github.louism33.utils.Piece;
+import com.github.louism33.utils.Square;
 import org.junit.Assert;
 
 import java.util.regex.Matcher;

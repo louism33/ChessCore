@@ -1,4 +1,4 @@
-package com.github.louism33.chesscore;
+package com.github.louism33.utils;
 
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 
