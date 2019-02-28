@@ -240,14 +240,16 @@ public class Chessboard {
      * @return an array of length 128 populated with fully legal chess moves, and 0s.
      * Use @see com.github.louism33.chesscore.MoveParser.class for methods to interpret the move object
      */
-    public int[] generateLegalMoves() {
-        Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
-
+    public final int[] generateLegalMoves() {
         Assert.assertNotNull(this.legalMoveStack[legalMoveStackIndex]);
+        // only clean array of moves if it has something in it
+        if (this.legalMoveStack[legalMoveStackIndex][0] != 0) {
+            Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
+        }
 
-        long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
-        long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
-        long friends, enemies;
+        final long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
+        final long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
+        final long friends, enemies;
 
         myPawns = pieces[turn][PAWN];
         myKnights = pieces[turn][KNIGHT];
@@ -266,8 +268,7 @@ public class Chessboard {
         friends = getPieces(turn);
         enemies = getPieces(1 - turn);
 
-        long allPieces = friends | enemies;
-
+        final long allPieces = friends | enemies;
 
         int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(turn == WHITE, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
@@ -285,18 +286,18 @@ public class Chessboard {
 
         Assert.assertEquals(allPieces, allPieces());
 
-
-        long currentPinnedPieces = whichPiecesArePinned(myKing,
+        final long currentPinnedPieces = whichPiecesArePinned(myKing,
                 enemyBishops, enemyRooks, enemyQueens,
                 friends, allPieces);
 
         pinnedPieces = currentPinnedPieces;
 
+        final boolean hasPreviousMove = hasPreviousMove();
         if (numberOfCheckers == 1) {
             inCheckRecorder = true;
 
             addCheckEvasionMoves(this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable, 
-                    pieces, hasPreviousMove(), moveStackArrayPeek(), turn == WHITE, currentPinnedPieces,
+                    pieces, hasPreviousMove, moveStackArrayPeek(), turn == WHITE, currentPinnedPieces,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     enemies, friends, allPieces);
@@ -306,15 +307,12 @@ public class Chessboard {
 
         inCheckRecorder = false;
 
-        Assert.assertEquals(allPieces, allPieces());
-
         long pinnedPieces = currentPinnedPieces;
 
         // not in check moves
-        long emptySquares = ~allPieces;
-
-        long promotablePawns = myPawns & PENULTIMATE_RANKS[turn];
-        long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
+        final long emptySquares = ~allPieces;
+        final long promotablePawns = myPawns & PENULTIMATE_RANKS[turn];
+        final long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
 
         addCastlingMoves(this.legalMoveStack[legalMoveStackIndex], turn, castlingRights,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
@@ -336,7 +334,7 @@ public class Chessboard {
                             myKnights, myBishops, myRooks, myQueens,
                             allPieces);
 
-            if (hasPreviousMove()) {
+            if (hasPreviousMove) {
                 addEnPassantMoves
                         (this.legalMoveStack[legalMoveStackIndex], moveStackArrayPeek(), turn, promotablePawns, emptySquares, enemies,
                                 myPawns, myKing,
@@ -354,7 +352,7 @@ public class Chessboard {
                             myKnights, myBishops, myRooks, myQueens,
                             allPieces);
 
-            if (hasPreviousMove()) {
+            if (hasPreviousMove) {
                 addEnPassantMoves
                         (this.legalMoveStack[legalMoveStackIndex], moveStackArrayPeek(), turn, pinnedPiecesAndPromotingPawns, emptySquares, enemies,
                                 myPawns, myKing,
@@ -378,7 +376,7 @@ public class Chessboard {
                     continue;
                 }
                 if ((pinnedPiece & myPawns) != 0) {
-                    long allButPinnedFriends = friends & ~pinnedPiece;
+                    final long allButPinnedFriends = friends & ~pinnedPiece;
 
                     if ((pinnedPiece & PENULTIMATE_RANKS[turn]) == 0) {
 
@@ -388,7 +386,7 @@ public class Chessboard {
                                 pinnedPieceIndex, PIECE[turn][PAWN], pieceSquareTable);
 
                         // a pinned pawn may still EP
-                        if (hasPreviousMove()) {
+                        if (hasPreviousMove) {
                             addEnPassantMoves(this.legalMoveStack[legalMoveStackIndex], 
                                     moveStackArrayPeek(), turn, allButPinnedFriends, pushMask, pinningPiece,
                                     myPawns, myKing,
@@ -436,17 +434,17 @@ public class Chessboard {
      * Updates the board with the move you want.
      * @param move the non-0 move you want to make of this board.
      */
-    public void makeMoveAndFlipTurnBetter(int move) {
+    public final void makeMoveAndFlipTurnBetter(int move) {
         this.rotateMoveIndexUp();
         Assert.assertNotEquals(move, 0);
         masterStackPush();
 
-        int sourceSquare = getSourceIndex(move);
-        int destinationIndex = getDestinationIndex(move);
-        int sourcePieceIdentifier = pieceSquareTable[sourceSquare] - 1;
-        boolean captureMove = isCaptureMove(move);
-        long destinationPiece = newPieceOnSquare(destinationIndex);
-        long destinationZH = zobristHashPieces[destinationIndex][sourcePieceIdentifier];
+        final int sourceSquare = getSourceIndex(move);
+        final int destinationIndex = getDestinationIndex(move);
+        final int sourcePieceIdentifier = pieceSquareTable[sourceSquare] - 1;
+        final boolean captureMove = isCaptureMove(move);
+        final long destinationPiece = newPieceOnSquare(destinationIndex);
+        final long destinationZH = zobristHashPieces[destinationIndex][sourcePieceIdentifier];
 
         zobristHash ^= zobristHashPieces[sourceSquare][sourcePieceIdentifier];
         zobristHash ^= destinationZH;
@@ -908,7 +906,7 @@ public class Chessboard {
     }
 
 
-    public long whitePieces() {
+    private long whitePieces() {
         this.pieces[WHITE][ALL_COLOUR_PIECES] = 0;
         for (int i = PAWN; i <= KING; i++) {
             this.pieces[WHITE][ALL_COLOUR_PIECES] |= this.pieces[WHITE][i];
@@ -924,7 +922,7 @@ public class Chessboard {
         }
     }
 
-    public long blackPieces() {
+    private long blackPieces() {
         this.pieces[BLACK][ALL_COLOUR_PIECES] = 0;
         for (int i = PAWN; i <= KING; i++) {
             this.pieces[BLACK][ALL_COLOUR_PIECES] |= this.pieces[BLACK][i];
