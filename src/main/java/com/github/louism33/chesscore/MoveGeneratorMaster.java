@@ -15,7 +15,7 @@ import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
 
 class MoveGeneratorMaster {
 
-    static void generateLegalMoves(Chessboard board, long pinnedPieces, boolean inCheckRecorder, int turn, long[][] pieces, int castlingRights,
+    static void generateLegalMoves(Chessboard board, int turn, long[][] pieces, int castlingRights,
                                    int[] pieceSquareTable, boolean hasPreviousMove, long peek, int[] moves) {
         Assert.assertNotNull(moves);
 
@@ -47,7 +47,7 @@ class MoveGeneratorMaster {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 allPieces);
 
-        if (numberOfCheckers > 1){
+        if (numberOfCheckers > 1) {
             board.inCheckRecorder = true;
 
             addKingLegalMovesOnly(moves, turn, pieces, pieceSquareTable,
@@ -66,7 +66,7 @@ class MoveGeneratorMaster {
 
         board.pinnedPieces = currentPinnedPieces;
 
-        if (numberOfCheckers == 1){
+        if (numberOfCheckers == 1) {
             board.inCheckRecorder = true;
 
             addCheckEvasionMoves(moves, board, turn == WHITE, currentPinnedPieces,
@@ -81,21 +81,9 @@ class MoveGeneratorMaster {
 
         Assert.assertEquals(allPieces, board.allPieces());
 
+        long pinnedPieces = currentPinnedPieces;
 
-        addNotInCheckMoves(moves, turn, pieces, castlingRights, pieceSquareTable, 
-                hasPreviousMove, peek, currentPinnedPieces,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
-
-    }
-
-    private static void addNotInCheckMoves(int[] moves, int turn, long[][] pieces, int castlingRights,
-                                           int[] pieceSquareTable, boolean hasPreviousMove, long peek, long pinnedPieces,
-                                           long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                           long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                           long enemies, long friends, long allPieces){
-
+        // not in check moves
         long emptySquares = ~allPieces;
 
         long promotablePawns = myPawns & PENULTIMATE_RANKS[turn];
@@ -110,7 +98,7 @@ class MoveGeneratorMaster {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 enemies, allPieces);
 
-        if (pinnedPieces == 0){
+        if (pinnedPieces == 0) {
             addPromotionMoves
                     (moves, turn, pieceSquareTable, 0, emptySquares, enemies,
                             myPawns,
@@ -128,8 +116,7 @@ class MoveGeneratorMaster {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
                         );
             }
-        }
-        else {
+        } else {
             addPromotionMoves
                     (moves, turn, pieceSquareTable, pinnedPieces, emptySquares, enemies,
                             myPawns,
@@ -148,26 +135,12 @@ class MoveGeneratorMaster {
                         );
             }
 
-            addPinnedPiecesMoves(moves, turn, pieceSquareTable,
-                    hasPreviousMove, peek, pinnedPieces, myKing,
-                    myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    enemies, friends, allPieces);
-        }
-    }
-
-    private static void addPinnedPiecesMoves(int[] moves, int turn,
-                                             int[] pieceSquareTable, boolean hasPreviousMove, long peek,
-                                             long pinnedPieces, long squareWeArePinnedTo,
-                                             long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                             long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                             long enemies, long friends, long allPieces){
-
-        while (pinnedPieces != 0){
+        // pinned pieces moves
+        while (pinnedPieces != 0) {
             long pinnedPiece = getFirstPiece(pinnedPieces);
-            long pinningPiece = xrayQueenAttacks(allPieces, pinnedPiece, squareWeArePinnedTo) & enemies;
-            long pushMask = extractRayFromTwoPiecesBitboardInclusive(squareWeArePinnedTo, pinningPiece)
-                    ^ (pinningPiece | squareWeArePinnedTo);
+            long pinningPiece = xrayQueenAttacks(allPieces, pinnedPiece, myKing) & enemies;
+            long pushMask = extractRayFromTwoPiecesBitboardInclusive(myKing, pinningPiece)
+                    ^ (pinningPiece | myKing);
 
             final int pinnedPieceIndex = getIndexOfFirstPiece(pinnedPiece);
             final long mask = (pushMask | pinningPiece);
@@ -227,4 +200,5 @@ class MoveGeneratorMaster {
         }
     }
 
+}
 }

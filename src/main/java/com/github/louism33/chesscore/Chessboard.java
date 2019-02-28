@@ -237,7 +237,7 @@ public class Chessboard {
     public int[] generateLegalMoves() {
         Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
 
-        MoveGeneratorMaster.generateLegalMoves(this, pinnedPieces, inCheckRecorder, turn,
+        MoveGeneratorMaster.generateLegalMoves(this, turn,
                 pieces, castlingRights, pieceSquareTable, hasPreviousMove(), moveStackArrayPeek(),
                 this.legalMoveStack[legalMoveStackIndex]);
 
