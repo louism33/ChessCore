@@ -44,7 +44,7 @@ class MoveGeneratorCheck {
                 enemies, allPieces);
 
         if (board.hasPreviousMove()) {
-            addEnPassantMoves(moves, board.moveStackArrayPeek(), board.turn, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
+            addEnPassantMoves(moves, board.moveStackArrayPeek(), board.turn, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
                     myPawns, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
             );

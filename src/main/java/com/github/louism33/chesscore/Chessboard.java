@@ -237,8 +237,9 @@ public class Chessboard {
     public int[] generateLegalMoves() {
         Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
 
-        MoveGeneratorMaster.generateLegalMoves(this,
-                this.legalMoveStack[legalMoveStackIndex], turn);
+        MoveGeneratorMaster.generateLegalMoves(this, pinnedPieces, inCheckRecorder, turn,
+                pieces, castlingRights, pieceSquareTable, hasPreviousMove(), moveStackArrayPeek(),
+                this.legalMoveStack[legalMoveStackIndex]);
 
         return this.legalMoveStack[legalMoveStackIndex];
     }
@@ -814,7 +815,7 @@ public class Chessboard {
     }
 
     long moveStackArrayPeek() {
-        return pastMoveStackArray[moveStackIndex - 1];
+        return moveStackIndex > 0 ? pastMoveStackArray[moveStackIndex - 1] : 0;
     }
 
     boolean hasPreviousMove() {

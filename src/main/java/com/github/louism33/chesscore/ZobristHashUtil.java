@@ -1,12 +1,7 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
 import java.util.Random;
 
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
-import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
-import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 import static com.github.louism33.chesscore.StackDataUtil.NULL_MOVE;
 
