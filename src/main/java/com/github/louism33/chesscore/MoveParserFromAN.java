@@ -4,34 +4,81 @@ import com.github.louism33.utils.Piece;
 import com.github.louism33.utils.Square;
 import org.junit.Assert;
 
+import javax.management.relation.RoleUnresolved;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.extractFileFromStack;
+import static com.github.louism33.chesscore.MoveParser.numberOfRealMoves;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 import static com.github.louism33.utils.Parser.moveFromSourceDestinationSquareCaptureSecure;
 
 public class MoveParserFromAN {
 
-//    public static void main (String[] args){
-//        Chessboard board = new Chessboard("r3k2r/8/8/8/2pP4/8/B7/R3K2R b KQkq d3 5 3");
-//        System.out.println(board);
-//
-//        int[] moves = board.generateLegalMoves();
-//        MoveParser.printMoves(moves);
-//
-//        String an = "e8g8";
-//        int move = buildMoveFromAN(board, an);
-//        String s = MoveParser.toString(move);
-//        System.out.println("-----> "+ s);
-//
-//        System.out.println("MP : " + MoveParser.isCastlingMove(move));
-//        board.makeMoveAndFlipTurnBetter(move);
-//        System.out.println(board);
-//
-//    }
+    private static Pattern pattern = Pattern.compile(".?([abcdefgh][12345678])[-x]([abcdefgh][12345678])(\\w)?");
+    private static Matcher matcher = pattern.matcher("");
+
+    public static int buildMoveFromLAN(Chessboard board, String an){
+        matcher.reset(an);
+
+        if (matcher.find()) {
+            String movingPieceStr = matcher.group(1);
+            String promotionPiece = matcher.group(3);
+
+            int sourceIndex = 'h' - movingPieceStr.charAt(0) + (movingPieceStr.charAt(1) - '1')*8;
+            int destinationIndex = 'h' - matcher.group(2).charAt(0) + (matcher.group(2).charAt(1) - '1')*8;
+
+            int basicMove = MoveParser.buildMove(sourceIndex, board.pieceSquareTable[sourceIndex], destinationIndex, board.pieceSquareTable[destinationIndex]);
+
+            long movingPiece = BitOperations.newPieceOnSquare(sourceIndex);
+            long destinationSquare = BitOperations.newPieceOnSquare(destinationIndex);
+
+            int turn = board.turn;
+            if (movingPiece == INITIAL_PIECES[turn][KING] && board.pieceSquareTable[sourceIndex] == PIECE[turn][KING]){
+                if ((destinationSquare & INITIAL_PIECES[turn][ROOK]) != 0){
+                    basicMove |= CASTLING_MASK;
+                }
+            }
+
+            // if it is a diagonal non-capture by a pawn, it must be EP
+            if (matcher.group(1).charAt(0) != matcher.group(2).charAt(0)) {
+                if (board.pieceSquareTable[sourceIndex] == PIECE[turn][PAWN]
+                        && board.pieceSquareTable[destinationIndex] == NO_PIECE) {
+                    basicMove |= ENPASSANT_MASK;
+                }
+            }
+
+            if (promotionPiece != null) {
+                basicMove |= PROMOTION_MASK;
+                switch (promotionPiece){
+                    case "n":
+                    case "N":
+                        basicMove |= KNIGHT_PROMOTION_MASK;
+                        break;
+                    case "b":
+                    case "B":
+                        basicMove |= BISHOP_PROMOTION_MASK;
+                        break;
+                    case "r":
+                    case "R":
+                        basicMove |= ROOK_PROMOTION_MASK;
+                        break;
+                    case "q":
+                    case "Q":
+                        basicMove |= QUEEN_PROMOTION_MASK;
+                        break;
+                }
+            }
+            return basicMove;
+        }
+
+        return buildMoveFromAN(board, an);
+//        throw new RuntimeException("Could not parse '" + an + "'");
+    }
+
 
     private static final String boardPattern =
             "([(PNBRQKpnrqk)|a-h]?)" +
@@ -143,10 +190,6 @@ public class MoveParserFromAN {
 
         if (sourcePiece != null && !sourcePiece.equals("")) {
             Assert.assertEquals(translateFromLetter(board.isWhiteTurn(), sourcePiece), MoveParser.getMovingPiece(move));
-        }
-
-        if (checkMove != null && checkMove.equals("+")) {
-//            return makeCheckingMove(move);
         }
 
         return move;

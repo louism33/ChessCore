@@ -34,11 +34,6 @@ class StackDataUtil {
         return (int) ((stackMoveData & SMD_CASTLE_FLAGS) >> smdCastleOffset);
     }
 
-//    public static long smdMakeSpecialMove(SpecialMove specialMove){
-//        return (long) specialMove.ordinal() << smdSpecialOffset;
-//    }
-
-
     static long buildStackDataBetter(int move, int turn, int fiftyCounter, int castlingRights, long typeOfSpecialMove, int enPassantFile) {
         return buildStackDataBetter(move, turn, fiftyCounter, castlingRights, typeOfSpecialMove) | ((long) enPassantFile << smdEPOffset);
     }

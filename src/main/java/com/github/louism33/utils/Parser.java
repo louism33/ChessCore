@@ -60,7 +60,7 @@ public class Parser {
     }
 
     public static int newMove(Chessboard board, String algebraicNotation){
-        return MoveParserFromAN.buildMoveFromAN(board, algebraicNotation);
+        return MoveParserFromAN.buildMoveFromLAN(board, algebraicNotation);
     }
 
     public static int capturePieceMask(Chessboard board, int destinationIndex) {

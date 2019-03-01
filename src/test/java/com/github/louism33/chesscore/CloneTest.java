@@ -1,5 +1,6 @@
 package com.github.louism33.chesscore;
 
+import com.github.louism33.utils.ExtendedPositionDescriptionParser;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -35,6 +36,8 @@ public class CloneTest {
     @org.junit.Test
     public void test() {
         final Chessboard board = EPDObject.getBoard();
+        
+        MoveParser.printMoves(EPDObject.getBestMoves());
         
         Chessboard board2 = new Chessboard(board);
 

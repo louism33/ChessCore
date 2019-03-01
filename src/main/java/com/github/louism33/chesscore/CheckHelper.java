@@ -16,6 +16,8 @@ class CheckHelper {
         return numberOfCheckers > 0;
     }
 
+    //todo add intermediate function to return bitboard of checkers, as we only need king moves if checked by pawn of knight
+    
     static int numberOfPiecesThatLegalThreatenSquare(boolean myColour, long square,
                                                      long pawns, long knights, long bishops, long rooks, long queens, long king,
                                                      long allPieces){

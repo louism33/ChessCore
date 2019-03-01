@@ -7,15 +7,14 @@ class MovePrettifier {
             return ".";
         }
         int sourceAsPiece = MoveParser.getSourceIndex(move);
-        String file = getFile(sourceAsPiece);
-        String rank = getRank(sourceAsPiece);
+        String file = Character.toString('h' - (sourceAsPiece % (8)));
+        String rank = (sourceAsPiece / 8 + 1) + "";
         int destination = MoveParser.getDestinationIndex(move);
-        String destinationFile = getFile(destination);
-        String destinationRank = getRank(destination);
+        String destinationFile = Character.toString('h' - (destination % (8)));
+        String destinationRank = (destination / 8 + 1) + "";
         String m = ""+file+ rank+destinationFile+ destinationRank;
 
         if (MoveParser.isPromotionMove(move)){
-
             if (MoveParser.isPromotionToKnight(move)){
                 m += "N";
             }
@@ -31,40 +30,5 @@ class MovePrettifier {
         }
         return m;
     }
-    
-    private static String getRank(int square){
-        return (square / 8 + 1) + "";
-    }
 
-    private static String getFile(int square){
-        int i = square % 8;
-        String file = "";
-        switch (i){
-            case 0: 
-                file = "h";
-                break;
-            case 1:
-                file = "g";
-                break;
-            case 2:
-                file = "f";
-                break;
-            case 3:
-                file = "e";
-                break;
-            case 4:
-                file = "d";
-                break;
-            case 5:
-                file = "c";
-                break;
-            case 6:
-                file = "b";
-                break;
-            case 7:
-                file = "a";
-                break;
-        }
-        return file;
-    }
 }

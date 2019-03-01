@@ -29,7 +29,7 @@ public class MoveParser {
         System.out.println(Arrays.toString(MoveParser.toString(moves)));
     }
     
-    static int buildMove(int source, int whichSourcePiece, int destinationIndex, int victimPiece) {
+    public static int buildMove(int source, int whichSourcePiece, int destinationIndex, int victimPiece) {
         Assert.assertTrue(source >= 0 && source < 64 && destinationIndex >= 0 && destinationIndex < 64);
 
         int move = 0;
@@ -172,8 +172,7 @@ public class MoveParser {
     }
 
     public static String[] toString(int[] moves){
-        int number = numberOfRealMoves(moves);
-        number = moves.length;
+        int number = moves[moves.length - 1];
         String[] realMoves = new String[number];
         for (int i = 0; i < number; i ++){
             realMoves[i] = prettyMove(moves[i]);
@@ -182,6 +181,6 @@ public class MoveParser {
     }
 
     public static String toString(int move){
-        return move == 0 ? "NULL_MOVE" : prettyMove(move);
+        return move == 0 ? "0000" : prettyMove(move);
     }
 }

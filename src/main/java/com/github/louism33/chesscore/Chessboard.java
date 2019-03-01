@@ -198,7 +198,6 @@ public class Chessboard {
      * Copy Constructor
      * @param board the chessboard you want an exact copy of
      */
-
     public Chessboard(Chessboard board) {
         this.turn = board.turn;
         this.castlingRights = board.castlingRights;
@@ -226,13 +225,6 @@ public class Chessboard {
         System.arraycopy(board.pieceSquareTable, 0, pieceSquareTable, 0, board.pieceSquareTable.length);
 
         Setup.init(false);
-    }
-
-    /**
-     * @return a String representation of the current board.
-     */
-    public String getFenRepresentation() {
-        return "not yet";
     }
 
     /**
@@ -1011,7 +1003,6 @@ public class Chessboard {
 
     /**
      * New Chessboard based on a FEN string
-     *
      * @param fen the String of pieces turn and castling rights and ep square and counters to make a board from
      */
     public Chessboard(String fen) {
