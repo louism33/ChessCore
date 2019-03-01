@@ -118,16 +118,6 @@ public class MoveTest {
                 break;
             }
 
-//            final Piece movingPiece = MoveParser.getMovingPiece(move);
-//            final Piece victimPiece = MoveParser.getVictimPiece(move);
-//            final int sourceIndex = MoveParser.getSourceIndex(move);
-//            final int destinationIndex = MoveParser.getDestinationIndex(move);
-//            final Piece source = Piece.pieceOnSquare(board, BitOperations.newPieceOnSquare(sourceIndex));
-//            final Piece dest = Piece.pieceOnSquare(board, BitOperations.newPieceOnSquare(destinationIndex));
-//            
-//            Assert.assertEquals(movingPiece, source);
-//            Assert.assertEquals(victimPiece, dest);
-
             board.makeMoveAndFlipTurnBetter(move);
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);

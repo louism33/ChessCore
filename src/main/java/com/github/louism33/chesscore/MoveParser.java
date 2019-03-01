@@ -7,7 +7,6 @@ import java.util.List;
 
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
-import static com.github.louism33.chesscore.MoveParserFromAN.Piece.values;
 
 public class MoveParser {
 
@@ -102,11 +101,6 @@ public class MoveParser {
     public static boolean isPromotionToQueen (int move){
         if (!((move & SPECIAL_MOVE_MASK) == PROMOTION_MASK)) return false;
         return (move & WHICH_PROMOTION) == QUEEN_PROMOTION_MASK;
-    }
-
-    public static MoveParserFromAN.Piece getMovingPiece(int move){
-        final int indexOfSourcePiece = (move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
-        return values()[indexOfSourcePiece];
     }
 
     public static int getMovingPieceInt(int move){

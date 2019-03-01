@@ -64,10 +64,6 @@ public class BitOperations {
         return highestOneBit(l);
     }
 
-    static long extractRayFromTwoPieces(MoveParserFromAN.Piece pieceOne, MoveParserFromAN.Piece pieceTwo){
-        return extractRayFromTwoPieces(pieceOne.ordinal(), pieceTwo.ordinal());
-    }
-
     static long extractRayFromTwoPiecesBitboard(long pieceOne, long pieceTwo){
         return extractRayFromTwoPieces(getIndexOfFirstPiece(pieceOne), getIndexOfFirstPiece(pieceTwo));
     }
