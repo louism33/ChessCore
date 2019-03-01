@@ -5,10 +5,10 @@ public class BoardConstants {
     public static final int NO_PIECE = 0;
 
     public static final int ALL_COLOUR_PIECES = 0;
-    
+
     public static final int WHITE = 0;
     public static final int BLACK = 1;
-    
+
     public static final int BOTH = 2;
 
     public static final int PAWN = 1;
@@ -48,7 +48,7 @@ public class BoardConstants {
         PIECE[BLACK][QUEEN] = BLACK_QUEEN;
         PIECE[BLACK][KING] = BLACK_KING;
     }
-    
+
     public static final int
             H1 = 0, G1 = 1, F1 = 2, E1 = 3, D1 = 4, C1 = 5, B1 = 6, A1 = 7,
             H2 = 8, G2 = 9, F2 = 10, E2 = 11, D2 = 12, C2 = 13, B2 = 14, A2 = 15,
@@ -73,7 +73,7 @@ public class BoardConstants {
     public static final long INITIAL_WHITE_KING = 0x0000000000000008L;
 
     public static final long INITIAL_BLACK_PIECES = 0xFFFF000000000000L;
-    
+
     public static final long INITIAL_BLACK_PAWNS = 0x00FF000000000000L;
     public static final long INITIAL_BLACK_KNIGHTS = 0x4200000000000000L;
     public static final long INITIAL_BLACK_BISHOPS = 0x2400000000000000L;
@@ -125,7 +125,7 @@ public class BoardConstants {
         INITIAL_PIECE_SQUARES[62] = BLACK_KNIGHT;
         INITIAL_PIECE_SQUARES[63] = BLACK_ROOK;
     }
-    
+
     public static final long WHITE_COLOURED_SQUARES = 0x5555555555555555L;
     public static final long BLACK_COLOURED_SQUARES = 0xAAAAAAAAAAAAAAAAL;
 
@@ -142,6 +142,17 @@ public class BoardConstants {
     public static final long RANK_SIX = 0x0000FF0000000000L;
     public static final long RANK_SEVEN = 0x00FF000000000000L;
     public static final long RANK_EIGHT = 0xFF00000000000000L;
+
+    public static final long[] RANKS = new long[]{
+            0x00000000000000FFL,
+            0x000000000000FF00L,
+            0x0000000000FF0000L,
+            0x00000000FF000000L,
+            0x000000FF00000000L,
+            0x0000FF0000000000L,
+            0x00FF000000000000L,
+            0xFF00000000000000L,
+    };
 
     public static final long FILE_H = 0x0101010101010101L;
     public static final long FILE_G = 0x0202020202020202L;
@@ -181,7 +192,7 @@ public class BoardConstants {
         ENPASSANT_RANK[WHITE] = RANK_FOUR;
         ENPASSANT_RANK[BLACK] = RANK_FIVE;
     }
-    
+
     public static final long[] ROWS = new long[]{
             0x00000000000000FFL,
             0x000000000000FF00L,
@@ -224,14 +235,14 @@ public class BoardConstants {
 
     public static final long whiteCastleQueenUnthreateneds = 0x0000000000000030L;
     public static final long blackCastleQueenUnthreateneds = 0x3000000000000000L;
-    
+
     public static final long[] castleQueenNoThreat = new long[2];
     public static final long[][] castleEmpties = new long[2][2];
 
     public static final int[][] castlingRightsOn = new int[2][2];
-    
+
     public static final int[][] castlingRightsMask = new int[2][3];
-    
+
     public static final int KQ = 2, K = 1, Q = 0;
     static{
         castleQueenNoThreat[WHITE] = whiteCastleQueenUnthreateneds;
@@ -239,7 +250,7 @@ public class BoardConstants {
 
         castleEmpties[WHITE][Q] = whiteCastleQueenEmpties;
         castleEmpties[WHITE][K] = whiteCastleKingEmpties;
-        
+
         castleEmpties[BLACK][Q] = blackCastleQueenEmpties;
         castleEmpties[BLACK][K] = blackCastleKingEmpties;
 
@@ -342,8 +353,8 @@ public class BoardConstants {
             2207613190144L, 4415226380288L, 8830452760576L, 17660905521152L, 35321811042304L, 70643622084608L, 141287244169216L, 0L,
             0L, 0L, 0L, 0L, 0L, 0L, 0L
     };
-    
-   
+
+
     public static final long[] PAWN_PUSH_MASK_WHITE = {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 16842752L,
             33685504L, 67371008L, 134742016L, 269484032L, 538968064L, 1077936128L, 2155872256L, 16777216L,
@@ -360,7 +371,7 @@ public class BoardConstants {
         PAWN_PUSH_MASK[WHITE] = PAWN_PUSH_MASK_WHITE;
         PAWN_PUSH_MASK[BLACK] = PAWN_PUSH_MASK_BLACK;
     }
-   
+
     public static final long[] PAWN_CAPTURE_TABLE_WHITE = {
             0x200L, 0x500L, 0xa00L, 0x1400L, 0x2800L, 0x5000L, 0xa000L, 0x4000L,
             0x20000L, 0x50000L, 0xa0000L, 0x140000L, 0x280000L, 0x500000L, 0xa00000L, 0x400000L,

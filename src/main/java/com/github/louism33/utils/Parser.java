@@ -1,17 +1,16 @@
 package com.github.louism33.utils;
 
+
 import com.github.louism33.chesscore.Chessboard;
 import com.github.louism33.chesscore.MoveConstants;
 import com.github.louism33.chesscore.MoveParser;
 import com.github.louism33.chesscore.MoveParserFromAN;
 import org.junit.Assert;
 
-import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.MoveConstants.*;
-import static com.github.louism33.utils.Piece.pieceOnSquareInt;
 
 public class Parser {
-    public static int moveFromSourceDestinationSquareCaptureSecure(Chessboard board, Piece movingPiece,
+    public static int moveFromSourceDestinationSquareCaptureSecure(Chessboard board, MoveParserFromAN.Piece movingPiece,
                                                                    long file, Square source, Square destinationIndex, boolean capture) {
         if (source == null){
             int sourceIndex = -1;
@@ -27,7 +26,7 @@ public class Parser {
                 }
                 
                 if (MoveParser.getDestinationIndex(move) == destinationIndex.ordinal()){
-                    if (movingPiece != null && movingPiece != Piece.NO_PIECE){
+                    if (movingPiece != null && movingPiece != MoveParserFromAN.Piece.NO_PIECE){
                         if (MoveParser.getMovingPiece(move) != movingPiece){
                             continue;
                         }
@@ -54,7 +53,7 @@ public class Parser {
         move |= (d & DESTINATION_MASK);
         
         move |= (MoveConstants.SOURCE_PIECE_MASK 
-                | (pieceOnSquareInt(board, newPieceOnSquare(s)))) << MoveConstants.SOURCE_PIECE_OFFSET;
+                | (board.pieceSquareTable[s])) << MoveConstants.SOURCE_PIECE_OFFSET;
         
         return move;
     }
@@ -64,6 +63,6 @@ public class Parser {
     }
 
     public static int capturePieceMask(Chessboard board, int destinationIndex) {
-        return (pieceOnSquareInt(board, newPieceOnSquare(destinationIndex))) << MoveConstants.VICTIM_PIECE_OFFSET;
+        return (board.pieceSquareTable[destinationIndex]) << MoveConstants.VICTIM_PIECE_OFFSET;
     }
 }

@@ -22,7 +22,7 @@ class PerftTest {
 
     @Test
     void npsTest(){
-        NPSTest.npsTest(new Chessboard(), 6);
+//        NPSTest.npsTest(new Chessboard(), 6);
         NPSTest.npsTest(new Chessboard(), 7);
     }
     

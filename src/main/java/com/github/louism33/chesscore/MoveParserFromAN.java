@@ -1,18 +1,17 @@
 package com.github.louism33.chesscore;
 
-import com.github.louism33.utils.Piece;
+import com.github.louism33.utils.ExtendedPositionDescriptionParser;
 import com.github.louism33.utils.Square;
 import org.junit.Assert;
 
-import javax.management.relation.RoleUnresolved;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.extractFileFromStack;
-import static com.github.louism33.chesscore.MoveParser.numberOfRealMoves;
+import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 import static com.github.louism33.utils.Parser.moveFromSourceDestinationSquareCaptureSecure;
 
@@ -24,17 +23,17 @@ public class MoveParserFromAN {
     public static int buildMoveFromLAN(Chessboard board, String an){
         matcher.reset(an);
 
-        if (matcher.find()) {
+        if (matcher.find() && false) {
             String movingPieceStr = matcher.group(1);
             String promotionPiece = matcher.group(3);
 
             int sourceIndex = 'h' - movingPieceStr.charAt(0) + (movingPieceStr.charAt(1) - '1')*8;
             int destinationIndex = 'h' - matcher.group(2).charAt(0) + (matcher.group(2).charAt(1) - '1')*8;
 
-            int basicMove = MoveParser.buildMove(sourceIndex, board.pieceSquareTable[sourceIndex], destinationIndex, board.pieceSquareTable[destinationIndex]);
+            int basicMove = buildMove(sourceIndex, board.pieceSquareTable[sourceIndex], destinationIndex, board.pieceSquareTable[destinationIndex]);
 
-            long movingPiece = BitOperations.newPieceOnSquare(sourceIndex);
-            long destinationSquare = BitOperations.newPieceOnSquare(destinationIndex);
+            long movingPiece = newPieceOnSquare(sourceIndex);
+            long destinationSquare = newPieceOnSquare(destinationIndex);
 
             int turn = board.turn;
             if (movingPiece == INITIAL_PIECES[turn][KING] && board.pieceSquareTable[sourceIndex] == PIECE[turn][KING]){
@@ -72,11 +71,11 @@ public class MoveParserFromAN {
                         break;
                 }
             }
+
             return basicMove;
         }
 
         return buildMoveFromAN(board, an);
-//        throw new RuntimeException("Could not parse '" + an + "'");
     }
 
 
@@ -91,108 +90,191 @@ public class MoveParserFromAN {
                     "([nbrqNBRQ])?" +
                     "";
 
-    public static int buildMoveFromAN(Chessboard board, String an){
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(an);
+    public static void main(String[] args){
+//        String e = "2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - - bm Qg6; id \"WAC.001\";\n";
+        String e = "2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - - bm Qh8; id \"WAC.001\";\n";
 
-        String sourcePiece = "";
-        String capture1 = "";
-        String possibleSourceFile = "";
-        String sourceSquareString = "";
-        String capture2 = "";
-        String destinationString = "";
 
-        String checkMove = "";
-        String promotionPiece = "";
 
-        if (m.find()){
-            sourcePiece = m.group(1);
-            capture1 = m.group(3);
-            possibleSourceFile = m.group(2);
-            sourceSquareString = m.group(4);
-            capture2 = m.group(5);
-            destinationString = m.group(6);
-            checkMove = m.group(7);
-            promotionPiece = m.group(8);
-        }
+        ExtendedPositionDescriptionParser.EPDObject EPDObject = ExtendedPositionDescriptionParser.parseEDPPosition(e);
 
-//        System.out.println(sourcePiece);
-//        System.out.println(possibleSourceFile);
-//        System.out.println(capture1);
-//        System.out.println(sourceSquareString);
-//        System.out.println(capture2);
-//        System.out.println(destinationString);
-//        System.out.println(checkMove);
-//        System.out.println("prom piece: " + promotionPiece);
+    }
 
-        Square sourceSquare = null;
-        if (sourceSquareString != null){
-            sourceSquare = Square.valueOf(sourceSquareString.toUpperCase());
-        }
+    private static Matcher anMatcher = Pattern.compile("([RBQKPN])?([a-h])?([1-8])?([x])?([a-h])([1-8])([=]?)([QNRB]?)([+#]?)").matcher("");
 
-        Square destinationSquare = Square.valueOf(destinationString.toUpperCase());
+    private static int buildMoveFromAN(Chessboard board, String an){
+        anMatcher.reset(an);
+        char[] chars = new char[9];
+        if (anMatcher.find()) {
+            int groupCount = anMatcher.groupCount();
 
-//        System.out.println(destinationSquare.ordinal());
-        // ep ?
-        boolean isCapture = (destinationSquare.toBitboard() & board.allPieces()) != 0;
-
-        Piece movingPiece = null;
-        if (sourcePiece != null && !sourcePiece.equals("")) {
-            movingPiece = translateFromLetter(board.isWhiteTurn(), sourcePiece);
-        }
-
-        long optionalSourceFile = UNIVERSE;
-
-        if (possibleSourceFile != null && !possibleSourceFile.equals("")){
-            optionalSourceFile = FILES[7 - (possibleSourceFile.charAt(0) - 'a')];
-        }
-
-        int move = moveFromSourceDestinationSquareCaptureSecure(board, movingPiece, optionalSourceFile, sourceSquare, destinationSquare,
-                isCapture);
-
-        if (isEP(board, sourceSquare, destinationSquare, movingPiece, isCapture)){
-            move |= ENPASSANT_MASK;
-        }
-
-        if (sourceSquare != null){
-            if (isCastle(board, sourceSquare, destinationSquare, movingPiece)){
-                move |= CASTLING_MASK;
+            for (int i = 0; i < groupCount; i++) {
+                String entry = anMatcher.group(i + 1);
+                if (entry != null && entry.length() != 0) {
+                    chars[i] = entry.charAt(0);
+                }
             }
         }
 
-        if (promotionPiece != null){
-            Assert.assertTrue(destinationSquare.ordinal() < 8 || destinationSquare.ordinal() > 55);
-            move |= PROMOTION_MASK;
-            switch (promotionPiece){
-                case "n":
-                case "N":
-                    move |= KNIGHT_PROMOTION_MASK;
-                    break;
-                case "b":
-                case "B":
-                    move |= BISHOP_PROMOTION_MASK;
-                    break;
-                case "r":
-                case "R":
-                    move |= ROOK_PROMOTION_MASK;
-                    break;
-                case "q":
-                case "Q":
-                    move |= QUEEN_PROMOTION_MASK;
-                    break;
-            }
+        System.out.println("================================");
+        System.out.println(an);
+        System.out.println(chars);
+        
+        int basicMove;
+
+        int turn = board.turn;
+        int sourcePieceType = chars[0] != 0 ? getSourcePiece(chars[0], turn) : PIECE[turn][PAWN];
+
+        boolean b1 = chars[1] != 0;
+        
+        long movingPieceLong = board.pieces[turn][sourcePieceType < 7 ? sourcePieceType : sourcePieceType - 6];
+         if (b1){
+             movingPieceLong &= FILES['h' - chars[1]];
+         }
+
+        int indexOfMovingPiece = getIndexOfFirstPiece(movingPieceLong);
+         
+        boolean b2 = chars[2] != 0;
+        if (b2) {
+            System.out.println(chars[2]);
+            System.out.println(chars[2]);
         }
 
-        if ((capture1 != null && capture1.equals("x")) || capture2 != null && capture2.equals("x")){
-            Assert.assertTrue(isCapture);
-            Assert.assertTrue(MoveParser.isCaptureMove(move));
+
+        boolean b3 = chars[3] != 0;
+        boolean capture = b3;
+
+
+
+        boolean b4 = chars[4] != 0;
+        long destinationFile = 0;
+        if (b4) {
+            destinationFile = FILES['h' - chars[4]];
         }
 
-        if (sourcePiece != null && !sourcePiece.equals("")) {
-            Assert.assertEquals(translateFromLetter(board.isWhiteTurn(), sourcePiece), MoveParser.getMovingPiece(move));
+        boolean b5 = chars[5] != 0;
+        long destinationSquare = 0;
+        if (b5) {
+            long rank = RANKS[chars[5] - '1']; // * 8;
+            destinationSquare = rank & destinationFile;
         }
 
-        return move;
+        boolean b6 = chars[6] != 0;
+        if (b6) {
+//            System.out.println(chars[6]);
+        }
+
+        boolean b7 = chars[7] != 0;
+        if (b7) {
+//            System.out.println(chars[7]);
+        }
+
+        boolean b8 = chars[8] != 0;
+        if (b8) {
+//            System.out.println(chars[8]);
+        }
+
+        int indexOfVictimPiece = getIndexOfFirstPiece(destinationSquare);
+
+
+        if (sourcePieceType == 0) {
+            sourcePieceType = board.pieceSquareTable[indexOfMovingPiece];
+        }
+//        System.out.println(indexOfMovingPiece + " " + sourcePieceType + " " + indexOfVictimPiece + " " + board.pieceSquareTable[indexOfVictimPiece]);
+
+
+        basicMove = buildMove(indexOfMovingPiece, sourcePieceType, indexOfVictimPiece, board.pieceSquareTable[indexOfVictimPiece]);
+        String s = MoveParser.toString(basicMove);
+        System.out.println(s);
+
+//        String sourcePiece = "";
+//        String capture1 = "";
+//        String possibleSourceFile = "";
+//        String sourceSquareString = "";
+//        String capture2 = "";
+//        String destinationString = "";
+//
+//        String checkMove = "";
+//        String promotionPiece = "";
+//
+//        if (anMatcher.find()){
+//            sourcePiece = anMatcher.group(1);
+//            capture1 = anMatcher.group(3);
+//            possibleSourceFile = anMatcher.group(2);
+//            sourceSquareString = anMatcher.group(4);
+//            capture2 = anMatcher.group(5);
+//            destinationString = anMatcher.group(6);
+//            checkMove = anMatcher.group(7);
+//            promotionPiece = anMatcher.group(8);
+//        }
+//
+//
+//        Square sourceSquare = null;
+//        if (sourceSquareString != null){
+//            sourceSquare = Square.valueOf(sourceSquareString.toUpperCase());
+//        }
+//
+//        Square destinationSquare = Square.valueOf(destinationString.toUpperCase());
+//
+//        boolean isCapture = (destinationSquare.toBitboard() & board.allPieces()) != 0;
+//
+//        Piece movingPiece = null;
+//        if (sourcePiece != null && !sourcePiece.equals("")) {
+//            movingPiece = translateFromLetter(board.isWhiteTurn(), sourcePiece);
+//        }
+//
+//        long optionalSourceFile = UNIVERSE;
+//
+//        if (possibleSourceFile != null && !possibleSourceFile.equals("")){
+//            optionalSourceFile = FILES[7 - (possibleSourceFile.charAt(0) - 'a')];
+//        }
+//
+//        int move = moveFromSourceDestinationSquareCaptureSecure(board, movingPiece, optionalSourceFile, sourceSquare, destinationSquare,
+//                isCapture);
+//
+//        if (isEP(board, sourceSquare, destinationSquare, movingPiece, isCapture)){
+//            move |= ENPASSANT_MASK;
+//        }
+//
+//        if (sourceSquare != null){
+//            if (isCastle(board, sourceSquare, destinationSquare, movingPiece)){
+//                move |= CASTLING_MASK;
+//            }
+//        }
+//
+//        if (promotionPiece != null){
+//            Assert.assertTrue(destinationSquare.ordinal() < 8 || destinationSquare.ordinal() > 55);
+//            move |= PROMOTION_MASK;
+//            switch (promotionPiece){
+//                case "n":
+//                case "N":
+//                    move |= KNIGHT_PROMOTION_MASK;
+//                    break;
+//                case "b":
+//                case "B":
+//                    move |= BISHOP_PROMOTION_MASK;
+//                    break;
+//                case "r":
+//                case "R":
+//                    move |= ROOK_PROMOTION_MASK;
+//                    break;
+//                case "q":
+//                case "Q":
+//                    move |= QUEEN_PROMOTION_MASK;
+//                    break;
+//            }
+//        }
+//
+//        if ((capture1 != null && capture1.equals("x")) || capture2 != null && capture2.equals("x")){
+//            Assert.assertTrue(isCapture);
+//            Assert.assertTrue(MoveParser.isCaptureMove(move));
+//        }
+//
+//        if (sourcePiece != null && !sourcePiece.equals("")) {
+//            Assert.assertEquals(translateFromLetter(board.isWhiteTurn(), sourcePiece), MoveParser.getMovingPiece(move));
+//        }
+
+        return basicMove;
     }
 
     private static boolean isCastle(Chessboard board, Square sourceSquare, Square destinationSquare, Piece movingPiece){
@@ -254,6 +336,30 @@ public class MoveParserFromAN {
         return false;
     }
 
+    private static int getSourcePiece(char c, int turn) {
+        switch (c) {
+            case 'P':
+            case 'p':
+                return PIECE[turn][PAWN];
+            case 'N':
+            case 'n':
+                return PIECE[turn][KNIGHT];
+            case 'B':
+            case 'b':
+                return PIECE[turn][BISHOP];
+            case 'R':
+            case 'r':
+                return PIECE[turn][ROOK];
+            case 'Q':
+            case 'q':
+                return PIECE[turn][QUEEN];
+            case 'K':
+            case 'k':
+                return PIECE[turn][KING];
+            default:
+                return NO_PIECE;
+        }
+    }
     private static Piece translateFromLetter (boolean white, String piece){
         if (white) {
             switch (piece) {
@@ -321,10 +427,10 @@ public class MoveParserFromAN {
 
     private static int rankAndFile(Chessboard board, String square){
         int f = whichDestinationFile(board, square);
-        int r = whichDestinationRank(board, square);
+        int r = whichDestinationRank(square);
         return (r-1) * 8 + f;
     }
-    private static int whichDestinationRank(Chessboard board, String algebraicNotation){
+    private static int whichDestinationRank(String algebraicNotation){
         String boardPattern = ".?x?.x?(\\d)";
         Pattern r = Pattern.compile(boardPattern);
         Matcher m = r.matcher(algebraicNotation);
@@ -386,4 +492,22 @@ public class MoveParserFromAN {
     }
 
 
+    public enum Piece {
+        NO_PIECE,
+
+        WHITE_PAWN,
+        WHITE_KNIGHT,
+        WHITE_BISHOP,
+        WHITE_ROOK,
+        WHITE_QUEEN,
+        WHITE_KING,
+
+        BLACK_PAWN,
+        BLACK_KNIGHT,
+        BLACK_BISHOP,
+        BLACK_ROOK,
+        BLACK_QUEEN,
+        BLACK_KING;
+
+    }
 }

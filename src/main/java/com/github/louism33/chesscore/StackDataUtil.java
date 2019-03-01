@@ -4,13 +4,13 @@ package com.github.louism33.chesscore;
 import static com.github.louism33.chesscore.StackConstants.*;
 
 @SuppressWarnings("CanBeFinal")
-class StackDataUtil {
+final class StackDataUtil {
 
-    public static final int NONE = 0, BASICQUIETPUSH = 1, BASICLOUDPUSH = 2, 
+    static final int NONE = 0, BASICQUIETPUSH = 1, BASICLOUDPUSH = 2, 
             BASICCAPTURE = 3, ENPASSANTVICTIM = 4, ENPASSANTCAPTURE = 5, 
             CASTLING = 6, PROMOTION = 7, NULL_MOVE = 8;
     
-    public static int getMove(long stackMoveData){
+    static int getMove(long stackMoveData){
         return (int) (stackMoveData & SMD_MOVE_MASK);
     }
     
@@ -18,19 +18,19 @@ class StackDataUtil {
         return (int) ((stackMoveData & SMD_FIFTY_MOVES) >> smdFiftyPieceOffset);
     }
 
-    public static int getTurn(long stackMoveData){
+    static int getTurn(long stackMoveData){
         return (int) ((stackMoveData & SMD_TURN) >> smdTurnOffset);
     }
 
-    public static int getSpecialMove(long stackMoveData){
+    static int getSpecialMove(long stackMoveData){
         return (int) ((stackMoveData & SMD_SPECIAL_MOVE) >> smdSpecialOffset);
     }
 
-    public static int getEPMove(long stackMoveData){
+    static int getEPMove(long stackMoveData){
         return (int) ((stackMoveData & SMD_EP_FILE) >> smdEPOffset);
     }
 
-    public static int getCastlingRights(long stackMoveData){
+    static int getCastlingRights(long stackMoveData){
         return (int) ((stackMoveData & SMD_CASTLE_FLAGS) >> smdCastleOffset);
     }
 

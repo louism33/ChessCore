@@ -1,6 +1,5 @@
 package com.github.louism33.chesscore;
 
-import com.github.louism33.utils.Piece;
 import org.junit.Assert;
 
 import java.util.Arrays;
@@ -8,8 +7,7 @@ import java.util.List;
 
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
-import static com.github.louism33.chesscore.MovePrettifier.prettyMove;
-import static com.github.louism33.utils.Piece.values;
+import static com.github.louism33.chesscore.MoveParserFromAN.Piece.values;
 
 public class MoveParser {
 
@@ -106,7 +104,7 @@ public class MoveParser {
         return (move & WHICH_PROMOTION) == QUEEN_PROMOTION_MASK;
     }
 
-    public static Piece getMovingPiece(int move){
+    public static MoveParserFromAN.Piece getMovingPiece(int move){
         final int indexOfSourcePiece = (move & SOURCE_PIECE_MASK) >>> SOURCE_PIECE_OFFSET;
         return values()[indexOfSourcePiece];
     }
@@ -182,5 +180,34 @@ public class MoveParser {
 
     public static String toString(int move){
         return move == 0 ? "0000" : prettyMove(move);
+    }
+
+    static String prettyMove(int move){
+        if (move == 0) {
+            return ".";
+        }
+        int sourceAsPiece = getSourceIndex(move);
+        String file = Character.toString('h' - (sourceAsPiece % (8)));
+        String rank = (sourceAsPiece / 8 + 1) + "";
+        int destination = getDestinationIndex(move);
+        String destinationFile = Character.toString('h' - (destination % (8)));
+        String destinationRank = (destination / 8 + 1) + "";
+        String m = ""+file+ rank+destinationFile+ destinationRank;
+
+        if (isPromotionMove(move)){
+            if (isPromotionToKnight(move)){
+                m += "N";
+            }
+            else if (isPromotionToBishop(move)){
+                m += "B";
+            }
+            else if (isPromotionToRook(move)){
+                m += "R";
+            }
+            else if (isPromotionToQueen(move)){
+                m += "Q";
+            }
+        }
+        return m;
     }
 }

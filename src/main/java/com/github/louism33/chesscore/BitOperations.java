@@ -1,7 +1,5 @@
 package com.github.louism33.chesscore;
 
-import com.github.louism33.utils.Piece;
-
 import static com.github.louism33.chesscore.BoardConstants.FILES;
 import static com.github.louism33.chesscore.BoardConstants.ROWS;
 import static com.github.louism33.chesscore.Setup.ready;
@@ -66,7 +64,7 @@ public class BitOperations {
         return highestOneBit(l);
     }
 
-    static long extractRayFromTwoPieces(Piece pieceOne, Piece pieceTwo){
+    static long extractRayFromTwoPieces(MoveParserFromAN.Piece pieceOne, MoveParserFromAN.Piece pieceTwo){
         return extractRayFromTwoPieces(pieceOne.ordinal(), pieceTwo.ordinal());
     }
 

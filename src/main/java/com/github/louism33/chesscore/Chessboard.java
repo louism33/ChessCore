@@ -26,7 +26,7 @@ public class Chessboard {
 
     public long[][] pieces = new long[2][7];
     
-    int[] pieceSquareTable = new int[64];
+    public int[] pieceSquareTable = new int[64];
     int turn;
     /*
     castling rights bits:
@@ -960,6 +960,25 @@ public class Chessboard {
     private int masterIndex = 0;
     private int moveStackIndex = 0;
 
+    private void rotateMasterIndexUp() {
+        this.masterIndex = (this.masterIndex + 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+    }
+    private void rotateMasterIndexDown() {
+        this.masterIndex = (this.masterIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+    }
+    
+    private void rotateMoveStackIndexUp() {
+        this.moveStackIndex = (this.moveStackIndex + 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+    }
+    private void rotateMoveStackIndexDown() {
+        this.moveStackIndex = (this.moveStackIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+    }
+
+    boolean hasPreviousMove() {
+        return pastMoveStackArray[(this.moveStackIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength] != 0;
+//        return moveStackIndex > 0 && pastMoveStackArray[moveStackIndex - 1] != 0;
+    }
+    
     private void masterStackPush() {
         checkStack[masterIndex] = this.inCheckRecorder;
         inCheckRecorder = false;
@@ -968,11 +987,13 @@ public class Chessboard {
         pinnedPieces = 0;
 
         zobristHashStack[masterIndex] = zobristHash;
-        masterIndex++;
+//        masterIndex++;
+        rotateMasterIndexUp();
     }
 
     private void masterStackPop() {
-        masterIndex--;
+//        masterIndex--;
+        rotateMasterIndexDown();
         inCheckRecorder = checkStack[masterIndex];
         checkStack[masterIndex] = false;
 
@@ -983,23 +1004,20 @@ public class Chessboard {
         zobristHashStack[masterIndex] = 0;
 
         pastMoveStackArray[moveStackIndex] = 0;
-        moveStackIndex--;
+//        moveStackIndex--;
+        rotateMoveStackIndexDown();
         moveStackData = pastMoveStackArray[moveStackIndex];
     }
 
     private void moveStackArrayPush(long l) {
         pastMoveStackArray[moveStackIndex] = l;
-        moveStackIndex++;
+//        moveStackIndex++;
+        rotateMoveStackIndexUp();
     }
 
     long moveStackArrayPeek() {
         return moveStackIndex > 0 ? pastMoveStackArray[moveStackIndex - 1] : 0;
     }
-
-    boolean hasPreviousMove() {
-        return moveStackIndex > 0 && pastMoveStackArray[moveStackIndex - 1] != 0;
-    }
-
 
     /**
      * New Chessboard based on a FEN string
