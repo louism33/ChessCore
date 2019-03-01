@@ -11,14 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c35fe9c9-175e-43e1-b3c4-5d6bc53ba64a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BitOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BitOperations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BoardConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BoardConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/utils/Parser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/louism33/utils/Square.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/A.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/A.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/MoveTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/MoveTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/CloneTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/CloneTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/../Axolotl/target/" />
@@ -50,11 +44,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="95" column="24" selection-start-line="95" selection-start-column="24" selection-end-line="95" selection-end-column="24" />
+            <state relative-caret-position="172">
+              <caret line="98" column="12" selection-start-line="98" selection-start-column="12" selection-end-line="98" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -62,8 +56,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="129">
-              <caret line="105" column="4" selection-start-line="105" selection-start-column="4" selection-end-line="105" selection-end-column="4" />
+            <state relative-caret-position="-365">
+              <caret line="29" selection-start-line="29" selection-end-line="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/CloneTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="12" column="24" lean-forward="true" selection-start-line="12" selection-start-column="24" selection-end-line="12" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -98,11 +101,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/utils/Perft.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" column="18" lean-forward="true" selection-start-line="13" selection-start-column="18" selection-end-line="13" selection-end-column="18" />
+            <state relative-caret-position="180">
+              <caret line="12" column="20" lean-forward="true" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3279#3280#0" expanded="true" />
@@ -245,15 +248,15 @@
         <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/PerftTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/WACSilverSanityTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/MateTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/CloneTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BoardConstants.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/A.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/PinnedManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/BitOperations.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/MoveTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/utils/Square.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/CloneTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java" />
       </list>
     </option>
   </component>
@@ -462,7 +465,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551476365170" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551477447774" />
     <property name="last.edited.regexp" value="Rg1" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../axolotl/pom.xml" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -502,23 +505,6 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.com.github.louism33.chesscore in chesscore">
-    <configuration name="A (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="chesscore" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.github.louism33.chesscore.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.github.louism33.chesscore" />
-      <option name="TEST_OBJECT" value="uniqueId" />
-      <uniqueIds>
-        <uniqueId value="[engine:junit-jupiter]/[class:com.github.louism33.chesscore.A]" />
-      </uniqueIds>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="A (2)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="chesscore" />
       <extension name="coverage">
@@ -566,6 +552,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="CloneTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="chesscore" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.github.louism33.chesscore.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.github.louism33.chesscore" />
+      <option name="MAIN_CLASS_NAME" value="com.github.louism33.chesscore.CloneTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="com.github.louism33.chesscore in chesscore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="chesscore" />
       <extension name="coverage">
@@ -582,18 +583,18 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.A.anTest" />
-      <item itemvalue="JUnit.A (1)" />
       <item itemvalue="JUnit.A.hii" />
       <item itemvalue="JUnit.A (2)" />
       <item itemvalue="JUnit.com.github.louism33.chesscore in chesscore" />
+      <item itemvalue="JUnit.CloneTest" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.com.github.louism33.chesscore in chesscore" />
+        <item itemvalue="JUnit.CloneTest" />
         <item itemvalue="JUnit.A.anTest" />
         <item itemvalue="JUnit.A (2)" />
         <item itemvalue="JUnit.A.hii" />
-        <item itemvalue="JUnit.A (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -650,14 +651,7 @@
       <workItem from="1550001102304" duration="980000" />
       <workItem from="1550699423815" duration="628000" />
       <workItem from="1550738448522" duration="56416000" />
-      <workItem from="1550917511487" duration="182815000" />
-    </task>
-    <task id="LOCAL-00012" summary="preparing for release">
-      <created>1544357938484</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1544357938484</updated>
+      <workItem from="1550917511487" duration="183806000" />
     </task>
     <task id="LOCAL-00013" summary="preparing for release">
       <created>1544373382694</created>
@@ -995,43 +989,50 @@
       <option name="project" value="LOCAL" />
       <updated>1551471030024</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="cleaning up code">
+      <created>1551476379004</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1551476379004</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="A_(1) - 2019.03.01 at 22h 30m 40s.xml">
-      <configuration name="A (1)" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 47m 55s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="A_hii - 2019.03.01 at 22h 33m 36s.xml">
-      <configuration name="A.hii" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 48m 10s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="A_hii - 2019.03.01 at 22h 33m 56s.xml">
-      <configuration name="A.hii" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 48m 21s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="A_hii - 2019.03.01 at 22h 34m 23s.xml">
-      <configuration name="A.hii" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 49m 26s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="A_hii - 2019.03.01 at 22h 35m 00s.xml">
-      <configuration name="A.hii" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 50m 49s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="A_(2) - 2019.03.01 at 22h 35m 12s.xml">
-      <configuration name="A (2)" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 51m 39s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="A_hi - 2019.03.01 at 22h 35m 34s.xml">
-      <configuration name="A.hi" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 52m 17s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="A_hi - 2019.03.01 at 22h 35m 59s.xml">
-      <configuration name="A.hi" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 53m 44s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="com_github_louism33_chesscore_in_chesscore - 2019.03.01 at 22h 37m 09s.xml">
-      <configuration name="com.github.louism33.chesscore in chesscore" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 54m 14s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="com_github_louism33_chesscore_in_chesscore - 2019.03.01 at 22h 38m 58s.xml">
-      <configuration name="com.github.louism33.chesscore in chesscore" configurationId="JUnit" />
+    <history-entry file="CloneTest - 2019.03.01 at 22h 54m 38s.xml">
+      <configuration name="CloneTest" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="395281000" />
+    <option name="totallyTimeSpent" value="396272000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1046,7 +1047,7 @@
     <frame x="-1" y="0" width="1368" height="741" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49815497" visible="true" weight="0.1030303" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49815497" visible="true" weight="0.1030303" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -1056,12 +1057,12 @@
       <window_info id="Favorites" order="7" sideWeight="0.501845" side_tool="true" weight="0.17045455" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Message" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49924242" visible="true" weight="0.08077545" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49924242" visible="true" weight="0.18093699" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3990307" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="6" weight="0.29402262" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49924242" weight="0.15185784" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49924242" weight="0.37318256" />
       <window_info anchor="bottom" id="TODO" order="8" weight="0.048465267" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="10" />
@@ -1409,13 +1410,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/CloneTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="47" column="12" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveAdder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="101">
@@ -1488,20 +1482,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="105" column="4" selection-start-line="105" selection-start-column="4" selection-end-line="105" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="95" column="24" selection-start-line="95" selection-start-column="24" selection-end-line="95" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/utils/Square.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -1515,13 +1495,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/utils/Perft.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="18" lean-forward="true" selection-start-line="13" selection-start-column="18" selection-end-line="13" selection-end-column="18" />
+        <state relative-caret-position="180">
+          <caret line="12" column="20" lean-forward="true" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3279#3280#0" expanded="true" />
             <element signature="e#3310#3311#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-365">
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/github/louism33/chesscore/CloneTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="12" column="24" lean-forward="true" selection-start-line="12" selection-start-column="24" selection-end-line="12" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/MoveParserFromAN.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="98" column="12" selection-start-line="98" selection-start-column="12" selection-end-line="98" selection-end-column="12" />
         </state>
       </provider>
     </entry>

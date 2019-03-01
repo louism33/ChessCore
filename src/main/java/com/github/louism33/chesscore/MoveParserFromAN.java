@@ -94,10 +94,14 @@ public class MoveParserFromAN {
 
         int turn = board.turn;
         int movingPiece = PIECE[turn][PAWN];
+
+        if (chars[0] != 0) {
+            movingPiece = getSourcePiece(chars[0], turn);
+        }
+        
         long movingPieceLong = board.pieces[turn][movingPiece < 7 ? movingPiece : movingPiece - 6];
 
         if (chars[1] != 0){
-            movingPiece = getSourcePiece(chars[0], turn);
             movingPieceLong &= FILES['h' - chars[1]];
         }
 
@@ -106,7 +110,7 @@ public class MoveParserFromAN {
         }
 
         int sourceIndex = getIndexOfFirstPiece(movingPieceLong);
-
+        
         boolean b4 = chars[4] != 0;
         long destinationFile = 0;
         if (b4) {

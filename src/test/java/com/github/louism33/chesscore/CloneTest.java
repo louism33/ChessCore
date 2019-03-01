@@ -19,6 +19,7 @@ public class CloneTest {
         for (int i = 0; i < splitUpWACs.length; i++) {
             String splitUpWAC = splitUpWACs[i];
             Object[] objectAndName = new Object[2];
+            System.out.println(splitUpWAC);
             ExtendedPositionDescriptionParser.EPDObject EPDObject = ExtendedPositionDescriptionParser.parseEDPPosition(splitUpWAC);
             objectAndName[0] = EPDObject;
             objectAndName[1] = EPDObject.getId();
