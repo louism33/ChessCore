@@ -3,8 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import static com.github.louism33.chesscore.BoardConstants.CASTLE_KING_DESTINATIONS;
-import static com.github.louism33.chesscore.MoveParserFromAN.buildMoveFromLAN;
+import static com.github.louism33.utils.MoveParserFromAN.buildMoveFromLAN;
 
 public class A {
 

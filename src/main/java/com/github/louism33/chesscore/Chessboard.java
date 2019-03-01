@@ -27,112 +27,35 @@ public class Chessboard {
     public long[][] pieces = new long[2][7];
     
     public int[] pieceSquareTable = new int[64];
-    int turn;
+    public int turn;
     /*
     castling rights bits:
     BK BA WK WQ
      */
-    int castlingRights = 0xf;
+    private int castlingRights = 0xf;
 
     private int fiftyMoveCounter = 0, fullMoveCounter = 0;
 
-    private void updateHashPreMove(int move){
-        int sourceSquare = getSourceIndex(move);
-        int destinationSquareIndex = getDestinationIndex(move);
-        int sourcePieceIdentifier = pieceSquareTable[sourceSquare] - 1;
+    long zobristHash;
 
-        zobristHash ^= zobristHashPieces[sourceSquare][sourcePieceIdentifier];
-        long destinationZH = zobristHashPieces[destinationSquareIndex][sourcePieceIdentifier];
+    private long moveStackData;
+    private final int maxDepthAndArrayLength = 64;
 
-        zobristHash ^= destinationZH;
+    private final int maxNumberOfMovesInAnyPosition = 128;
+    int[] moves = new int[maxNumberOfMovesInAnyPosition];
 
-        /*
-        captures
-         */
-        if (isCaptureMove(move)){
-            int destinationPieceIdentifier = pieceSquareTable[destinationSquareIndex] - 1;
-            /*
-            remove taken piece from hash
-            */
-            long victimZH = zobristHashPieces[destinationSquareIndex][destinationPieceIdentifier];
-            zobristHash ^= victimZH;
-        }
+    private int[][] legalMoveStack = new int[maxDepthAndArrayLength][maxNumberOfMovesInAnyPosition];
 
-        /* 
-        "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
-        */
-        if (hasPreviousMove()){
-            zobristHash = updateWithEPFlags(moveStackArrayPeek(), zobristHash);
-        }
+    long[] zobristHashStack = new long[maxDepthAndArrayLength];
 
-        long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
+    private long[] pastMoveStackArray = new long[maxDepthAndArrayLength];
+    public boolean inCheckRecorder;
 
-        if (isSpecialMove(move)){
-            if (isCastlingMove(move)) {
-                int originalRookIndex = 0;
-                int newRookIndex = 0;
-                switch (getDestinationIndex(move)) {
-                    case 1:
-                        originalRookIndex = 0;
-                        newRookIndex = getDestinationIndex(move) + 1;
-                        break;
-                    case 5:
-                        originalRookIndex = 7;
-                        newRookIndex = getDestinationIndex(move) - 1;
-                        break;
-                    case 57:
-                        originalRookIndex = 56;
-                        newRookIndex = getDestinationIndex(move) + 1;
-                        break;
-                    case 61:
-                        originalRookIndex = 63;
-                        newRookIndex = getDestinationIndex(move) - 1;
-                        break;
-                }
-
-                int myRook = pieceSquareTable[originalRookIndex] - 1;
-                zobristHash ^= zobristHashPieces[originalRookIndex][myRook];
-                zobristHash ^= zobristHashPieces[newRookIndex][myRook];
-            }
-
-            else if (isEnPassantMove(move)){
-                long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
-                zobristHash ^= zobristHashPieces
-                        [BitOperations.getIndexOfFirstPiece(victimPawn)]
-                        [pieceSquareTable[getIndexOfFirstPiece(victimPawn)] - 1];
-            }
-
-            else if (isPromotionMove(move)){
-                int whichPromotingPiece = 0;
-
-                switch (move & WHICH_PROMOTION){
-                    case KNIGHT_PROMOTION_MASK:
-                        whichPromotingPiece = 2 + (turn) * 6;
-                        break;
-                    case BISHOP_PROMOTION_MASK:
-                        whichPromotingPiece = 3 + (turn) * 6;
-                        break;
-                    case ROOK_PROMOTION_MASK:
-                        whichPromotingPiece = 4 + (turn) * 6;
-                        break;
-                    case QUEEN_PROMOTION_MASK:
-                        whichPromotingPiece = 5 + (turn) * 6;
-                        break;
-                }
-
-                /*
-                remove my pawn from zh
-                 */
-                zobristHash ^= destinationZH;
-
-                Assert.assertTrue(whichPromotingPiece != 0);
-                long promotionZH = zobristHashPieces[destinationSquareIndex][whichPromotingPiece - 1];
-                zobristHash ^= promotionZH;
-            }
-        }
-
-    }
-
+    public long pinnedPieces;
+    private long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
+    private boolean[] checkStack = new boolean[maxDepthAndArrayLength];
+    
+    
     private long boardToHash(){
         long hash = 0;
         for (int sq = 0; sq < 64; sq++) {
@@ -156,27 +79,9 @@ public class Chessboard {
         return hash;
     }
 
-    public int getFiftyMoveCounter() {
+    private int getFiftyMoveCounter() {
         return fiftyMoveCounter;
     }
-
-    long zobristHash;
-    long moveStackData;
-
-    private final int maxDepthAndArrayLength = 64;
-    private final int maxNumberOfMovesInAnyPosition = 128;
-
-    int[] moves = new int[maxNumberOfMovesInAnyPosition];
-
-    private int[][] legalMoveStack = new int[maxDepthAndArrayLength][maxNumberOfMovesInAnyPosition];
-
-    long[] zobristHashStack = new long[maxDepthAndArrayLength];
-    long[] pastMoveStackArray = new long[maxDepthAndArrayLength];
-
-    public boolean inCheckRecorder;
-    public long pinnedPieces;
-    public long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
-    public boolean[] checkStack = new boolean[maxDepthAndArrayLength];
 
 
     /**
@@ -691,20 +596,16 @@ public class Chessboard {
                         originalKing = newPieceOnSquare(squareToMoveBackTo),
                         newKing = newPieceOnSquare(pieceToMoveBackIndex);
 
-                switch (StackDataUtil.getTurn(pop)) {
-                    case BLACK:
-                        originalRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? 0 : 7);
-                        newRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
-                        togglePiecesFrom(pieces, pieceSquareTable, newKing, WHITE_KING);
-                        togglePiecesFrom(pieces, pieceSquareTable, newRook, WHITE_ROOK);
-                        break;
-
-                    default:
-                        originalRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? 56 : 63);
-                        newRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
-                        togglePiecesFrom(pieces, pieceSquareTable, newKing, BLACK_KING);
-                        togglePiecesFrom(pieces, pieceSquareTable, newRook, BLACK_ROOK);
-                        break;
+                if (getTurn(pop) == BLACK) {
+                    originalRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? 0 : 7);
+                    newRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
+                    togglePiecesFrom(pieces, pieceSquareTable, newKing, WHITE_KING);
+                    togglePiecesFrom(pieces, pieceSquareTable, newRook, WHITE_ROOK);
+                } else {
+                    originalRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? 56 : 63);
+                    newRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
+                    togglePiecesFrom(pieces, pieceSquareTable, newKing, BLACK_KING);
+                    togglePiecesFrom(pieces, pieceSquareTable, newRook, BLACK_ROOK);
                 }
 
                 pieces[1 - StackDataUtil.getTurn(pop)][KING] |= originalKing;
@@ -749,7 +650,7 @@ public class Chessboard {
         turn = 1 - turn;
     }
 
-    static void makeRegularMove(long[][] pieces, int[] pieceSquareTable, int move) {
+    private static void makeRegularMove(long[][] pieces, int[] pieceSquareTable, int move) {
         final long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
         removePieces(pieces, pieceSquareTable, newPieceOnSquare(getSourceIndex(move)), destinationPiece, move);
         togglePiecesFrom(pieces, pieceSquareTable, destinationPiece, getMovingPieceInt(move));
@@ -906,7 +807,7 @@ public class Chessboard {
         return this.pieces[WHITE][ALL_COLOUR_PIECES];
     }
 
-    public long getPieces(int turn) {
+    private long getPieces(int turn) {
         if (turn == WHITE) {
             return whitePieces();
         } else {
@@ -974,9 +875,9 @@ public class Chessboard {
         this.moveStackIndex = (this.moveStackIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
     }
 
-    boolean hasPreviousMove() {
+    //todo can this return incorrectly after 64 moves have been made / simulated
+    private boolean hasPreviousMove() {
         return pastMoveStackArray[(this.moveStackIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength] != 0;
-//        return moveStackIndex > 0 && pastMoveStackArray[moveStackIndex - 1] != 0;
     }
     
     private void masterStackPush() {
@@ -987,7 +888,6 @@ public class Chessboard {
         pinnedPieces = 0;
 
         zobristHashStack[masterIndex] = zobristHash;
-//        masterIndex++;
         rotateMasterIndexUp();
     }
 
@@ -1004,18 +904,16 @@ public class Chessboard {
         zobristHashStack[masterIndex] = 0;
 
         pastMoveStackArray[moveStackIndex] = 0;
-//        moveStackIndex--;
         rotateMoveStackIndexDown();
         moveStackData = pastMoveStackArray[moveStackIndex];
     }
 
     private void moveStackArrayPush(long l) {
         pastMoveStackArray[moveStackIndex] = l;
-//        moveStackIndex++;
         rotateMoveStackIndexUp();
     }
 
-    long moveStackArrayPeek() {
+    private long moveStackArrayPeek() {
         return moveStackIndex > 0 ? pastMoveStackArray[moveStackIndex - 1] : 0;
     }
 
