@@ -116,8 +116,7 @@ class MoveGeneratorSpecial {
                         moves[moves[moves.length - 1]++] = buildMove(
                                 numberOfTrailingZeros(pawn),
                                 PIECE[turn][PAWN],
-                                numberOfTrailingZeros(pawnEnPassantCaptureSpecific),
-                                0) | ENPASSANT_MASK;
+                                numberOfTrailingZeros(pawnEnPassantCaptureSpecific)) | ENPASSANT_MASK;
                     }
                     pawnEnPassantCapture &= pawnEnPassantCapture - 1;
                 }
@@ -159,7 +158,7 @@ class MoveGeneratorSpecial {
                                 allPieces)){
 
                             moves[moves[moves.length - 1]] =
-                                    buildMove(3, WHITE_KING, 5, NO_PIECE) | CASTLING_MASK;
+                                    buildMove(3, WHITE_KING, 5) | CASTLING_MASK;
                             moves[moves.length - 1]++;
 
                         }
@@ -173,7 +172,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[moves[moves.length - 1]] = buildMove(3, WHITE_KING, 5, NO_PIECE) | CASTLING_MASK;
+                            moves[moves[moves.length - 1]] = buildMove(3, WHITE_KING, 5) | CASTLING_MASK;
                             moves[moves.length - 1]++;
                         }
 
@@ -185,7 +184,7 @@ class MoveGeneratorSpecial {
                                 allPieces)){
 
 
-                            moves[moves[moves.length - 1]] = buildMove(3, WHITE_KING,1, NO_PIECE) | CASTLING_MASK;
+                            moves[moves[moves.length - 1]] = buildMove(3, WHITE_KING,1) | CASTLING_MASK;
                             moves[moves.length - 1]++;
                         }
 
@@ -203,7 +202,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[moves[moves.length - 1]] = buildMove(59, BLACK_KING, 61, NO_PIECE) | CASTLING_MASK;
+                            moves[moves[moves.length - 1]] = buildMove(59, BLACK_KING, 61) | CASTLING_MASK;
                             moves[moves.length - 1]++;
                         }
                         break;
@@ -215,7 +214,7 @@ class MoveGeneratorSpecial {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                                 allPieces)){
 
-                            moves[moves[moves.length - 1]] = buildMove(59, BLACK_KING, 61, NO_PIECE) | CASTLING_MASK;
+                            moves[moves[moves.length - 1]] = buildMove(59, BLACK_KING, 61) | CASTLING_MASK;
                             moves[moves.length - 1]++;
                         }
 

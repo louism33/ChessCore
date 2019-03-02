@@ -10,6 +10,7 @@ import static java.lang.Long.numberOfTrailingZeros;
 class PieceMove {
 
     static long singlePawnPushes(long pawns, int turn, long legalPushes, long allPieces) {
+        Assert.assertEquals(1, populationCount(pawns));
         final long possiblePawnSinglePushes = turn == WHITE ? pawns << 8 : pawns >>> 8;
         final long intermediateRank = INTERMEDIATE_RANKS[turn];
         final long possibleDoubles = (((possiblePawnSinglePushes & intermediateRank & ~allPieces) ));

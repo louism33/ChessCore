@@ -25,19 +25,19 @@ public class MoveParser {
     public static void printMoves(int[] moves){
         System.out.println(Arrays.toString(MoveParser.toString(moves)));
     }
+
+    public static int buildMove(int source, int whichSourcePiece, int destinationIndex) {
+        Assert.assertTrue(source >= 0 && source < 64 && destinationIndex >= 0 && destinationIndex < 64);
+        return destinationIndex | source << SOURCE_OFFSET | whichSourcePiece << SOURCE_PIECE_OFFSET;
+    }
     
     public static int buildMove(int source, int whichSourcePiece, int destinationIndex, int victimPiece) {
         Assert.assertTrue(source >= 0 && source < 64 && destinationIndex >= 0 && destinationIndex < 64);
 
-        int move = 0;
-        move |= ((source << SOURCE_OFFSET) & SOURCE_MASK);
-        move |= (destinationIndex & DESTINATION_MASK);
-
-        move |= (MoveConstants.SOURCE_PIECE_MASK
-                & (whichSourcePiece << MoveConstants.SOURCE_PIECE_OFFSET));
+        int move = destinationIndex | source << SOURCE_OFFSET | whichSourcePiece << SOURCE_PIECE_OFFSET;
 
         if (victimPiece != NO_PIECE) {
-            move |= (CAPTURE_MOVE_MASK | (victimPiece << MoveConstants.VICTIM_PIECE_OFFSET));
+            move |= (CAPTURE_MOVE_MASK | (victimPiece << VICTIM_PIECE_OFFSET));
         }
 
         return move;

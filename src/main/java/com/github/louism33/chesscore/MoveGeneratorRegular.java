@@ -4,7 +4,7 @@ import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
-import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterBetter;
+import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.PieceMove.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
@@ -72,7 +72,7 @@ class MoveGeneratorRegular {
         }
         
         if (table != 0) {
-            addMovesFromAttackTableMasterBetter(moves,
+            addMovesFromAttackTableMaster(moves,
                     table,
                     numberOfTrailingZeros(myKing),
                     PIECE[turn][KING],

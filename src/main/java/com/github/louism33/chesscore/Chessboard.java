@@ -8,7 +8,7 @@ import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.*;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
-import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterBetter;
+import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorCheck.addCheckEvasionMoves;
 import static com.github.louism33.chesscore.MoveGeneratorPseudo.addAllMovesWithoutKing;
@@ -288,7 +288,7 @@ public class Chessboard {
                         final long table = singlePawnPushes(pinnedPiece, turn, pushMask, allPieces)
                                 | singlePawnCaptures(pinnedPiece, turn, pinningPiece);
                         if (table != 0) {
-                            addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                            addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
                                     table,
                                     pinnedPieceIndex, PIECE[turn][PAWN], pieceSquareTable);
                         }
@@ -314,7 +314,7 @@ public class Chessboard {
                 if ((pinnedPiece & myBishops) != 0) {
                     final long table = singleBishopTable(allPieces, pinnedPiece, UNIVERSE) & mask;
                     if (table != 0) {
-                        addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                        addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
                                 table,
                                 pinnedPieceIndex, PIECE[turn][BISHOP], pieceSquareTable);
                     }
@@ -324,7 +324,7 @@ public class Chessboard {
                 if ((pinnedPiece & myRooks) != 0) {
                     final long table = singleRookTable(allPieces, pinnedPiece, UNIVERSE) & mask;
                     if (table != 0) {
-                        addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                        addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
                                 table,
                                 pinnedPieceIndex, PIECE[turn][ROOK], pieceSquareTable);
                     }
@@ -334,7 +334,7 @@ public class Chessboard {
                 if ((pinnedPiece & myQueens) != 0) {
                     final long table = singleQueenTable(allPieces, pinnedPiece, UNIVERSE) & mask;
                     if (table != 0) {
-                        addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                        addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
                                 table,
                                 pinnedPieceIndex, PIECE[turn][QUEEN], pieceSquareTable);
                     }

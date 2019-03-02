@@ -2,16 +2,16 @@ package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterBetter;
+import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.PieceMove.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
 class MoveGeneratorPseudo {
 
-    static void addAllMovesWithoutKing(int[] moves, long[][] pieces, int turn, int[] pieceSquareTable,
-                                       long ignoreThesePieces, long legalPushes, long legalCaptures,
+    static void addAllMovesWithoutKing(final int[] moves, final long[][] pieces, final int turn, final int[] pieceSquareTable,
+                                       final long ignoreThesePieces, final long legalPushes, final long legalCaptures,
                                        long myKnights, long myBishops, long myRooks, long myQueens,
-                                       long allPieces){
+                                       final long allPieces){
 
         //knight moves
         long mask = (legalPushes | legalCaptures);
@@ -20,8 +20,14 @@ class MoveGeneratorPseudo {
             if ((knight & ignoreThesePieces) == 0) {
                 final long jumps = KNIGHT_MOVE_TABLE[numberOfTrailingZeros(knight)] & mask;
                 if (jumps != 0) {
-                    addMovesFromAttackTableMasterBetter(moves, jumps, numberOfTrailingZeros(knight),
-                            PIECE[turn][KNIGHT], pieceSquareTable);
+                    if ((jumps & allPieces) != 0) {
+                        addMovesFromAttackTableMaster(moves, jumps, numberOfTrailingZeros(knight),
+                                PIECE[turn][KNIGHT], pieceSquareTable);
+                    }
+                    else {
+                        addMovesFromAttackTableMaster(moves, jumps, numberOfTrailingZeros(knight),
+                                PIECE[turn][KNIGHT]);
+                    }
                 }
             }
             myKnights &= (myKnights - 1);
@@ -33,7 +39,12 @@ class MoveGeneratorPseudo {
             if ((bishop & ignoreThesePieces) == 0) {
                 final long slides = singleBishopTable(allPieces, bishop, mask);
                 if (slides != 0) {
-                    addMovesFromAttackTableMasterBetter(moves, slides, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP], pieceSquareTable);
+                    if ((slides & allPieces) != 0) {
+                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP], pieceSquareTable);
+                    }
+                    else{
+                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP]);
+                    }
                 }
             }
             myBishops &= (myBishops - 1);
@@ -43,7 +54,12 @@ class MoveGeneratorPseudo {
             if ((rook & ignoreThesePieces) == 0) {
                 final long slides = singleRookTable(allPieces, rook, mask);
                 if (slides != 0) {
-                    addMovesFromAttackTableMasterBetter(moves, slides, numberOfTrailingZeros(rook), PIECE[turn][ROOK], pieceSquareTable);
+                    if ((slides & allPieces) != 0) {
+                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(rook), PIECE[turn][ROOK], pieceSquareTable);
+                    }
+                    else {
+                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(rook), PIECE[turn][ROOK]);
+                    }
                 }
             }
             myRooks &= (myRooks - 1);
@@ -53,36 +69,40 @@ class MoveGeneratorPseudo {
             if ((queen & ignoreThesePieces) == 0) {
                 final long slides = singleQueenTable(allPieces, queen, mask);
                 if (slides != 0) {
-                    addMovesFromAttackTableMasterBetter(moves, slides, numberOfTrailingZeros(queen), PIECE[turn][QUEEN], pieceSquareTable);
+                    if ((slides & allPieces) != 0) {
+                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(queen), PIECE[turn][QUEEN], pieceSquareTable);
+                    }
+                    else {
+                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(queen), PIECE[turn][QUEEN]);
+                    }
                 }
             }
             myQueens &= (myQueens - 1);
         }
 
         //pawn moves
-        long myPawns = pieces[turn][PAWN];
-
-        long allPawnPushes = (turn == WHITE ? myPawns << 8 : myPawns >>> 8) & ~allPieces & legalPushes;
-
+        long myPawns = pieces[turn][PAWN] & ~ignoreThesePieces;
         while (myPawns != 0){
             final long pawn = getFirstPiece(myPawns);
-            if ((pawn & ignoreThesePieces) == 0){
-                final int pawnIndex = numberOfTrailingZeros(pawn);
-                final long mySquares;
-                if ((pawn & PENULTIMATE_RANKS[1 - turn]) != 0) {
-                    mySquares = singlePawnPushes(pawn, turn, legalPushes, allPieces);
-                }
-                else {
-                    mySquares = (allPawnPushes & (PAWN_PUSH_MASK[turn][pawnIndex]));
-                }
+            final int pawnIndex = numberOfTrailingZeros(pawn);
+            final long quietTable;
+            // doubles
+            if ((pawn & PENULTIMATE_RANKS[1 - turn]) != 0) {
+                quietTable = singlePawnPushes(pawn, turn, legalPushes, allPieces);
+            }
+            else {
+                quietTable = (turn == WHITE ? pawn << 8 : pawn >>> 8) & ~allPieces & legalPushes;
+            }
 
-                final long pawnCaptures = singlePawnCaptures(pawn, turn, legalCaptures);
+            final long captureTable = singlePawnCaptures(pawn, turn, legalCaptures);
 
-                final long table = mySquares | pawnCaptures;
-                if (table != 0) {
-                    addMovesFromAttackTableMasterBetter(moves, table,
-                            pawnIndex, PIECE[turn][PAWN], pieceSquareTable);
-                }
+            if (quietTable != 0) {
+                addMovesFromAttackTableMaster(moves, quietTable,
+                        pawnIndex, PIECE[turn][PAWN]);
+            }
+            if (captureTable != 0) {
+                addMovesFromAttackTableMaster(moves, captureTable,
+                        pawnIndex, PIECE[turn][PAWN], pieceSquareTable);
             }
             myPawns &= myPawns - 1;
         }
