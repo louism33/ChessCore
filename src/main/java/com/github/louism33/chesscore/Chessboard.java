@@ -25,9 +25,9 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 public class Chessboard {
     
-    public long[][] pieces = new long[2][7];
+    public final long[][] pieces = new long[2][7];
     
-    public int[] pieceSquareTable = new int[64];
+    public final int[] pieceSquareTable = new int[64];
     public int turn;
     /*
     castling rights bits:
@@ -40,24 +40,24 @@ public class Chessboard {
     long zobristHash;
 
     private long moveStackData;
-    private final int maxDepthAndArrayLength = 64;
+    private static final int maxDepthAndArrayLength = 64;
 
-    private final int maxNumberOfMovesInAnyPosition = 128;
-    int[] moves = new int[maxNumberOfMovesInAnyPosition];
+    private static final int maxNumberOfMovesInAnyPosition = 128;
+    final int[] moves = new int[maxNumberOfMovesInAnyPosition];
 
-    private int[][] legalMoveStack = new int[maxDepthAndArrayLength][maxNumberOfMovesInAnyPosition];
+    private final int[][] legalMoveStack = new int[maxDepthAndArrayLength][maxNumberOfMovesInAnyPosition];
 
-    long[] zobristHashStack = new long[maxDepthAndArrayLength];
+    final long[] zobristHashStack = new long[maxDepthAndArrayLength];
 
-    private long[] pastMoveStackArray = new long[maxDepthAndArrayLength];
+    private final long[] pastMoveStackArray = new long[maxDepthAndArrayLength];
     public boolean inCheckRecorder;
 
     // todo needs array
     public long checkingPieces;
     
     public long pinnedPieces;
-    private long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
-    private boolean[] checkStack = new boolean[maxDepthAndArrayLength];
+    private final long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
+    private final boolean[] checkStack = new boolean[maxDepthAndArrayLength];
     
     
     private long boardToHash(){
@@ -414,7 +414,7 @@ public class Chessboard {
         }
 
         if (move == 0) {
-            moveStackArrayPush(buildStackDataBetter(0, turn, getFiftyMoveCounter(), castlingRights, NULL_MOVE));
+            moveStackArrayPush(buildStackDataBetter(0, turn, fiftyMoveCounter, castlingRights, NULL_MOVE));
             return;
         }
 
@@ -448,7 +448,7 @@ public class Chessboard {
                     zobristHash ^= zobristHashPieces[originalRookIndex][myRook];
                     zobristHash ^= zobristHashPieces[newRookIndex][myRook];
                     
-                    moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, CASTLING));
+                    moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, CASTLING));
                     castlingRights = makeCastlingMove(castlingRights, pieces, pieceSquareTable, move);
                     break;
 
@@ -458,7 +458,7 @@ public class Chessboard {
                             [numberOfTrailingZeros(victimPawn)]
                             [pieceSquareTable[numberOfTrailingZeros(victimPawn)] - 1];
                     
-                    moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, ENPASSANTCAPTURE));
+                    moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, ENPASSANTCAPTURE));
                     makeEnPassantMove(pieces, pieceSquareTable, turn, move);
                     break;
 
@@ -489,26 +489,26 @@ public class Chessboard {
                     long promotionZH = zobristHashPieces[destinationIndex][whichPromotingPiece - 1];
                     zobristHash ^= promotionZH;
                     
-                    moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, PROMOTION));
+                    moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, PROMOTION));
                     makePromotingMove(pieces, pieceSquareTable, turn, move);
                     break;
             }
         } else {
             if (captureMove) {
-                moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, BASICCAPTURE));
+                moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICCAPTURE));
             } else if (enPassantPossibility(turn, pieces[turn][PAWN], move)) {
                 int whichFile = 8 - getSourceIndex(move) % 8;
-                moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, ENPASSANTVICTIM, whichFile));
+                moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, ENPASSANTVICTIM, whichFile));
             } else {
                 switch (pieceSquareTable[getSourceIndex(move)]) {
                     case WHITE_PAWN: 
                     case BLACK_PAWN: 
-                        moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, BASICLOUDPUSH));
+                        moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICLOUDPUSH));
                         break;
                     default:
                         // increment 50 move rule
                         resetFifty = false;
-                        moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, BASICQUIETPUSH));
+                        moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICQUIETPUSH));
                 }
 
             }
@@ -591,12 +591,12 @@ public class Chessboard {
     }
 
     private void rotateMoveIndexUp() {
-        this.legalMoveStackIndex = (this.legalMoveStackIndex + 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+        this.legalMoveStackIndex = (this.legalMoveStackIndex + 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
 
 
     private void rotateMoveIndexDown() {
-        this.legalMoveStackIndex = (this.legalMoveStackIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+        this.legalMoveStackIndex = (this.legalMoveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
 
     /**
@@ -727,7 +727,7 @@ public class Chessboard {
             zobristHash = (updateWithEPFlags(moveStackArrayPeek(), zobristHash));
         }
 
-        moveStackArrayPush(buildStackDataBetter(0, turn, getFiftyMoveCounter(), castlingRights, NULL_MOVE));
+        moveStackArrayPush(buildStackDataBetter(0, turn, fiftyMoveCounter, castlingRights, NULL_MOVE));
 
         zobristHash = zobristFlipTurn(zobristHash);
 
@@ -917,7 +917,7 @@ public class Chessboard {
     @Override
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
-        return "\n" + Art.boardArt(this) + "\n" + turn
+        return '\n' + Art.boardArt(this) + '\n' + turn
                 ;
     }
 
@@ -926,22 +926,22 @@ public class Chessboard {
     private int moveStackIndex = 0;
 
     private void rotateMasterIndexUp() {
-        this.masterIndex = (this.masterIndex + 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+        this.masterIndex = (this.masterIndex + 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
     private void rotateMasterIndexDown() {
-        this.masterIndex = (this.masterIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+        this.masterIndex = (this.masterIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
     
     private void rotateMoveStackIndexUp() {
-        this.moveStackIndex = (this.moveStackIndex + 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+        this.moveStackIndex = (this.moveStackIndex + 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
     private void rotateMoveStackIndexDown() {
-        this.moveStackIndex = (this.moveStackIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength;
+        this.moveStackIndex = (this.moveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
 
     //todo can this return incorrectly after 64 moves have been made / simulated
     private boolean hasPreviousMove() {
-        return pastMoveStackArray[(this.moveStackIndex - 1 + this.maxDepthAndArrayLength) % this.maxDepthAndArrayLength] != 0;
+        return pastMoveStackArray[(this.moveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength] != 0;
     }
     
     private void masterStackPush() {

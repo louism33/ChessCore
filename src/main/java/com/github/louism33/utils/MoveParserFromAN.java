@@ -15,8 +15,8 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 public class MoveParserFromAN {
 
-    private static Pattern pattern = Pattern.compile(".?([abcdefgh][12345678])[-x]?([abcdefgh][12345678])(\\w)?");
-    private static Matcher matcher = pattern.matcher("");
+    private static final Pattern pattern = Pattern.compile(".?([abcdefgh][12345678])[-x]?([abcdefgh][12345678])(\\w)?");
+    private static final Matcher matcher = pattern.matcher("");
 
     public static int buildMoveFromLAN(Chessboard board, String an){
         matcher.reset(an);
@@ -76,7 +76,7 @@ public class MoveParserFromAN {
         return buildMoveFromAN(board, an);
     }
 
-    private static Matcher anMatcher = Pattern.compile("([RBQKPN])?([a-h])?([1-8])?([x])?([a-h])([1-8])([=]?)([QNRB]?)([+#]?)").matcher("");
+    private static final Matcher anMatcher = Pattern.compile("([RBQKPN])?([a-h])?([1-8])?([x])?([a-h])([1-8])([=]?)([QNRB]?)([+#]?)").matcher("");
     public static int buildMoveFromAN(Chessboard board, String an){
         anMatcher.reset(an);
         

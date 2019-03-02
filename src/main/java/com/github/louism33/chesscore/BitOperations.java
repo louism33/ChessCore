@@ -77,19 +77,19 @@ public class BitOperations {
                 ^ (BitOperations.newPieceOnSquare(pieceOneIndex) | BitOperations.newPieceOnSquare(pieceTwoIndex));
     }
 
-    public int getRowNumber(long piece){
+    public static int getRowNumber(long piece){
         return numberOfTrailingZeros(piece) / 8;
     }
 
-    public int getFileNumber(long piece){
+    public static int getFileNumber(long piece){
         return numberOfTrailingZeros(piece)  % 8;
     }
 
-    public long getRow(long piece){
+    public static long getRow(long piece){
         return ROWS[numberOfTrailingZeros(piece)  / 8];
     }
 
-    public long getFile(long piece) {
+    public static long getFile(long piece) {
         return FILES[numberOfTrailingZeros(piece) % 8];
     }
 }

@@ -59,7 +59,7 @@ public class BoardConstants {
             H7 = 48, G7 = 49, F7 = 50, E7 = 51, D7 = 52, C7 = 53, B7 = 54, A7 = 55,
             H8 = 56, G8 = 57, F8 = 58, E8 = 59, D8 = 60, C8 = 61, B8 = 62, A8 = 63;
 
-    public static long[][] inBetweenSquares = new long[64][64];
+    public static final long[][] inBetweenSquares = new long[64][64];
 
     public static final long UNIVERSE = 0xffffffffffffffffL;
 
@@ -129,7 +129,7 @@ public class BoardConstants {
     public static final long WHITE_COLOURED_SQUARES = 0x5555555555555555L;
     public static final long BLACK_COLOURED_SQUARES = 0xAAAAAAAAAAAAAAAAL;
 
-    public static long CASTLE_KING_DESTINATIONS = 0x2200000000000022L;
+    public static final long CASTLE_KING_DESTINATIONS = 0x2200000000000022L;
     
     static long CASTLE_WHITE_KING_SQUARES = 0x0000000000000006L;
     static long CASTLE_WHITE_QUEEN_SQUARES = 0x0000000000000070L;
@@ -402,8 +402,8 @@ public class BoardConstants {
         PAWN_CAPTURE_TABLE[BLACK] = PAWN_CAPTURE_TABLE_BLACK;
     }
 
-    public static long[][] rookDatabase = new long[64][];
-    public static long[][] bishopDatabase = new long[64][];
+    public static final long[][] rookDatabase = new long[64][];
+    public static final long[][] bishopDatabase = new long[64][];
 
     public static final int[] rookShiftAmounts = new int[]{
             12, 11, 11, 11, 11, 11, 11, 12,

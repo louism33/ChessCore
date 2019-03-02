@@ -9,14 +9,14 @@ import java.util.regex.Pattern;
 
 public class ExtendedPositionDescriptionParser {
 
-    private static Pattern boardPattern = Pattern.compile("([/|\\w]* [wb] [-|\\w]* [-|\\w])");
-    private static Pattern bestMovePattern = Pattern.compile("bm ([\\w\\s+]+)");
-    private static Pattern avoidMovePattern = Pattern.compile("am ([\\w|+]+)");
-    private static Pattern idPattern = Pattern.compile("id \"(\\S*)\"");
-    private static Matcher boardMatcher = boardPattern.matcher("");
-    private static Matcher bmMatcher = bestMovePattern.matcher("");
-    private static Matcher amMatcher = avoidMovePattern.matcher("");
-    private static Matcher idMatcher = idPattern.matcher("");
+    private static final Pattern boardPattern = Pattern.compile("([/|\\w]* [wb] [-|\\w]* [-|\\w])");
+    private static final Pattern bestMovePattern = Pattern.compile("bm ([\\w\\s+]+)");
+    private static final Pattern avoidMovePattern = Pattern.compile("am ([\\w|+]+)");
+    private static final Pattern idPattern = Pattern.compile("id \"(\\S*)\"");
+    private static final Matcher boardMatcher = boardPattern.matcher("");
+    private static final Matcher bmMatcher = bestMovePattern.matcher("");
+    private static final Matcher amMatcher = avoidMovePattern.matcher("");
+    private static final Matcher idMatcher = idPattern.matcher("");
 
     public static EPDObject parseEDPPosition(String edpPosition){
         boardMatcher.reset(edpPosition);

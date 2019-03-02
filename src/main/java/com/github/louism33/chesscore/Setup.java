@@ -269,17 +269,17 @@ class Setup {
         return permuteRookBetter(indexes, length);
     }
 
-    private static long NORTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_EIGHT,
-            NORTH_WEST1 = BoardConstants.FILE_B | BoardConstants.RANK_SEVEN,
+    private static final long NORTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_EIGHT;
+    private static final long NORTH_WEST1 = BoardConstants.FILE_B | BoardConstants.RANK_SEVEN;
 
-    NORTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_EIGHT,
-            NORTH_EAST1 = BoardConstants.FILE_G | BoardConstants.RANK_SEVEN,
+    private static final long NORTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_EIGHT;
+    private static final long NORTH_EAST1 = BoardConstants.FILE_G | BoardConstants.RANK_SEVEN;
 
-    SOUTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_ONE,
-            SOUTH_WEST1 = BoardConstants.FILE_B | BoardConstants.RANK_TWO,
+    private static final long SOUTH_WEST = BoardConstants.FILE_A | BoardConstants.RANK_ONE;
+    private static final long SOUTH_WEST1 = BoardConstants.FILE_B | BoardConstants.RANK_TWO;
 
-    SOUTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_ONE,
-            SOUTH_EAST1 = BoardConstants.FILE_G | BoardConstants.RANK_TWO;
+    private static final long SOUTH_EAST = BoardConstants.FILE_H | BoardConstants.RANK_ONE;
+    private static final long SOUTH_EAST1 = BoardConstants.FILE_G | BoardConstants.RANK_TWO;
 
     private static long[] singleBishopAllVariationsBetter(long piece, int length) {
         

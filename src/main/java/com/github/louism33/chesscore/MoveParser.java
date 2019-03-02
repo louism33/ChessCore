@@ -182,11 +182,11 @@ public class MoveParser {
         }
         int sourceAsPiece = getSourceIndex(move);
         String file = Character.toString('h' - (sourceAsPiece % (8)));
-        String rank = (sourceAsPiece / 8 + 1) + "";
+        String rank = String.valueOf(sourceAsPiece / 8 + 1);
         int destination = getDestinationIndex(move);
         String destinationFile = Character.toString('h' - (destination % (8)));
-        String destinationRank = (destination / 8 + 1) + "";
-        String m = ""+file+ rank+destinationFile+ destinationRank;
+        String destinationRank = String.valueOf(destination / 8 + 1);
+        String m = file + rank + destinationFile + destinationRank;
 
         if (isPromotionMove(move)){
             if (isPromotionToKnight(move)){
