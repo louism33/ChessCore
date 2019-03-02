@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
@@ -13,12 +15,20 @@ class CheckHelper {
         int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(turn, myKing,
                 pawns, knights, bishops, rooks, queens, king,
                 allPiece, 2);
-        
+
+
+        final int i = populationCount(bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
+                pawns, knights, bishops, rooks, queens, king,
+                allPiece, 2));
+
+        Assert.assertEquals(numberOfCheckers, i);
+
+
         return numberOfCheckers > 0;
     }
 
     //todo add intermediate function to return bitboard of checkers, as we only need king moves if checked by pawn of knight
-    
+
     static int numberOfPiecesThatLegalThreatenSquare(int turn, long square,
                                                      long pawns, long knights, long bishops, long rooks, long queens, long king,
                                                      long allPieces, int stopAt){
@@ -62,6 +72,71 @@ class CheckHelper {
         return numberOfThreats;
     }
 
+
+    static boolean boardInCheckBetter(int turn, long myKing,
+                                long pawns, long knights, long bishops, long rooks, long queens, long king,
+                                long allPiece){
+        
+        int numberOfCheckers = populationCount(bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
+                pawns, knights, bishops, rooks, queens, king,
+                allPiece, 2));
+
+        return numberOfCheckers > 0;
+    }
+
+    static long bitboardOfPiecesThatLegalThreatenSquare(int turn, long square,
+                                                        long pawns, long knights, long bishops, long rooks, long queens, long king,
+                                                        long allPieces, int stopAt){
+
+        long threats = 0;
+
+        if (pawns != 0) {
+            threats |= singlePawnCaptures(square, turn, pawns);
+        }
+        if (stopAt != 0){
+            if (populationCount(threats) >= stopAt){
+                return threats;
+            }
+        }
+        if (knights != 0) {
+            threats |= KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(square)] & knights;
+        }
+        if (stopAt != 0){
+            if (populationCount(threats) >= stopAt){
+                return threats;
+            }
+        }
+        if (bishops != 0) {
+            threats |= singleBishopTable(allPieces, square, bishops);
+        }
+        if (stopAt != 0){
+            if (populationCount(threats) >= stopAt){
+                return threats;
+            }
+        }
+        if (rooks != 0) {
+            threats |= singleRookTable(allPieces, square, rooks);
+        }
+        if (stopAt != 0){
+            if (populationCount(threats) >= stopAt){
+                return threats;
+            }
+        }
+        if (queens != 0) {
+            threats |= singleQueenTable(allPieces, square, queens);
+        }
+        if (stopAt != 0){
+            if (populationCount(threats) >= stopAt){
+                return threats;
+            }
+        }
+        if (king != 0) {
+            threats |= KING_MOVE_TABLE[getIndexOfFirstPiece(square)] & king;
+        }
+
+        return threats;
+    }
+
     static boolean isDrawByRepetition(Chessboard board){
         int limit = 25;
         long currentZob = board.zobristHash;
@@ -86,7 +161,7 @@ class CheckHelper {
                         + populationCount(board.pieces[WHITE][BISHOP])
                         + populationCount(board.pieces[BLACK][KNIGHT])
                         +populationCount(board.pieces[WHITE][KNIGHT]) != 0) {
-                    
+
                     drawByMaterial = true;
                 }
                 break;

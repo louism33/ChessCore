@@ -12,53 +12,38 @@ class PieceMove {
     static long singlePawnPushes(long pawns, int turn, long legalPushes, long allPieces) {
         final long possiblePawnSinglePushes = turn == WHITE ? pawns << 8 : pawns >>> 8;
         final long intermediateRank = INTERMEDIATE_RANKS[turn];
-        long possibleDoubles = (((possiblePawnSinglePushes & intermediateRank & ~allPieces) ));
+        final long possibleDoubles = (((possiblePawnSinglePushes & intermediateRank & ~allPieces) ));
         return (possiblePawnSinglePushes | (turn == WHITE ? possibleDoubles << 8 : possibleDoubles >>> 8))
                 & legalPushes & ~allPieces;
     }
     
-    static long singlePawnPushes(long pawns, boolean white, long legalPushes, long allPieces) {
-        final long possiblePawnSinglePushes = white ? pawns << 8 : pawns >>> 8;
-        final long intermediateRank = white ? BoardConstants.RANK_THREE : BoardConstants.RANK_SIX;
-        long possibleDoubles = (((possiblePawnSinglePushes & intermediateRank & ~allPieces) ));
-        return (possiblePawnSinglePushes | (white ? possibleDoubles << 8 : possibleDoubles >>> 8))
-                & legalPushes & ~allPieces;
-    }
-
     static long singlePawnCaptures(long piece, int turn, long legalCaptures) {
         Assert.assertTrue(getIndexOfFirstPiece(piece) > 0 || getIndexOfFirstPiece(piece) <= 63);
         return legalCaptures & (PAWN_CAPTURE_TABLE[turn][getIndexOfFirstPiece(piece)]);
     }
     
-    static long singlePawnCaptures(long piece, boolean white, long legalCaptures) {
-        Assert.assertTrue(getIndexOfFirstPiece(piece) > 0 || getIndexOfFirstPiece(piece) <= 63);
-        return legalCaptures & (white
-                ? PAWN_CAPTURE_TABLE_WHITE[getIndexOfFirstPiece(piece)]
-                : PAWN_CAPTURE_TABLE_BLACK[getIndexOfFirstPiece(piece)]);
-    }
-
-    public static long singleQueenTable(long occupancy, long piece, long mask){
+    static long singleQueenTable(long occupancy, long piece, long mask){
         return singleBishopTable(occupancy, piece, mask) | singleRookTable(occupancy, piece, mask);
     }
 
-    public static long xrayQueenAttacks(long allPieces, long blockers, long queen){
+    static long xrayQueenAttacks(long allPieces, long blockers, long queen){
         return xrayRookAttacks(allPieces, blockers, queen) | xrayBishopAttacks(allPieces, blockers, queen);
     }
 
-    public static long xrayRookAttacks(long allPieces, long blockers, long rook){
+    static long xrayRookAttacks(long allPieces, long blockers, long rook){
         final long rookMoves = singleRookTable(allPieces, rook, UNIVERSE);
         blockers &= rookMoves;
         return rookMoves ^ singleRookTable(allPieces ^ blockers, rook, UNIVERSE);
     }
 
-    public static long xrayBishopAttacks(long allPieces, long blockers, long bishop){
+    static long xrayBishopAttacks(long allPieces, long blockers, long bishop){
         final long bishopMoves = singleBishopTable(allPieces, bishop, UNIVERSE);
         blockers &= bishopMoves;
         return bishopMoves ^ singleBishopTable(allPieces ^ blockers, bishop, UNIVERSE);
     }
 
 
-    public static long singleRookTable(long occupancy, long rook, long legalMovesMask){
+    static long singleRookTable(long occupancy, long rook, long legalMovesMask){
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(rook), 1);
 
@@ -73,7 +58,7 @@ class PieceMove {
         return legalMoves & legalMovesMask;
     }
 
-    public static long singleBishopTable(long allPieces, long bishop, long legalMovesMask){
+    static long singleBishopTable(long allPieces, long bishop, long legalMovesMask){
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(bishop), 1);
 

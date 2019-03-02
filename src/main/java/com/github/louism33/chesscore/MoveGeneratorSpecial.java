@@ -25,7 +25,7 @@ class MoveGeneratorSpecial {
 
         while (promotablePawns != 0){
             final long pawn = getFirstPiece(promotablePawns);
-            long pawnMoves = singlePawnPushes(pawn, turn, (finalRank & legalPushes), allPieces)
+            final long pawnMoves = singlePawnPushes(pawn, turn, (finalRank & legalPushes), allPieces)
                     | singlePawnCaptures(pawn, turn, ((finalRank & enemies) & legalCaptures));
 
             if (pawnMoves != 0) {
@@ -126,7 +126,7 @@ class MoveGeneratorSpecial {
     }
 
 
-    static long extractFileFromStack(int file){
+    private static long extractFileFromStack(int file){
         if (file == 0){
             return 0;
         }
