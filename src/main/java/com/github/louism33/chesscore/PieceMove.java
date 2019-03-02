@@ -37,20 +37,8 @@ class PieceMove {
                 : PAWN_CAPTURE_TABLE_BLACK[getIndexOfFirstPiece(piece)]);
     }
 
-    static long singleKnightTable(long piece, long mask){
-        return KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
-    }
-
-    public static long singleBishopTable(long occupancy, long piece, long legalCaptures){
-        return singleBishopMagicMoves(occupancy, piece, legalCaptures);
-    }
-
-    public static long singleRookTable(long occupancy, long piece, long legalPushes){
-        return singleRookMagicMoves(occupancy, piece, legalPushes);
-    }
-
     public static long singleQueenTable(long occupancy, long piece, long mask){
-        return singleBishopMagicMoves(occupancy, piece, mask) | singleRookMagicMoves(occupancy, piece, mask);
+        return singleBishopTable(occupancy, piece, mask) | singleRookTable(occupancy, piece, mask);
     }
 
     public static long xrayQueenAttacks(long allPieces, long blockers, long queen){
@@ -70,7 +58,7 @@ class PieceMove {
     }
 
 
-    public static long singleRookMagicMoves(long occupancy, long rook, long legalMovesMask){
+    public static long singleRookTable(long occupancy, long rook, long legalMovesMask){
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(rook), 1);
 
@@ -85,7 +73,7 @@ class PieceMove {
         return legalMoves & legalMovesMask;
     }
 
-    public static long singleBishopMagicMoves(long allPieces, long bishop, long legalMovesMask){
+    public static long singleBishopTable(long allPieces, long bishop, long legalMovesMask){
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(bishop), 1);
 
@@ -98,11 +86,6 @@ class PieceMove {
         final long legalMoves = bishopDatabase[bishopIndex][index];
 
         return legalMoves & legalMovesMask;
-    }
-
-
-    public static long singleKingTable(long piece, long mask){
-        return KING_MOVE_TABLE[getIndexOfFirstPiece(piece)] & mask;
     }
 
 }

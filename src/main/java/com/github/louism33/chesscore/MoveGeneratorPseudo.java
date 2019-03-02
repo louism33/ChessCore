@@ -9,28 +9,32 @@ import static com.github.louism33.chesscore.PieceMove.*;
 class MoveGeneratorPseudo {
 
     static void addAllMovesWithoutKing(int[] moves, long[][] pieces, int turn, int[] pieceSquareTable,
-                                              long ignoreThesePieces, long legalPushes, long legalCaptures,
-                                              long myKnights, long myBishops, long myRooks, long myQueens,
-                                              long allPieces){
+                                       long ignoreThesePieces, long legalPushes, long legalCaptures,
+                                       long myKnights, long myBishops, long myRooks, long myQueens,
+                                       long allPieces){
 
         //knight moves
         long mask = (legalPushes | legalCaptures);
         while (myKnights != 0){
             final long knight = getFirstPiece(myKnights);
             if ((knight & ignoreThesePieces) == 0) {
-                long jumps = singleKnightTable(knight, mask);
-                addMovesFromAttackTableMasterBetter(moves, jumps, getIndexOfFirstPiece(knight),
-                        PIECE[turn][KNIGHT], pieceSquareTable);
+                long jumps = KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(knight)] & mask;
+                if (jumps != 0) {
+                    addMovesFromAttackTableMasterBetter(moves, jumps, getIndexOfFirstPiece(knight),
+                            PIECE[turn][KNIGHT], pieceSquareTable);
+                }
             }
             myKnights &= (myKnights - 1);
         }
-        
+
         //sliding moves
         while (myBishops != 0){
             long bishop = getFirstPiece(myBishops);
             if ((bishop & ignoreThesePieces) == 0) {
                 long slides = singleBishopTable(allPieces, bishop, mask);
-                addMovesFromAttackTableMasterBetter(moves, slides, getIndexOfFirstPiece(bishop), PIECE[turn][BISHOP], pieceSquareTable);
+                if (slides != 0) {
+                    addMovesFromAttackTableMasterBetter(moves, slides, getIndexOfFirstPiece(bishop), PIECE[turn][BISHOP], pieceSquareTable);
+                }
             }
             myBishops &= (myBishops - 1);
         }
@@ -38,7 +42,9 @@ class MoveGeneratorPseudo {
             long rook = getFirstPiece(myRooks);
             if ((rook & ignoreThesePieces) == 0) {
                 long slides = singleRookTable(allPieces, rook, mask);
-                addMovesFromAttackTableMasterBetter(moves, slides, getIndexOfFirstPiece(rook), PIECE[turn][ROOK], pieceSquareTable);
+                if (slides != 0) {
+                    addMovesFromAttackTableMasterBetter(moves, slides, getIndexOfFirstPiece(rook), PIECE[turn][ROOK], pieceSquareTable);
+                }
             }
             myRooks &= (myRooks - 1);
         }
@@ -46,11 +52,13 @@ class MoveGeneratorPseudo {
             long queen = getFirstPiece(myQueens);
             if ((queen & ignoreThesePieces) == 0) {
                 long slides = singleQueenTable(allPieces, queen, mask);
-                addMovesFromAttackTableMasterBetter(moves, slides, getIndexOfFirstPiece(queen), PIECE[turn][QUEEN], pieceSquareTable);
+                if (slides != 0) {
+                    addMovesFromAttackTableMasterBetter(moves, slides, getIndexOfFirstPiece(queen), PIECE[turn][QUEEN], pieceSquareTable);
+                }
             }
             myQueens &= (myQueens - 1);
         }
-        
+
         //pawn moves
         long myPawns = pieces[turn][PAWN];
 
@@ -70,8 +78,11 @@ class MoveGeneratorPseudo {
 
                 final long pawnCaptures = singlePawnCaptures(pawn, turn, legalCaptures);
 
-                addMovesFromAttackTableMasterBetter(moves, mySquares | pawnCaptures,
-                        pawnIndex, PIECE[turn][PAWN], pieceSquareTable);
+                final long table = mySquares | pawnCaptures;
+                if (table != 0) {
+                    addMovesFromAttackTableMasterBetter(moves, table,
+                            pawnIndex, PIECE[turn][PAWN], pieceSquareTable);
+                }
             }
             myPawns &= myPawns - 1;
         }

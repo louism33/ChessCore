@@ -15,9 +15,9 @@ public class A {
         int[] moves = board.generateLegalMoves();
 
         for (int i = 0; i < 64; i++) {
-            System.out.println(i + ":");
-            Art.printLong(BitOperations.newPieceOnSquare(i));
-            Art.printLong(bigAdjacentSquares[i]);
+//            System.out.println(i + ":");
+//            Art.printLong(BitOperations.newPieceOnSquare(i));
+//            Art.printLong(bigAdjacentSquares[i]);
         }
 
     }

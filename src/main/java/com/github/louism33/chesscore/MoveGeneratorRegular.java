@@ -20,7 +20,7 @@ class MoveGeneratorRegular {
             return;
         }
         if (populationCount(kingPseudoMoves) == 1) {
-            if (numberOfPiecesThatLegalThreatenSquare(turn == WHITE, kingPseudoMoves,
+            if (numberOfPiecesThatLegalThreatenSquare(turn, kingPseudoMoves,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces, 1) != 0){
                 return;
             }
@@ -66,20 +66,16 @@ class MoveGeneratorRegular {
 
             pieces[turn][KING] = myKing;
 
-            long kingSafeSquares = ~kingDangerSquares;
-
-            long kingSafeCaptures = enemies & kingSafeSquares;
-            long kingSafePushes = (~allPieces & kingSafeSquares);
-
-            table = kingPseudoMoves & (kingSafePushes | kingSafeCaptures);
-
+            table = kingPseudoMoves & ~kingDangerSquares;
         }
         
-        addMovesFromAttackTableMasterBetter(moves,
-                table,
-                getIndexOfFirstPiece(myKing),
-                PIECE[turn][KING],
-                pieceSquareTable);
+        if (table != 0) {
+            addMovesFromAttackTableMasterBetter(moves,
+                    table,
+                    getIndexOfFirstPiece(myKing),
+                    PIECE[turn][KING],
+                    pieceSquareTable);
+        }
     }
 
 }

@@ -1,7 +1,8 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.extractRayFromTwoPiecesBitboard;
-import static com.github.louism33.chesscore.BoardConstants.UNIVERSE;
+import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorPseudo.addAllMovesWithoutKing;
 import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMovesOnly;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.addEnPassantMoves;
@@ -17,7 +18,7 @@ class MoveGeneratorCheck {
                                      long enemies, long friends, long allPieces){
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
         long blockingSquaresMask, checkingPieceMask;
-        long jumper = inCheckByAJumper(white, myKing, enemyPawns, enemyKnights);
+        long jumper = inCheckByAJumper(turn, myKing, enemyPawns, enemyKnights);
         if (jumper != 0){
             blockingSquaresMask = 0;
             checkingPieceMask = jumper;
@@ -53,19 +54,19 @@ class MoveGeneratorCheck {
         }
     }
 
-    private static long inCheckByAJumper(boolean white,
-                                         long myKing, long enemyPawns, long enemyKnights){
-        long possiblePawn = singlePawnCaptures(myKing, white, enemyPawns);
+    private static long inCheckByAJumper(int turn, long myKing, long enemyPawns, long enemyKnights){
+        long possiblePawn = singlePawnCaptures(myKing, turn, enemyPawns);
         if (possiblePawn != 0) {
             return possiblePawn;
         }
-        long possibleKnight = singleKnightTable(myKing, UNIVERSE) & enemyKnights;
+        long possibleKnight = KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(myKing)] & enemyKnights;
         if (possibleKnight != 0) {
             return possibleKnight;
         }
 
         return 0;
     }
+
 
     private static long inCheckByASlider(long myKing,
                                          long enemyBishops, long enemyRooks, long enemyQueens,

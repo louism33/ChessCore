@@ -1,15 +1,16 @@
 package com.github.louism33.chesscore;
 
+import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.PieceMove.*;
 
 class CheckHelper {
 
-    static boolean boardInCheck(boolean white, long myKing,
+    static boolean boardInCheck(int turn, long myKing,
                                 long pawns, long knights, long bishops, long rooks, long queens, long king,
                                 long allPiece){
-        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(white, myKing,
+        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(turn, myKing,
                 pawns, knights, bishops, rooks, queens, king,
                 allPiece, 2);
         
@@ -18,20 +19,20 @@ class CheckHelper {
 
     //todo add intermediate function to return bitboard of checkers, as we only need king moves if checked by pawn of knight
     
-    static int numberOfPiecesThatLegalThreatenSquare(boolean myColour, long square,
+    static int numberOfPiecesThatLegalThreatenSquare(int turn, long square,
                                                      long pawns, long knights, long bishops, long rooks, long queens, long king,
                                                      long allPieces, int stopAt){
-        
+
         int numberOfThreats = 0;
 
         if (pawns != 0) {
-            numberOfThreats += populationCount(singlePawnCaptures(square, myColour, pawns));
+            numberOfThreats += populationCount(singlePawnCaptures(square, turn, pawns));
         }
         if (numberOfThreats >= stopAt){
             return numberOfThreats;
         }
         if (knights != 0) {
-            numberOfThreats += populationCount(singleKnightTable(square, knights));
+            numberOfThreats += populationCount(KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(square)] & knights);
         }
         if (numberOfThreats >= stopAt){
             return numberOfThreats;
@@ -55,7 +56,7 @@ class CheckHelper {
             return numberOfThreats;
         }
         if (king != 0) {
-            numberOfThreats += populationCount(singleKingTable(square, king));
+            numberOfThreats += populationCount(KING_MOVE_TABLE[getIndexOfFirstPiece(square)] & king);
         }
 
         return numberOfThreats;

@@ -21,11 +21,12 @@ class MoveGeneratorSpecial {
                                   long enemies, long allPieces){
 
         long promotablePawns = myPawns & PENULTIMATE_RANKS[turn] & ~ignoreThesePieces;
+        final long finalRank = FINAL_RANKS[turn];
 
         while (promotablePawns != 0){
             final long pawn = getFirstPiece(promotablePawns);
-            long pawnMoves = singlePawnPushes(pawn, turn, (FINAL_RANKS[turn] & legalPushes), allPieces)
-                    | singlePawnCaptures(pawn, turn, ((FINAL_RANKS[turn] & enemies) & legalCaptures));
+            long pawnMoves = singlePawnPushes(pawn, turn, (finalRank & legalPushes), allPieces)
+                    | singlePawnCaptures(pawn, turn, ((finalRank & enemies) & legalCaptures));
 
             if (pawnMoves != 0) {
                 addMovesFromAttackTableMasterPromotion(pieceSquareTable, moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn),
@@ -106,7 +107,7 @@ class MoveGeneratorSpecial {
                     allPiecesAreAwesome ^= pawn;
                     allPiecesAreAwesome ^= pawnEnPassantCaptureSpecific;
 
-                    boolean enPassantWouldLeadToCheck = boardInCheck(turn == WHITE, myKing,
+                    boolean enPassantWouldLeadToCheck = boardInCheck(turn, myKing,
                             enemyPawnsAreAwesome, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                             allPiecesAreAwesome);
 
@@ -245,7 +246,7 @@ class MoveGeneratorSpecial {
 
         while (squares != 0){
             final long square = BitOperations.getFirstPiece(squares);
-            int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(white, square,
+            int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(turn, square,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     allPieces, 1);
             if (numberOfThreats > 0){

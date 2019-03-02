@@ -9,56 +9,55 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 class MoveAdder {
 
-    static void addMovesFromAttackTableMasterBetter(int[] moves, long attackBoard, int source, 
-                                                           int sourcePiece, int[] pieceSquareTable) {
+    static void addMovesFromAttackTableMasterBetter(int[] moves, long attackBoard, int source,
+                                                    int sourcePiece, int[] pieceSquareTable) {
 
 
-//        int x = populationCount(attackBoard);
-//        System.out.println(x);
-//        if (x == 0) {
-//            throw new RuntimeException();
-//        }else {
-//            System.out.println(x);
-//        }
-        
+        final int numberOfMoves = populationCount(attackBoard);
+        Assert.assertTrue(numberOfMoves > 0);
+        int startIndex = moves[moves.length - 1];
+        int i = 0;
         while (attackBoard != 0){
-            
             final long destination = getFirstPiece(attackBoard);
 
-            moves[moves[moves.length - 1]] = buildMove(source, sourcePiece, 
+            moves[startIndex + i] = buildMove(source, sourcePiece,
                     getIndexOfFirstPiece(destination), pieceSquareTable[numberOfTrailingZeros(destination)]);
-
-            moves[moves.length - 1]++;
-
+            i++;
             attackBoard &= attackBoard - 1;
         }
+        moves[moves.length - 1] += numberOfMoves;
     }
 
     static void addMovesFromAttackTableMasterPromotion(int[] pieceSquareTable, int[] moves, long attackBoard,
-                                                              int source, int movingPiece) {
-        
-        while (attackBoard != 0){
-            int index = moves[moves.length - 1];
+                                                       int source, int movingPiece) {
 
-            Assert.assertEquals(index, moves[moves.length - 1]);
-            
+
+        final int numberOfMoves = populationCount(attackBoard);
+        Assert.assertTrue(numberOfMoves > 0);
+        int startIndex = moves[moves.length - 1];
+        int i = 0;
+        while (attackBoard != 0){
+            int index = startIndex + i;
+
             final long destination = getFirstPiece(attackBoard);
 
             int destinationIndex = getIndexOfFirstPiece(destination);
 
-            final int move = buildMove(source, movingPiece, 
+            final int move = buildMove(source, movingPiece,
                     getIndexOfFirstPiece(destination),
                     pieceSquareTable[destinationIndex]) | PROMOTION_MASK;
-            
+
             moves[index] = move | KNIGHT_PROMOTION_MASK;
             moves[index+1] = move | BISHOP_PROMOTION_MASK;
             moves[index+2] = move | ROOK_PROMOTION_MASK;
             moves[index+3] = move | QUEEN_PROMOTION_MASK;
 
-            moves[moves.length - 1] += 4;
-
             attackBoard &= attackBoard - 1;
-        }
+            
+            i += 4;
+        } 
+        
+        moves[moves.length - 1] += 4*numberOfMoves;
     }
 
 }

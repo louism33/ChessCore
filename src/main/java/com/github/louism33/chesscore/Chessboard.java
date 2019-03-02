@@ -168,7 +168,7 @@ public class Chessboard {
 
         final long allPieces = friends | enemies;
 
-        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(turn == WHITE, myKing,
+        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, 0,
                 allPieces, 2);
 
@@ -276,10 +276,13 @@ public class Chessboard {
 
                     if ((pinnedPiece & PENULTIMATE_RANKS[turn]) == 0) {
 
-                        addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
-                                singlePawnPushes(pinnedPiece, turn, pushMask, allPieces)
-                                        | singlePawnCaptures(pinnedPiece, turn, pinningPiece),
-                                pinnedPieceIndex, PIECE[turn][PAWN], pieceSquareTable);
+                        final long table = singlePawnPushes(pinnedPiece, turn, pushMask, allPieces)
+                                | singlePawnCaptures(pinnedPiece, turn, pinningPiece);
+                        if (table != 0) {
+                            addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                                    table,
+                                    pinnedPieceIndex, PIECE[turn][PAWN], pieceSquareTable);
+                        }
 
                         // a pinned pawn may still EP
                         if (hasPreviousMove) {
@@ -300,23 +303,32 @@ public class Chessboard {
                     continue;
                 }
                 if ((pinnedPiece & myBishops) != 0) {
-                    addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
-                            singleBishopTable(allPieces, pinnedPiece, UNIVERSE) & mask,
-                            pinnedPieceIndex, PIECE[turn][BISHOP], pieceSquareTable);
+                    final long table = singleBishopTable(allPieces, pinnedPiece, UNIVERSE) & mask;
+                    if (table != 0) {
+                        addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                                table,
+                                pinnedPieceIndex, PIECE[turn][BISHOP], pieceSquareTable);
+                    }
                     pinnedPieces &= pinnedPieces - 1;
                     continue;
                 }
                 if ((pinnedPiece & myRooks) != 0) {
-                    addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
-                            singleRookTable(allPieces, pinnedPiece, UNIVERSE) & mask,
-                            pinnedPieceIndex, PIECE[turn][ROOK], pieceSquareTable);
+                    final long table = singleRookTable(allPieces, pinnedPiece, UNIVERSE) & mask;
+                    if (table != 0) {
+                        addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                                table,
+                                pinnedPieceIndex, PIECE[turn][ROOK], pieceSquareTable);
+                    }
                     pinnedPieces &= pinnedPieces - 1;
                     continue;
                 }
                 if ((pinnedPiece & myQueens) != 0) {
-                    addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
-                            (singleQueenTable(allPieces, pinnedPiece, UNIVERSE) & mask),
-                            pinnedPieceIndex, PIECE[turn][QUEEN], pieceSquareTable);
+                    final long table = singleQueenTable(allPieces, pinnedPiece, UNIVERSE) & mask;
+                    if (table != 0) {
+                        addMovesFromAttackTableMasterBetter(this.legalMoveStack[legalMoveStackIndex],
+                                table,
+                                pinnedPieceIndex, PIECE[turn][QUEEN], pieceSquareTable);
+                    }
                 }
 
                 pinnedPieces &= pinnedPieces - 1;
@@ -410,22 +422,22 @@ public class Chessboard {
 
                     switch (move & WHICH_PROMOTION){
                         case KNIGHT_PROMOTION_MASK:
-                            whichPromotingPiece = 2 + (turn) * 6;
+                            whichPromotingPiece = 2 + turn * 6;
                             break;
                         case BISHOP_PROMOTION_MASK:
-                            whichPromotingPiece = 3 + (turn) * 6;
+                            whichPromotingPiece = 3 + turn * 6;
                             break;
                         case ROOK_PROMOTION_MASK:
-                            whichPromotingPiece = 4 + (turn) * 6;
+                            whichPromotingPiece = 4 + turn * 6;
                             break;
                         case QUEEN_PROMOTION_MASK:
-                            whichPromotingPiece = 5 + (turn) * 6;
+                            whichPromotingPiece = 5 + turn * 6;
                             break;
                     }
 
-                /*
-                remove my pawn from zh
-                 */
+                    /*
+                    remove my pawn from zh
+                     */
                     zobristHash ^= destinationZH;
 
                     Assert.assertTrue(whichPromotingPiece != 0);
@@ -444,8 +456,8 @@ public class Chessboard {
                 moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, ENPASSANTVICTIM, whichFile));
             } else {
                 switch (pieceSquareTable[getSourceIndex(move)]) {
-                    case WHITE_PAWN: // white pawn
-                    case BLACK_PAWN: // black pawn
+                    case WHITE_PAWN: 
+                    case BLACK_PAWN: 
                         moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, BASICLOUDPUSH));
                         break;
                     default:
@@ -718,7 +730,7 @@ public class Chessboard {
             friends = blackPieces();
         }
 
-        return boardInCheck(white, myKing,
+        return boardInCheck(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
                 allPieces());
 
