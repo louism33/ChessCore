@@ -42,7 +42,7 @@ class MoveGeneratorCheck {
         addKingLegalMovesOnly(moves, turn, pieces, pieceSquareTable,
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, allPieces);
+                friends, enemies, allPieces);
 
         if (hasPreviousMove) {
             addEnPassantMoves(moves, peek, turn, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,

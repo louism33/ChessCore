@@ -11,7 +11,7 @@ class CheckHelper {
                                 long allPiece){
         int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(white, myKing,
                 pawns, knights, bishops, rooks, queens, king,
-                allPiece);
+                allPiece, 2);
         
         return numberOfCheckers > 0;
     }
@@ -20,38 +20,38 @@ class CheckHelper {
     
     static int numberOfPiecesThatLegalThreatenSquare(boolean myColour, long square,
                                                      long pawns, long knights, long bishops, long rooks, long queens, long king,
-                                                     long allPieces){
+                                                     long allPieces, int stopAt){
         
         int numberOfThreats = 0;
 
         if (pawns != 0) {
             numberOfThreats += populationCount(singlePawnCaptures(square, myColour, pawns));
         }
-        if (numberOfThreats > 1){
+        if (numberOfThreats >= stopAt){
             return numberOfThreats;
         }
         if (knights != 0) {
             numberOfThreats += populationCount(singleKnightTable(square, knights));
         }
-        if (numberOfThreats > 1){
+        if (numberOfThreats >= stopAt){
             return numberOfThreats;
         }
         if (bishops != 0) {
             numberOfThreats += populationCount(singleBishopTable(allPieces, square, bishops));
         }
-        if (numberOfThreats > 1){
+        if (numberOfThreats >= stopAt){
             return numberOfThreats;
         }
         if (rooks != 0) {
             numberOfThreats += populationCount(singleRookTable(allPieces, square, rooks));
         }
-        if (numberOfThreats > 1){
+        if (numberOfThreats >= stopAt){
             return numberOfThreats;
         }
         if (queens != 0) {
             numberOfThreats += populationCount(singleQueenTable(allPieces, square, queens));
         }
-        if (numberOfThreats > 1){
+        if (numberOfThreats >= stopAt){
             return numberOfThreats;
         }
         if (king != 0) {

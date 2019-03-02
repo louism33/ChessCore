@@ -247,7 +247,7 @@ class MoveGeneratorSpecial {
             final long square = BitOperations.getFirstPiece(squares);
             int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(white, square,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    allPieces);
+                    allPieces, 1);
             if (numberOfThreats > 0){
                 return false;
             }

@@ -2,8 +2,7 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static java.lang.Long.numberOfTrailingZeros;
@@ -12,8 +11,18 @@ class MoveAdder {
 
     static void addMovesFromAttackTableMasterBetter(int[] moves, long attackBoard, int source, 
                                                            int sourcePiece, int[] pieceSquareTable) {
+
+
+//        int x = populationCount(attackBoard);
+//        System.out.println(x);
+//        if (x == 0) {
+//            throw new RuntimeException();
+//        }else {
+//            System.out.println(x);
+//        }
         
         while (attackBoard != 0){
+            
             final long destination = getFirstPiece(attackBoard);
 
             moves[moves[moves.length - 1]] = buildMove(source, sourcePiece, 

@@ -162,14 +162,15 @@ public class Chessboard {
         enemyQueens = pieces[1 - turn][QUEEN];
         enemyKing = pieces[1 - turn][KING];
 
-        friends = getPieces(turn);
-        enemies = getPieces(1 - turn);
+        getPieces();
+        friends = this.pieces[turn][ALL_COLOUR_PIECES];
+        enemies = this.pieces[1 - turn][ALL_COLOUR_PIECES];
 
         final long allPieces = friends | enemies;
 
         int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(turn == WHITE, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                allPieces);
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, 0,
+                allPieces, 2);
 
         if (numberOfCheckers > 1) {
             inCheckRecorder = true;
@@ -177,11 +178,9 @@ public class Chessboard {
             addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, pieces, pieceSquareTable,
                     myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    enemies, allPieces);
+                    friends, enemies, allPieces);
             return this.legalMoveStack[legalMoveStackIndex];
         }
-
-        Assert.assertEquals(allPieces, allPieces());
 
         final long currentPinnedPieces = whichPiecesArePinned(myKing,
                 enemyBishops, enemyRooks, enemyQueens,
@@ -218,7 +217,7 @@ public class Chessboard {
         addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, pieces, pieceSquareTable,
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, allPieces);
+                friends, enemies, allPieces);
 
         if (pinnedPieces == 0) {
             addPromotionMoves
@@ -807,12 +806,14 @@ public class Chessboard {
         return this.pieces[WHITE][ALL_COLOUR_PIECES];
     }
 
-    private long getPieces(int turn) {
-        if (turn == WHITE) {
-            return whitePieces();
-        } else {
-            return blackPieces();
+    private void getPieces(){
+        long b = 0, w = 0;
+        for (int i = PAWN; i <= KING; i++) {
+            w |= this.pieces[WHITE][i];
+            b |= this.pieces[BLACK][i];
         }
+        this.pieces[WHITE][ALL_COLOUR_PIECES] = w;
+        this.pieces[BLACK][ALL_COLOUR_PIECES] = b;
     }
 
     private long blackPieces() {
@@ -824,7 +825,8 @@ public class Chessboard {
     }
 
     public long allPieces() {
-        return whitePieces() | blackPieces();
+        getPieces();
+        return this.pieces[WHITE][ALL_COLOUR_PIECES] | this.pieces[BLACK][ALL_COLOUR_PIECES];
     }
 
     @Override
