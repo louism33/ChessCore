@@ -31,7 +31,7 @@ class MoveGeneratorPseudo {
         while (myBishops != 0){
             final long bishop = getFirstPiece(myBishops);
             if ((bishop & ignoreThesePieces) == 0) {
-                long slides = singleBishopTable(allPieces, bishop, mask);
+                final long slides = singleBishopTable(allPieces, bishop, mask);
                 if (slides != 0) {
                     addMovesFromAttackTableMasterBetter(moves, slides, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP], pieceSquareTable);
                 }
@@ -41,7 +41,7 @@ class MoveGeneratorPseudo {
         while (myRooks != 0){
             final long rook = getFirstPiece(myRooks);
             if ((rook & ignoreThesePieces) == 0) {
-                long slides = singleRookTable(allPieces, rook, mask);
+                final long slides = singleRookTable(allPieces, rook, mask);
                 if (slides != 0) {
                     addMovesFromAttackTableMasterBetter(moves, slides, numberOfTrailingZeros(rook), PIECE[turn][ROOK], pieceSquareTable);
                 }

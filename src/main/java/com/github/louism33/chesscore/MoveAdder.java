@@ -13,16 +13,16 @@ class MoveAdder {
     static void addMovesFromAttackTableMasterBetter(int[] moves, long attackBoard, int source,
                                                     int sourcePiece, int[] pieceSquareTable) {
 
-
         final int numberOfMoves = populationCount(attackBoard);
         Assert.assertTrue(numberOfMoves > 0);
-        int startIndex = moves[moves.length - 1];
+        final int startIndex = moves[moves.length - 1];
         int i = 0;
         while (attackBoard != 0){
-            final long destination = getFirstPiece(attackBoard);
 
+            final int destinationIndex = numberOfTrailingZeros(attackBoard);
+            
             moves[startIndex + i] = buildMove(source, sourcePiece,
-                    numberOfTrailingZeros(destination), pieceSquareTable[numberOfTrailingZeros(destination)]);
+                    destinationIndex, pieceSquareTable[destinationIndex]);
             i++;
             attackBoard &= attackBoard - 1;
         }
