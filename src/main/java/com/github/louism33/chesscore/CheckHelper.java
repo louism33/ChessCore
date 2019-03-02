@@ -7,7 +7,6 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 class CheckHelper {
 
-
     static boolean boardInCheckBetter(int turn, long myKing,
                                 long pawns, long knights, long bishops, long rooks, long queens, long king,
                                 long allPiece, int stopAt){

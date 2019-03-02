@@ -1,5 +1,6 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 public class MoveTest {
@@ -101,7 +102,9 @@ public class MoveTest {
     private static void verifyMoveToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
 
-        long ii = countFinalNodesAtDepthHelper(board, depth);
+        countFinalNodesAtDepthHelper(board, depth);
+
+        Assert.assertEquals(initial, board);
     }
 
     private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){
@@ -111,14 +114,14 @@ public class MoveTest {
         }
         int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            return realMoves(moves);
+            return moves[moves.length - 1];
         }
         for (int move : moves) {
             if (move == 0){
                 break;
             }
 
-            board.makeMoveAndFlipTurnBetter(move);
+            board.makeMoveAndFlipTurn(move);
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;
@@ -126,13 +129,4 @@ public class MoveTest {
         }
         return temp;
     }
-
-    private static int realMoves(int[] moves){
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-        return index;
-    }
-
 }

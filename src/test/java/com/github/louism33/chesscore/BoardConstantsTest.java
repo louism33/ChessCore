@@ -10,15 +10,6 @@ class BoardConstantsTest {
     @Test
     void intialBoard(){
 
-        System.out.println(new Chessboard());
-        for (int i = 7; i >= 0; i--) {
-            for (int j = 7; j >= 0; j--) {
-                System.out.print(Integer.toHexString(INITIAL_PIECE_SQUARES[i * 8 + j]) + " ");
-//                System.out.print(String.format("%4d", INITIAL_PIECE_SQUARES[i * 8 + j]));
-            }
-            System.out.println();
-        }
-
         for (int i = 0; i < 8; i++) {
             Assert.assertEquals(INITIAL_PIECE_SQUARES[i+8], WHITE_PAWN);
             Assert.assertEquals(INITIAL_PIECE_SQUARES[64-9-i], BLACK_PAWN);

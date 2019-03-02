@@ -19,7 +19,6 @@ public class CloneTest {
         for (int i = 0; i < splitUpWACs.length; i++) {
             String splitUpWAC = splitUpWACs[i];
             Object[] objectAndName = new Object[2];
-            System.out.println(splitUpWAC);
             ExtendedPositionDescriptionParser.EPDObject EPDObject = ExtendedPositionDescriptionParser.parseEDPPosition(splitUpWAC);
             objectAndName[0] = EPDObject;
             objectAndName[1] = EPDObject.getId();
@@ -38,12 +37,9 @@ public class CloneTest {
     public void test() {
         final Chessboard board = EPDObject.getBoard();
         
-//        MoveParser.printMoves(EPDObject.getBestMoves());
-        
         Chessboard board2 = new Chessboard(board);
 
         Assert.assertEquals(board, board2);
-        
     }
 
     //arasan

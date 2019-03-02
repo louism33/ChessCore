@@ -24,7 +24,7 @@ import static com.github.louism33.chesscore.ZobristHashUtil.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
 public class Chessboard {
-
+    
     public long[][] pieces = new long[2][7];
     
     public int[] pieceSquareTable = new int[64];
@@ -166,10 +166,18 @@ public class Chessboard {
         enemyQueens = pieces[1 - turn][QUEEN];
         enemyKing = pieces[1 - turn][KING];
 
+
+        long f = this.pieces[turn][ALL_COLOUR_PIECES];
+        long e = this.pieces[1-turn][ALL_COLOUR_PIECES];
+        
         getPieces();
         friends = this.pieces[turn][ALL_COLOUR_PIECES];
         enemies = this.pieces[1 - turn][ALL_COLOUR_PIECES];
 
+        Assert.assertEquals(f, friends);
+        Assert.assertEquals(e, enemies);
+        
+        
         final long allPieces = friends | enemies;
 
 
@@ -285,12 +293,18 @@ public class Chessboard {
 
                     if ((pinnedPiece & PENULTIMATE_RANKS[turn]) == 0) {
 
-                        final long table = singlePawnPushes(pinnedPiece, turn, pushMask, allPieces)
-                                | singlePawnCaptures(pinnedPiece, turn, pinningPiece);
-                        if (table != 0) {
+                        final long captureMask = singlePawnCaptures(pinnedPiece, turn, pinningPiece);
+                        if (captureMask != 0) {
                             addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
-                                    table,
+                                    captureMask,
                                     pinnedPieceIndex, PIECE[turn][PAWN], pieceSquareTable);
+                        }
+
+                        final long quietMask = singlePawnPushes(pinnedPiece, turn, pushMask, allPieces);
+                        if (quietMask != 0) {
+                            addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
+                                    quietMask,
+                                    pinnedPieceIndex, PIECE[turn][PAWN]);
                         }
 
                         // a pinned pawn may still EP
@@ -313,30 +327,52 @@ public class Chessboard {
                 }
                 if ((pinnedPiece & myBishops) != 0) {
                     final long table = singleBishopTable(allPieces, pinnedPiece, UNIVERSE) & mask;
-                    if (table != 0) {
+                    final long captureMask = table & allPieces;
+                    if (captureMask != 0) {
                         addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
-                                table,
+                                captureMask,
                                 pinnedPieceIndex, PIECE[turn][BISHOP], pieceSquareTable);
+                    }
+                    final long quietMask = table & ~allPieces;
+                    if (quietMask != 0) {
+                        addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
+                                quietMask,
+                                pinnedPieceIndex, PIECE[turn][BISHOP]);
                     }
                     pinnedPieces &= pinnedPieces - 1;
                     continue;
                 }
                 if ((pinnedPiece & myRooks) != 0) {
                     final long table = singleRookTable(allPieces, pinnedPiece, UNIVERSE) & mask;
-                    if (table != 0) {
+                    final long captureMask = table & allPieces;
+                    if (captureMask != 0) {
                         addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
-                                table,
+                                captureMask,
                                 pinnedPieceIndex, PIECE[turn][ROOK], pieceSquareTable);
+                    }
+                    final long quietMask = table & ~allPieces;
+                    if (quietMask != 0) {
+                        addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
+                                quietMask,
+                                pinnedPieceIndex, PIECE[turn][ROOK]);
                     }
                     pinnedPieces &= pinnedPieces - 1;
                     continue;
                 }
                 if ((pinnedPiece & myQueens) != 0) {
                     final long table = singleQueenTable(allPieces, pinnedPiece, UNIVERSE) & mask;
-                    if (table != 0) {
+                    final long captureTable = table & allPieces;
+                    if (captureTable != 0) {
                         addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
-                                table,
+                                captureTable,
                                 pinnedPieceIndex, PIECE[turn][QUEEN], pieceSquareTable);
+                    }
+
+                    final long quietTable = table & ~allPieces;
+                    if (quietTable != 0) {
+                        addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
+                                quietTable,
+                                pinnedPieceIndex, PIECE[turn][QUEEN]);
                     }
                 }
 
@@ -351,7 +387,7 @@ public class Chessboard {
      * Updates the board with the move you want.
      * @param move the non-0 move you want to make of this board.
      */
-    public final void makeMoveAndFlipTurnBetter(int move) {
+    public final void makeMoveAndFlipTurn(int move) {
         this.rotateMoveIndexUp();
         Assert.assertNotEquals(move, 0);
         masterStackPush();
@@ -541,10 +577,10 @@ public class Chessboard {
         // determine if flag should be added to enable EP on next turn
         long sourceSquare = newPieceOnSquare(getSourceIndex(move));
         long destinationSquare = newPieceOnSquare(getDestinationIndex(move));
-        long HOME_RANK = PENULTIMATE_RANKS[1 - turn];
+        long homeRank = PENULTIMATE_RANKS[1 - turn];
         long enPassantPossibilityRank = ENPASSANT_RANK[turn];
 
-        if ((sourceSquare & HOME_RANK) == 0) {
+        if ((sourceSquare & homeRank) == 0) {
             return false;
         }
 
@@ -631,6 +667,8 @@ public class Chessboard {
                 pieces[1 - StackDataUtil.getTurn(pop)][KING] |= originalKing;
                 pieces[1 - StackDataUtil.getTurn(pop)][ROOK] |= originalRook;
 
+                pieces[1 - StackDataUtil.getTurn(pop)][ALL_COLOUR_PIECES] |= originalKing | originalRook;
+
                 pieceSquareTable[squareToMoveBackTo] = WHITE_KING + (1 - StackDataUtil.getTurn(pop)) * 6;
                 pieceSquareTable[numberOfTrailingZeros(originalRook)] = WHITE_ROOK + (1 - StackDataUtil.getTurn(pop)) * 6;
                 break;
@@ -654,6 +692,9 @@ public class Chessboard {
                 pieces[BLACK][QUEEN] &= mask;
                 pieces[BLACK][KING] &= mask;
 
+                pieces[WHITE][ALL_COLOUR_PIECES] &= mask;
+                pieces[BLACK][ALL_COLOUR_PIECES] &= mask;
+                
                 pieceSquareTable[pieceToMoveBackIndex] = 0;
                 pieceSquareTable[squareToMoveBackTo] = 0;
 
@@ -1012,6 +1053,7 @@ public class Chessboard {
                     square--;
 
                     this.pieces[whichPiece / 7][whichPiece < 7 ? whichPiece : whichPiece - 6] |= newPieceOnSquare(square);
+                    pieces[whichPiece / 7][ALL_COLOUR_PIECES] |= newPieceOnSquare(square);
                     pieceSquareTable[square] = whichPiece;
 
                     break;

@@ -26,14 +26,19 @@ class MoveGeneratorSpecial {
 
         while (promotablePawns != 0){
             final long pawn = getFirstPiece(promotablePawns);
-            final long pawnMoves = singlePawnPushes(pawn, turn, (finalRank & legalPushes), allPieces)
-                    | singlePawnCaptures(pawn, turn, ((finalRank & enemies) & legalCaptures));
-
-            if (pawnMoves != 0) {
-                addMovesFromAttackTableMasterPromotion(pieceSquareTable, moves, pawnMoves, numberOfTrailingZeros(pawn),
+          
+            final long captureTable = singlePawnCaptures(pawn, turn, ((finalRank & enemies) & legalCaptures));
+            if (captureTable != 0) {
+                addMovesFromAttackTableMasterPromotion(pieceSquareTable, moves, captureTable, numberOfTrailingZeros(pawn),
                         PIECE[turn][PAWN]);
-
-            }
+            }  
+            
+            final long quietTable = singlePawnPushes(pawn, turn, (finalRank & legalPushes), allPieces);
+            if (quietTable != 0) {
+                addMovesFromAttackTableMasterPromotion(moves, quietTable, numberOfTrailingZeros(pawn),
+                        PIECE[turn][PAWN]);
+            }            
+            
             promotablePawns &= promotablePawns - 1;
         }
     }

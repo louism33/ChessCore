@@ -2,6 +2,7 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
+import static com.github.louism33.chesscore.BoardConstants.ALL_COLOUR_PIECES;
 import static java.lang.Long.numberOfTrailingZeros;
 
 class MoveMakingUtilities {
@@ -32,13 +33,17 @@ class MoveMakingUtilities {
 
     static void togglePiecesFrom (long[][] pieces, int[] pieceSquareTable, long removeThis, int thesePieces){
         // remove
-        if ((pieces[thesePieces / 7][thesePieces < 7 ? thesePieces : thesePieces - 6] & removeThis) != 0) {
+        final int colour = thesePieces / 7;
+        final int colourBlindPiece = thesePieces < 7 ? thesePieces : thesePieces - 6;
+        if ((pieces[colour][colourBlindPiece] & removeThis) != 0) {
             pieceSquareTable[numberOfTrailingZeros(removeThis)] = 0;
-            pieces[thesePieces / 7][thesePieces < 7 ? thesePieces : thesePieces - 6] ^= removeThis;
+            pieces[colour][colourBlindPiece] ^= removeThis;
+            pieces[colour][ALL_COLOUR_PIECES] ^= removeThis;
         }
         else {
             pieceSquareTable[numberOfTrailingZeros(removeThis)] = thesePieces;
-            pieces[thesePieces / 7][thesePieces < 7 ? thesePieces : thesePieces - 6] |= removeThis;
+            pieces[colour][colourBlindPiece] |= removeThis;
+            pieces[colour][ALL_COLOUR_PIECES] |= removeThis;
         }
     }
 

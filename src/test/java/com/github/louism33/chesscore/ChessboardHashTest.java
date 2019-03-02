@@ -76,12 +76,11 @@ public class ChessboardHashTest {
     
     private static void verifyHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
-
         Assert.assertEquals(board, initial);
 
-        long ii = countFinalNodesAtDepthHelper(board, depth);
+        countFinalNodesAtDepthHelper(board, depth);
+        
         Assert.assertEquals(board, new Chessboard(board));
-
         Assert.assertEquals(board, initial);
     }
 
@@ -92,14 +91,13 @@ public class ChessboardHashTest {
         }
         int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            return realMoves(moves);
+            return moves[moves.length - 1];
         }
         for (int move : moves) {
             if (move == 0){
                 break;
             }
-//            board.makeMoveAndFlipTurnBetter(move);
-            board.makeMoveAndFlipTurnBetter(move);
+            board.makeMoveAndFlipTurn(move);
             
             Assert.assertEquals(board, new Chessboard(board));
             
@@ -108,14 +106,6 @@ public class ChessboardHashTest {
             board.unMakeMoveAndFlipTurn();
         }
         return temp;
-    }
-
-    private static int realMoves(int[] moves){
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-        return index;
     }
 
 }

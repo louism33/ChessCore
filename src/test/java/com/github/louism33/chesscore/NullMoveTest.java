@@ -74,10 +74,9 @@ public class NullMoveTest {
         board.unMakeNullMoveAndFlipTurn();
         Assert.assertEquals(board, new Chessboard(board));
 
-
-        long ii = countFinalNodesAtDepthHelper(board, depth);
+        countFinalNodesAtDepthHelper(board, depth);
+        
         Assert.assertEquals(board, new Chessboard(board));
-
         Assert.assertEquals(board, initial);
 
     }
@@ -89,13 +88,13 @@ public class NullMoveTest {
         }
         int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            return moves.length;
+            return moves[moves.length - 1];
         }
         for (int move : moves) {
             if (move == 0){
                 break;
             }
-            board.makeMoveAndFlipTurnBetter(move);
+            board.makeMoveAndFlipTurn(move);
             Assert.assertEquals(board, new Chessboard(board));
 
             board.makeNullMoveAndFlipTurn();

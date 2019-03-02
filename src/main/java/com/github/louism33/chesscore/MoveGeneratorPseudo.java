@@ -20,12 +20,14 @@ class MoveGeneratorPseudo {
             if ((knight & ignoreThesePieces) == 0) {
                 final long jumps = KNIGHT_MOVE_TABLE[numberOfTrailingZeros(knight)] & mask;
                 if (jumps != 0) {
-                    if ((jumps & allPieces) != 0) {
-                        addMovesFromAttackTableMaster(moves, jumps, numberOfTrailingZeros(knight),
+                    final long captureTable = jumps & allPieces;
+                    if (captureTable != 0) {
+                        addMovesFromAttackTableMaster(moves, captureTable, numberOfTrailingZeros(knight),
                                 PIECE[turn][KNIGHT], pieceSquareTable);
                     }
-                    else {
-                        addMovesFromAttackTableMaster(moves, jumps, numberOfTrailingZeros(knight),
+                    final long quietTable = jumps & ~allPieces;
+                    if (quietTable != 0){
+                        addMovesFromAttackTableMaster(moves, quietTable, numberOfTrailingZeros(knight),
                                 PIECE[turn][KNIGHT]);
                     }
                 }
@@ -39,11 +41,13 @@ class MoveGeneratorPseudo {
             if ((bishop & ignoreThesePieces) == 0) {
                 final long slides = singleBishopTable(allPieces, bishop, mask);
                 if (slides != 0) {
-                    if ((slides & allPieces) != 0) {
-                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP], pieceSquareTable);
+                    final long captureTable = slides & allPieces;
+                    if (captureTable != 0) {
+                        addMovesFromAttackTableMaster(moves, captureTable, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP], pieceSquareTable);
                     }
-                    else{
-                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP]);
+                    final long quietTable = slides & ~allPieces;
+                    if (quietTable != 0){
+                        addMovesFromAttackTableMaster(moves, quietTable, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP]);
                     }
                 }
             }
@@ -54,11 +58,13 @@ class MoveGeneratorPseudo {
             if ((rook & ignoreThesePieces) == 0) {
                 final long slides = singleRookTable(allPieces, rook, mask);
                 if (slides != 0) {
-                    if ((slides & allPieces) != 0) {
-                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(rook), PIECE[turn][ROOK], pieceSquareTable);
+                    final long captureTable = slides & allPieces;
+                    if (captureTable != 0) {
+                        addMovesFromAttackTableMaster(moves, captureTable, numberOfTrailingZeros(rook), PIECE[turn][ROOK], pieceSquareTable);
                     }
-                    else {
-                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(rook), PIECE[turn][ROOK]);
+                    final long quietTable = slides & ~allPieces;
+                    if (quietTable != 0) {
+                        addMovesFromAttackTableMaster(moves, quietTable, numberOfTrailingZeros(rook), PIECE[turn][ROOK]);
                     }
                 }
             }
@@ -69,11 +75,13 @@ class MoveGeneratorPseudo {
             if ((queen & ignoreThesePieces) == 0) {
                 final long slides = singleQueenTable(allPieces, queen, mask);
                 if (slides != 0) {
-                    if ((slides & allPieces) != 0) {
-                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(queen), PIECE[turn][QUEEN], pieceSquareTable);
+                    final long captureTable = slides & allPieces;
+                    if (captureTable != 0) {
+                        addMovesFromAttackTableMaster(moves, captureTable, numberOfTrailingZeros(queen), PIECE[turn][QUEEN], pieceSquareTable);
                     }
-                    else {
-                        addMovesFromAttackTableMaster(moves, slides, numberOfTrailingZeros(queen), PIECE[turn][QUEEN]);
+                    final long quietTable = slides & ~allPieces;
+                    if (quietTable != 0) {
+                        addMovesFromAttackTableMaster(moves, quietTable, numberOfTrailingZeros(queen), PIECE[turn][QUEEN]);
                     }
                 }
             }

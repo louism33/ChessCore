@@ -37,7 +37,9 @@ class MoveAdder {
         int i = 0;
         while (attackBoard != 0){
             final int destinationIndex = numberOfTrailingZeros(attackBoard);
-
+            
+            Assert.assertTrue(pieceSquareTable[destinationIndex] != 0);
+            
             moves[startIndex + i] = buildMove(source, sourcePiece,
                     destinationIndex, pieceSquareTable[destinationIndex]);
             i++;
@@ -55,7 +57,7 @@ class MoveAdder {
         int startIndex = moves[moves.length - 1];
         int i = 0;
         while (attackBoard != 0){
-            int index = startIndex + i;
+            final int index = startIndex + i;
 
             final long destination = getFirstPiece(attackBoard);
 
@@ -64,6 +66,37 @@ class MoveAdder {
             final int move = buildMove(source, movingPiece,
                     numberOfTrailingZeros(destination),
                     pieceSquareTable[destinationIndex]) | PROMOTION_MASK;
+
+            moves[index] = move | KNIGHT_PROMOTION_MASK;
+            moves[index+1] = move | BISHOP_PROMOTION_MASK;
+            moves[index+2] = move | ROOK_PROMOTION_MASK;
+            moves[index+3] = move | QUEEN_PROMOTION_MASK;
+
+            attackBoard &= attackBoard - 1;
+
+            i += 4;
+        }
+
+        moves[moves.length - 1] += 4*numberOfMoves;
+    }
+
+    static void addMovesFromAttackTableMasterPromotion(final int[] moves, long attackBoard,
+                                                       final int source, final int movingPiece) {
+
+
+        final int numberOfMoves = populationCount(attackBoard);
+        Assert.assertTrue(numberOfMoves > 0);
+        int startIndex = moves[moves.length - 1];
+        int i = 0;
+        while (attackBoard != 0){
+            final int index = startIndex + i;
+
+            final long destination = getFirstPiece(attackBoard);
+
+            final int destinationIndex = numberOfTrailingZeros(destination);
+
+            final int move = buildMove(source, movingPiece,
+                    numberOfTrailingZeros(destination)) | PROMOTION_MASK;
 
             moves[index] = move | KNIGHT_PROMOTION_MASK;
             moves[index+1] = move | BISHOP_PROMOTION_MASK;

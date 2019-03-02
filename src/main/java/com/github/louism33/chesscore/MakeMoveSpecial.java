@@ -28,6 +28,8 @@ class MakeMoveSpecial {
                 pieces[WHITE][ROOK] |= newRook;
                 pieces[WHITE][KING] |= newKing;
 
+                pieces[WHITE][ALL_COLOUR_PIECES] |= newRook | newKing;
+
                 pieceSquareTable[newRookIndex - 2] = WHITE_ROOK;
                 pieceSquareTable[MoveParser.getDestinationIndex(move)] = WHITE_KING;
 
@@ -45,6 +47,8 @@ class MakeMoveSpecial {
 
                 pieces[BLACK][ROOK] |= newRook;
                 pieces[BLACK][KING] |= newKing;
+
+                pieces[BLACK][ALL_COLOUR_PIECES] |= newRook | newKing;
 
                 pieceSquareTable[newRookIndex - 2] = BLACK_ROOK;
                 pieceSquareTable[MoveParser.getDestinationIndex(move)] = BLACK_KING;
@@ -72,6 +76,7 @@ class MakeMoveSpecial {
         removePieces(pieces, pieceSquareTable, sourcePiece, destinationPiece, move);
 
         pieces[turn][MoveParser.whichPromotion(move) + 2] |= destinationPiece;
+        pieces[turn][ALL_COLOUR_PIECES] |= destinationPiece;
         pieceSquareTable[getDestinationIndex(move)] = MoveParser.whichPromotion(move) + 2 + turn * 6;
     }
 
@@ -84,6 +89,7 @@ class MakeMoveSpecial {
                 togglePiecesFrom(pieces, pieceSquareTable, sourcePiece, WHITE_PAWN);
                 togglePiecesFrom(pieces, pieceSquareTable, destinationPiece >>> 8, BLACK_PAWN);
                 pieces[WHITE][PAWN] |= destinationPiece;
+                pieces[WHITE][ALL_COLOUR_PIECES] |= destinationPiece;
                 pieceSquareTable[MoveParser.getDestinationIndex(move)] = WHITE_PAWN;
                 break;
 
@@ -91,6 +97,7 @@ class MakeMoveSpecial {
                 togglePiecesFrom(pieces, pieceSquareTable, sourcePiece, BLACK_PAWN);
                 togglePiecesFrom(pieces, pieceSquareTable, destinationPiece << 8, WHITE_PAWN);
                 pieces[BLACK][PAWN] |= destinationPiece;
+                pieces[BLACK][ALL_COLOUR_PIECES] |= destinationPiece;
                 pieceSquareTable[MoveParser.getDestinationIndex(move)] = BLACK_PAWN;
         }
     }

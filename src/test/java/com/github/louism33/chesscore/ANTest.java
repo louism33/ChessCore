@@ -22,14 +22,12 @@ public class ANTest {
         
         for (int i = 0; i < length; i++) {
             int move1 = buildMoveFromLAN(board1, moves[i]);
-            board1.makeMoveAndFlipTurnBetter(move1);
+            board1.makeMoveAndFlipTurn(move1);
 
             String s1 = MoveParser.toString(move1);
             int move2 = buildMoveFromLAN((board2), s1);
 
-            board2.makeMoveAndFlipTurnBetter(move2);
-
-
+            board2.makeMoveAndFlipTurn(move2);
 
             Assert.assertEquals(move1, move2);
             Assert.assertEquals(board1, board2);

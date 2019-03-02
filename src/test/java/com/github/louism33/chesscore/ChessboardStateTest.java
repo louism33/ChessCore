@@ -123,7 +123,7 @@ class ChessboardStateTest {
 
 
         if (depth == 1){
-            return realMoves(moves);
+            return moves[moves.length - 1];
         }
         for (int move : moves) {
             if (move == 0){
@@ -134,7 +134,7 @@ class ChessboardStateTest {
 
             Assert.assertTrue(move < biggestMoveBit);
 
-            board.makeMoveAndFlipTurnBetter(move);
+            board.makeMoveAndFlipTurn(move);
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;
@@ -142,14 +142,5 @@ class ChessboardStateTest {
         }
         return temp;
     }
-
-    private static int realMoves(int[] moves){
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-        return index;
-    }
-
 }
 

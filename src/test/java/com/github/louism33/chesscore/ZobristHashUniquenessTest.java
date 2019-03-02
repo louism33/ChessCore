@@ -129,7 +129,7 @@ public class ZobristHashUniquenessTest {
         
         Assert.assertEquals(board, initial);
 
-        long ii = countFinalNodesAtDepthHelper(board, depth);
+        countFinalNodesAtDepthHelper(board, depth);
         
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
@@ -144,13 +144,13 @@ public class ZobristHashUniquenessTest {
         }
         int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            return realMoves(moves);
+            return moves[moves.length - 1];
         }
         for (int move : moves) {
             if (move == 0){
                 break;
             }
-            board.makeMoveAndFlipTurnBetter(move);
+            board.makeMoveAndFlipTurn(move);
 
             int index = (int) (board.zobristHash >>> (64-shift));
             long entry = hashesSeen[index];
@@ -180,15 +180,6 @@ public class ZobristHashUniquenessTest {
         }
         return temp;
     }
-
-    private static int realMoves(int[] moves){
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-        return index;
-    }
-
 }
 
     

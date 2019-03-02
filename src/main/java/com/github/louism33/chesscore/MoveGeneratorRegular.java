@@ -72,11 +72,21 @@ class MoveGeneratorRegular {
         }
         
         if (table != 0) {
-            addMovesFromAttackTableMaster(moves,
-                    table,
-                    numberOfTrailingZeros(myKing),
-                    PIECE[turn][KING],
-                    pieceSquareTable);
+            final long captureTable = table & allPieces;
+            if (captureTable != 0) {
+                addMovesFromAttackTableMaster(moves,
+                        captureTable,
+                        numberOfTrailingZeros(myKing),
+                        PIECE[turn][KING],
+                        pieceSquareTable);
+            }
+            final long quietTable = table & ~allPieces;
+            if (quietTable != 0) {
+                addMovesFromAttackTableMaster(moves,
+                        quietTable,
+                        numberOfTrailingZeros(myKing),
+                        PIECE[turn][KING]);
+            }
         }
     }
 
