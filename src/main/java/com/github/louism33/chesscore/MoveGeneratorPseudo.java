@@ -18,7 +18,7 @@ class MoveGeneratorPseudo {
         while (myKnights != 0){
             final long knight = getFirstPiece(myKnights);
             if ((knight & ignoreThesePieces) == 0) {
-                long jumps = KNIGHT_MOVE_TABLE[numberOfTrailingZeros(knight)] & mask;
+                final long jumps = KNIGHT_MOVE_TABLE[numberOfTrailingZeros(knight)] & mask;
                 if (jumps != 0) {
                     addMovesFromAttackTableMasterBetter(moves, jumps, numberOfTrailingZeros(knight),
                             PIECE[turn][KNIGHT], pieceSquareTable);
@@ -29,7 +29,7 @@ class MoveGeneratorPseudo {
 
         //sliding moves
         while (myBishops != 0){
-            long bishop = getFirstPiece(myBishops);
+            final long bishop = getFirstPiece(myBishops);
             if ((bishop & ignoreThesePieces) == 0) {
                 long slides = singleBishopTable(allPieces, bishop, mask);
                 if (slides != 0) {
@@ -39,7 +39,7 @@ class MoveGeneratorPseudo {
             myBishops &= (myBishops - 1);
         }
         while (myRooks != 0){
-            long rook = getFirstPiece(myRooks);
+            final long rook = getFirstPiece(myRooks);
             if ((rook & ignoreThesePieces) == 0) {
                 long slides = singleRookTable(allPieces, rook, mask);
                 if (slides != 0) {
@@ -49,9 +49,9 @@ class MoveGeneratorPseudo {
             myRooks &= (myRooks - 1);
         }
         while (myQueens != 0){
-            long queen = getFirstPiece(myQueens);
+            final long queen = getFirstPiece(myQueens);
             if ((queen & ignoreThesePieces) == 0) {
-                long slides = singleQueenTable(allPieces, queen, mask);
+                final long slides = singleQueenTable(allPieces, queen, mask);
                 if (slides != 0) {
                     addMovesFromAttackTableMasterBetter(moves, slides, numberOfTrailingZeros(queen), PIECE[turn][QUEEN], pieceSquareTable);
                 }
@@ -65,10 +65,10 @@ class MoveGeneratorPseudo {
         long allPawnPushes = (turn == WHITE ? myPawns << 8 : myPawns >>> 8) & ~allPieces & legalPushes;
 
         while (myPawns != 0){
-            long pawn = getFirstPiece(myPawns);
+            final long pawn = getFirstPiece(myPawns);
             if ((pawn & ignoreThesePieces) == 0){
                 final int pawnIndex = numberOfTrailingZeros(pawn);
-                long mySquares;
+                final long mySquares;
                 if ((pawn & PENULTIMATE_RANKS[1 - turn]) != 0) {
                     mySquares = singlePawnPushes(pawn, turn, legalPushes, allPieces);
                 }
