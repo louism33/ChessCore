@@ -1,8 +1,9 @@
 package com.github.louism33.chesscore;
 
-import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
+import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterBetter;
 import static com.github.louism33.chesscore.PieceMove.*;
 import static java.lang.Long.numberOfTrailingZeros;
@@ -11,7 +12,7 @@ class MoveGeneratorRegular {
 
     static void addKingLegalMovesOnly(int[] moves, int turn, long[][] pieces, int[] pieceSquareTable, long myKing,
                                       long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
-                                      long friends, long enemies, long allPieces){
+                                      long friends, long allPieces){
 
         final int myKingIndex = numberOfTrailingZeros(myKing);
         final long kingPseudoMoves = KING_MOVE_TABLE[myKingIndex] & ~friends;
@@ -20,10 +21,11 @@ class MoveGeneratorRegular {
             return;
         }
         if (populationCount(kingPseudoMoves) == 1) {
-            if (numberOfPiecesThatLegalThreatenSquare(turn, kingPseudoMoves,
-                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces, 1) != 0){
+            if (populationCount(bitboardOfPiecesThatLegalThreatenSquare(turn, kingPseudoMoves,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces, 1)) != 0){
                 return;
-            }
+            }            
+            
             table = kingPseudoMoves;
         }
         else {
@@ -72,7 +74,7 @@ class MoveGeneratorRegular {
         if (table != 0) {
             addMovesFromAttackTableMasterBetter(moves,
                     table,
-                    getIndexOfFirstPiece(myKing),
+                    numberOfTrailingZeros(myKing),
                     PIECE[turn][KING],
                     pieceSquareTable);
         }

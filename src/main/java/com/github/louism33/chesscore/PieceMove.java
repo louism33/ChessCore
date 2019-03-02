@@ -2,10 +2,10 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.Setup.ready;
+import static java.lang.Long.numberOfTrailingZeros;
 
 class PieceMove {
 
@@ -18,8 +18,8 @@ class PieceMove {
     }
     
     static long singlePawnCaptures(long piece, int turn, long legalCaptures) {
-        Assert.assertTrue(getIndexOfFirstPiece(piece) > 0 || getIndexOfFirstPiece(piece) <= 63);
-        return legalCaptures & (PAWN_CAPTURE_TABLE[turn][getIndexOfFirstPiece(piece)]);
+        Assert.assertTrue(numberOfTrailingZeros(piece) > 0 || numberOfTrailingZeros(piece) <= 63);
+        return legalCaptures & (PAWN_CAPTURE_TABLE[turn][numberOfTrailingZeros(piece)]);
     }
     
     static long singleQueenTable(long occupancy, long piece, long mask){
@@ -47,7 +47,7 @@ class PieceMove {
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(rook), 1);
 
-        final int rookIndex = getIndexOfFirstPiece(rook);
+        final int rookIndex = numberOfTrailingZeros(rook);
         final long rookMagicNumber = rookMagicNumbers[rookIndex];
 
         final int index = (int) (((occupancy & rookBlankBoardAttackMasks[rookIndex]) * rookMagicNumber)
@@ -62,7 +62,7 @@ class PieceMove {
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(bishop), 1);
 
-        final int bishopIndex = getIndexOfFirstPiece(bishop);
+        final int bishopIndex = numberOfTrailingZeros(bishop);
         final long bishopMagicNumber = bishopMagicNumbers[bishopIndex];
 
         final int index = (int) (((allPieces & bishopBlankBoardAttackMasks[bishopIndex]) * bishopMagicNumber)

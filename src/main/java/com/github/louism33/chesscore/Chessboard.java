@@ -21,6 +21,7 @@ import static com.github.louism33.chesscore.PieceMove.*;
 import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
 import static com.github.louism33.chesscore.StackDataUtil.*;
 import static com.github.louism33.chesscore.ZobristHashUtil.*;
+import static java.lang.Long.numberOfTrailingZeros;
 
 public class Chessboard {
 
@@ -51,6 +52,9 @@ public class Chessboard {
     private long[] pastMoveStackArray = new long[maxDepthAndArrayLength];
     public boolean inCheckRecorder;
 
+    // todo needs array
+    public long checkingPieces;
+    
     public long pinnedPieces;
     private long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
     private boolean[] checkStack = new boolean[maxDepthAndArrayLength];
@@ -60,7 +64,7 @@ public class Chessboard {
         long hash = 0;
         for (int sq = 0; sq < 64; sq++) {
             long pieceOnSquare = newPieceOnSquare(sq);
-            int pieceIndex = pieceSquareTable[getIndexOfFirstPiece(pieceOnSquare)] - 1;
+            int pieceIndex = pieceSquareTable[numberOfTrailingZeros(pieceOnSquare)] - 1;
             if (pieceIndex != -1) {
                 hash ^= zobristHashPieces[sq][pieceIndex];
             }
@@ -168,17 +172,22 @@ public class Chessboard {
 
         final long allPieces = friends | enemies;
 
-        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(turn, myKing,
+
+        final long checkingPieces = bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, 0,
                 allPieces, 2);
+        
+        this.checkingPieces = checkingPieces;
+        
+        final int numberOfCheckers = populationCount(checkingPieces);
 
         if (numberOfCheckers > 1) {
             inCheckRecorder = true;
 
-            addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, pieces, pieceSquareTable,
+            addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, this.pieces, pieceSquareTable,
                     myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    friends, enemies, allPieces);
+                    friends, allPieces);
             return this.legalMoveStack[legalMoveStackIndex];
         }
 
@@ -192,8 +201,8 @@ public class Chessboard {
         if (numberOfCheckers == 1) {
             inCheckRecorder = true;
 
-            addCheckEvasionMoves(this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable, 
-                    pieces, hasPreviousMove, moveStackArrayPeek(), turn == WHITE, currentPinnedPieces,
+            addCheckEvasionMoves(this.checkingPieces, this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable,
+                    this.pieces, hasPreviousMove, moveStackArrayPeek(), currentPinnedPieces,
                     myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     enemies, friends, allPieces);
@@ -214,10 +223,10 @@ public class Chessboard {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 allPieces);
 
-        addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, pieces, pieceSquareTable,
+        addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, this.pieces, pieceSquareTable,
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                friends, enemies, allPieces);
+                friends, allPieces);
 
         if (pinnedPieces == 0) {
             addPromotionMoves
@@ -226,7 +235,7 @@ public class Chessboard {
                             enemies, allPieces);
 
             addAllMovesWithoutKing
-                    (this.legalMoveStack[legalMoveStackIndex], pieces, turn, pieceSquareTable, promotablePawns, emptySquares, enemies,
+                    (this.legalMoveStack[legalMoveStackIndex], this.pieces, turn, pieceSquareTable, promotablePawns, emptySquares, enemies,
                             myKnights, myBishops, myRooks, myQueens,
                             allPieces);
 
@@ -244,7 +253,7 @@ public class Chessboard {
                             enemies, allPieces);
 
             addAllMovesWithoutKing
-                    (this.legalMoveStack[legalMoveStackIndex], pieces, turn, pieceSquareTable, pinnedPiecesAndPromotingPawns, ~allPieces, enemies,
+                    (this.legalMoveStack[legalMoveStackIndex], this.pieces, turn, pieceSquareTable, pinnedPiecesAndPromotingPawns, ~allPieces, enemies,
                             myKnights, myBishops, myRooks, myQueens,
                             allPieces);
 
@@ -263,7 +272,7 @@ public class Chessboard {
                 long pushMask = extractRayFromTwoPiecesBitboardInclusive(myKing, pinningPiece)
                         ^ (pinningPiece | myKing);
 
-                final int pinnedPieceIndex = getIndexOfFirstPiece(pinnedPiece);
+                final int pinnedPieceIndex = numberOfTrailingZeros(pinnedPiece);
                 final long mask = (pushMask | pinningPiece);
 
                 if ((pinnedPiece & myKnights) != 0) {
@@ -410,8 +419,8 @@ public class Chessboard {
                 case ENPASSANT_MASK:
                     long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
                     zobristHash ^= zobristHashPieces
-                            [BitOperations.getIndexOfFirstPiece(victimPawn)]
-                            [pieceSquareTable[getIndexOfFirstPiece(victimPawn)] - 1];
+                            [numberOfTrailingZeros(victimPawn)]
+                            [pieceSquareTable[numberOfTrailingZeros(victimPawn)] - 1];
                     
                     moveStackArrayPush(buildStackDataBetter(move, turn, getFiftyMoveCounter(), castlingRights, ENPASSANTCAPTURE));
                     makeEnPassantMove(pieces, pieceSquareTable, turn, move);
@@ -623,7 +632,7 @@ public class Chessboard {
                 pieces[1 - StackDataUtil.getTurn(pop)][ROOK] |= originalRook;
 
                 pieceSquareTable[squareToMoveBackTo] = WHITE_KING + (1 - StackDataUtil.getTurn(pop)) * 6;
-                pieceSquareTable[getIndexOfFirstPiece(originalRook)] = WHITE_ROOK + (1 - StackDataUtil.getTurn(pop)) * 6;
+                pieceSquareTable[numberOfTrailingZeros(originalRook)] = WHITE_ROOK + (1 - StackDataUtil.getTurn(pop)) * 6;
                 break;
 
             case PROMOTION:
@@ -730,9 +739,9 @@ public class Chessboard {
             friends = blackPieces();
         }
 
-        return boardInCheck(turn, myKing,
+        return boardInCheckBetter(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                allPieces());
+                allPieces(), 1);
 
     }
 

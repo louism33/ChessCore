@@ -1,9 +1,9 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.extractRayFromTwoPieces;
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.PieceMove.xrayBishopAttacks;
 import static com.github.louism33.chesscore.PieceMove.xrayRookAttacks;
+import static java.lang.Long.numberOfTrailingZeros;
 
 public class PinnedManager {
 
@@ -28,8 +28,8 @@ public class PinnedManager {
         long pinningPieces = pinners & (enemyBishops | enemyQueens);
 
         while (pinningPieces != 0){
-            final int indexOfPinningPiece = getIndexOfFirstPiece(pinningPieces);
-            final long ray = extractRayFromTwoPieces(indexOfPinningPiece, getIndexOfFirstPiece(squareOfInterest));
+            final int indexOfPinningPiece = numberOfTrailingZeros(pinningPieces);
+            final long ray = extractRayFromTwoPieces(indexOfPinningPiece, numberOfTrailingZeros(squareOfInterest));
             pinnedPieces |= (ray & friends);
             pinningPieces &= pinningPieces - 1;
         }
@@ -38,8 +38,8 @@ public class PinnedManager {
         pinningPieces = pinners & (enemyRooks | enemyQueens);
 
         while (pinningPieces != 0){
-            final int indexOfPinningPiece = getIndexOfFirstPiece(pinningPieces);
-            final long ray = extractRayFromTwoPieces(indexOfPinningPiece, getIndexOfFirstPiece(squareOfInterest));
+            final int indexOfPinningPiece = numberOfTrailingZeros(pinningPieces);
+            final long ray = extractRayFromTwoPieces(indexOfPinningPiece, numberOfTrailingZeros(squareOfInterest));
             pinnedPieces |= (ray & friends);
             pinningPieces &= pinningPieces - 1;
         }

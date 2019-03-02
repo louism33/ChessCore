@@ -1,10 +1,10 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
-import static com.github.louism33.chesscore.CheckHelper.numberOfPiecesThatLegalThreatenSquare;
+import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
+import static com.github.louism33.chesscore.CheckHelper.boardInCheckBetter;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterPromotion;
 import static com.github.louism33.chesscore.MoveConstants.CASTLING_MASK;
 import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
@@ -12,6 +12,7 @@ import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
+import static java.lang.Long.numberOfTrailingZeros;
 
 class MoveGeneratorSpecial {
 
@@ -29,7 +30,7 @@ class MoveGeneratorSpecial {
                     | singlePawnCaptures(pawn, turn, ((finalRank & enemies) & legalCaptures));
 
             if (pawnMoves != 0) {
-                addMovesFromAttackTableMasterPromotion(pieceSquareTable, moves, pawnMoves, BitOperations.getIndexOfFirstPiece(pawn),
+                addMovesFromAttackTableMasterPromotion(pieceSquareTable, moves, pawnMoves, numberOfTrailingZeros(pawn),
                         PIECE[turn][PAWN]);
 
             }
@@ -107,15 +108,15 @@ class MoveGeneratorSpecial {
                     allPiecesAreAwesome ^= pawn;
                     allPiecesAreAwesome ^= pawnEnPassantCaptureSpecific;
 
-                    boolean enPassantWouldLeadToCheck = boardInCheck(turn, myKing,
+                    boolean enPassantWouldLeadToCheck = boardInCheckBetter(turn, myKing,
                             enemyPawnsAreAwesome, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            allPiecesAreAwesome);
+                            allPiecesAreAwesome, 1);
 
                     if (!enPassantWouldLeadToCheck) {
                         moves[moves[moves.length - 1]++] = buildMove(
-                                getIndexOfFirstPiece(pawn),
+                                numberOfTrailingZeros(pawn),
                                 PIECE[turn][PAWN],
-                                getIndexOfFirstPiece(pawnEnPassantCaptureSpecific),
+                                numberOfTrailingZeros(pawnEnPassantCaptureSpecific),
                                 0) | ENPASSANT_MASK;
                     }
                     pawnEnPassantCapture &= pawnEnPassantCapture - 1;
@@ -242,13 +243,11 @@ class MoveGeneratorSpecial {
                                                        long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                                        long allPieces){
 
-        boolean white = turn == WHITE;
-
         while (squares != 0){
             final long square = BitOperations.getFirstPiece(squares);
-            int numberOfThreats = numberOfPiecesThatLegalThreatenSquare(turn, square,
+            int numberOfThreats = populationCount(bitboardOfPiecesThatLegalThreatenSquare(turn, square,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                    allPieces, 1);
+                    allPieces, 1));
             if (numberOfThreats > 0){
                 return false;
             }

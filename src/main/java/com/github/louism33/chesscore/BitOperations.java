@@ -38,10 +38,6 @@ public class BitOperations {
         }
     }
     
-    public static int getIndexOfFirstPiece (long pieces) {
-        return numberOfTrailingZeros(pieces);
-    }
-
     public static int populationCount (long pieces) {
         return bitCount(pieces);
     }
@@ -65,11 +61,11 @@ public class BitOperations {
     }
 
     static long extractRayFromTwoPiecesBitboard(long pieceOne, long pieceTwo){
-        return extractRayFromTwoPieces(getIndexOfFirstPiece(pieceOne), getIndexOfFirstPiece(pieceTwo));
+        return extractRayFromTwoPieces(numberOfTrailingZeros(pieceOne), numberOfTrailingZeros(pieceTwo));
     }
 
     static long extractRayFromTwoPiecesBitboardInclusive(long pieceOne, long pieceTwo){
-        return extractRayFromTwoPieces(getIndexOfFirstPiece(pieceOne), getIndexOfFirstPiece(pieceTwo))
+        return extractRayFromTwoPieces(numberOfTrailingZeros(pieceOne), numberOfTrailingZeros(pieceTwo))
                 | pieceOne | pieceTwo;
     }
 
@@ -82,18 +78,18 @@ public class BitOperations {
     }
 
     public int getRowNumber(long piece){
-        return getIndexOfFirstPiece(piece) / 8;
+        return numberOfTrailingZeros(piece) / 8;
     }
 
     public int getFileNumber(long piece){
-        return getIndexOfFirstPiece(piece)  % 8;
+        return numberOfTrailingZeros(piece)  % 8;
     }
 
     public long getRow(long piece){
-        return ROWS[getIndexOfFirstPiece(piece)  / 8];
+        return ROWS[numberOfTrailingZeros(piece)  / 8];
     }
 
     public long getFile(long piece) {
-        return FILES[getIndexOfFirstPiece(piece) % 8];
+        return FILES[numberOfTrailingZeros(piece) % 8];
     }
 }

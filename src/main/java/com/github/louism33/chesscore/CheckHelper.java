@@ -1,85 +1,20 @@
 package com.github.louism33.chesscore;
 
-import org.junit.Assert;
-
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.PieceMove.*;
+import static java.lang.Long.numberOfTrailingZeros;
 
 class CheckHelper {
-
-    static boolean boardInCheck(int turn, long myKing,
-                                long pawns, long knights, long bishops, long rooks, long queens, long king,
-                                long allPiece){
-        int numberOfCheckers = numberOfPiecesThatLegalThreatenSquare(turn, myKing,
-                pawns, knights, bishops, rooks, queens, king,
-                allPiece, 2);
-
-
-        final int i = populationCount(bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
-                pawns, knights, bishops, rooks, queens, king,
-                allPiece, 2));
-
-        Assert.assertEquals(numberOfCheckers, i);
-
-
-        return numberOfCheckers > 0;
-    }
-
-    //todo add intermediate function to return bitboard of checkers, as we only need king moves if checked by pawn of knight
-
-    static int numberOfPiecesThatLegalThreatenSquare(int turn, long square,
-                                                     long pawns, long knights, long bishops, long rooks, long queens, long king,
-                                                     long allPieces, int stopAt){
-
-        int numberOfThreats = 0;
-
-        if (pawns != 0) {
-            numberOfThreats += populationCount(singlePawnCaptures(square, turn, pawns));
-        }
-        if (numberOfThreats >= stopAt){
-            return numberOfThreats;
-        }
-        if (knights != 0) {
-            numberOfThreats += populationCount(KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(square)] & knights);
-        }
-        if (numberOfThreats >= stopAt){
-            return numberOfThreats;
-        }
-        if (bishops != 0) {
-            numberOfThreats += populationCount(singleBishopTable(allPieces, square, bishops));
-        }
-        if (numberOfThreats >= stopAt){
-            return numberOfThreats;
-        }
-        if (rooks != 0) {
-            numberOfThreats += populationCount(singleRookTable(allPieces, square, rooks));
-        }
-        if (numberOfThreats >= stopAt){
-            return numberOfThreats;
-        }
-        if (queens != 0) {
-            numberOfThreats += populationCount(singleQueenTable(allPieces, square, queens));
-        }
-        if (numberOfThreats >= stopAt){
-            return numberOfThreats;
-        }
-        if (king != 0) {
-            numberOfThreats += populationCount(KING_MOVE_TABLE[getIndexOfFirstPiece(square)] & king);
-        }
-
-        return numberOfThreats;
-    }
 
 
     static boolean boardInCheckBetter(int turn, long myKing,
                                 long pawns, long knights, long bishops, long rooks, long queens, long king,
-                                long allPiece){
+                                long allPiece, int stopAt){
         
         int numberOfCheckers = populationCount(bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
                 pawns, knights, bishops, rooks, queens, king,
-                allPiece, 2));
+                allPiece, stopAt));
 
         return numberOfCheckers > 0;
     }
@@ -99,7 +34,7 @@ class CheckHelper {
             }
         }
         if (knights != 0) {
-            threats |= KNIGHT_MOVE_TABLE[getIndexOfFirstPiece(square)] & knights;
+            threats |= KNIGHT_MOVE_TABLE[numberOfTrailingZeros(square)] & knights;
         }
         if (stopAt != 0){
             if (populationCount(threats) >= stopAt){
@@ -131,7 +66,7 @@ class CheckHelper {
             }
         }
         if (king != 0) {
-            threats |= KING_MOVE_TABLE[getIndexOfFirstPiece(square)] & king;
+            threats |= KING_MOVE_TABLE[numberOfTrailingZeros(square)] & king;
         }
 
         return threats;

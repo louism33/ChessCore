@@ -2,7 +2,8 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static java.lang.Long.numberOfTrailingZeros;
@@ -21,7 +22,7 @@ class MoveAdder {
             final long destination = getFirstPiece(attackBoard);
 
             moves[startIndex + i] = buildMove(source, sourcePiece,
-                    getIndexOfFirstPiece(destination), pieceSquareTable[numberOfTrailingZeros(destination)]);
+                    numberOfTrailingZeros(destination), pieceSquareTable[numberOfTrailingZeros(destination)]);
             i++;
             attackBoard &= attackBoard - 1;
         }
@@ -41,10 +42,10 @@ class MoveAdder {
 
             final long destination = getFirstPiece(attackBoard);
 
-            int destinationIndex = getIndexOfFirstPiece(destination);
+            int destinationIndex = numberOfTrailingZeros(destination);
 
             final int move = buildMove(source, movingPiece,
-                    getIndexOfFirstPiece(destination),
+                    numberOfTrailingZeros(destination),
                     pieceSquareTable[destinationIndex]) | PROMOTION_MASK;
 
             moves[index] = move | KNIGHT_PROMOTION_MASK;

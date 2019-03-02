@@ -2,9 +2,9 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BoardConstants.*;
+import static java.lang.Long.numberOfTrailingZeros;
 
 class Setup {
 
@@ -89,8 +89,8 @@ class Setup {
         long originalPieces = pieceOne | pieceTwo;
 
         // necessary as java offers signed ints, which get confused if talking about square 63
-        int indexOfPieceOne = getIndexOfFirstPiece(pieceOne);
-        int indexOfPieceTwo = getIndexOfFirstPiece(pieceTwo);
+        int indexOfPieceOne = numberOfTrailingZeros(pieceOne);
+        int indexOfPieceTwo = numberOfTrailingZeros(pieceTwo);
         long bigPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceOne : pieceTwo;
         long smallPiece = (indexOfPieceOne > indexOfPieceTwo) ? pieceTwo : pieceOne;
         long possibleAnswer = 0;

@@ -2,6 +2,8 @@ package com.github.louism33.chesscore;
 
 import org.junit.Assert;
 
+import static java.lang.Long.numberOfTrailingZeros;
+
 class MoveMakingUtilities {
 
     static void removePieces(long[][] pieces, int[] pieceSquareTable, long sourceSquare, long victimPieceSquare, int move){
@@ -31,11 +33,11 @@ class MoveMakingUtilities {
     static void togglePiecesFrom (long[][] pieces, int[] pieceSquareTable, long removeThis, int thesePieces){
         // remove
         if ((pieces[thesePieces / 7][thesePieces < 7 ? thesePieces : thesePieces - 6] & removeThis) != 0) {
-            pieceSquareTable[BitOperations.getIndexOfFirstPiece(removeThis)] = 0;
+            pieceSquareTable[numberOfTrailingZeros(removeThis)] = 0;
             pieces[thesePieces / 7][thesePieces < 7 ? thesePieces : thesePieces - 6] ^= removeThis;
         }
         else {
-            pieceSquareTable[BitOperations.getIndexOfFirstPiece(removeThis)] = thesePieces;
+            pieceSquareTable[numberOfTrailingZeros(removeThis)] = thesePieces;
             pieces[thesePieces / 7][thesePieces < 7 ? thesePieces : thesePieces - 6] |= removeThis;
         }
     }

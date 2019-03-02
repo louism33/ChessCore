@@ -7,11 +7,11 @@ import org.junit.Assert;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveParser.buildMove;
+import static java.lang.Long.numberOfTrailingZeros;
 
 public class MoveParserFromAN {
 
@@ -111,7 +111,7 @@ public class MoveParserFromAN {
             movingPieceLong &= RANKS[chars[2] - '1'];
         }
 
-        int sourceIndex = getIndexOfFirstPiece(movingPieceLong);
+        int sourceIndex = numberOfTrailingZeros(movingPieceLong);
         
         boolean b4 = chars[4] != 0;
         long destinationFile = 0;
@@ -126,7 +126,7 @@ public class MoveParserFromAN {
             destinationSquare = rank & destinationFile;
         }
 
-        int destinationIndex = getIndexOfFirstPiece(destinationSquare);
+        int destinationIndex = numberOfTrailingZeros(destinationSquare);
 
         if (movingPiece == 0) {
             movingPiece = board.pieceSquareTable[sourceIndex];
