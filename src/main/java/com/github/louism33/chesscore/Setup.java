@@ -6,7 +6,7 @@ import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
-class Setup {
+final class Setup {
 
     public static void main(String[] args){
         setup(false);

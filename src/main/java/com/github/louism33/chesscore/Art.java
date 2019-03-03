@@ -1,6 +1,6 @@
 package com.github.louism33.chesscore;
 
-public class Art {
+public final class Art {
 
     public static String boardArt(Chessboard board) {
         StringBuilder s = new StringBuilder(512);

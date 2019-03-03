@@ -24,24 +24,12 @@ public class PerftTest {
 
     @Test
     void npsTest(){
-//        NPSTest.npsTest(new Chessboard(), 6);
+        NPSTest.npsTest(new Chessboard(), 6);
 //        NPSTest.npsTest(new Chessboard(), 7);
 //        NPSTest.npsTest(new Chessboard(), 8);
     }
 
 
-    @Test
-    void numberTest(){
-        NPSTest.npsTest(new Chessboard(), 6);
-        System.out.println("cap: ");
-        System.out.println(Arrays.toString(MoveAdder.cArr));
-
-        System.out.println("q: ");
-        System.out.println(Arrays.toString(MoveAdder.qArr));
-    }
-        
-        
-    
     @Test
     void regularBoard() {
         Assert.assertEquals(4865609, Perft.perftTest(new Chessboard(), 5));

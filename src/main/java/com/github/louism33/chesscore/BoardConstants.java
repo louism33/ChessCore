@@ -1,6 +1,6 @@
 package com.github.louism33.chesscore;
 
-public class BoardConstants {
+public final class BoardConstants {
 
     public static final int NO_PIECE = 0;
 

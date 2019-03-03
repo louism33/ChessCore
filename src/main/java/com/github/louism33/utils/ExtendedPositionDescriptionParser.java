@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExtendedPositionDescriptionParser {
+public final class ExtendedPositionDescriptionParser {
 
     private static final Pattern boardPattern = Pattern.compile("([/|\\w]* [wb] [-|\\w]* [-|\\w])");
     private static final Pattern bestMovePattern = Pattern.compile("bm ([\\w\\s+]+)");

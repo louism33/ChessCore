@@ -5,7 +5,7 @@ import org.junit.Assert;
 import static com.github.louism33.chesscore.BoardConstants.ALL_COLOUR_PIECES;
 import static java.lang.Long.numberOfTrailingZeros;
 
-class MoveMakingUtilities {
+final class MoveMakingUtilities {
 
     static void removePieces(long[][] pieces, int[] pieceSquareTable, long sourceSquare, long victimPieceSquare, int move){
         int movingPiece = MoveParser.getMovingPieceInt(move);

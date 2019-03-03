@@ -6,7 +6,7 @@ import static com.github.louism33.chesscore.Setup.ready;
 import static com.github.louism33.chesscore.Setup.setup;
 import static java.lang.Long.*;
 
-public class BitOperations {
+public final class BitOperations {
 
     public static long newPieceOnSquare (int x){
         return 0x0000000000000001L << x;

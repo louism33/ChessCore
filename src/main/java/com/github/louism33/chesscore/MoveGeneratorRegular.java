@@ -9,15 +9,15 @@ import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static com.github.louism33.chesscore.PieceMove.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
-class MoveGeneratorRegular {
+final class MoveGeneratorRegular {
 
-    static void addKingLegalMovesOnly(int[] moves, int turn, long[][] pieces, int[] pieceSquareTable, long myKing,
+    final static void addKingLegalMovesOnly(int[] moves, int turn, long[][] pieces, int[] pieceSquareTable, long myKing,
                                       long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                       long friends, long allPieces){
 
         final int myKingIndex = numberOfTrailingZeros(myKing);
         final long kingPseudoMoves = KING_MOVE_TABLE[myKingIndex] & ~friends;
-        long table;
+        final long table;
         if (kingPseudoMoves == 0) {
             return;
         }

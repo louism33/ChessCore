@@ -13,7 +13,7 @@ import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static java.lang.Long.numberOfTrailingZeros;
 
-public class MoveParserFromAN {
+public final class MoveParserFromAN {
 
     private static final Pattern pattern = Pattern.compile(".?([abcdefgh][12345678])[-x]?([abcdefgh][12345678])(\\w)?");
     private static final Matcher matcher = pattern.matcher("");

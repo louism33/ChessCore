@@ -8,7 +8,7 @@ import java.util.List;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 
-public class MoveParser {
+public final class MoveParser {
 
     /*
     00000001

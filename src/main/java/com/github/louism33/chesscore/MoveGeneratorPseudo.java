@@ -7,9 +7,9 @@ import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static com.github.louism33.chesscore.PieceMove.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
-class MoveGeneratorPseudo {
+final class MoveGeneratorPseudo {
 
-    static void addAllMovesWithoutKing(final int[] moves, final long[][] pieces, final int turn, final int[] pieceSquareTable,
+    final static void addAllMovesWithoutKing(final int[] moves, final long[][] pieces, final int turn, final int[] pieceSquareTable,
                                        final long ignoreThesePieces, final long legalPushes, final long legalCaptures,
                                        long myKnights, long myBishops, long myRooks, long myQueens,
                                        final long allPieces){

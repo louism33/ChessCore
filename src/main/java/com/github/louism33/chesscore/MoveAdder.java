@@ -8,17 +8,12 @@ import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static java.lang.Long.numberOfTrailingZeros;
 
-public class MoveAdder {
+public final class MoveAdder {
 
-    public static int[] qArr = new int[32];
-    public static int[] cArr = new int[32];
-    
     static void addMovesFromAttackTableMaster(final int[] moves, long attackBoard, final int source,
                                               final int sourcePiece) {
 
         final int numberOfMoves = populationCount(attackBoard);
-        
-        qArr[numberOfMoves]++;
         
         Assert.assertTrue(numberOfMoves > 0);
         final int startIndex = moves[moves.length - 1];

@@ -1,6 +1,6 @@
 package com.github.louism33.chesscore;
 
-public class MoveConstants {
+public final class MoveConstants {
 
     /*
     00000001

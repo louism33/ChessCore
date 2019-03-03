@@ -3,9 +3,9 @@ package com.github.louism33.utils;
 import com.github.louism33.chesscore.Art;
 import com.github.louism33.chesscore.Chessboard;
 
-public class Perft {
+public final class Perft {
 
-    static Chessboard board;
+    private static Chessboard board;
     private static long nodesForNps = 0;
 
     public static long perftTest(Chessboard b, int d){

@@ -392,19 +392,19 @@ public class Chessboard {
      * Updates the board with the move you want.
      * @param move the non-0 move you want to make of this board.
      */
-    public final void makeMoveAndFlipTurn(int move) {
+    public final void makeMoveAndFlipTurn(final int move) {
         this.rotateMoveIndexUp();
         Assert.assertNotEquals(move, 0);
         masterStackPush();
 
-        final int sourceSquare = getSourceIndex(move);
+        final int sourceIndex = getSourceIndex(move);
         final int destinationIndex = getDestinationIndex(move);
-        final int sourcePieceIdentifier = pieceSquareTable[sourceSquare] - 1;
+        final int sourcePieceIdentifier = pieceSquareTable[sourceIndex] - 1;
         final boolean captureMove = isCaptureMove(move);
         final long destinationPiece = newPieceOnSquare(destinationIndex);
         final long destinationZH = zobristHashPieces[destinationIndex][sourcePieceIdentifier];
 
-        zobristHash ^= zobristHashPieces[sourceSquare][sourcePieceIdentifier];
+        zobristHash ^= zobristHashPieces[sourceIndex][sourcePieceIdentifier];
         zobristHash ^= destinationZH;
 
         if (captureMove){
@@ -449,7 +449,7 @@ public class Chessboard {
                             break;
                     }
 
-                    int myRook = pieceSquareTable[originalRookIndex] - 1;
+                    final int myRook = pieceSquareTable[originalRookIndex] - 1;
                     zobristHash ^= zobristHashPieces[originalRookIndex][myRook];
                     zobristHash ^= zobristHashPieces[newRookIndex][myRook];
 
@@ -458,10 +458,11 @@ public class Chessboard {
                     break;
 
                 case ENPASSANT_MASK:
-                    long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
+                    final long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
+                    final int victimPawnIndex = numberOfTrailingZeros(victimPawn);
                     zobristHash ^= zobristHashPieces
-                            [numberOfTrailingZeros(victimPawn)]
-                            [pieceSquareTable[numberOfTrailingZeros(victimPawn)] - 1];
+                            [victimPawnIndex]
+                            [pieceSquareTable[victimPawnIndex] - 1];
 
                     moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, ENPASSANTCAPTURE));
                     makeEnPassantMove(pieces, pieceSquareTable, turn, move);
@@ -501,11 +502,13 @@ public class Chessboard {
         } else {
             if (captureMove) {
                 moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICCAPTURE));
-            } else if (enPassantPossibility(turn, pieces[turn][PAWN], move)) {
-                int whichFile = 8 - getSourceIndex(move) % 8;
+            } 
+            else if (enPassantPossibility(turn, pieces[turn][PAWN], newPieceOnSquare(sourceIndex), destinationPiece)) {
+                final int whichFile = 8 - sourceIndex % 8;
                 moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, ENPASSANTVICTIM, whichFile));
-            } else {
-                switch (pieceSquareTable[getSourceIndex(move)]) {
+            } 
+            else {
+                switch (pieceSquareTable[sourceIndex]) {
                     case WHITE_PAWN:
                     case BLACK_PAWN:
                         moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICLOUDPUSH));
@@ -530,7 +533,9 @@ public class Chessboard {
 //        }
 
 
-        castleFlagManager(move);
+        if (castlingRights != 0) {
+            castleFlagManager(sourceIndex, destinationIndex);   
+        }
 
         Assert.assertTrue(hasPreviousMove());
         zobristHash = (updateHashPostMove(moveStackArrayPeek(), castlingRights, zobristHash));
@@ -538,9 +543,9 @@ public class Chessboard {
         this.turn = 1 - this.turn;
     }
 
-    private void castleFlagManager(int move) {
+    private void castleFlagManager(int sourceIndex, int destinationIndex) {
         // disable relevant castle flag whenever a piece moves into the relevant square.
-        switch (getSourceIndex(move)) {
+        switch (sourceIndex) {
             case 0:
                 castlingRights &= castlingRightsMask[WHITE][K];
                 break;
@@ -558,7 +563,7 @@ public class Chessboard {
                 castlingRights &= castlingRightsMask[BLACK][Q];
                 break;
         }
-        switch (getDestinationIndex(move)) {
+        switch (destinationIndex) {
             case 0:
                 castlingRights &= castlingRightsMask[WHITE][K];
                 break;
@@ -578,12 +583,9 @@ public class Chessboard {
         }
     }
 
-    private static boolean enPassantPossibility(int turn, long myPawns, int move) {
+    private static boolean enPassantPossibility(int turn, long myPawns, long sourceSquare, long destinationSquare) {
         // determine if flag should be added to enable EP on next turn
-        long sourceSquare = newPieceOnSquare(getSourceIndex(move));
-        long destinationSquare = newPieceOnSquare(getDestinationIndex(move));
         long homeRank = PENULTIMATE_RANKS[1 - turn];
-        long enPassantPossibilityRank = ENPASSANT_RANK[turn];
 
         if ((sourceSquare & homeRank) == 0) {
             return false;
@@ -592,6 +594,7 @@ public class Chessboard {
         if ((sourceSquare & myPawns) == 0) {
             return false;
         }
+        long enPassantPossibilityRank = ENPASSANT_RANK[turn];
         return (destinationSquare & enPassantPossibilityRank) != 0;
     }
 
@@ -785,9 +788,9 @@ public class Chessboard {
             friends = blackPieces();
         }
 
-        return boardInCheckBetter(turn, myKing,
+        return boardInCheck(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                allPieces(), 1);
+                allPieces());
 
     }
 

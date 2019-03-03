@@ -7,9 +7,8 @@ import static com.github.louism33.chesscore.MoveMakingUtilities.togglePiecesFrom
 import static com.github.louism33.chesscore.MoveParser.getDestinationIndex;
 import static com.github.louism33.chesscore.MoveParser.getSourceIndex;
 
-class MakeMoveSpecial {
+final class MakeMoveSpecial {
 
-    // possible todo, inline in Chessboard all these methods
     static int makeCastlingMove(int castlingRights, long[][] pieces, int[] pieceSquareTable, int move){
         long sourcePiece = newPieceOnSquare(MoveParser.getSourceIndex(move));
         int originalRookIndex = 0, newRookIndex = MoveParser.getDestinationIndex(move) + 1,

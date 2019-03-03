@@ -4,7 +4,7 @@ import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
-import static com.github.louism33.chesscore.CheckHelper.boardInCheckBetter;
+import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMasterPromotion;
 import static com.github.louism33.chesscore.MoveConstants.CASTLING_MASK;
 import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
@@ -14,7 +14,7 @@ import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 import static java.lang.Long.numberOfTrailingZeros;
 
-class MoveGeneratorSpecial {
+final class MoveGeneratorSpecial {
 
     static void addPromotionMoves(int[] moves, int turn, int[] pieceSquareTable,
                                   long ignoreThesePieces, long legalPushes, long legalCaptures,
@@ -113,9 +113,9 @@ class MoveGeneratorSpecial {
                     allPiecesAreAwesome ^= pawn;
                     allPiecesAreAwesome ^= pawnEnPassantCaptureSpecific;
 
-                    boolean enPassantWouldLeadToCheck = boardInCheckBetter(turn, myKing,
+                    boolean enPassantWouldLeadToCheck = boardInCheck(turn, myKing,
                             enemyPawnsAreAwesome, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            allPiecesAreAwesome, 1);
+                            allPiecesAreAwesome);
 
                     if (!enPassantWouldLeadToCheck) {
                         moves[moves[moves.length - 1]++] = buildMove(

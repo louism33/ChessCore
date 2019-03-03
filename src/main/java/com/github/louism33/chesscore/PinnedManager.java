@@ -5,7 +5,7 @@ import static com.github.louism33.chesscore.PieceMove.xrayBishopAttacks;
 import static com.github.louism33.chesscore.PieceMove.xrayRookAttacks;
 import static java.lang.Long.numberOfTrailingZeros;
 
-public class PinnedManager {
+public final class PinnedManager {
 
     public static long whichPiecesArePinned(long squareOfInterest,
                                             long enemyBishops, long enemyRooks, long enemyQueens,

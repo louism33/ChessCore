@@ -5,15 +5,15 @@ import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.PieceMove.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
-class CheckHelper {
+final class CheckHelper {
 
-    static boolean boardInCheckBetter(int turn, long myKing,
+    static boolean boardInCheck(int turn, long myKing,
                                 long pawns, long knights, long bishops, long rooks, long queens, long king,
-                                long allPiece, int stopAt){
+                                long allPiece){
         
         int numberOfCheckers = populationCount(bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
                 pawns, knights, bishops, rooks, queens, king,
-                allPiece, stopAt));
+                allPiece, 1));
 
         return numberOfCheckers > 0;
     }

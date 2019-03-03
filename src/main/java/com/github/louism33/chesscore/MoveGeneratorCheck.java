@@ -10,7 +10,7 @@ import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMov
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.addEnPassantMoves;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.addPromotionMoves;
 
-class MoveGeneratorCheck {
+final class MoveGeneratorCheck {
 
     static void addCheckEvasionMoves(long checkingPiece, int[] moves, int turn, int[] pieceSquareTable, long[][] pieces,
                                      boolean hasPreviousMove, long peek, long pinnedPieces,

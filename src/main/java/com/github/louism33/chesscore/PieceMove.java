@@ -7,7 +7,7 @@ import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.Setup.ready;
 import static java.lang.Long.numberOfTrailingZeros;
 
-class PieceMove {
+final class PieceMove {
 
     static long singlePawnPushes(long pawns, int turn, long legalPushes, long allPieces) {
         Assert.assertEquals(1, populationCount(pawns));

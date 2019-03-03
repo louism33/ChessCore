@@ -2,7 +2,7 @@ package com.github.louism33.utils;
 
 import com.github.louism33.chesscore.Chessboard;
 
-public class NPSTest {
+public final class NPSTest {
 
     public static void npsTest(Chessboard board, int d) {
         long t1 = System.currentTimeMillis();
