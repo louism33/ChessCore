@@ -27,6 +27,10 @@ class PieceMove {
         return singleBishopTable(occupancy, piece, mask) | singleRookTable(occupancy, piece, mask);
     }
 
+    static long singleQueenTable(long occupancy, int pieceIndex, long mask){
+        return singleBishopTable(occupancy, pieceIndex, mask) | singleRookTable(occupancy, pieceIndex, mask);
+    }
+
     static long xrayQueenAttacks(long allPieces, long blockers, long queen){
         return xrayRookAttacks(allPieces, blockers, queen) | xrayBishopAttacks(allPieces, blockers, queen);
     }
@@ -59,11 +63,36 @@ class PieceMove {
         return legalMoves & legalMovesMask;
     }
 
+    static long singleRookTable(long occupancy, int rookIndex, long legalMovesMask){
+        Assert.assertTrue(ready);
+        final long rookMagicNumber = rookMagicNumbers[rookIndex];
+
+        final int index = (int) (((occupancy & rookBlankBoardAttackMasks[rookIndex]) * rookMagicNumber)
+                >>> (64 - (rookShiftAmounts[rookIndex])));
+
+        final long legalMoves = rookDatabase[rookIndex][index];
+
+        return legalMoves & legalMovesMask;
+    }
+
     static long singleBishopTable(long allPieces, long bishop, long legalMovesMask){
         Assert.assertTrue(ready);
         Assert.assertEquals(populationCount(bishop), 1);
 
         final int bishopIndex = numberOfTrailingZeros(bishop);
+        final long bishopMagicNumber = bishopMagicNumbers[bishopIndex];
+
+        final int index = (int) (((allPieces & bishopBlankBoardAttackMasks[bishopIndex]) * bishopMagicNumber)
+                >>> (64 - (bishopShiftAmounts[bishopIndex])));
+
+        final long legalMoves = bishopDatabase[bishopIndex][index];
+
+        return legalMoves & legalMovesMask;
+    }
+
+    static long singleBishopTable(long allPieces, int bishopIndex, long legalMovesMask){
+        Assert.assertTrue(ready);
+
         final long bishopMagicNumber = bishopMagicNumbers[bishopIndex];
 
         final int index = (int) (((allPieces & bishopBlankBoardAttackMasks[bishopIndex]) * bishopMagicNumber)

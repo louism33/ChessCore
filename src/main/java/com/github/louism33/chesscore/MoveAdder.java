@@ -8,12 +8,18 @@ import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static java.lang.Long.numberOfTrailingZeros;
 
-class MoveAdder {
+public class MoveAdder {
 
+    public static int[] qArr = new int[32];
+    public static int[] cArr = new int[32];
+    
     static void addMovesFromAttackTableMaster(final int[] moves, long attackBoard, final int source,
                                               final int sourcePiece) {
 
         final int numberOfMoves = populationCount(attackBoard);
+        
+        qArr[numberOfMoves]++;
+        
         Assert.assertTrue(numberOfMoves > 0);
         final int startIndex = moves[moves.length - 1];
         int i = 0;
@@ -22,26 +28,6 @@ class MoveAdder {
 
             moves[startIndex + i] = buildMove(source, sourcePiece,
                     destinationIndex);
-            i++;
-            attackBoard &= attackBoard - 1;
-        }
-        moves[moves.length - 1] += numberOfMoves;
-    }
-
-    static void addMovesFromAttackTableMaster(final int[] moves, long attackBoard, final int source,
-                                              final int sourcePiece, final int[] pieceSquareTable) {
-
-        final int numberOfMoves = populationCount(attackBoard);
-        Assert.assertTrue(numberOfMoves > 0);
-        final int startIndex = moves[moves.length - 1];
-        int i = 0;
-        while (attackBoard != 0){
-            final int destinationIndex = numberOfTrailingZeros(attackBoard);
-            
-            Assert.assertTrue(pieceSquareTable[destinationIndex] != 0);
-            
-            moves[startIndex + i] = buildMove(source, sourcePiece,
-                    destinationIndex, pieceSquareTable[destinationIndex]);
             i++;
             attackBoard &= attackBoard - 1;
         }
@@ -92,8 +78,6 @@ class MoveAdder {
             final int index = startIndex + i;
 
             final long destination = getFirstPiece(attackBoard);
-
-            final int destinationIndex = numberOfTrailingZeros(destination);
 
             final int move = buildMove(source, movingPiece,
                     numberOfTrailingZeros(destination)) | PROMOTION_MASK;

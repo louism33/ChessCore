@@ -5,6 +5,7 @@ import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
+import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static com.github.louism33.chesscore.PieceMove.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
@@ -72,13 +73,20 @@ class MoveGeneratorRegular {
         }
         
         if (table != 0) {
-            final long captureTable = table & allPieces;
+            long captureTable = table & allPieces;
             if (captureTable != 0) {
-                addMovesFromAttackTableMaster(moves,
-                        captureTable,
-                        numberOfTrailingZeros(myKing),
-                        PIECE[turn][KING],
-                        pieceSquareTable);
+
+                final int i1 = populationCount(captureTable);
+                final int startIndex = moves[moves.length - 1];
+                int i = 0;
+                while (captureTable != 0){
+                    final int destinationIndex = numberOfTrailingZeros(captureTable);
+                    moves[startIndex + i] = buildMove(numberOfTrailingZeros(myKing), PIECE[turn][KING],
+                            destinationIndex, pieceSquareTable[destinationIndex]);
+                    i++;
+                    captureTable &= captureTable - 1;
+                }   
+                moves[moves.length - 1] += i1;
             }
             final long quietTable = table & ~allPieces;
             if (quietTable != 0) {

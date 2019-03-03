@@ -1,8 +1,9 @@
 package com.github.louism33.chesscore;
 
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
+import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
+import static com.github.louism33.chesscore.MoveParser.buildMove;
 import static com.github.louism33.chesscore.PieceMove.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
@@ -18,17 +19,38 @@ class MoveGeneratorPseudo {
         while (myKnights != 0){
             final long knight = getFirstPiece(myKnights);
             if ((knight & ignoreThesePieces) == 0) {
-                final long jumps = KNIGHT_MOVE_TABLE[numberOfTrailingZeros(knight)] & mask;
+                final int knightIndex = numberOfTrailingZeros(knight);
+                final long jumps = KNIGHT_MOVE_TABLE[knightIndex] & mask;
                 if (jumps != 0) {
-                    final long captureTable = jumps & allPieces;
+                    
+                    long captureTable = jumps & allPieces;
                     if (captureTable != 0) {
-                        addMovesFromAttackTableMaster(moves, captureTable, numberOfTrailingZeros(knight),
-                                PIECE[turn][KNIGHT], pieceSquareTable);
+                        final int i1 = populationCount(captureTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (captureTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(captureTable);
+                            moves[startIndex + i] = buildMove(knightIndex, PIECE[turn][KNIGHT],
+                                    destinationIndex, pieceSquareTable[destinationIndex]);
+                            i++;
+                            captureTable &= captureTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
                     }
-                    final long quietTable = jumps & ~allPieces;
+                    
+                    long quietTable = jumps & ~allPieces;
                     if (quietTable != 0){
-                        addMovesFromAttackTableMaster(moves, quietTable, numberOfTrailingZeros(knight),
-                                PIECE[turn][KNIGHT]);
+                        final int i1 = populationCount(quietTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (quietTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(quietTable);
+                            moves[startIndex + i] = buildMove(knightIndex, PIECE[turn][KNIGHT],
+                                    destinationIndex);
+                            i++;
+                            quietTable &= quietTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
                     }
                 }
             }
@@ -39,15 +61,38 @@ class MoveGeneratorPseudo {
         while (myBishops != 0){
             final long bishop = getFirstPiece(myBishops);
             if ((bishop & ignoreThesePieces) == 0) {
-                final long slides = singleBishopTable(allPieces, bishop, mask);
+                final int bishopIndex = numberOfTrailingZeros(bishop);
+                final long slides = singleBishopTable(allPieces, bishopIndex, mask);
                 if (slides != 0) {
-                    final long captureTable = slides & allPieces;
+
+                    long captureTable = slides & allPieces;
                     if (captureTable != 0) {
-                        addMovesFromAttackTableMaster(moves, captureTable, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP], pieceSquareTable);
+                        final int i1 = populationCount(captureTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (captureTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(captureTable);
+                            moves[startIndex + i] = buildMove(bishopIndex, PIECE[turn][BISHOP],
+                                    destinationIndex, pieceSquareTable[destinationIndex]);
+                            i++;
+                            captureTable &= captureTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;     
                     }
-                    final long quietTable = slides & ~allPieces;
+                    
+                    long quietTable = slides & ~allPieces;
                     if (quietTable != 0){
-                        addMovesFromAttackTableMaster(moves, quietTable, numberOfTrailingZeros(bishop), PIECE[turn][BISHOP]);
+                        final int i1 = populationCount(quietTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (quietTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(quietTable);
+                            moves[startIndex + i] = buildMove(bishopIndex, PIECE[turn][BISHOP],
+                                    destinationIndex);
+                            i++;
+                            quietTable &= quietTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
                     }
                 }
             }
@@ -56,15 +101,37 @@ class MoveGeneratorPseudo {
         while (myRooks != 0){
             final long rook = getFirstPiece(myRooks);
             if ((rook & ignoreThesePieces) == 0) {
-                final long slides = singleRookTable(allPieces, rook, mask);
+                final int rookIndex = numberOfTrailingZeros(rook);
+                final long slides = singleRookTable(allPieces, rookIndex, mask);
                 if (slides != 0) {
-                    final long captureTable = slides & allPieces;
+                    long captureTable = slides & allPieces;
                     if (captureTable != 0) {
-                        addMovesFromAttackTableMaster(moves, captureTable, numberOfTrailingZeros(rook), PIECE[turn][ROOK], pieceSquareTable);
+                        final int i1 = populationCount(captureTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (captureTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(captureTable);
+                            moves[startIndex + i] = buildMove(rookIndex, PIECE[turn][ROOK],
+                                    destinationIndex, pieceSquareTable[destinationIndex]);
+                            i++;
+                            captureTable &= captureTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
+                        
                     }
-                    final long quietTable = slides & ~allPieces;
+                    long quietTable = slides & ~allPieces;
                     if (quietTable != 0) {
-                        addMovesFromAttackTableMaster(moves, quietTable, numberOfTrailingZeros(rook), PIECE[turn][ROOK]);
+                        final int i1 = populationCount(quietTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (quietTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(quietTable);
+                            moves[startIndex + i] = buildMove(rookIndex, PIECE[turn][ROOK],
+                                    destinationIndex);
+                            i++;
+                            quietTable &= quietTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
                     }
                 }
             }
@@ -73,15 +140,37 @@ class MoveGeneratorPseudo {
         while (myQueens != 0){
             final long queen = getFirstPiece(myQueens);
             if ((queen & ignoreThesePieces) == 0) {
-                final long slides = singleQueenTable(allPieces, queen, mask);
+                final int queenIndex = numberOfTrailingZeros(queen);
+                final long slides = singleQueenTable(allPieces, queenIndex, mask);
                 if (slides != 0) {
-                    final long captureTable = slides & allPieces;
+                    long captureTable = slides & allPieces;
                     if (captureTable != 0) {
-                        addMovesFromAttackTableMaster(moves, captureTable, numberOfTrailingZeros(queen), PIECE[turn][QUEEN], pieceSquareTable);
+                        final int i1 = populationCount(captureTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (captureTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(captureTable);
+                            moves[startIndex + i] = buildMove(queenIndex, PIECE[turn][QUEEN],
+                                    destinationIndex, pieceSquareTable[destinationIndex]);
+                            i++;
+                            captureTable &= captureTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
+                        
                     }
-                    final long quietTable = slides & ~allPieces;
+                    long quietTable = slides & ~allPieces;
                     if (quietTable != 0) {
-                        addMovesFromAttackTableMaster(moves, quietTable, numberOfTrailingZeros(queen), PIECE[turn][QUEEN]);
+                        final int i1 = populationCount(quietTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (quietTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(quietTable);
+                            moves[startIndex + i] = buildMove(queenIndex, PIECE[turn][QUEEN],
+                                    destinationIndex);
+                            i++;
+                            quietTable &= quietTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
                     }
                 }
             }
@@ -93,7 +182,7 @@ class MoveGeneratorPseudo {
         while (myPawns != 0){
             final long pawn = getFirstPiece(myPawns);
             final int pawnIndex = numberOfTrailingZeros(pawn);
-            final long quietTable;
+            long quietTable;
             // doubles
             if ((pawn & PENULTIMATE_RANKS[1 - turn]) != 0) {
                 quietTable = singlePawnPushes(pawn, turn, legalPushes, allPieces);
@@ -102,16 +191,36 @@ class MoveGeneratorPseudo {
                 quietTable = (turn == WHITE ? pawn << 8 : pawn >>> 8) & ~allPieces & legalPushes;
             }
 
-            final long captureTable = singlePawnCaptures(pawn, turn, legalCaptures);
-
-            if (quietTable != 0) {
-                addMovesFromAttackTableMaster(moves, quietTable,
-                        pawnIndex, PIECE[turn][PAWN]);
-            }
+            long captureTable = singlePawnCaptures(pawn, turn, legalCaptures);
             if (captureTable != 0) {
-                addMovesFromAttackTableMaster(moves, captureTable,
-                        pawnIndex, PIECE[turn][PAWN], pieceSquareTable);
+                final int i1 = populationCount(captureTable);
+                final int startIndex = moves[moves.length - 1];
+                int i = 0;
+                while (captureTable != 0){
+                    final int destinationIndex = numberOfTrailingZeros(captureTable);
+                    moves[startIndex + i] = buildMove(pawnIndex, PIECE[turn][PAWN],
+                            destinationIndex, pieceSquareTable[destinationIndex]);
+                    i++;
+                    captureTable &= captureTable - 1;
+                }
+                moves[moves.length - 1] += i1;
             }
+            
+            if (quietTable != 0) {
+                final int i1 = populationCount(quietTable);
+                final int startIndex = moves[moves.length - 1];
+                int i = 0;
+                while (quietTable != 0){
+                    final int destinationIndex = numberOfTrailingZeros(quietTable);
+                    moves[startIndex + i] = buildMove(pawnIndex, PIECE[turn][PAWN],
+                            destinationIndex);
+                    i++;
+                    quietTable &= quietTable - 1;
+                }
+                moves[moves.length - 1] += i1;
+                
+            }
+            
             myPawns &= myPawns - 1;
         }
     }
