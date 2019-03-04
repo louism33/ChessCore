@@ -7,9 +7,9 @@ import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.Setup.ready;
 import static java.lang.Long.numberOfTrailingZeros;
 
-final class PieceMove {
+public final class PieceMove {
 
-    static long singlePawnPushes(long pawns, int turn, long legalPushes, long allPieces) {
+    public static long singlePawnPushes(long pawns, int turn, long legalPushes, long allPieces) {
         Assert.assertEquals(1, populationCount(pawns));
         final long possiblePawnSinglePushes = turn == WHITE ? pawns << 8 : pawns >>> 8;
         final long intermediateRank = INTERMEDIATE_RANKS[turn];
@@ -18,16 +18,16 @@ final class PieceMove {
                 & legalPushes & ~allPieces;
     }
     
-    static long singlePawnCaptures(long piece, int turn, long legalCaptures) {
+    public static long singlePawnCaptures(long piece, int turn, long legalCaptures) {
         Assert.assertTrue(numberOfTrailingZeros(piece) > 0 || numberOfTrailingZeros(piece) <= 63);
         return legalCaptures & (PAWN_CAPTURE_TABLE[turn][numberOfTrailingZeros(piece)]);
     }
     
-    static long singleQueenTable(long occupancy, long piece, long mask){
+    public static long singleQueenTable(long occupancy, long piece, long mask){
         return singleBishopTable(occupancy, piece, mask) | singleRookTable(occupancy, piece, mask);
     }
 
-    static long singleQueenTable(long occupancy, int pieceIndex, long mask){
+    public static long singleQueenTable(long occupancy, int pieceIndex, long mask){
         return singleBishopTable(occupancy, pieceIndex, mask) | singleRookTable(occupancy, pieceIndex, mask);
     }
 
@@ -63,7 +63,7 @@ final class PieceMove {
         return legalMoves & legalMovesMask;
     }
 
-    static long singleRookTable(long occupancy, int rookIndex, long legalMovesMask){
+    public static long singleRookTable(long occupancy, int rookIndex, long legalMovesMask){
         Assert.assertTrue(ready);
         final long rookMagicNumber = rookMagicNumbers[rookIndex];
 
@@ -90,7 +90,7 @@ final class PieceMove {
         return legalMoves & legalMovesMask;
     }
 
-    static long singleBishopTable(long allPieces, int bishopIndex, long legalMovesMask){
+    public static long singleBishopTable(long allPieces, int bishopIndex, long legalMovesMask){
         Assert.assertTrue(ready);
 
         final long bishopMagicNumber = bishopMagicNumbers[bishopIndex];

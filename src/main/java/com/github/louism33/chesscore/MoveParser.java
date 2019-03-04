@@ -22,8 +22,12 @@ public final class MoveParser {
         return moves[moves.length - 1];
     }
     
-    public static void printMoves(int[] moves){
-        System.out.println(Arrays.toString(MoveParser.toString(moves)));
+    public static void printMove(int[] moves){
+        System.out.println(Arrays.toString(MoveParser.toString(moves)) + ", total: " + moves[moves.length - 1]);
+    }
+
+    public static void printMove(int move){
+        System.out.println(MoveParser.toString(move));
     }
 
     public static int buildMove(int source, int whichSourcePiece, int destinationIndex) {

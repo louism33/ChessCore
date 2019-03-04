@@ -1,5 +1,6 @@
 package com.github.louism33.utils;
 
+import com.github.louism33.chesscore.Art;
 import com.github.louism33.chesscore.Chessboard;
 import com.github.louism33.chesscore.MoveParser;
 import org.junit.Assert;
@@ -7,16 +8,27 @@ import org.junit.Assert;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
+import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveParser.buildMove;
+import static com.github.louism33.chesscore.PieceMove.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
 public final class MoveParserFromAN {
 
     private static final Pattern pattern = Pattern.compile(".?([abcdefgh][12345678])[-x]?([abcdefgh][12345678])(\\w)?");
     private static final Matcher matcher = pattern.matcher("");
+
+    public static void main(String[] args) {
+        String fen = "6k1/3b3r/1p1p4/p1n2p2/1PPNpP1q/P3Q1p1/1R1RB1P1/5K2 b - - 0 1";
+        final String s = "qxf4";
+        Chessboard board = new Chessboard(fen);
+        System.out.println(board);
+        System.out.println(s);
+        final int move = buildMoveFromAN(board, s);
+        MoveParser.printMove(move);
+    }
 
     public static int buildMoveFromLAN(Chessboard board, String an){
         matcher.reset(an);
@@ -76,10 +88,11 @@ public final class MoveParserFromAN {
         return buildMoveFromAN(board, an);
     }
 
-    private static final Matcher anMatcher = Pattern.compile("([RBQKPN])?([a-h])?([1-8])?([x])?([a-h])([1-8])([=]?)([QNRB]?)([+#]?)").matcher("");
+    // is lower case b in first group necessary or safe?
+    private static final Matcher anMatcher = Pattern.compile("([PNBRQKpnrqk])?([a-h])?([1-8])?([x])?([a-h])([1-8])([=]?)([QNRB]?)([+#]?)").matcher("");
     public static int buildMoveFromAN(Chessboard board, String an){
         anMatcher.reset(an);
-        
+
         char[] chars = new char[9];
         if (anMatcher.find()) {
             int groupCount = anMatcher.groupCount();
@@ -92,6 +105,10 @@ public final class MoveParserFromAN {
             }
         }
 
+        if (chars[1] != 0 && chars[2] != 0 && chars[4] != 0 && chars[5] != 0) {
+            return buildMoveFromLAN(board, an);
+        }
+
         int basicMove;
 
         int turn = board.turn;
@@ -100,7 +117,7 @@ public final class MoveParserFromAN {
         if (chars[0] != 0) {
             movingPiece = getSourcePiece(chars[0], turn);
         }
-        
+
         long movingPieceLong = board.pieces[turn][movingPiece < 7 ? movingPiece : movingPiece - 6];
 
         if (chars[1] != 0){
@@ -111,8 +128,6 @@ public final class MoveParserFromAN {
             movingPieceLong &= RANKS[chars[2] - '1'];
         }
 
-        int sourceIndex = numberOfTrailingZeros(movingPieceLong);
-        
         boolean b4 = chars[4] != 0;
         long destinationFile = 0;
         if (b4) {
@@ -122,25 +137,40 @@ public final class MoveParserFromAN {
         boolean b5 = chars[5] != 0;
         long destinationSquare = 0;
         if (b5) {
-            long rank = RANKS[chars[5] - '1']; // * 8;
+            long rank = RANKS[chars[5] - '1'];
             destinationSquare = rank & destinationFile;
         }
 
         int destinationIndex = numberOfTrailingZeros(destinationSquare);
+
+        if (populationCount(destinationSquare) != 1) {
+            throw new RuntimeException();
+        }
+
+        int sourceIndex;
+
+        if (populationCount(movingPieceLong) != 1) {
+            sourceIndex = numberOfTrailingZeros(getMovingPiece(board.allPieces(), destinationIndex, movingPieceLong, movingPiece));
+        }
+        else {
+            sourceIndex = numberOfTrailingZeros(movingPieceLong);
+        }
 
         if (movingPiece == 0) {
             movingPiece = board.pieceSquareTable[sourceIndex];
         }
         basicMove = buildMove(sourceIndex, movingPiece, destinationIndex, board.pieceSquareTable[destinationIndex]);
 
-        Assert.assertEquals(chars[3] != 0, MoveParser.isCaptureMove(basicMove));
+        if (chars[3] != 0) {
+            Assert.assertTrue(MoveParser.isCaptureMove(basicMove));
+        }
 
         if (movingPiece == INITIAL_PIECES[turn][KING] && board.pieceSquareTable[sourceIndex] == PIECE[turn][KING]){
             if ((destinationSquare & CASTLE_KING_DESTINATIONS) != 0){
                 basicMove |= CASTLING_MASK;
             }
         }
-        
+
         // if it is a diagonal non-capture by a pawn, it must be EP
         if ((sourceIndex != destinationIndex + 16)
                 && (sourceIndex != destinationIndex - 16)
@@ -177,6 +207,80 @@ public final class MoveParserFromAN {
         return basicMove;
     }
 
+    private static long getMovingPiece(long allPieces, int destinationIndex, long candidateMovers, int movingPieceType){
+        switch (movingPieceType) {
+            case NO_PIECE:
+                throw new RuntimeException();
+            case WHITE_PAWN:
+                candidateMovers = pawnFinder(allPieces, candidateMovers, WHITE, destinationIndex);
+                break;
+            case BLACK_PAWN:
+                candidateMovers = pawnFinder(allPieces, candidateMovers, BLACK, destinationIndex);
+                break;
+            case WHITE_KNIGHT:
+            case BLACK_KNIGHT:
+                candidateMovers &= KNIGHT_MOVE_TABLE[destinationIndex];
+                break;
+            case WHITE_BISHOP:
+            case BLACK_BISHOP:
+                candidateMovers = singleBishopTable(allPieces, destinationIndex, candidateMovers);
+                break;
+            case WHITE_ROOK:
+            case BLACK_ROOK:
+                candidateMovers = singleRookTable(allPieces, destinationIndex, candidateMovers);
+                break;
+            case WHITE_QUEEN:
+            case BLACK_QUEEN:
+                candidateMovers = singleQueenTable(allPieces, destinationIndex, candidateMovers);
+                break;
+            case WHITE_KING:
+            case BLACK_KING:
+                candidateMovers &= KING_MOVE_TABLE[destinationIndex];
+                break;
+        }
+
+        if (populationCount(candidateMovers) != 1) {
+            throw new RuntimeException();
+        }
+
+        return candidateMovers;
+    }
+    
+    
+    private static long pawnFinder(long allPieces, long myPawns, int turn, int destinationIndex){
+        long destinationSquare = newPieceOnSquare(destinationIndex);
+        
+        while (myPawns != 0){
+            final long pawn = getFirstPiece(myPawns);
+            long quietTable;
+            // doubles
+            if ((pawn & PENULTIMATE_RANKS[1 - turn]) != 0) {
+                quietTable = singlePawnPushes(pawn, turn, destinationSquare, allPieces);
+            }
+            else {
+                quietTable = (turn == WHITE ? pawn << 8 : pawn >>> 8) & ~allPieces & destinationSquare;
+            }
+
+            quietTable &= ~allPieces;
+            quietTable &= destinationSquare;
+
+            if (quietTable != 0) {
+                return pawn;
+            }
+
+            long captureTable = singlePawnCaptures(pawn, turn, destinationSquare);
+
+            captureTable &= destinationSquare;
+
+            if (captureTable != 0) {
+                return pawn;
+            }
+            
+            myPawns &= myPawns - 1;
+        }
+
+        throw new RuntimeException("couldn't find moving pawn");
+    }
 
     private static int getSourcePiece(char c, int turn) {
         switch (c) {

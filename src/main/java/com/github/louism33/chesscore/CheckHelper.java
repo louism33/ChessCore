@@ -72,13 +72,13 @@ final class CheckHelper {
     }
 
     static boolean isDrawByRepetition(Chessboard board){
-        int limit = 25;
-        long currentZob = board.zobristHash;
-        for (int i = 0; i < limit; i++) {
-            if (board.zobristHashStack[i] == currentZob){
-                return true;
-            }
-        }
+//        int limit = 25;
+//        long currentZob = board.zobristHash;
+//        for (int i = 0; i < limit; i++) {
+//            if (board.zobristHashStack[i] == currentZob){
+//                return true;
+//            }
+//        }
         return false;
     }
 

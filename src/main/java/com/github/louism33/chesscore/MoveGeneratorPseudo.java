@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
 import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
@@ -126,6 +128,14 @@ final class MoveGeneratorPseudo {
                         int i = 0;
                         while (quietTable != 0){
                             final int destinationIndex = numberOfTrailingZeros(quietTable);
+
+                            if (startIndex + i > 120) {
+                                System.out.println(startIndex);
+                                MoveParser.printMove(moves);
+                                Assert.assertTrue(startIndex < 120);
+                            }
+                            
+                            
                             moves[startIndex + i] = buildMove(rookIndex, PIECE[turn][ROOK],
                                     destinationIndex);
                             i++;
@@ -150,6 +160,15 @@ final class MoveGeneratorPseudo {
                         int i = 0;
                         while (captureTable != 0){
                             final int destinationIndex = numberOfTrailingZeros(captureTable);
+
+                            // todo
+                            if (startIndex + i > 120) {
+                                System.out.println(startIndex);
+                                MoveParser.printMove(moves);
+                                Assert.assertTrue(startIndex < 120);
+                            }
+                            
+                            
                             moves[startIndex + i] = buildMove(queenIndex, PIECE[turn][QUEEN],
                                     destinationIndex, pieceSquareTable[destinationIndex]);
                             i++;
@@ -165,6 +184,13 @@ final class MoveGeneratorPseudo {
                         int i = 0;
                         while (quietTable != 0){
                             final int destinationIndex = numberOfTrailingZeros(quietTable);
+                            
+                            if (startIndex + i > 120) {
+                                System.out.println(startIndex);
+                                MoveParser.printMove(moves);
+                                Assert.assertTrue(startIndex < 120);
+                            }
+                            
                             moves[startIndex + i] = buildMove(queenIndex, PIECE[turn][QUEEN],
                                     destinationIndex);
                             i++;

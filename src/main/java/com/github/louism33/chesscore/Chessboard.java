@@ -37,7 +37,7 @@ public class Chessboard {
 
     private int fiftyMoveCounter = 0, fullMoveCounter = 0;
 
-    long zobristHash;
+    public long zobristHash;
 
     private long moveStackData;
     private static final int maxDepthAndArrayLength = 64;
