@@ -16,8 +16,8 @@ public class CloneTest {
     public static Collection<Object[]> data() {
         List<Object[]> answers = new ArrayList<>();
 
-        for (int i = 0; i < splitUpWACs.length; i++) {
-            String splitUpWAC = splitUpWACs[i];
+        for (int i = 0; i < splitUpPositions.length; i++) {
+            String splitUpWAC = splitUpPositions[i];
             Object[] objectAndName = new Object[2];
             ExtendedPositionDescriptionParser.EPDObject EPDObject = ExtendedPositionDescriptionParser.parseEDPPosition(splitUpWAC);
             objectAndName[0] = EPDObject;
@@ -43,7 +43,7 @@ public class CloneTest {
     }
 
     //arasan
-    private static final String wacTests = "" +
+    private static final String positions = "" +
             "r1bq1r1k/p1pnbpp1/1p2p3/6p1/3PB3/5N2/PPPQ1PPP/2KR3R w - - bm g4; id \"arasan20.1\"; \n" +
             "r1b2rk1/1p1nbppp/pq1p4/3B4/P2NP3/2N1p3/1PP3PP/R2Q1R1K w - - bm Rxf7; id \"arasan20.2\";\n" +
             "r1q1k2r/1p1nbpp1/2p2np1/p1Pp4/3Pp3/P1N1P1P1/1P1B1P1P/R2QRBK1 b kq - bm Bxc5; id \"arasan20.3\";\n" +
@@ -246,7 +246,7 @@ public class CloneTest {
             "4rrk1/1bq1pp2/p2p1n1Q/1pn2p1p/4P3/P1N2P2/BPP3PP/2KRR3 w - - bm g4; id \"arasan20.200\";  " +
             "";
     
-    private static final String wacTests1 = "" +
+    private static final String positions1 = "" +
             "2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - - bm Qg6; id \"WAC.001\";\n" +
             "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - - bm Rxb2; id \"WAC.002\";\n" +
             "5rk1/1ppb3p/p1pb4/6q1/3P1p1r/2P1R2P/PP1BQ1P1/5RKN w - - bm Rg3; id \"WAC.003\";\n" +
@@ -549,8 +549,8 @@ public class CloneTest {
             "b2b1r1k/3R1ppp/4qP2/4p1PQ/4P3/5B2/4N1K1/8 w - - bm g6; id \"WAC.300\";" +
             "";
 
-    private static final String[] splitUpWACs = wacTests.split("\n");
-    static int totalWACS = splitUpWACs.length;
+    private static final String[] splitUpPositions = positions.split("\n");
+    static int totalWACS = splitUpPositions.length;
 
 
 }

@@ -50,6 +50,6 @@ public final class MoveConstants {
     public final static int VICTIM_PIECE_OFFSET = 20;
 
 
-    public final static int CAPTURE_MOVE_MASK = 0x01000000
-            ;
+    public final static int CAPTURE_MOVE_MASK = 0x01000000;
+    public final static int MOVE_UPPER_BOUND = CAPTURE_MOVE_MASK << 1;
 }

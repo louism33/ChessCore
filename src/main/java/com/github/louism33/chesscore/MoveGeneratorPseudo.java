@@ -161,14 +161,6 @@ final class MoveGeneratorPseudo {
                         while (captureTable != 0){
                             final int destinationIndex = numberOfTrailingZeros(captureTable);
 
-                            // todo
-                            if (startIndex + i > 120) {
-                                System.out.println(startIndex);
-                                MoveParser.printMove(moves);
-                                Assert.assertTrue(startIndex < 120);
-                            }
-                            
-                            
                             moves[startIndex + i] = buildMove(queenIndex, PIECE[turn][QUEEN],
                                     destinationIndex, pieceSquareTable[destinationIndex]);
                             i++;

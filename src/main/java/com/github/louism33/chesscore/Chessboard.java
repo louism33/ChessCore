@@ -169,15 +169,9 @@ public class Chessboard {
         enemyKing = pieces[1 - turn][KING];
 
 
-        long f = this.pieces[turn][ALL_COLOUR_PIECES];
-        long e = this.pieces[1-turn][ALL_COLOUR_PIECES];
-
         getPieces();
         friends = this.pieces[turn][ALL_COLOUR_PIECES];
         enemies = this.pieces[1 - turn][ALL_COLOUR_PIECES];
-
-        Assert.assertEquals(f, friends);
-        Assert.assertEquals(e, enemies);
 
 
         final long allPieces = friends | enemies;
@@ -876,7 +870,7 @@ public class Chessboard {
         return this.pieces[WHITE][ALL_COLOUR_PIECES];
     }
 
-    private void getPieces(){
+    public void getPieces(){
         long b = 0, w = 0;
         for (int i = PAWN; i <= KING; i++) {
             w |= this.pieces[WHITE][i];

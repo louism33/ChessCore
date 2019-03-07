@@ -13,11 +13,20 @@ public final class ExtendedPositionDescriptionParser {
     private static final Pattern bestMovePattern = Pattern.compile("bm ([\\w\\s+]+)");
     private static final Pattern avoidMovePattern = Pattern.compile("am ([\\w|+]+)");
     private static final Pattern idPattern = Pattern.compile("id \"(\\S*)\"");
+    private static final Pattern commentPattern = Pattern.compile(" c0 \"(.*)\";");
     private static final Matcher boardMatcher = boardPattern.matcher("");
     private static final Matcher bmMatcher = bestMovePattern.matcher("");
     private static final Matcher amMatcher = avoidMovePattern.matcher("");
     private static final Matcher idMatcher = idPattern.matcher("");
+    private static final Matcher commentMatcher = commentPattern.matcher("");
 
+    public static void main(String[] args) {
+        String e = "1kr5/3n4/q3p2p/p2n2p1/PppB1P2/5BP1/1P2Q2P/3R2K1 w - - bm f5; id \"Undermine.001\"; c0 \"f5=10, Be5+=2, Bf2=3, Bg4=2\";";
+
+        final EPDObject epdObject = parseEDPPosition(e);
+        System.out.println(epdObject);
+    }
+    
     public static EPDObject parseEDPPosition(String edpPosition){
         System.out.println(edpPosition);
         
@@ -25,6 +34,7 @@ public final class ExtendedPositionDescriptionParser {
         bmMatcher.reset(edpPosition);
         amMatcher.reset(edpPosition);
         idMatcher.reset(edpPosition);
+        commentMatcher.reset(edpPosition);
 
         Chessboard board = new Chessboard();
         String fen = "";
@@ -57,8 +67,14 @@ public final class ExtendedPositionDescriptionParser {
         if (idMatcher.find()) {
             id = idMatcher.group(1);
         }
+        
+        ScoredMoves scoredMoves = null;
+        if (commentMatcher.find()) {
+            System.out.println(commentMatcher.group());
+            scoredMoves = ScoredMoves.parseComment(commentMatcher.group(1));
+        }
 
-        return new EPDObject(board, goodMoves, id, fen, badMoves, edpPosition);
+        return new EPDObject(board, goodMoves, id, fen, badMoves, edpPosition, scoredMoves);
     }
 
     public static class EPDObject {
@@ -68,15 +84,17 @@ public final class ExtendedPositionDescriptionParser {
         private final String id;
         private final String boardFen;
         private final String fullString;
+        private final ScoredMoves scoredMoves;
 
         EPDObject(Chessboard board, int[] bestMoves, String id,
-                  String boardFen, int[] avoidMoves, String fullString) {
+                  String boardFen, int[] avoidMoves, String fullString, ScoredMoves scoredMoves) {
             this.board = board;
             this.bestMoves = bestMoves;
             this.id = id;
             this.boardFen = boardFen;
             this.avoidMoves = avoidMoves;
             this.fullString = fullString;
+            this.scoredMoves = scoredMoves;
         }
 
         public Chessboard getBoard() {
@@ -112,11 +130,12 @@ public final class ExtendedPositionDescriptionParser {
             return "EPDObject{" +
                     '\n' +fullString+
                     (id.length() > 0 ? "\n     id='" + id + '\'' : "") +
+                    (this.scoredMoves == null ? "" : "\n" + this.scoredMoves) +
                     "\n     boardFen='" + boardFen + '\'' +
                     (bestMoves[bestMoves.length - 1] > 0 ? "\n     bestMoves=" + Arrays.toString(MoveParser.toString(bestMoves)) : "") +
                     (avoidMoves[avoidMoves.length - 1] > 0 ? "\n     avoidMoves =" + Arrays.toString(MoveParser.toString(avoidMoves)) : "") +
                     '}';
         }
     }
-
+    
 }
