@@ -478,7 +478,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552064940547" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552064964438" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last.edited.regexp" value=" c0 \&quot;f5=10, Be5+=2, Bf2=3, Bg4=2\&quot;;" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/old" />
@@ -529,20 +529,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.UCIEntry">
-    <configuration name="Engine" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.github.louism33.axolotl.search.Engine" />
-      <module name="axolotl" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.github.louism33.axolotl.old.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.WACTest">
     <configuration name="UCIEntry" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.github.louism33.axolotl.main.UCIEntry" />
       <module name="axolotl" />
@@ -567,6 +554,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="WACTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="axolotl" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="challenges.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="challenges" />
+      <option name="MAIN_CLASS_NAME" value="challenges.WACTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="com.github.louism33.axolotl in axolotl" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="axolotl" />
       <extension name="coverage">
@@ -586,19 +588,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Application.EngineBetter" />
       <item itemvalue="JUnit.com.github.louism33.axolotl in axolotl" />
       <item itemvalue="JUnit.MoveOrdererTest and 1 more" />
       <item itemvalue="Application.UCIEntry" />
       <item itemvalue="JAR Application.axolotl.jar" />
+      <item itemvalue="JUnit.WACTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.WACTest" />
         <item itemvalue="Application.UCIEntry" />
         <item itemvalue="JAR Application.axolotl.jar" />
         <item itemvalue="JUnit.MoveOrdererTest and 1 more" />
         <item itemvalue="JUnit.com.github.louism33.axolotl in axolotl" />
-        <item itemvalue="Application.EngineBetter" />
       </list>
     </recent_temporary>
   </component>
