@@ -115,18 +115,26 @@ public final class MoveParser {
         return (move & VICTIM_PIECE_MASK) >>> VICTIM_PIECE_OFFSET;
     }
 
-    public static boolean moveIsPawnPushSeven(int move){
-        return getMovingPieceInt(move) == WHITE_PAWN
-                & getMovingPieceInt(move) == BLACK_PAWN
-                & (getDestinationLong(move) & BoardConstants.RANK_SEVEN) != 0
-                & (getDestinationLong(move) & BoardConstants.RANK_TWO) != 0;
+    /**
+     * from point of view of person about to make the move
+     * @param turn
+     * @param move
+     * @return
+     */
+    public static boolean moveIsPawnPushSeven(int turn, int move){
+        return getMovingPieceInt(move) == PIECE[turn][PAWN]
+                & (getDestinationLong(move) & PENULTIMATE_RANKS[turn]) != 0;
     }
 
-    public static boolean moveIsPawnPushSix(int move){
-        return getMovingPieceInt(move) == WHITE_PAWN
-                & getMovingPieceInt(move) == BLACK_PAWN
-                & (getDestinationLong(move) & BoardConstants.RANK_SIX) != 0
-                & (getDestinationLong(move) & BoardConstants.RANK_THREE) != 0;
+    /**
+     * from point of view of person about to make the move
+     * @param turn
+     * @param move
+     * @return
+     */
+    public static boolean moveIsPawnPushSix(int turn, int move){
+        return getMovingPieceInt(move) == PIECE[turn][PAWN]
+                & (getDestinationLong(move) & INTERMEDIATE_RANKS[1 - turn]) != 0;
     }
     
     public static boolean verifyMoveCheap(Chessboard board, int move){

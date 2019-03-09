@@ -837,15 +837,15 @@ public class Chessboard {
             return false;
         }
         long peek = moveStackArrayPeek();
-        return moveIsPawnPushSix(StackDataUtil.getMove(peek));
+        return moveIsPawnPushSix(1 - StackDataUtil.getTurn(peek), StackDataUtil.getMove(peek));
     }
-
+    
     public boolean previousMoveWasPawnPushToSeven() {
         if (!hasPreviousMove()) {
             return false;
         }
         long peek = moveStackArrayPeek();
-        return moveIsPawnPushSeven(StackDataUtil.getMove(peek));
+        return moveIsPawnPushSeven(1 - StackDataUtil.getTurn(peek), StackDataUtil.getMove(peek));
     }
 
     public boolean moveIsCaptureOfLastMovePiece(int move) {
