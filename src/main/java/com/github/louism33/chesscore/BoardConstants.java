@@ -304,6 +304,7 @@ public final class BoardConstants {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
     };
 
+
     public final static long[] whitePawnKillZone = {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
             3L, 7L, 14L, 28L, 56L, 112L, 224L, 192L,
@@ -315,6 +316,12 @@ public final class BoardConstants {
             847723465015296L, 1978021418369024L, 3956042836738048L, 7912085673476096L, 15824171346952192L, 31648342693904384L, 63296685387808768L, 54254301760978944L,
     };
 
+    public final static long[][] pawnKillZone = new long[2][64];
+    static {
+        pawnKillZone[WHITE] = whitePawnKillZone;
+        pawnKillZone[BLACK] = blackPawnKillZone;
+    }
+    
     public final static long[] fileForwardBlack = {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
             1L, 2L, 4L, 8L, 16L, 32L, 64L, 128L,
@@ -336,7 +343,14 @@ public final class BoardConstants {
             72057594037927936L, 144115188075855872L, 288230376151711744L, 576460752303423488L, 1152921504606846976L, 2305843009213693952L, 4611686018427387904L, -9223372036854775808L,
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
     };
+    
+    public final static long[][] fileForward = new long[2][64];
 
+    static {
+        fileForward[WHITE] = fileForwardWhite;
+        fileForward[BLACK] = fileForwardBlack;
+    }
+    
     public final static long[] antiDiagonal = {
             1L, 258L, 66052L, 16909320L, 4328785936L, 1108169199648L, 283691315109952L, 72624976668147840L, 145249953336295424L, 290499906672525312L, 580999813328273408L, 1161999622361579520L, 2323998145211531264L, 4647714815446351872L, -9223372036854775808L,
     };
@@ -368,10 +382,10 @@ public final class BoardConstants {
             0L, 0L, 0L, 0L, 0L, 0L, 0L,
     };
 
-    public static final long[][] PAWN_PUSH_MASK = new long[2][PAWN_PUSH_MASK_WHITE.length];
+    public static final long[][] PAWN_PUSH_TABLE = new long[2][PAWN_PUSH_MASK_WHITE.length];
     static {
-        PAWN_PUSH_MASK[WHITE] = PAWN_PUSH_MASK_WHITE;
-        PAWN_PUSH_MASK[BLACK] = PAWN_PUSH_MASK_BLACK;
+        PAWN_PUSH_TABLE[WHITE] = PAWN_PUSH_MASK_WHITE;
+        PAWN_PUSH_TABLE[BLACK] = PAWN_PUSH_MASK_BLACK;
     }
 
     public static final long[] PAWN_CAPTURE_TABLE_WHITE = {
