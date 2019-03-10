@@ -920,7 +920,7 @@ public class Chessboard {
     @Override
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
-        return '\n' + Art.boardArt(this) + '\n' + turn
+        return '\n' + Art.boardArt(this) + '\n' + turn + '\n'
                 ;
     }
 
