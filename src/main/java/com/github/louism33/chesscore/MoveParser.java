@@ -11,12 +11,26 @@ import static com.github.louism33.chesscore.MoveConstants.*;
 public final class MoveParser {
 
     /*
-    00000001
-    11111111
+    free: 
+    11111100
     00000000
     00000000
+    00000000
+    
+    000000Cc
+    vvvvmmmm
+    ppSSssss
+    ssdddddd
+    
+    C = Checking flag, not set in chesscore
+    c = capture flag
+    v = victim piece
+    m = source piece
+    p = promotions
+    S = Special
+    s = source
+    d = destination
      */
-
 
     public static int numberOfRealMoves(int[] moves){
         return moves[moves.length - 1];
@@ -64,9 +78,23 @@ public final class MoveParser {
     }
 
     public static boolean isCaptureMove(int move){
-        return (move & CAPTURE_MOVE_MASK) != 0;
+        final int i = move & CAPTURE_MOVE_MASK;
+        return (i != 0);
     }
 
+    /**
+     * Warning, please set this yourself. It is currently always false.
+     * @param move
+     * @return
+     */
+    public static boolean isCheckingMove(int move){
+        return (move & CHECKING_MOVE_MASK) != 0;
+    }
+
+    public static int setCheckingMove(int move){
+        return move | CHECKING_MOVE_MASK;
+    }
+    
     public static boolean isSpecialMove (int move){
         return (move & SPECIAL_MOVE_MASK) != 0;
     }

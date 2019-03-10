@@ -117,4 +117,16 @@ public class ChessboardTest {
             board.unMakeMoveAndFlipTurn();
         }
     }
+
+    @Test
+    public void moveIsCaptureOfLastMovePieceTest() {
+        String fen = "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -";
+        Chessboard board = new Chessboard(fen);
+
+        final int move = MoveParserFromAN.buildMoveFromLAN(board, "b3b2");
+        board.makeMoveAndFlipTurn(move);
+        final int moveC = MoveParserFromAN.buildMoveFromLAN(board, "d2b2");
+        Assert.assertTrue(board.moveIsCaptureOfLastMovePiece(moveC));
+    }
 }
+

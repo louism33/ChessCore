@@ -3,13 +3,26 @@ package com.github.louism33.chesscore;
 public final class MoveConstants {
 
     /*
-    00000001
-    11111111
+    free: 
+    11111110
     00000000
     00000000
+    00000000
+    
+    0000000c
+    vvvvmmmm
+    ppSSssss
+    ssdddddd
+    
+    c = capture flag
+    v = victim piece
+    m = source piece
+    p = promotions
+    S = Special
+    s = source
+    d = destination
      */
-    final static int
-            WHITE_PAWN_MASK = 0x00000001;
+    final static int WHITE_PAWN_MASK = 0x00000001;
     final static int WHITE_KNIGHT_MASK = 0x00000002;
     final static int WHITE_BISHOP_MASK = 0x00000003;
     final static int WHITE_ROOK_MASK = 0x00000004;
@@ -23,25 +36,35 @@ public final class MoveConstants {
     final static int BLACK_QUEEN_MASK = 0x0000000b;
     final static int BLACK_KING_MASK = 0x0000000c;
 
+    public static void main(String[] args) {
+        int i = DESTINATION_MASK;
+        i |= SOURCE_MASK;
+        i |= SPECIAL_MOVE_MASK;
+        i |= QUEEN_PROMOTION_MASK;
+        i |= SOURCE_PIECE_MASK;
+        i |= VICTIM_PIECE_MASK;
+        
+        Art.printLong(i);
+        
+        Art.printLong(CAPTURE_MOVE_MASK);
+    }
 
+    public final static int DESTINATION_MASK = 0x0000003f;
+    
     public final static int SOURCE_OFFSET = 6;
     public final static int SOURCE_MASK = 0x00000fc0;
-    public final static int DESTINATION_MASK = 0x0000003f;
-
-    public final static int ENPASSANT_MASK = 0x00002000;
-    public final static int PROMOTION_MASK = 0x00003000;
 
     final static int SPECIAL_MOVE_MASK = 0x00003000;
     public final static int CASTLING_MASK = 0x00001000;
+    public final static int ENPASSANT_MASK = 0x00002000;
+    public final static int PROMOTION_MASK = 0x00003000;
 
-
+    final static int WHICH_PROMOTION = 0x0000c000;
     public final static int KNIGHT_PROMOTION_MASK = 0x00000000;
     public final static int BISHOP_PROMOTION_MASK = 0x00004000;
     public final static int ROOK_PROMOTION_MASK = 0x00008000;
     public final static int QUEEN_PROMOTION_MASK = 0x0000c000;
     final static int WHICH_PROMOTION_OFFSET = 14;
-
-    final static int WHICH_PROMOTION = 0x0000c000;
 
     public final static int SOURCE_PIECE_MASK = 0x000f0000;
     public final static int SOURCE_PIECE_OFFSET = 16;
@@ -49,7 +72,8 @@ public final class MoveConstants {
     final static int VICTIM_PIECE_MASK = 0x00f00000;
     public final static int VICTIM_PIECE_OFFSET = 20;
 
-
     public final static int CAPTURE_MOVE_MASK = 0x01000000;
-    public final static int MOVE_UPPER_BOUND = CAPTURE_MOVE_MASK << 1;
+
+    public final static int CHECKING_MOVE_MASK = 0x02000000;
+    public final static int MOVE_UPPER_BOUND = CHECKING_MOVE_MASK << 1;
 }

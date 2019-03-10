@@ -857,6 +857,7 @@ public class Chessboard {
         if (StackDataUtil.getMove(peek) == 0) {
             return false;
         }
+        
         int previousMoveDestinationIndex = getDestinationIndex(StackDataUtil.getMove(peek));
         return (getDestinationIndex(move) == previousMoveDestinationIndex);
     }
