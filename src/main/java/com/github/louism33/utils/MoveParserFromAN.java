@@ -21,13 +21,19 @@ public final class MoveParserFromAN {
     private static final Matcher matcher = pattern.matcher("");
 
     public static void main(String[] args) {
-        String fen = "6k1/3b3r/1p1p4/p1n2p2/1PPNpP1q/P3Q1p1/1R1RB1P1/5K2 b - - 0 1";
-        final String s = "qxf4";
-        Chessboard board = new Chessboard(fen);
+        String x = "2k5/pppr4/4R3/4Q3/2pp2q1/8/PPP2PPP/6K1 w - - bm f3 h3; id \"WAC.069\";";
+
+        ExtendedPositionDescriptionParser.EPDObject epdObject = ExtendedPositionDescriptionParser.parseEDPPosition(x);
+
+        System.out.println(epdObject);
+        System.out.println("**************");
+        final Chessboard board = epdObject.getBoard();
         System.out.println(board);
-        System.out.println(s);
-        final int move = buildMoveFromAN(board, s);
-        MoveParser.printMove(move);
+        final int[] bestMoves = epdObject.getBestMoves();
+        MoveParser.printMove(bestMoves);
+        final String id = epdObject.getId();
+        System.out.println(id);
+        
     }
 
     public static int buildMoveFromLAN(Chessboard board, String an){
@@ -140,7 +146,7 @@ public final class MoveParserFromAN {
             long rank = RANKS[chars[5] - '1'];
             destinationSquare = rank & destinationFile;
         }
-
+        
         int destinationIndex = numberOfTrailingZeros(destinationSquare);
 
         if (populationCount(destinationSquare) != 1) {
@@ -249,9 +255,10 @@ public final class MoveParserFromAN {
     
     private static long pawnFinder(long allPieces, long myPawns, int turn, int destinationIndex){
         long destinationSquare = newPieceOnSquare(destinationIndex);
-        
+
         while (myPawns != 0){
             final long pawn = getFirstPiece(myPawns);
+            
             long quietTable;
             // doubles
             if ((pawn & PENULTIMATE_RANKS[1 - turn]) != 0) {
@@ -268,7 +275,7 @@ public final class MoveParserFromAN {
                 return pawn;
             }
 
-            long captureTable = singlePawnCaptures(pawn, turn, destinationSquare);
+            long captureTable = singlePawnCaptures(pawn, turn, destinationSquare) & allPieces;
 
             captureTable &= destinationSquare;
 
