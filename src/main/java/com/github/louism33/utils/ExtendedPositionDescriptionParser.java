@@ -20,13 +20,6 @@ public final class ExtendedPositionDescriptionParser {
     private static final Matcher idMatcher = idPattern.matcher("");
     private static final Matcher commentMatcher = commentPattern.matcher("");
 
-    public static void main(String[] args) {
-        String e = "1kr5/3n4/q3p2p/p2n2p1/PppB1P2/5BP1/1P2Q2P/3R2K1 w - - bm f5; id \"Undermine.001\"; c0 \"f5=10, Be5+=2, Bf2=3, Bg4=2\";";
-
-        final EPDObject epdObject = parseEDPPosition(e);
-        System.out.println(epdObject);
-    }
-    
     public static EPDObject parseEDPPosition(String edpPosition){
         System.out.println(edpPosition);
         
