@@ -11,7 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c35fe9c9-175e-43e1-b3c4-5d6bc53ba64a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../axolotl/.travis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/.travis.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/../Axolotl/target/" />
@@ -44,11 +44,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../axolotl/.travis.yml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
-              <caret line="4" column="7" lean-forward="true" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
+              <caret line="4" column="7" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -57,10 +57,28 @@
         <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="310">
-              <caret line="217" column="1" lean-forward="true" selection-start-line="217" selection-start-column="1" selection-end-line="217" selection-end-column="1" />
+              <caret line="217" column="1" selection-start-line="217" selection-start-column="1" selection-end-line="217" selection-end-column="1" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="22" column="42" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../axolotl/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="313" column="32" lean-forward="true" selection-start-line="313" selection-start-column="32" selection-end-line="313" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -76,7 +94,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>/p5p1/1pnpp1B1/3NP3/3B1P2/PPPQ4/1</find>
       <find>givesCheckMove</find>
       <find>chec</find>
       <find>check</find>
@@ -104,8 +121,9 @@
       <find>captureM</find>
       <find>Time p</find>
       <find>Testing</find>
-      <find>flux</find>
       <find>prox</find>
+      <find>jcp</find>
+      <find>flux</find>
     </findStrings>
     <replaceStrings>
       <replace>9</replace>
@@ -198,19 +216,19 @@
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/utils/MoveParserFromAN.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/utils/ExtendedPositionDescriptionParser.java" />
-        <option value="$PROJECT_DIR$/../axolotl/pom.xml" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIPrinter.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/search/EngineBetter.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Chessboard.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACSilverTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/search/MoveOrdererBetter.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/evaluation/Evaluator.java" />
-        <option value="$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/challenges/MateTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/WACSilverSanityTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/MateTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java" />
         <option value="$PROJECT_DIR$/../axolotl/.travis.yml" />
+        <option value="$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java" />
+        <option value="$PROJECT_DIR$/../axolotl/pom.xml" />
       </list>
     </option>
   </component>
@@ -399,7 +417,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552301905967" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552326839846" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last.edited.regexp" value=" c0 \&quot;f5=10, Be5+=2, Bf2=3, Bg4=2\&quot;;" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/old" />
@@ -451,7 +469,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.UCIEntry">
+  <component name="RunManager" selected="JUnit.WACTest">
     <configuration name="UCIEntry" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.github.louism33.axolotl.main.UCIEntry" />
       <module name="axolotl" />
@@ -633,14 +651,7 @@
       <workItem from="1550917511487" duration="213235000" />
       <workItem from="1551540559512" duration="156977000" />
       <workItem from="1552293895594" duration="9000" />
-      <workItem from="1552293945264" duration="6205000" />
-    </task>
-    <task id="LOCAL-00050" summary="cleaning up code">
-      <created>1551036843101</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1551036843105</updated>
+      <workItem from="1552293945264" duration="7130000" />
     </task>
     <task id="LOCAL-00051" summary="cleaning up code">
       <created>1551076506603</created>
@@ -978,19 +989,17 @@
       <option name="project" value="LOCAL" />
       <updated>1552301719482</updated>
     </task>
-    <option name="localTasksCounter" value="99" />
+    <task id="LOCAL-00099" summary="********** new base version **********">
+      <created>1552301911623</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1552301911623</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="WACTest - 2019.03.11 at 10h 10m 46s.xml">
-      <configuration name="WACTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="WACTest - 2019.03.11 at 10h 29m 50s.xml">
-      <configuration name="WACTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="MateTest_test - 2019.03.11 at 10h 37m 06s.xml">
-      <configuration name="MateTest.test" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="WACSilverSanityTest - 2019.03.11 at 10h 39m 03s.xml">
       <configuration name="WACSilverSanityTest" configurationId="JUnit" />
     </history-entry>
@@ -1012,9 +1021,18 @@
     <history-entry file="com_github_louism33_axolotl_in_axolotl - 2019.03.11 at 11h 01m 01s.xml">
       <configuration name="com.github.louism33.axolotl in axolotl" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="WACTest - 2019.03.11 at 18h 38m 55s.xml">
+      <configuration name="WACTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="WACTest - 2019.03.11 at 18h 39m 06s.xml">
+      <configuration name="WACTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="WACTest - 2019.03.11 at 18h 39m 50s.xml">
+      <configuration name="WACTest" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="644046000" />
+    <option name="totallyTimeSpent" value="644971000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1029,7 +1047,7 @@
     <frame x="-1" y="0" width="1368" height="741" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49541286" visible="true" weight="0.19772728" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49541286" visible="true" weight="0.19772728" />
       <window_info id="Structure" order="1" sideWeight="0.5045872" side_tool="true" weight="0.23484848" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -1039,13 +1057,13 @@
       <window_info id="Favorites" order="7" sideWeight="0.501845" side_tool="true" weight="0.1693852" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Message" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49924242" weight="0.23424879" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49924242" visible="true" weight="0.07754443" />
       <window_info anchor="bottom" id="Terminal" order="3" weight="0.35702747" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.41518578" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="7" weight="0.4878837" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="8" sideWeight="0.49924242" visible="true" weight="0.24878837" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49924242" weight="0.24878837" />
       <window_info anchor="bottom" id="TODO" order="9" weight="0.2924071" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="11" />
@@ -1163,13 +1181,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="********** new base version **********" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/com/fluxchess/jcpi/1.4.0/jcpi-1.4.0-sources.jar!/com/fluxchess/jcpi/commands/EngineStartCalculatingCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/search/MoveOrderer.java" />
     <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/evaluation/MoveTable.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -1491,13 +1502,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../axolotl/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="369" column="5" selection-start-line="369" selection-start-column="5" selection-end-line="369" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/MateTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="214">
@@ -1505,21 +1509,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="40" column="5" lean-forward="true" selection-start-line="40" selection-start-column="5" selection-end-line="40" selection-end-column="5" />
-          <folding>
-            <element signature="e#1443#1444#0" expanded="true" />
-            <element signature="e#1486#1487#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="310">
-          <caret line="217" column="1" lean-forward="true" selection-start-line="217" selection-start-column="1" selection-end-line="217" selection-end-column="1" />
+          <caret line="217" column="1" selection-start-line="217" selection-start-column="1" selection-end-line="217" selection-end-column="1" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1529,7 +1522,29 @@
     <entry file="file://$PROJECT_DIR$/../axolotl/.travis.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
-          <caret line="4" column="7" lean-forward="true" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
+          <caret line="4" column="7" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="22" column="42" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../axolotl/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="313" column="32" lean-forward="true" selection-start-line="313" selection-start-column="32" selection-end-line="313" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../axolotl/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
         </state>
       </provider>
     </entry>
