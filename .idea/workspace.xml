@@ -12,6 +12,7 @@
     <list default="true" id="c35fe9c9-175e-43e1-b3c4-5d6bc53ba64a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../axolotl/.travis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/.travis.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/../Axolotl/target/" />
@@ -44,23 +45,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../axolotl/.travis.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="200" column="36" selection-start-line="200" selection-start-column="36" selection-end-line="200" selection-end-column="36" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="45">
+              <caret line="3" column="10" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../axolotl/.travis.yml">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="17" selection-start-line="17" selection-end-line="17" />
+            <state relative-caret-position="310">
+              <caret line="217" column="1" lean-forward="true" selection-start-line="217" selection-start-column="1" selection-end-line="217" selection-end-column="1" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -399,7 +400,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552301529836" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552301712846" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last.edited.regexp" value=" c0 \&quot;f5=10, Be5+=2, Bf2=3, Bg4=2\&quot;;" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/old" />
@@ -633,14 +634,7 @@
       <workItem from="1550917511487" duration="213235000" />
       <workItem from="1551540559512" duration="156977000" />
       <workItem from="1552293895594" duration="9000" />
-      <workItem from="1552293945264" duration="5829000" />
-    </task>
-    <task id="LOCAL-00048" summary="cleaning up code">
-      <created>1551019087779</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1551019087779</updated>
+      <workItem from="1552293945264" duration="6012000" />
     </task>
     <task id="LOCAL-00049" summary="cleaning up code">
       <created>1551026323464</created>
@@ -978,7 +972,14 @@
       <option name="project" value="LOCAL" />
       <updated>1552301310081</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="********** new base version **********">
+      <created>1552301539216</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1552301539216</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1014,7 +1015,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="643670000" />
+    <option name="totallyTimeSpent" value="643853000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1029,7 +1030,7 @@
     <frame x="-1" y="0" width="1368" height="741" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49541286" visible="true" weight="0.19772728" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49541286" visible="true" weight="0.19772728" />
       <window_info id="Structure" order="1" sideWeight="0.5045872" side_tool="true" weight="0.23484848" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -1045,7 +1046,7 @@
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="7" weight="0.4878837" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49924242" visible="true" weight="0.24878837" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="8" sideWeight="0.49924242" visible="true" weight="0.24878837" />
       <window_info anchor="bottom" id="TODO" order="9" weight="0.2924071" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="11" />
@@ -1518,8 +1519,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/UCIEntry.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="200" column="36" selection-start-line="200" selection-start-column="36" selection-end-line="200" selection-end-column="36" />
+        <state relative-caret-position="310">
+          <caret line="217" column="1" lean-forward="true" selection-start-line="217" selection-start-column="1" selection-end-line="217" selection-end-column="1" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1528,8 +1529,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/.travis.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        <state relative-caret-position="45">
+          <caret line="3" column="10" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
         </state>
       </provider>
     </entry>
