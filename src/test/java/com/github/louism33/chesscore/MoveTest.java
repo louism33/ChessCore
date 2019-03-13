@@ -56,6 +56,9 @@ public class MoveTest {
                 break;
             }
 
+            int[] copies = new int[moves.length];
+            System.arraycopy(moves, 0, copies, 0, moves.length);
+            
             Assert.assertTrue(move < FIRST_FREE_BIT);
 
             board.makeMoveAndFlipTurn(move);
@@ -66,6 +69,8 @@ public class MoveTest {
             board.unMakeMoveAndFlipTurn();
             Assert.assertEquals(board, new Chessboard(board));
 
+            Assert.assertArrayEquals(moves, copies);
+            
         }
         return temp;
     }

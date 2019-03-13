@@ -723,6 +723,7 @@ public class Chessboard {
      * Makes a null move on the board. Make sure to unmake it afterwards
      */
     public void makeNullMoveAndFlipTurn() {
+        this.rotateMoveIndexUp();
         masterStackPush();
 
         if (hasPreviousMove()) {
@@ -741,6 +742,8 @@ public class Chessboard {
      * Unmakes a null move on the board.
      */
     public void unMakeNullMoveAndFlipTurn() {
+//        wwwwwww
+        this.rotateMoveIndexDown();
         Assert.assertTrue(hasPreviousMove());
         masterStackPop();
         this.turn = 1 - this.turn;

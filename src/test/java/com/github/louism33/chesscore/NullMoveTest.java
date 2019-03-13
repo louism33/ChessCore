@@ -94,6 +94,10 @@ public class NullMoveTest {
             if (move == 0){
                 break;
             }
+
+            int[] copies = new int[moves.length];
+            System.arraycopy(moves, 0, copies, 0, moves.length);
+            
             board.makeMoveAndFlipTurn(move);
             Assert.assertEquals(board, new Chessboard(board));
 
@@ -109,6 +113,8 @@ public class NullMoveTest {
 
             board.unMakeMoveAndFlipTurn();
             Assert.assertEquals(board, new Chessboard(board));
+            
+            Assert.assertArrayEquals(moves, copies);
 
         }
         return temp;
