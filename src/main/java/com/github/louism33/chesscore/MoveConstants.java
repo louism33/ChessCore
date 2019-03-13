@@ -43,10 +43,15 @@ public final class MoveConstants {
         i |= QUEEN_PROMOTION_MASK;
         i |= SOURCE_PIECE_MASK;
         i |= VICTIM_PIECE_MASK;
+
+        i |= CAPTURE_MOVE_MASK;
+        i |= CHECKING_MOVE_MASK;
         
         Art.printLong(i);
         
-        Art.printLong(CAPTURE_MOVE_MASK);
+        Art.printLong(MOVE_SCORE_MASK);
+        Art.printLong(MOVE_MASK_WITH_CHECK);
+        Art.printLong(MOVE_MASK_WITHOUT_CHECK);
     }
 
     public final static int DESTINATION_MASK = 0x0000003f;
@@ -75,5 +80,12 @@ public final class MoveConstants {
     public final static int CAPTURE_MOVE_MASK = 0x01000000;
 
     public final static int CHECKING_MOVE_MASK = 0x02000000;
-    public final static int MOVE_UPPER_BOUND = CHECKING_MOVE_MASK << 1;
+    public final static int FIRST_FREE_BIT = CHECKING_MOVE_MASK << 1;
+
+    public static final int moveScoreOffset = 26;
+    public static final int MOVE_SCORE_MASK = 0xfc000000;
+    
+    public static final int MOVE_MASK_WITH_CHECK = 0x3ffffff;
+    public static final int MOVE_MASK_WITHOUT_CHECK = 0x1ffffff;
+    
 }

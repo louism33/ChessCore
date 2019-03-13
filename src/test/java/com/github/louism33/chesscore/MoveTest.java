@@ -3,8 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import static com.github.louism33.chesscore.MoveConstants.CAPTURE_MOVE_MASK;
-import static com.github.louism33.chesscore.MoveConstants.MOVE_UPPER_BOUND;
+import static com.github.louism33.chesscore.MoveConstants.FIRST_FREE_BIT;
 
 public class MoveTest {
 
@@ -57,7 +56,7 @@ public class MoveTest {
                 break;
             }
 
-            Assert.assertTrue(move < MOVE_UPPER_BOUND);
+            Assert.assertTrue(move < FIRST_FREE_BIT);
 
             board.makeMoveAndFlipTurn(move);
 
