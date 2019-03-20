@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.louism33</groupId>
     <artifactId>chesscore</artifactId>
-    <version>1.8</version>
+    <version>1.10-SNAPSHOT</version>
     <name>ChessCore</name>
     <description>Legal Chess Move Generation in Java</description>
     <url>https://github.com/louism33/ChessCore</url>
@@ -36,10 +36,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git@github.com:louism33/ChessCore.git</connection>
-        <developerConnection>scm:git:git@github.com:louism33/ChessCore.git</developerConnection>
+        <connection>scm:git:git://github.com/louism33/ChessCore.git</connection>
+        <developerConnection>scm:git:git://github.com/louism33/ChessCore.git</developerConnection>
         <url>https://github.com/louism33/ChessCore/tree/master</url>
-      <tag>v1.8</tag>
   </scm>
     <developers>
         <developer>
@@ -58,9 +57,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.4.2</version>
+                    <version>2.5.3</version>
+                    <!--<dependencies>-->
+                        <!--<dependency>-->
+                            <!--<groupId>org.apache.maven.plugins</groupId>-->
+                            <!--<artifactId>maven-scm-plugin</artifactId>-->
+                            <!--<version>1.11.1</version>-->
+                        <!--</dependency>-->
+                    <!--</dependencies>-->
                     <configuration>
                         <tagNameFormat>v@{project.version}</tagNameFormat>
+                        <pushChanges>false</pushChanges>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <releaseProfiles>releases</releaseProfiles>
                     </configuration>
@@ -224,11 +231,15 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.1</version>
                     <configuration>
                         <archive>
                             <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>
                                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                 <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                                <mainClass>com.github.louism33.chesscore.Setup</mainClass>
                             </manifest>
                         </archive>
                     </configuration>
@@ -255,6 +266,36 @@
                         </execution>
                     </executions>
                 </plugin>
+
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <finalName>chesscore_v1.8</finalName>
+                        <appendAssemblyId>false</appendAssemblyId>
+                        <outputDirectory>${user.dir}</outputDirectory>
+                        <archive>
+                            <manifest>
+                                <mainClass>com.github.louism33.chesscore.Setup</mainClass>
+                            </manifest>
+                        </archive>
+                        <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                        </descriptorRefs>
+                    </configuration>
+                </plugin>
+                
+                
+                
             </plugins>
         </pluginManagement>
     </build>
