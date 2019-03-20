@@ -10,12 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c35fe9c9-175e-43e1-b3c4-5d6bc53ba64a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/improving/WACChallenge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/evaluation/PinnedPieces.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_opentest4j_opentest4j_1_1_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../axolotl/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/WACSilverSanityTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/WACSilverSanityTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../axolotl/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/evaluation/Evaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/evaluation/Evaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/evaluation/MoveTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/evaluation/MoveTable.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/../Axolotl/target/" />
@@ -48,29 +50,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../axolotl/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="30" selection-start-line="4" selection-start-column="30" selection-end-line="4" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/improving/WACChallenge.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="69" column="5" lean-forward="true" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/MateTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="124">
-              <caret line="24" column="16" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/WACSilverSanityTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="21" column="49" selection-start-line="21" selection-start-column="49" selection-end-line="21" selection-end-column="49" />
+            <state relative-caret-position="180">
+              <caret line="43" column="23" lean-forward="true" selection-start-line="43" selection-start-column="23" selection-end-line="43" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -78,8 +71,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="37" column="4" lean-forward="true" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
+            <state relative-caret-position="330">
+              <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -95,9 +88,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ignore</find>
-      <find>moves[i]</find>
-      <find>staticEx</find>
       <find>generat</find>
       <find>pinned</find>
       <find>pin</find>
@@ -125,6 +115,9 @@
       <find>print</find>
       <find>nullm</find>
       <find>1.9</find>
+      <find>jcpi</find>
+      <find>flu</find>
+      <find>1.4</find>
     </findStrings>
     <replaceStrings>
       <replace>9</replace>
@@ -225,11 +218,11 @@
         <option value="$PROJECT_DIR$/src/main/java/com/github/louism33/chesscore/Chessboard.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/search/EngineBetter.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/search/SearchUtils.java" />
-        <option value="$PROJECT_DIR$/../axolotl/pom.xml" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/PVLine.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/improving/WACTest.java" />
         <option value="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/WACSilverSanityTest.java" />
+        <option value="$PROJECT_DIR$/../axolotl/pom.xml" />
         <option value="$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/improving/WACChallenge.java" />
       </list>
     </option>
@@ -258,7 +251,7 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="4">
-    <option name="x" value="-1" />
+    <option name="x" value="683" />
     <option name="width" value="684" />
     <option name="height" value="741" />
   </component>
@@ -271,173 +264,18 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="ProjectPane" />
       <pane id="PackagesPane" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-              <item name="artifacts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-              <item name="artifacts" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl_jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="challenges" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="evaluation" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="moveordering" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="search" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="improving" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="moveordering" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="search" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ChessCore" type="b2602c69:ProjectViewProjectNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="axolotl" type="462c0819:PsiDirectoryNode" />
-              <item name="transpositiontable" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552581758406" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552656512042" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last.edited.regexp" value=" c0 \&quot;f5=10, Be5+=2, Bf2=3, Bg4=2\&quot;;" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/old" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -446,7 +284,7 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="run.code.analysis.last.selected.profile" value="pallPerformance" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.excludes" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
   </component>
   <component name="RecentsManager">
     <key name="MoveMembersDialog.RECENTS_KEY">
@@ -487,7 +325,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.com.github.louism33.axolotl in axolotl">
+  <component name="RunManager" selected="JUnit.WACTest">
     <configuration name="EngineBetter" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.github.louism33.axolotl.search.EngineBetter" />
       <module name="axolotl" />
@@ -516,18 +354,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="WACTest (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="WACSilverSanityTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="axolotl" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="challenges.*" />
+          <option name="PATTERN" value="com.github.louism33.axolotl.search.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="challenges" />
-      <option name="MAIN_CLASS_NAME" value="challenges.WACTest" />
+      <option name="PACKAGE_NAME" value="com.github.louism33.axolotl.search" />
+      <option name="MAIN_CLASS_NAME" value="com.github.louism33.axolotl.search.WACSilverSanityTest" />
       <option name="TEST_OBJECT" value="class" />
-      <option name="PARAMETERS" value="[1 Test: WAC.002]" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -599,18 +436,18 @@
       <item itemvalue="Application.EngineBetter" />
       <item itemvalue="JUnit.WACTest" />
       <item itemvalue="JUnit.the failed 19" />
-      <item itemvalue="JUnit.WACTest (1)" />
       <item itemvalue="JUnit.com.github.louism33.chesscore in chesscore" />
       <item itemvalue="JUnit.com.github.louism33.axolotl in axolotl" />
       <item itemvalue="JUnit.WACChallenge" />
+      <item itemvalue="JUnit.WACSilverSanityTest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.com.github.louism33.axolotl in axolotl" />
         <item itemvalue="JUnit.WACChallenge" />
+        <item itemvalue="JUnit.WACSilverSanityTest" />
+        <item itemvalue="JUnit.com.github.louism33.axolotl in axolotl" />
         <item itemvalue="Application.EngineBetter" />
         <item itemvalue="JUnit.com.github.louism33.chesscore in chesscore" />
-        <item itemvalue="JUnit.WACTest (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -671,13 +508,10 @@
       <workItem from="1551540559512" duration="156977000" />
       <workItem from="1552293895594" duration="9000" />
       <workItem from="1552293945264" duration="17270000" />
-    </task>
-    <task id="LOCAL-00058" summary="cleaning up code">
-      <created>1551374975157</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1551374975157</updated>
+      <workItem from="1552641358942" duration="1967000" />
+      <workItem from="1552656047960" duration="725000" />
+      <workItem from="1552670104131" duration="39000" />
+      <workItem from="1553030408389" duration="31000" />
     </task>
     <task id="LOCAL-00059" summary="cleaning up code">
       <created>1551422638645</created>
@@ -1015,28 +849,17 @@
       <option name="project" value="LOCAL" />
       <updated>1552503621879</updated>
     </task>
-    <option name="localTasksCounter" value="107" />
+    <task id="LOCAL-00107" summary="********** new base version **********">
+      <created>1552581773340</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1552581773341</updated>
+    </task>
+    <option name="localTasksCounter" value="108" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="WACTest - 2019.03.13 at 19h 07m 40s.xml">
-      <configuration name="WACTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="WACTest - 2019.03.13 at 19h 12m 10s.xml">
-      <configuration name="WACTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="WACTest - 2019.03.13 at 19h 24m 53s.xml">
-      <configuration name="WACTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="WACTest - 2019.03.13 at 19h 28m 13s.xml">
-      <configuration name="WACTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="WACTest - 2019.03.13 at 19h 50m 40s.xml">
-      <configuration name="WACTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="WACTest - 2019.03.13 at 22h 37m 49s.xml">
-      <configuration name="WACTest" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="WACTest_(2) - 2019.03.14 at 16h 53m 13s.xml">
       <configuration name="WACTest (2)" configurationId="JUnit" />
     </history-entry>
@@ -1049,9 +872,27 @@
     <history-entry file="com_github_louism33_axolotl_in_axolotl - 2019.03.14 at 17h 01m 12s.xml">
       <configuration name="com.github.louism33.axolotl in axolotl" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="WACSilverSanityTest - 2019.03.14 at 19h 16m 23s.xml">
+      <configuration name="WACSilverSanityTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="WACChallenge - 2019.03.15 at 11h 04m 01s.xml">
+      <configuration name="WACChallenge" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="WACChallenge - 2019.03.15 at 14h 22m 13s.xml">
+      <configuration name="WACChallenge" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="WACTest - 2019.03.15 at 14h 27m 53s.xml">
+      <configuration name="WACTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="WACTest - 2019.03.15 at 14h 28m 16s.xml">
+      <configuration name="WACTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="WACTest - 2019.03.15 at 14h 28m 31s.xml">
+      <configuration name="WACTest" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="677209000" />
+    <option name="totallyTimeSpent" value="684113000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1063,10 +904,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="0" width="684" height="741" extended-state="4" />
+    <frame x="683" y="0" width="684" height="741" extended-state="4" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49541286" weight="0.5" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49541286" visible="true" weight="0.3899371" />
       <window_info id="Structure" order="1" sideWeight="0.5045872" side_tool="true" weight="0.23484848" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -1076,13 +917,13 @@
       <window_info id="Favorites" order="7" sideWeight="0.501845" side_tool="true" weight="0.1693852" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Message" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49924242" weight="0.13408723" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49924242" weight="0.13570274" />
       <window_info anchor="bottom" id="Terminal" order="3" weight="0.35702747" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.41518578" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="7" weight="0.11470113" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49924242" visible="true" weight="0.3231018" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49924242" weight="0.10500808" />
       <window_info anchor="bottom" id="TODO" order="9" weight="0.2924071" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="11" />
@@ -1102,7 +943,7 @@
       <window_info anchor="right" id="Database" order="7" />
       <window_info anchor="right" id="Maven Projects" order="8" />
       <window_info anchor="right" id="Coverage" order="9" side_tool="true" weight="0.5598485" />
-      <window_info anchor="right" id="Maven" order="10" weight="0.32954547" />
+      <window_info anchor="right" id="Maven" order="10" weight="0.32938075" />
     </layout>
     <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49541286" visible="true" weight="0.18159807" />
@@ -1521,13 +1362,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../axolotl/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="301" column="25" selection-start-line="301" selection-start-column="25" selection-end-line="301" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/com/github/louism33/axolotl/main/PVLine.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="106">
@@ -1552,31 +1386,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="37" column="4" lean-forward="true" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/MateTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="124">
-          <caret line="24" column="16" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
+          <caret line="24" selection-start-line="24" selection-end-line="37" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/search/WACSilverSanityTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="21" column="49" selection-start-line="21" selection-start-column="49" selection-end-line="21" selection-end-column="49" />
+        <state relative-caret-position="840">
+          <caret line="68" selection-start-line="68" selection-end-line="74" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../axolotl/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="30" selection-start-line="4" selection-start-column="30" selection-end-line="4" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../axolotl/src/main/java/challenges/WACTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../axolotl/src/test/java/com/github/louism33/axolotl/improving/WACChallenge.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="69" column="5" lean-forward="true" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
+        <state relative-caret-position="180">
+          <caret line="43" column="23" lean-forward="true" selection-start-line="43" selection-start-column="23" selection-end-line="43" selection-end-column="23" />
         </state>
       </provider>
     </entry>
