@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.louism33</groupId>
     <artifactId>chesscore</artifactId>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.8</version>
     <name>ChessCore</name>
     <description>Legal Chess Move Generation in Java</description>
     <url>https://github.com/louism33/ChessCore</url>
@@ -10,21 +10,23 @@
         <url>https://github.com/louism33/ChessCore/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
+    
     <distributionManagement>
-        <!--<repository>-->
-            <!--<uniqueVersion>true</uniqueVersion>-->
-            <!--<id>ossrh</id>-->
-            <!--<url>-->
-                <!--https://oss.sonatype.org/content/repositories/releases-->
-            <!--</url>-->
-            <!--<layout>default</layout>-->
-        <!--</repository>-->
-        <snapshotRepository>
+        <repository>
+            <uniqueVersion>true</uniqueVersion>
             <id>ossrh</id>
             <url>
-                https://oss.sonatype.org/content/repositories/snapshots
+                https://oss.sonatype.org/content/repositories/releases
             </url>
-        </snapshotRepository>
+            <layout>default</layout>
+        </repository>
+        
+        <!--<snapshotRepository>-->
+            <!--<id>ossrh</id>-->
+            <!--<url>-->
+                <!--https://oss.sonatype.org/content/repositories/snapshots-->
+            <!--</url>-->
+        <!--</snapshotRepository>-->
     </distributionManagement>
     <licenses>
         <license>
@@ -37,7 +39,7 @@
         <connection>scm:git:git@github.com:louism33/ChessCore.git</connection>
         <developerConnection>scm:git:git@github.com:louism33/ChessCore.git</developerConnection>
         <url>https://github.com/louism33/ChessCore/tree/master</url>
-      <tag>v1.1</tag>
+      <tag>v1.8</tag>
   </scm>
     <developers>
         <developer>
