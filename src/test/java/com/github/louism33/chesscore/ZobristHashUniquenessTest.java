@@ -72,12 +72,12 @@ public class ZobristHashUniquenessTest {
 
     @Test
     void bigDepth3() {
-        verifyHashToDepth(6, new Chessboard("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28"));
+        verifyHashToDepth(5, new Chessboard("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28"));
     }
 
     @Test
     void bigDepth4() {
-        verifyHashToDepth(7, new Chessboard("8/3K4/2p5/p2b2r1/5k2/8/8/1q6 b - - 1 67"));
+        verifyHashToDepth(6, new Chessboard("8/3K4/2p5/p2b2r1/5k2/8/8/1q6 b - - 1 67"));
     }
     @Test
     void bigDepth5() {
@@ -86,18 +86,18 @@ public class ZobristHashUniquenessTest {
 
     @Test
     void bigDepth10() {
-        verifyHashToDepth(7, new Chessboard("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -"));
+        verifyHashToDepth(6, new Chessboard("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -"));
     }
 
 
     @Test
     void bigDepth11() {
-        verifyHashToDepth(8, new Chessboard("8/5p2/8/2k3P1/p3K3/8/1P6/8 b - -"));
+        verifyHashToDepth(6, new Chessboard("8/5p2/8/2k3P1/p3K3/8/1P6/8 b - -"));
     }
 
     @Test
     void bigDepth12() {
-        verifyHashToDepth(5, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
+        verifyHashToDepth(4, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
     }
     
     @AfterAll
@@ -129,12 +129,7 @@ public class ZobristHashUniquenessTest {
         
         Assert.assertEquals(board, initial);
 
-        long ii = 0;
-        try {
-            ii = countFinalNodesAtDepthHelper(board, depth);
-        } catch (IllegalUnmakeException e) {
-            e.printStackTrace();
-        }
+        countFinalNodesAtDepthHelper(board, depth);
         
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
@@ -142,37 +137,37 @@ public class ZobristHashUniquenessTest {
     
   
 
-    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) throws IllegalUnmakeException {
+    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){
         long temp = 0;
         if (depth == 0){
             return 1;
         }
         int[] moves = board.generateLegalMoves();
         if (depth == 1){
-            return realMoves(moves);
+            return moves[moves.length - 1];
         }
         for (int move : moves) {
             if (move == 0){
-                continue;
+                break;
             }
             board.makeMoveAndFlipTurn(move);
 
-            int index = (int) (board.getBoardHash() >>> (64-shift));
+            int index = (int) (board.zobristHash >>> (64-shift));
             long entry = hashesSeen[index];
             numberOfHashChecks++;
             if (entry == 0){
-                hashesSeen[index] = board.getBoardHash();
+                hashesSeen[index] = board.zobristHash;
                 size++;
             } else{
                 
-                if (entry == board.getBoardHash()){
+                if (entry == board.zobristHash){
                     checkSuccess++;
                 }
                 else {
                     checkFail++;
                 }
                 
-                if (hashesSeen[index] == board.getBoardHash()){
+                if (hashesSeen[index] == board.zobristHash){
                     sameEntry++;
                 } else {
                     differentEntry++;
@@ -185,15 +180,6 @@ public class ZobristHashUniquenessTest {
         }
         return temp;
     }
-
-    private static int realMoves(int[] moves){
-        int index = 0;
-        while (moves[index] != 0){
-            index++;
-        }
-        return index;
-    }
-
 }
 
     

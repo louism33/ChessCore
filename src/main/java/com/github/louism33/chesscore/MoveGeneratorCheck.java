@@ -1,87 +1,66 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import static com.github.louism33.chesscore.BitOperations.extractRayFromTwoPiecesBitboard;
-import static com.github.louism33.chesscore.BitboardResources.UNIVERSE;
+import static com.github.louism33.chesscore.BitOperations.populationCount;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorPseudo.addAllMovesWithoutKing;
 import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMovesOnly;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.addEnPassantMoves;
 import static com.github.louism33.chesscore.MoveGeneratorSpecial.addPromotionMoves;
-import static com.github.louism33.chesscore.PieceMove.*;
 
-class MoveGeneratorCheck {
+final class MoveGeneratorCheck {
 
-    static void addCheckEvasionMoves(int[] moves, Chessboard board, boolean white, long pinnedPieces,
+    static void addCheckEvasionMoves(long checkingPiece, int[] moves, int turn, int[] pieceSquareTable, long[][] pieces,
+                                     boolean hasPreviousMove, long peek, long pinnedPieces,
                                      long myPawns, long myKnights, long myBishops, long myRooks, long myQueens, long myKing,
-                                     long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing, 
+                                     long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks, long enemyQueens, long enemyKing,
                                      long enemies, long friends, long allPieces){
+
+        Assert.assertEquals(1, populationCount(checkingPiece));
+
         // if a piece in pinned to the king, it can never be used to block / capture a different checker
-        long blockingSquaresMask, checkingPieceMask;
-        long jumper = inCheckByAJumper(board, white, myKing, enemyPawns, enemyKnights);
-        if (jumper != 0){
-            blockingSquaresMask = 0;
-            checkingPieceMask = jumper;
+        long blockingSquaresMask;
+        switch (pieceSquareTable[Long.numberOfTrailingZeros(checkingPiece)]) {
+            case WHITE_BISHOP:
+            case BLACK_BISHOP:
+            case WHITE_ROOK:
+            case BLACK_ROOK:
+            case WHITE_QUEEN:
+            case BLACK_QUEEN:
+                blockingSquaresMask = extractRayFromTwoPiecesBitboard(myKing, checkingPiece) & (~checkingPiece);
+                break;
+            default:
+                blockingSquaresMask = 0;
         }
-        else {
-            long slider = inCheckByASlider(board, white, myKing, enemyBishops, enemyRooks, enemyQueens, allPieces);
-            blockingSquaresMask = extractRayFromTwoPiecesBitboard(myKing, slider) & (~slider);
-            checkingPieceMask = slider;
+        
+        long piecesToIgnoreAndPromotingPawns = pinnedPieces | (myPawns & PENULTIMATE_RANKS[turn]);
+
+        addPromotionMoves(moves, turn, pieceSquareTable, pinnedPieces, blockingSquaresMask, checkingPiece,
+                myPawns,
+                enemies,
+                allPieces);
+
+        addAllMovesWithoutKing (moves, pieces, turn, pieceSquareTable, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPiece,
+                myKnights, myBishops, myRooks, myQueens,
+                allPieces);
+
+
+        addKingLegalMovesOnly(moves, turn, pieces, pieceSquareTable,
+                myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                friends,
+                allPieces);
+
+        if (hasPreviousMove) {
+            addEnPassantMoves(moves, peek, turn, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPiece,
+                    myPawns, myKing,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
+            );
+
         }
-        long PENULTIMATE_RANK = white ? BitboardResources.RANK_SEVEN : BitboardResources.RANK_TWO;
-        long promotablePawns = myPawns & PENULTIMATE_RANK;
-        long piecesToIgnoreAndPromotingPawns = pinnedPieces | promotablePawns;
-
-        addPromotionMoves(moves, board, white, pinnedPieces, blockingSquaresMask, checkingPieceMask,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
-
-        addAllMovesWithoutKing (moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
-
-        addKingLegalMovesOnly(moves, board, white,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
-
-        addEnPassantMoves(moves, board, white, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPieceMask,
-                myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                enemies, friends, allPieces);
     }
 
-    private static long inCheckByAJumper(Chessboard board, boolean white,
-                                         long myKing, long enemyPawns, long enemyKnights){
-        long possiblePawn = singlePawnCaptures(myKing, white, enemyPawns);
-        if (possiblePawn != 0) {
-            return possiblePawn;
-        }
-        long possibleKnight = singleKnightTable(myKing, UNIVERSE) & enemyKnights;
-        if (possibleKnight != 0) {
-            return possibleKnight;
-        }
-
-        return 0;
-    }
-
-    private static long inCheckByASlider(Chessboard board, boolean white,
-                                         long myKing,
-                                         long enemyBishops, long enemyRooks, long enemyQueens,
-                                         long allPieces){
-        long possibleBishop = singleBishopTable(allPieces, white, myKing, enemyBishops);
-        if (possibleBishop != 0) {
-            return possibleBishop;
-        }
-        long possibleRook = singleRookTable(allPieces, white, myKing, enemyRooks);
-        if (possibleRook != 0){
-            return possibleRook;
-        }
-        long possibleQueen = singleQueenTable(allPieces, white, myKing, enemyQueens);
-        if (possibleQueen != 0){
-            return possibleQueen;
-        }
-        return 0;
-    }
 
 }

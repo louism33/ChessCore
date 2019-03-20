@@ -1,52 +1,93 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
-import static com.github.louism33.chesscore.BitOperations.getIndexOfFirstPiece;
-import static com.github.louism33.chesscore.ConstantsMove.*;
-import static com.github.louism33.chesscore.MoveParser.moveFromSourceDestinationCapture;
-import static com.github.louism33.chesscore.MoveParser.numberOfRealMoves;
+import static com.github.louism33.chesscore.BitOperations.populationCount;
+import static com.github.louism33.chesscore.MoveConstants.*;
+import static com.github.louism33.chesscore.MoveParser.buildMove;
+import static java.lang.Long.numberOfTrailingZeros;
 
-class MoveAdder {
-    
-    public static void addMovesFromAttackTableMaster(int[] moves, long attackBoard, int source, Chessboard board) {
-        int index = numberOfRealMoves(moves);
+public final class MoveAdder {
 
-        long enemyPieces = board.isWhiteTurn() ? board.blackPieces() : board.whitePieces();
+    static void addMovesFromAttackTableMaster(final int[] moves, long attackBoard, final int source,
+                                              final int sourcePiece) {
+
+        final int numberOfMoves = populationCount(attackBoard);
         
+        Assert.assertTrue(numberOfMoves > 0);
+        final int startIndex = moves[moves.length - 1];
+        int i = 0;
         while (attackBoard != 0){
-            final long destination = getFirstPiece(attackBoard);
+            final int destinationIndex = numberOfTrailingZeros(attackBoard);
 
-            moves[index] = moveFromSourceDestinationCapture(board, source, getIndexOfFirstPiece(destination),
-                    ((destination & enemyPieces) != 0));
-
-            index++;
-
+            moves[startIndex + i] = buildMove(source, sourcePiece,
+                    destinationIndex);
+            i++;
             attackBoard &= attackBoard - 1;
         }
+        moves[moves.length - 1] += numberOfMoves;
     }
 
-    public static void addMovesFromAttackTableMasterCastling(Chessboard board, int[] moves, int source, int destination) {
+    static void addMovesFromAttackTableMasterPromotion(final int[] pieceSquareTable, final int[] moves, long attackBoard,
+                                                       final int source, final int movingPiece) {
 
-        int index = numberOfRealMoves(moves);
 
-        moves[index] = MoveParser.makeSpecialMove(board, source, destination, true, false, false, false, false, false, false);
-    }
-
-    public static void addMovesFromAttackTableMasterPromotion(Chessboard board, int[] moves, long attackBoard, int source, long enemyPieces) {
+        final int numberOfMoves = populationCount(attackBoard);
+        Assert.assertTrue(numberOfMoves > 0);
+        int startIndex = moves[moves.length - 1];
+        int i = 0;
         while (attackBoard != 0){
-            int index = numberOfRealMoves(moves);
-            
+            final int index = startIndex + i;
+
             final long destination = getFirstPiece(attackBoard);
-            final boolean capture = (destination & enemyPieces) != 0;
-            final int move = moveFromSourceDestinationCapture(board, source, getIndexOfFirstPiece(destination), capture) | PROMOTION_MASK;
-            
+
+            final int destinationIndex = numberOfTrailingZeros(destination);
+
+            final int move = buildMove(source, movingPiece,
+                    numberOfTrailingZeros(destination),
+                    pieceSquareTable[destinationIndex]) | PROMOTION_MASK;
+
             moves[index] = move | KNIGHT_PROMOTION_MASK;
             moves[index+1] = move | BISHOP_PROMOTION_MASK;
             moves[index+2] = move | ROOK_PROMOTION_MASK;
             moves[index+3] = move | QUEEN_PROMOTION_MASK;
 
             attackBoard &= attackBoard - 1;
+
+            i += 4;
         }
+
+        moves[moves.length - 1] += 4*numberOfMoves;
     }
-    
+
+    static void addMovesFromAttackTableMasterPromotion(final int[] moves, long attackBoard,
+                                                       final int source, final int movingPiece) {
+
+
+        final int numberOfMoves = populationCount(attackBoard);
+        Assert.assertTrue(numberOfMoves > 0);
+        int startIndex = moves[moves.length - 1];
+        int i = 0;
+        while (attackBoard != 0){
+            final int index = startIndex + i;
+
+            final long destination = getFirstPiece(attackBoard);
+
+            final int move = buildMove(source, movingPiece,
+                    numberOfTrailingZeros(destination)) | PROMOTION_MASK;
+
+            moves[index] = move | KNIGHT_PROMOTION_MASK;
+            moves[index+1] = move | BISHOP_PROMOTION_MASK;
+            moves[index+2] = move | ROOK_PROMOTION_MASK;
+            moves[index+3] = move | QUEEN_PROMOTION_MASK;
+
+            attackBoard &= attackBoard - 1;
+
+            i += 4;
+        }
+
+        moves[moves.length - 1] += 4*numberOfMoves;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.github.louism33.chesscore;
 
+import com.github.louism33.utils.Perft;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +38,7 @@ public class PerftTestDetail {
         System.out.println("--------- ");
 //
 //        Assert.assertEquals(
-//                Perft.runPerftTestWithBoardLong(6, new Chessboard("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"), 8031647685L),
+//                PrettyPerft.runPerftTestWithBoardLong(6, new Chessboard("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"), 8031647685L),
 //                8031647685L);
 //
 //        System.out.println("--------- ");
@@ -76,7 +77,7 @@ public class PerftTestDetail {
         System.out.println("--------- ");
 
 //        Assert.assertEquals(
-//                Perft.runPerftTestWithBoardLong(6, new Chessboard("8/PPP4k/8/8/8/8/4Kppp/8 w - - 0 1"), 34336777),
+//                PrettyPerft.runPerftTestWithBoardLong(6, new Chessboard("8/PPP4k/8/8/8/8/4Kppp/8 w - - 0 1"), 34336777),
 //                34336777);
 //
 //        System.out.println("--------- ");

@@ -1,61 +1,106 @@
 package com.github.louism33.chesscore;
 
+import org.junit.Assert;
+
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import static com.github.louism33.chesscore.BitOperations.*;
+import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.*;
-import static com.github.louism33.chesscore.MakeMoveAndHashUpdate.*;
-import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
-import static com.github.louism33.chesscore.StackDataUtil.buildStackData;
+import static com.github.louism33.chesscore.MakeMoveSpecial.*;
+import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
+import static com.github.louism33.chesscore.MoveConstants.*;
+import static com.github.louism33.chesscore.MoveGeneratorCheck.addCheckEvasionMoves;
+import static com.github.louism33.chesscore.MoveGeneratorPseudo.addAllMovesWithoutKing;
+import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMovesOnly;
+import static com.github.louism33.chesscore.MoveGeneratorSpecial.*;
+import static com.github.louism33.chesscore.MoveMakingUtilities.removePieces;
+import static com.github.louism33.chesscore.MoveMakingUtilities.togglePiecesFrom;
+import static com.github.louism33.chesscore.MoveParser.*;
+import static com.github.louism33.chesscore.PieceMove.*;
+import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
+import static com.github.louism33.chesscore.StackDataUtil.*;
+import static com.github.louism33.chesscore.ZobristHashUtil.*;
+import static java.lang.Long.numberOfTrailingZeros;
 
-public class Chessboard implements Cloneable{
+public class Chessboard {
 
-    private ChessboardDetails details;
+    public final long[][] pieces = new long[2][7];
 
-    private int index = 0;
-    private int zobristIndex = 0;
-    
-    private long zobristHash;
-    long moveStackData;
+    public final int[] pieceSquareTable = new int[64];
+    public int turn;
+    /*
+    castling rights bits:
+    BK BA WK WQ
+     */
+    private int castlingRights = 0xf;
 
-    private final int arrayLength = 128;
-    
-    private long[] zobristHashStack = new long[arrayLength];
-    private long[] moveStackArray = new long[arrayLength];
-    
+    private int fiftyMoveCounter = 0, fullMoveCounter = 0;
+
+    public long zobristHash;
+
+    private long moveStackData;
+    private static final int maxDepthAndArrayLength = 64;
+
+    private static final int maxNumberOfMovesInAnyPosition = 128;
+    final int[] moves = new int[maxNumberOfMovesInAnyPosition];
+
+    private final int[][] legalMoveStack = new int[maxDepthAndArrayLength][maxNumberOfMovesInAnyPosition];
+
+    final long[] zobristHashStack = new long[maxDepthAndArrayLength];
+
+    private final long[] pastMoveStackArray = new long[maxDepthAndArrayLength];
     public boolean inCheckRecorder;
+
+    // todo needs array
+    public long checkingPieces;
+
     public long pinnedPieces;
-    public long[] pinnedPiecesArray = new long[arrayLength];
-    public boolean[] checkStack = new boolean[arrayLength];
-    
-    
+    private final long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
+    private final boolean[] checkStack = new boolean[maxDepthAndArrayLength];
+
+
+    private long boardToHash(){
+        long hash = 0;
+        for (int sq = 0; sq < 64; sq++) {
+            long pieceOnSquare = newPieceOnSquare(sq);
+            int pieceIndex = pieceSquareTable[numberOfTrailingZeros(pieceOnSquare)] - 1;
+            if (pieceIndex != -1) {
+                hash ^= zobristHashPieces[sq][pieceIndex];
+            }
+        }
+
+        hash ^= zobristHashCastlingRights[castlingRights];
+
+        if (!isWhiteTurn()){
+            hash = zobristFlipTurn(hash);
+        }
+
+        if (hasPreviousMove()){
+            hash = updateWithEPFlags(moveStackArrayPeek(), hash);
+        }
+
+        return hash;
+    }
+
+    private int getFiftyMoveCounter() {
+        return fiftyMoveCounter;
+    }
+
+
     /**
      * A new Chessboard in the starting position, white to play.
      */
     public Chessboard() {
-        init();
-        makeZobrist();
+        boardToHash();
         Setup.init(false);
-    }
 
-    /**
-     * New Chessboard based on a FEN string
-     * @param fen the String of pieces turn and castling rights and ep square and counters to make a board from
-     */
-    public Chessboard(String fen) {
-        details = new ChessboardDetails();
-        makeBoardBasedOnFENSpecific(fen);
+        System.arraycopy(INITIAL_PIECES[BLACK], 0, this.pieces[BLACK], 0, INITIAL_PIECES[BLACK].length);
+        System.arraycopy(INITIAL_PIECES[WHITE], 0, this.pieces[WHITE], 0, INITIAL_PIECES[WHITE].length);
 
-        this.zobristHash = ZobristHashUtil.boardToHash(this);
-        Setup.init(false);
-    }
+        System.arraycopy(INITIAL_PIECE_SQUARES, 0, pieceSquareTable, 0, pieceSquareTable.length);
 
-    Chessboard(boolean blank){
-        this.details = new ChessboardDetails();
-        this.zobristHash = ZobristHashUtil.boardToHash(this);
+        turn = WHITE;
     }
 
     /**
@@ -63,867 +108,1009 @@ public class Chessboard implements Cloneable{
      * @param board the chessboard you want an exact copy of
      */
     public Chessboard(Chessboard board) {
-        this.details = new ChessboardDetails();
-
-        System.arraycopy(board.moveStackArray, 0, this.moveStackArray, 0, board.moveStackArray.length);
-        System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
-        
-        System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
-        System.arraycopy(board.pinnedPiecesArray, 0, this.pinnedPiecesArray, 0, board.pinnedPiecesArray.length);
-
-
+        this.turn = board.turn;
+        this.castlingRights = board.castlingRights;
+        this.fiftyMoveCounter = board.fiftyMoveCounter;
+        this.zobristHash = board.zobristHash;
+        this.moveStackData = board.moveStackData;
         this.inCheckRecorder = board.inCheckRecorder;
         this.pinnedPieces = board.pinnedPieces;
-        
-        this.index = board.index;
-        this.zobristIndex = board.zobristIndex;
-        this.checkIndex = board.checkIndex;
-        this.pinIndex = board.pinIndex;
-        
-        this.setWhitePawns(board.getWhitePawns());
-        this.setWhiteKnights(board.getWhiteKnights());
-        this.setWhiteBishops(board.getWhiteBishops());
-        this.setWhiteRooks(board.getWhiteRooks());
-        this.setWhiteQueen(board.getWhiteQueen());
-        this.setWhiteKing(board.getWhiteKing());
+        this.legalMoveStackIndex = board.legalMoveStackIndex;
+        this.masterIndex = board.masterIndex;
+        this.moveStackIndex = board.moveStackIndex;
+        System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
+        System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
+        System.arraycopy(board.moves, 0, this.moves, 0, board.moves.length);
 
-        this.setBlackPawns(board.getBlackPawns());
-        this.setBlackKnights(board.getBlackKnights());
-        this.setBlackBishops(board.getBlackBishops());
-        this.setBlackRooks(board.getBlackRooks());
-        this.setBlackQueen(board.getBlackQueen());
-        this.setBlackKing(board.getBlackKing());
+        for (int i = 0; i < board.legalMoveStack.length; i++) {
+            System.arraycopy(board.legalMoveStack[i], 0, this.legalMoveStack[i], 0, board.legalMoveStack[i].length);
+        }
 
-        this.setWhiteCanCastleK(board.isWhiteCanCastleK());
-        this.setBlackCanCastleK(board.isBlackCanCastleK());
-        this.setWhiteCanCastleQ(board.isWhiteCanCastleQ());
-        this.setBlackCanCastleQ(board.isBlackCanCastleQ());
+        System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
+        System.arraycopy(board.pastMoveStackArray, 0, this.pastMoveStackArray, 0, board.pastMoveStackArray.length);
+        System.arraycopy(board.pinnedPiecesArray, 0, this.pinnedPiecesArray, 0, board.pinnedPiecesArray.length);
+        System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
 
-        this.setWhiteTurn(board.isWhiteTurn());
+        System.arraycopy(board.pieceSquareTable, 0, pieceSquareTable, 0, board.pieceSquareTable.length);
 
-        // this.zobrist = that.zobrist...
-        this.makeZobrist();
         Setup.init(false);
-
     }
 
     /**
-     * @return a String representation of the current board.
-     */
-    public String getFenRepresentation(){
-        return "not yet";
-    }
-
-    /** legal chess move generation
-     * @return an array of length 128 populated with fully legal chess moves, and 0s. 
-     * Only make moves that are not 0!
+     * legal chess move generation
+     * @return an array of length 128 populated with fully legal chess moves, and 0s.
      * Use @see com.github.louism33.chesscore.MoveParser.class for methods to interpret the move object
      */
-    public int[] generateLegalMoves(){
-        return MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn());
-    }
+    public final int[] generateLegalMoves() {
+        Assert.assertNotNull(this.legalMoveStack[legalMoveStackIndex]);
+        // only clean array of moves if it has something in it
+        if (this.legalMoveStack[legalMoveStackIndex][0] != 0) {
+            Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
+        }
 
-    /** legal chess move generation
-     * @return an array of exactly the right length populated with fully legal chess moves. 
-     * easier to use, but a bit slower than @see com.github.louism33.chesscore.generateLegalMoves
-     * Use @see com.github.louism33.chesscore.MoveParser for methods to interpret the move object
-     */
-    public int[] generateCleanLegalMoves(){
-        return Arrays.stream(MoveGeneratorMaster.generateLegalMoves(this, isWhiteTurn()))
-                .filter(x -> x != 0)
-                .toArray();
-    }
+        int[] moves = this.legalMoveStack[legalMoveStackIndex];
 
-    /**
-     * Updates the board with the move you want. Does not flip turn!
-     * @param move the non-0 move you want to make of this board.
-     */
-    public void makeMove(int move){
-        makeMoveAndHashUpdate(this, move);
+        final long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
+        final long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
+        final long friends, enemies;
+
+        myPawns = pieces[turn][PAWN];
+        myKnights = pieces[turn][KNIGHT];
+        myBishops = pieces[turn][BISHOP];
+        myRooks = pieces[turn][ROOK];
+        myQueens = pieces[turn][QUEEN];
+        myKing = pieces[turn][KING];
+
+        enemyPawns = pieces[1 - turn][PAWN];
+        enemyKnights = pieces[1 - turn][KNIGHT];
+        enemyBishops = pieces[1 - turn][BISHOP];
+        enemyRooks = pieces[1 - turn][ROOK];
+        enemyQueens = pieces[1 - turn][QUEEN];
+        enemyKing = pieces[1 - turn][KING];
+
+
+        getPieces();
+        friends = this.pieces[turn][ALL_COLOUR_PIECES];
+        enemies = this.pieces[1 - turn][ALL_COLOUR_PIECES];
+
+
+        final long allPieces = friends | enemies;
+
+
+        final long checkingPieces = bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, 0,
+                allPieces, 2);
+
+        this.checkingPieces = checkingPieces;
+
+        final int numberOfCheckers = populationCount(checkingPieces);
+
+        if (numberOfCheckers > 1) {
+            inCheckRecorder = true;
+
+            addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, this.pieces, pieceSquareTable,
+                    myKing,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                    friends, allPieces);
+            return this.legalMoveStack[legalMoveStackIndex];
+        }
+
+        final long currentPinnedPieces = whichPiecesArePinned(myKing,
+                enemyBishops, enemyRooks, enemyQueens,
+                friends, allPieces);
+
+        pinnedPieces = currentPinnedPieces;
+
+        final boolean hasPreviousMove = hasPreviousMove();
+        if (numberOfCheckers == 1) {
+            inCheckRecorder = true;
+
+            addCheckEvasionMoves(this.checkingPieces, this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable,
+                    this.pieces, hasPreviousMove, moveStackArrayPeek(), currentPinnedPieces,
+                    myPawns, myKnights, myBishops, myRooks, myQueens, myKing,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                    enemies, friends, allPieces);
+
+            return this.legalMoveStack[legalMoveStackIndex];
+        }
+
+        inCheckRecorder = false;
+
+        long pinnedPieces = currentPinnedPieces;
+
+        // not in check moves
+        final long emptySquares = ~allPieces;
+        final long promotablePawns = myPawns & PENULTIMATE_RANKS[turn];
+        final long pinnedPiecesAndPromotingPawns = pinnedPieces | promotablePawns;
+
+        addCastlingMoves(this.legalMoveStack[legalMoveStackIndex], turn, castlingRights,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                allPieces);
+
+        addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, this.pieces, pieceSquareTable,
+                myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                friends, allPieces);
+
+        if (pinnedPieces == 0) {
+            addPromotionMoves
+                    (this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable, 0, emptySquares, enemies,
+                            myPawns,
+                            enemies, allPieces);
+
+            addAllMovesWithoutKing
+                    (this.legalMoveStack[legalMoveStackIndex], this.pieces, turn, pieceSquareTable, promotablePawns, emptySquares, enemies,
+                            myKnights, myBishops, myRooks, myQueens,
+                            allPieces);
+
+            if (hasPreviousMove) {
+                addEnPassantMoves
+                        (this.legalMoveStack[legalMoveStackIndex], moveStackArrayPeek(), turn, promotablePawns, emptySquares, enemies,
+                                myPawns, myKing,
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
+                        );
+            }
+        } else {
+            addPromotionMoves
+                    (this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable, pinnedPieces, emptySquares, enemies,
+                            myPawns,
+                            enemies, allPieces);
+
+            addAllMovesWithoutKing
+                    (this.legalMoveStack[legalMoveStackIndex], this.pieces, turn, pieceSquareTable, pinnedPiecesAndPromotingPawns, ~allPieces, enemies,
+                            myKnights, myBishops, myRooks, myQueens,
+                            allPieces);
+
+            if (hasPreviousMove) {
+                addEnPassantMoves
+                        (this.legalMoveStack[legalMoveStackIndex], moveStackArrayPeek(), turn, pinnedPiecesAndPromotingPawns, emptySquares, enemies,
+                                myPawns, myKing,
+                                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
+                        );
+            }
+
+            // pinned pieces moves
+            while (pinnedPieces != 0) {
+                long pinnedPiece = getFirstPiece(pinnedPieces);
+                long pinningPiece = xrayQueenAttacks(allPieces, pinnedPiece, myKing) & enemies;
+                long pushMask = extractRayFromTwoPiecesBitboardInclusive(myKing, pinningPiece)
+                        ^ (pinningPiece | myKing);
+
+                final int pinnedPieceIndex = numberOfTrailingZeros(pinnedPiece);
+                final long mask = (pushMask | pinningPiece);
+
+                if ((pinnedPiece & myKnights) != 0) {
+                    // knights cannot move cardinally or diagonally, and so cannot move while pinned
+                    pinnedPieces &= pinnedPieces - 1;
+                    continue;
+                }
+                if ((pinnedPiece & myPawns) != 0) {
+                    final long allButPinnedFriends = friends & ~pinnedPiece;
+
+                    if ((pinnedPiece & PENULTIMATE_RANKS[turn]) == 0) {
+                        final long captureTable = singlePawnCaptures(pinnedPiece, turn, pinningPiece);
+                        if (captureTable != 0) {
+                            final int destinationIndex = numberOfTrailingZeros(captureTable);
+                            moves[moves[moves.length - 1]++] = 
+                                    buildMove(numberOfTrailingZeros(pinnedPiece), PIECE[turn][PAWN],
+                                    destinationIndex, pieceSquareTable[destinationIndex]);
+                        }
+
+                        final long quietMask = singlePawnPushes(pinnedPiece, turn, pushMask, allPieces);
+                        if (quietMask != 0) {
+                            addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
+                                    quietMask,
+                                    pinnedPieceIndex, PIECE[turn][PAWN]);
+                        }
+
+                        // a pinned pawn may still EP
+                        if (hasPreviousMove) {
+                            addEnPassantMoves(this.legalMoveStack[legalMoveStackIndex],
+                                    moveStackArrayPeek(), turn, allButPinnedFriends, pushMask, pinningPiece,
+                                    myPawns, myKing,
+                                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
+                            );
+                        }
+                    } else {
+                        // a pinned pawn may still promote, through a capture of the pinner
+                        addPromotionMoves(this.legalMoveStack[legalMoveStackIndex], turn,
+                                pieceSquareTable, allButPinnedFriends, pushMask, pinningPiece,
+                                myPawns,
+                                enemies, allPieces);
+                    }
+                    pinnedPieces &= pinnedPieces - 1;
+                    continue;
+                }
+                if ((pinnedPiece & myBishops) != 0) {
+                    final long table = singleBishopTable(allPieces, pinnedPiece, UNIVERSE) & mask;
+                    final long captureTable = table & allPieces;
+                    if (captureTable != 0) {
+                        final int destinationIndex = numberOfTrailingZeros(captureTable);
+                        moves[moves[moves.length - 1]++] =
+                                buildMove(numberOfTrailingZeros(pinnedPiece), PIECE[turn][BISHOP],
+                                        destinationIndex, pieceSquareTable[destinationIndex]);
+                    }
+                    final long quietMask = table & ~allPieces;
+                    if (quietMask != 0) {
+                        addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
+                                quietMask,
+                                pinnedPieceIndex, PIECE[turn][BISHOP]);
+                    }
+                    pinnedPieces &= pinnedPieces - 1;
+                    continue;
+                }
+                if ((pinnedPiece & myRooks) != 0) {
+                    final long table = singleRookTable(allPieces, pinnedPiece, UNIVERSE) & mask;
+                    final long captureTable = table & allPieces;
+                    if (captureTable != 0) {
+                        final int destinationIndex = numberOfTrailingZeros(captureTable);
+                        moves[moves[moves.length - 1]++] =
+                                buildMove(numberOfTrailingZeros(pinnedPiece), PIECE[turn][ROOK],
+                                        destinationIndex, pieceSquareTable[destinationIndex]);
+                    }
+                    final long quietMask = table & ~allPieces;
+                    if (quietMask != 0) {
+                        addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
+                                quietMask,
+                                pinnedPieceIndex, PIECE[turn][ROOK]);
+                    }
+                    pinnedPieces &= pinnedPieces - 1;
+                    continue;
+                }
+                if ((pinnedPiece & myQueens) != 0) {
+                    final long table = singleQueenTable(allPieces, pinnedPiece, UNIVERSE) & mask;
+                    final long captureTable = table & allPieces;
+                    if (captureTable != 0) {
+                        final int destinationIndex = numberOfTrailingZeros(captureTable);
+                        moves[moves[moves.length - 1]++] =
+                                buildMove(numberOfTrailingZeros(pinnedPiece), PIECE[turn][QUEEN],
+                                        destinationIndex, pieceSquareTable[destinationIndex]);
+                    }
+
+                    final long quietTable = table & ~allPieces;
+                    if (quietTable != 0) {
+                        addMovesFromAttackTableMaster(this.legalMoveStack[legalMoveStackIndex],
+                                quietTable,
+                                pinnedPieceIndex, PIECE[turn][QUEEN]);
+                    }
+                }
+
+                pinnedPieces &= pinnedPieces - 1;
+            }
+        }
+
+        return this.legalMoveStack[legalMoveStackIndex];
     }
 
     /**
      * Updates the board with the move you want.
      * @param move the non-0 move you want to make of this board.
      */
-    public void makeMoveAndFlipTurn(int move){
-        makeMoveAndHashUpdate(this, move);
-        flipTurn();
+    public final void makeMoveAndFlipTurn(final int move) {
+        this.rotateMoveIndexUp();
+        Assert.assertNotEquals(move, 0);
+        masterStackPush();
+
+        final int sourceIndex = getSourceIndex(move);
+        final int destinationIndex = getDestinationIndex(move);
+        final int sourcePieceIdentifier = pieceSquareTable[sourceIndex] - 1;
+        final boolean captureMove = isCaptureMove(move);
+        final long destinationPiece = newPieceOnSquare(destinationIndex);
+        final long destinationZH = zobristHashPieces[destinationIndex][sourcePieceIdentifier];
+
+        zobristHash ^= zobristHashPieces[sourceIndex][sourcePieceIdentifier];
+        zobristHash ^= destinationZH;
+
+        if (captureMove){
+            zobristHash ^= zobristHashPieces[destinationIndex][pieceSquareTable[destinationIndex] - 1];
+        }
+
+        /* 
+        "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
+        */
+        if (hasPreviousMove()){
+            zobristHash = updateWithEPFlags(moveStackArrayPeek(), zobristHash);
+        }
+
+        if (move == 0) {
+            moveStackArrayPush(buildStackDataBetter(0, turn, fiftyMoveCounter, castlingRights, NULL_MOVE));
+            return;
+        }
+
+        boolean resetFifty = true;
+
+        if (isSpecialMove(move)) {
+            switch (move & SPECIAL_MOVE_MASK) {
+                case CASTLING_MASK:
+                    int originalRookIndex = 0;
+                    int newRookIndex = 0;
+                    switch (destinationIndex) {
+                        case 1:
+                            originalRookIndex = 0;
+                            newRookIndex = destinationIndex + 1;
+                            break;
+                        case 5:
+                            originalRookIndex = 7;
+                            newRookIndex = destinationIndex - 1;
+                            break;
+                        case 57:
+                            originalRookIndex = 56;
+                            newRookIndex = destinationIndex + 1;
+                            break;
+                        case 61:
+                            originalRookIndex = 63;
+                            newRookIndex = destinationIndex - 1;
+                            break;
+                    }
+
+                    final int myRook = pieceSquareTable[originalRookIndex] - 1;
+                    zobristHash ^= zobristHashPieces[originalRookIndex][myRook];
+                    zobristHash ^= zobristHashPieces[newRookIndex][myRook];
+
+                    moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, CASTLING));
+                    castlingRights = makeCastlingMove(castlingRights, pieces, pieceSquareTable, move);
+                    break;
+
+                case ENPASSANT_MASK:
+                    final long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
+                    final int victimPawnIndex = numberOfTrailingZeros(victimPawn);
+                    zobristHash ^= zobristHashPieces
+                            [victimPawnIndex]
+                            [pieceSquareTable[victimPawnIndex] - 1];
+
+                    moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, ENPASSANTCAPTURE));
+                    makeEnPassantMove(pieces, pieceSquareTable, turn, move);
+                    break;
+
+                case PROMOTION_MASK:
+                    int whichPromotingPiece = 0;
+
+                    switch (move & WHICH_PROMOTION){
+                        case KNIGHT_PROMOTION_MASK:
+                            whichPromotingPiece = 2 + turn * 6;
+                            break;
+                        case BISHOP_PROMOTION_MASK:
+                            whichPromotingPiece = 3 + turn * 6;
+                            break;
+                        case ROOK_PROMOTION_MASK:
+                            whichPromotingPiece = 4 + turn * 6;
+                            break;
+                        case QUEEN_PROMOTION_MASK:
+                            whichPromotingPiece = 5 + turn * 6;
+                            break;
+                    }
+
+                    /*
+                    remove my pawn from zh
+                     */
+                    zobristHash ^= destinationZH;
+
+                    Assert.assertTrue(whichPromotingPiece != 0);
+                    long promotionZH = zobristHashPieces[destinationIndex][whichPromotingPiece - 1];
+                    zobristHash ^= promotionZH;
+
+                    moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, PROMOTION));
+                    makePromotingMove(pieces, pieceSquareTable, turn, move);
+                    break;
+            }
+        } else {
+            if (captureMove) {
+                moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICCAPTURE));
+            } 
+            else if (enPassantPossibility(turn, pieces[turn][PAWN], newPieceOnSquare(sourceIndex), destinationPiece)) {
+                final int whichFile = 8 - sourceIndex % 8;
+                moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, ENPASSANTVICTIM, whichFile));
+            } 
+            else {
+                switch (pieceSquareTable[sourceIndex]) {
+                    case WHITE_PAWN:
+                    case BLACK_PAWN:
+                        moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICLOUDPUSH));
+                        break;
+                    default:
+                        // increment 50 move rule
+                        resetFifty = false;
+                        moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICQUIETPUSH));
+                }
+
+            }
+
+            makeRegularMove(pieces, pieceSquareTable, move);
+        }
+
+        // todo update unmake move to compensate
+//        if (resetFifty) {
+//            setFiftyMoveCounter(0);
+//        }
+//        else {
+//            setFiftyMoveCounter(getFiftyMoveCounter() + 1);
+//        }
+
+
+        if (castlingRights != 0) {
+            castleFlagManager(sourceIndex, destinationIndex);   
+        }
+
+        Assert.assertTrue(hasPreviousMove());
+        zobristHash = (updateHashPostMove(moveStackArrayPeek(), castlingRights, zobristHash));
+
+        this.turn = 1 - this.turn;
+    }
+
+    private void castleFlagManager(int sourceIndex, int destinationIndex) {
+        // disable relevant castle flag whenever a piece moves into the relevant square.
+        switch (sourceIndex) {
+            case 0:
+                castlingRights &= castlingRightsMask[WHITE][K];
+                break;
+            case 3:
+                castlingRights &= castlingRightsMask[WHITE][K];
+            case 7:
+                castlingRights &= castlingRightsMask[WHITE][Q];
+                break;
+            case 56:
+                castlingRights &= castlingRightsMask[BLACK][K];
+                break;
+            case 59:
+                castlingRights &= castlingRightsMask[BLACK][K];
+            case 63:
+                castlingRights &= castlingRightsMask[BLACK][Q];
+                break;
+        }
+        switch (destinationIndex) {
+            case 0:
+                castlingRights &= castlingRightsMask[WHITE][K];
+                break;
+            case 3:
+                castlingRights &= castlingRightsMask[WHITE][K];
+            case 7:
+                castlingRights &= castlingRightsMask[WHITE][Q];
+                break;
+            case 56:
+                castlingRights &= castlingRightsMask[BLACK][K];
+                break;
+            case 59:
+                castlingRights &= castlingRightsMask[BLACK][K];
+            case 63:
+                castlingRights &= castlingRightsMask[BLACK][Q];
+                break;
+        }
+    }
+
+    private static boolean enPassantPossibility(int turn, long myPawns, long sourceSquare, long destinationSquare) {
+        // determine if flag should be added to enable EP on next turn
+        long homeRank = PENULTIMATE_RANKS[1 - turn];
+
+        if ((sourceSquare & homeRank) == 0) {
+            return false;
+        }
+
+        if ((sourceSquare & myPawns) == 0) {
+            return false;
+        }
+        long enPassantPossibilityRank = ENPASSANT_RANK[turn];
+        return (destinationSquare & enPassantPossibilityRank) != 0;
+    }
+
+    private void rotateMoveIndexUp() {
+        this.legalMoveStackIndex = (this.legalMoveStackIndex + 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
 
 
+    private void rotateMoveIndexDown() {
+        this.legalMoveStackIndex = (this.legalMoveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
+    }
+
     /**
      * Completely undoes the last made move, and changes the side to play
-     * @throws IllegalUnmakeException don't call this if no moves have been made
      */
-    public void unMakeMoveAndFlipTurn() throws IllegalUnmakeException {
-        UnMakeMoveAndHashUpdate(this);
+    public void unMakeMoveAndFlipTurn() {
+        this.rotateMoveIndexDown();
+
+        Assert.assertTrue(hasPreviousMove());
+
+        masterStackPop();
+
+        long pop = moveStackData;
+
+        if (StackDataUtil.getMove(pop) == 0) {
+            turn = StackDataUtil.getTurn(pop);
+            return;
+        }
+
+        int pieceToMoveBackIndex = getDestinationIndex(StackDataUtil.getMove(pop));
+        int squareToMoveBackTo = getSourceIndex(StackDataUtil.getMove(pop));
+        int basicReversedMove = buildMove(pieceToMoveBackIndex, pieceSquareTable[pieceToMoveBackIndex],
+                squareToMoveBackTo, NO_PIECE);
+
+        switch (StackDataUtil.getSpecialMove(pop)) {
+            //double pawn push
+            case ENPASSANTVICTIM:
+            case BASICQUIETPUSH:
+            case BASICLOUDPUSH:
+                makeRegularMove(pieces, pieceSquareTable, basicReversedMove);
+                break;
+
+            case BASICCAPTURE:
+                makeRegularMove(pieces, pieceSquareTable, basicReversedMove);
+                int takenPiece = getVictimPieceInt(StackDataUtil.getMove(pop));
+                if (getVictimPieceInt(StackDataUtil.getMove(pop)) != 0) {
+                    togglePiecesFrom(pieces, pieceSquareTable, newPieceOnSquare(pieceToMoveBackIndex), takenPiece);
+                }
+                break;
+
+            case ENPASSANTCAPTURE:
+                makeRegularMove(pieces, pieceSquareTable, basicReversedMove);
+                if (StackDataUtil.getTurn(pop) == BLACK) {
+                    togglePiecesFrom(pieces, pieceSquareTable, newPieceOnSquare(pieceToMoveBackIndex - 8), BLACK_PAWN);
+                } else {
+                    togglePiecesFrom(pieces, pieceSquareTable, newPieceOnSquare(pieceToMoveBackIndex + 8), WHITE_PAWN);
+                }
+                break;
+
+            case CASTLING:
+                // king moved to:
+                long originalRook, newRook,
+                        originalKing = newPieceOnSquare(squareToMoveBackTo),
+                        newKing = newPieceOnSquare(pieceToMoveBackIndex);
+
+                if (getTurn(pop) == BLACK) {
+                    originalRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? 0 : 7);
+                    newRook = newPieceOnSquare(pieceToMoveBackIndex == 1 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
+                    togglePiecesFrom(pieces, pieceSquareTable, newKing, WHITE_KING);
+                    togglePiecesFrom(pieces, pieceSquareTable, newRook, WHITE_ROOK);
+                } else {
+                    originalRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? 56 : 63);
+                    newRook = newPieceOnSquare(pieceToMoveBackIndex == 57 ? pieceToMoveBackIndex + 1 : pieceToMoveBackIndex - 1);
+                    togglePiecesFrom(pieces, pieceSquareTable, newKing, BLACK_KING);
+                    togglePiecesFrom(pieces, pieceSquareTable, newRook, BLACK_ROOK);
+                }
+
+                pieces[1 - StackDataUtil.getTurn(pop)][KING] |= originalKing;
+                pieces[1 - StackDataUtil.getTurn(pop)][ROOK] |= originalRook;
+
+                pieces[1 - StackDataUtil.getTurn(pop)][ALL_COLOUR_PIECES] |= originalKing | originalRook;
+
+                pieceSquareTable[squareToMoveBackTo] = WHITE_KING + (1 - StackDataUtil.getTurn(pop)) * 6;
+                pieceSquareTable[numberOfTrailingZeros(originalRook)] = WHITE_ROOK + (1 - StackDataUtil.getTurn(pop)) * 6;
+                break;
+
+            case PROMOTION:
+                long sourceSquare = newPieceOnSquare(pieceToMoveBackIndex);
+                long destinationSquare = newPieceOnSquare(squareToMoveBackTo);
+                long mask = ~(sourceSquare | destinationSquare);
+
+                pieces[WHITE][PAWN] &= mask;
+                pieces[WHITE][KNIGHT] &= mask;
+                pieces[WHITE][BISHOP] &= mask;
+                pieces[WHITE][ROOK] &= mask;
+                pieces[WHITE][QUEEN] &= mask;
+                pieces[WHITE][KING] &= mask;
+
+                pieces[BLACK][PAWN] &= mask;
+                pieces[BLACK][KNIGHT] &= mask;
+                pieces[BLACK][BISHOP] &= mask;
+                pieces[BLACK][ROOK] &= mask;
+                pieces[BLACK][QUEEN] &= mask;
+                pieces[BLACK][KING] &= mask;
+
+                pieces[WHITE][ALL_COLOUR_PIECES] &= mask;
+                pieces[BLACK][ALL_COLOUR_PIECES] &= mask;
+
+                pieceSquareTable[pieceToMoveBackIndex] = 0;
+                pieceSquareTable[squareToMoveBackTo] = 0;
+
+                togglePiecesFrom(pieces, pieceSquareTable, destinationSquare,
+                        StackDataUtil.getTurn(pop) == 1 ? WHITE_PAWN : BLACK_PAWN);
+                int takenPiecePromotion = getVictimPieceInt(StackDataUtil.getMove(pop));
+                if (takenPiecePromotion > 0) {
+                    togglePiecesFrom(pieces, pieceSquareTable, sourceSquare, takenPiecePromotion);
+                }
+                break;
+        }
+
+        castlingRights = StackDataUtil.getCastlingRights(pop);
+        turn = 1 - turn;
+    }
+
+    private static void makeRegularMove(long[][] pieces, int[] pieceSquareTable, int move) {
+        final long destinationPiece = newPieceOnSquare(getDestinationIndex(move));
+        removePieces(pieces, pieceSquareTable, newPieceOnSquare(getSourceIndex(move)), destinationPiece, move);
+        togglePiecesFrom(pieces, pieceSquareTable, destinationPiece, getMovingPieceInt(move));
     }
 
     /**
      * Makes a null move on the board. Make sure to unmake it afterwards
      */
-    public void makeNullMoveAndFlipTurn(){
-        makeNullMoveAndHashUpdate(this);
-        flipTurn();
+    public void makeNullMoveAndFlipTurn() {
+        this.rotateMoveIndexUp();
+        masterStackPush();
+
+        if (hasPreviousMove()) {
+            zobristHash = (updateWithEPFlags(moveStackArrayPeek(), zobristHash));
+        }
+
+        moveStackArrayPush(buildStackDataBetter(0, turn, fiftyMoveCounter, castlingRights, NULL_MOVE));
+
+        zobristHash = zobristFlipTurn(zobristHash);
+
+        this.turn = 1 - this.turn;
     }
 
 
     /**
      * Unmakes a null move on the board.
-     * @throws IllegalUnmakeException don't call this if no moves have been made
      */
-    public void unMakeNullMoveAndFlipTurn() throws IllegalUnmakeException {
-        unMakeNullMove(this);
+    public void unMakeNullMoveAndFlipTurn() {
+//        wwwwwww
+        this.rotateMoveIndexDown();
+        Assert.assertTrue(hasPreviousMove());
+        masterStackPop();
+        this.turn = 1 - this.turn;
     }
 
-
-    /**
-     * Changes whose turn it is
-     */
-    public void flipTurn(){
-        setWhiteTurn(!isWhiteTurn());
+    public boolean isWhiteTurn() {
+        return this.turn == WHITE;
     }
 
     /**
-     *
      * Tells you if the specified player is in check
+     *
      * @param white true if white to play
      * @return true if in check, otherwise false
      */
-    public boolean inCheck(boolean white){
+    public boolean inCheck(boolean white) {
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
-        if (white){
-            myKing = getWhiteKing();
-            enemyPawns = getBlackPawns();
-            enemyKnights = getBlackKnights();
-            enemyBishops = getBlackBishops();
-            enemyRooks = getBlackRooks();
-            enemyQueen = getBlackQueen();
-            enemyKing = getBlackKing();
+        if (white) {
+            myKing = pieces[WHITE][KING];
+            enemyPawns = pieces[BLACK][PAWN];
+            enemyKnights = pieces[BLACK][KNIGHT];
+            enemyBishops = pieces[BLACK][BISHOP];
+            enemyRooks = pieces[BLACK][ROOK];
+            enemyQueen = pieces[BLACK][QUEEN];
+            enemyKing = pieces[BLACK][KING];
 
             enemies = blackPieces();
             friends = whitePieces();
         } else {
-            myKing = getBlackKing();
-            enemyPawns = getWhitePawns();
-            enemyKnights = getWhiteKnights();
-            enemyBishops = getWhiteBishops();
-            enemyRooks = getWhiteRooks();
-            enemyQueen = getWhiteQueen();
-            enemyKing = getWhiteKing();
+            myKing = pieces[BLACK][KING];
+            enemyPawns = pieces[WHITE][PAWN];
+            enemyKnights = pieces[WHITE][KNIGHT];
+            enemyBishops = pieces[WHITE][BISHOP];
+            enemyRooks = pieces[WHITE][ROOK];
+            enemyQueen = pieces[WHITE][QUEEN];
+            enemyKing = pieces[WHITE][KING];
 
             enemies = whitePieces();
             friends = blackPieces();
         }
 
-        return boardInCheck(this, white, myKing,
+        return boardInCheck(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                enemies, friends, allPieces());
+                allPieces());
 
     }
 
     /**
-     *
-     * @param white the player 
+     * @param white the player
      * @return true if it is a draw by repetition
      */
-    public boolean drawByRepetition (boolean white){
+    public boolean drawByRepetition(boolean white) {
         return isDrawByRepetition(this);
     }
 
     /**
-     *
      * @param white the player
      * @return true if draw by repetition
      */
-    private boolean drawByInsufficientMaterial (boolean white){
+    private boolean drawByInsufficientMaterial(boolean white) {
         return isDrawByInsufficientMaterial(this);
     }
 
     /**
-     *
      * @param white the player
      * @return true if this side does not have enough pieces to ever win the game
      */
-    private boolean colourHasInsufficientMaterialToMate (boolean white){
+    private boolean colourHasInsufficientMaterialToMate(boolean white) {
         return CheckHelper.colourHasInsufficientMaterialToMate(this, white);
     }
 
     /**
-     *
      * @return true if in checkmate
      */
-    public boolean inCheckmate(){
-        if (!this.inCheck(isWhiteTurn())){
+    public boolean inCheckmate() {
+        if (!this.inCheck(isWhiteTurn())) {
             return false;
         }
         return this.generateLegalMoves().length == 0;
     }
 
     /**
-     *
      * @return true if in stalemate
      */
-    public boolean inStalemate(){
-        if (this.inCheck(isWhiteTurn())){
+    public boolean inStalemate() {
+        if (this.inCheck(isWhiteTurn())) {
             return false;
         }
         return this.generateLegalMoves().length == 0;
     }
 
-    /**
-     * Expensive operation to determine pinned pieces to king
-     * @param white the player
-     * @return a list of squares that have pinned pieces to the king on them
-     */
-    private List<Square> pinnedPiecesToKing(boolean white){
-        long myKing = white ? getWhiteKing() : getBlackKing();
-        return pinnedPiecesToSquare(white, Square.getSquareOfBitboard(myKing));
-    }
-
-    /**
-     * Expensive operation to determine pinned pieces to a particular square
-     * @param white the player 
-     * @param square the square you are interested in seeing the pins to
-     * @return a list of squares that have pinned pieces on them
-     */
-    public List<Square> pinnedPiecesToSquare(boolean white, Square square){
-        return Square.squaresFromBitboard(pinnedPiecesToSquareBitBoard(white, square));
-    }
-
-    /**
-     * Expensive operation to determine pinned pieces to a particular square
-     * @param white the player 
-     * @param square the square you are interested in seeing the pins to
-     * @return a list of squares that have pinned pieces on them
-     */
-    public long pinnedPiecesToSquareBitBoard(boolean white, Square square){
-
-        long myPawns, myKnights, myBishops, myRooks, myQueen, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                enemies, friends;
-        if (isWhiteTurn()){
-            myPawns = getWhitePawns();
-            myKnights = getWhiteKnights();
-            myBishops = getWhiteBishops();
-            myRooks = getWhiteRooks();
-            myQueen = getWhiteQueen();
-            myKing = getWhiteKing();
-
-            enemyPawns = getBlackPawns();
-            enemyKnights = getBlackKnights();
-            enemyBishops = getBlackBishops();
-            enemyRooks = getBlackRooks();
-            enemyQueen = getBlackQueen();
-            enemyKing = getBlackKing();
-
-            enemies = blackPieces();
-            friends = whitePieces();
-        } else {
-            myPawns = getBlackPawns();
-            myKnights = getBlackKnights();
-            myBishops = getBlackBishops();
-            myRooks = getBlackRooks();
-            myQueen = getBlackQueen();
-            myKing = getBlackKing();
-
-            enemyPawns = getWhitePawns();
-            enemyKnights = getWhiteKnights();
-            enemyBishops = getWhiteBishops();
-            enemyRooks = getWhiteRooks();
-            enemyQueen = getWhiteQueen();
-            enemyKing = getWhiteKing();
-
-            enemies = whitePieces();
-            friends = blackPieces();
-        }
-
-        return PinnedManager.whichPiecesArePinned(this, white, white ? getWhiteKing() : getBlackKing(),
-                myPawns, myKnights, myBishops, myRooks, myQueen, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                enemies, friends, allPieces());
-    }
-
-    public boolean previousMoveWasPawnPushToSix(){
-        if (!hasPreviousMove()){
+    public boolean previousMoveWasPawnPushToSix() {
+        if (!hasPreviousMove()) {
             return false;
         }
         long peek = moveStackArrayPeek();
-        return MoveParser.moveIsPawnPushSix(StackDataUtil.getMove(peek));
+        return moveIsPawnPushSix(1 - StackDataUtil.getTurn(peek), StackDataUtil.getMove(peek));
     }
-
-    public boolean previousMoveWasPawnPushToSeven(){
-        if (!hasPreviousMove()){
+    
+    public boolean previousMoveWasPawnPushToSeven() {
+        if (!hasPreviousMove()) {
             return false;
         }
         long peek = moveStackArrayPeek();
-        return MoveParser.moveIsPawnPushSeven(StackDataUtil.getMove(peek));
+        return moveIsPawnPushSeven(1 - StackDataUtil.getTurn(peek), StackDataUtil.getMove(peek));
     }
 
-    public boolean moveIsCaptureOfLastMovePiece(int move){
-        if (!hasPreviousMove()){
+    public boolean moveIsCaptureOfLastMovePiece(int move) {
+        if (!hasPreviousMove()) {
+            return false;
+        }
+
+        long peek = moveStackArrayPeek();
+        if (StackDataUtil.getMove(peek) == 0) {
             return false;
         }
         
-        long peek = moveStackArrayPeek();
-        if (StackDataUtil.getMove(peek) == 0){
-            return false;
+        int previousMoveDestinationIndex = getDestinationIndex(StackDataUtil.getMove(peek));
+        return (getDestinationIndex(move) == previousMoveDestinationIndex);
+    }
+
+
+    private long whitePieces() {
+        this.pieces[WHITE][ALL_COLOUR_PIECES] = 0;
+        for (int i = PAWN; i <= KING; i++) {
+            this.pieces[WHITE][ALL_COLOUR_PIECES] |= this.pieces[WHITE][i];
         }
-        int previousMoveDestinationIndex = MoveParser.getDestinationIndex(StackDataUtil.getMove(peek));
-        return (MoveParser.getDestinationIndex(move) == previousMoveDestinationIndex);
+        return this.pieces[WHITE][ALL_COLOUR_PIECES];
     }
 
-
-    private void init(){
-        this.details = new ChessboardDetails(true);
+    public void getPieces(){
+        long b = 0, w = 0;
+        for (int i = PAWN; i <= KING; i++) {
+            w |= this.pieces[WHITE][i];
+            b |= this.pieces[BLACK][i];
+        }
+        this.pieces[WHITE][ALL_COLOUR_PIECES] = w;
+        this.pieces[BLACK][ALL_COLOUR_PIECES] = b;
     }
 
-    void makeZobrist(){
-        this.zobristHash = ZobristHashUtil.boardToHash(this);
+    private long blackPieces() {
+        this.pieces[BLACK][ALL_COLOUR_PIECES] = 0;
+        for (int i = PAWN; i <= KING; i++) {
+            this.pieces[BLACK][ALL_COLOUR_PIECES] |= this.pieces[BLACK][i];
+        }
+        return this.pieces[BLACK][ALL_COLOUR_PIECES];
     }
 
-    public long whitePieces(){
-        return getWhitePawns() | getWhiteKnights() | getWhiteBishops() | getWhiteRooks() | getWhiteQueen() | getWhiteKing();
-    }
-
-    public long blackPieces(){
-        return getBlackPawns() | getBlackKnights() | getBlackBishops() | getBlackRooks() | getBlackQueen() | getBlackKing();
-    }
-
-    public long allPieces(){
-        return whitePieces() | blackPieces();
-    }
-
-    public boolean isWhiteTurn() {
-        return this.details.whiteTurn;
-    }
-
-    public void setWhiteTurn(boolean whiteTurn) {
-        this.details.whiteTurn = whiteTurn;
+    public long allPieces() {
+        getPieces();
+        return this.pieces[WHITE][ALL_COLOUR_PIECES] | this.pieces[BLACK][ALL_COLOUR_PIECES];
     }
 
     @Override
     public boolean equals(Object o) {
+        // we do not check equality for fields that change during move gen
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Chessboard that = (Chessboard) o;
-        return Objects.equals(details, that.details)
-                && Objects.equals(zobristHash, that.zobristHash)
-                && Arrays.equals(zobristHashStack, that.zobristHashStack)
-                && Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray)
-                && Arrays.equals(checkStack, that.checkStack)
+        this.whitePieces();
+        this.blackPieces();
+        that.whitePieces();
+        that.blackPieces();
+        return turn == that.turn &&
+                castlingRights == that.castlingRights &&
+                fiftyMoveCounter == that.fiftyMoveCounter &&
+                zobristHash == that.zobristHash &&
+                masterIndex == that.masterIndex &&
+                Arrays.deepEquals(pieces, that.pieces) &&
+                Arrays.equals(zobristHashStack, that.zobristHashStack) &&
+                Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray) &&
+                Arrays.equals(checkStack, that.checkStack) &&
+                Arrays.equals(pieceSquareTable, that.pieceSquareTable)
                 ;
     }
 
     @Override
     public String toString() {
         String turn = isWhiteTurn() ? "It is white's turn." : "It is black's turn.";
-        return "\n" + Art.boardArt(this) + "\n" + turn
+        return '\n' + Art.boardArt(this) + '\n' + turn + '\n'
                 ;
     }
 
-    public boolean isWhiteCanCastleK() {
-        return this.details.whiteCanCastleK;
+    private int legalMoveStackIndex = 0;
+    private int masterIndex = 0;
+    private int moveStackIndex = 0;
+
+    private void rotateMasterIndexUp() {
+        this.masterIndex = (this.masterIndex + 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
+    }
+    private void rotateMasterIndexDown() {
+        this.masterIndex = (this.masterIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
 
-    public void setWhiteCanCastleK(boolean whiteCanCastleK) {
-        this.details.whiteCanCastleK = whiteCanCastleK;
+    private void rotateMoveStackIndexUp() {
+        this.moveStackIndex = (this.moveStackIndex + 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
+    }
+    private void rotateMoveStackIndexDown() {
+        this.moveStackIndex = (this.moveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
 
-    public boolean isWhiteCanCastleQ() {
-        return details.whiteCanCastleQ;
+    //todo can this return incorrectly after 64 moves have been made / simulated
+    private boolean hasPreviousMove() {
+        return pastMoveStackArray[(this.moveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength] != 0;
     }
 
-    public void setWhiteCanCastleQ(boolean whiteCanCastleQ) {
-        this.details.whiteCanCastleQ = whiteCanCastleQ;
+    private void masterStackPush() {
+        checkStack[masterIndex] = this.inCheckRecorder;
+        inCheckRecorder = false;
+
+        pinnedPiecesArray[masterIndex] = this.pinnedPieces;
+        pinnedPieces = 0;
+
+        zobristHashStack[masterIndex] = zobristHash;
+        rotateMasterIndexUp();
     }
 
-    public boolean isBlackCanCastleK() {
-        return details.blackCanCastleK;
+    private void masterStackPop() {
+//        masterIndex--;
+        rotateMasterIndexDown();
+        inCheckRecorder = checkStack[masterIndex];
+        checkStack[masterIndex] = false;
+
+        pinnedPieces = pinnedPiecesArray[masterIndex];
+        pinnedPiecesArray[masterIndex] = 0;
+
+        zobristHash = zobristHashStack[masterIndex];
+        zobristHashStack[masterIndex] = 0;
+
+        pastMoveStackArray[moveStackIndex] = 0;
+        rotateMoveStackIndexDown();
+        moveStackData = pastMoveStackArray[moveStackIndex];
     }
 
-    public void setBlackCanCastleK(boolean blackCanCastleK) {
-        this.details.blackCanCastleK = blackCanCastleK;
+    private void moveStackArrayPush(long l) {
+        pastMoveStackArray[moveStackIndex] = l;
+        rotateMoveStackIndexUp();
     }
 
-    public boolean isBlackCanCastleQ() {
-        return details.blackCanCastleQ;
+    private long moveStackArrayPeek() {
+        return moveStackIndex > 0 ? pastMoveStackArray[moveStackIndex - 1] : 0;
     }
 
-    public void setBlackCanCastleQ(boolean blackCanCastleQ) {
-        this.details.blackCanCastleQ = blackCanCastleQ;
-    }
+    /**
+     * New Chessboard based on a FEN string
+     * @param fen the String of pieces turn and castling rights and ep square and counters to make a board from
+     */
+    public Chessboard(String fen) {
+        char[] c = fen.toCharArray();
+        int phase = 1;
+        int square = 64, whichPiece;
 
-    public long getWhitePawns() {
-        return this.details.whitePawns;
-    }
+        Arrays.fill(this.pieceSquareTable, 0);
+        Arrays.fill(this.pieces[WHITE], 0);
+        Arrays.fill(this.pieces[BLACK], 0);
 
-    public void setWhitePawns(long whitePawns) {
-        this.details.whitePawns = whitePawns;
-    }
+        castlingRights = 0;
 
-    public long getWhiteKnights() {
-        return this.details.whiteKnights;
-    }
-
-    public void setWhiteKnights(long whiteKnights) {
-        this.details.whiteKnights = whiteKnights;
-    }
-
-    public long getWhiteBishops() {
-        return this.details.whiteBishops;
-    }
-
-    public void setWhiteBishops(long whiteBishops) {
-        this.details.whiteBishops = whiteBishops;
-    }
-
-    public long getWhiteRooks() {
-        return this.details.whiteRooks;
-    }
-
-    public void setWhiteRooks(long whiteRooks) {
-        this.details.whiteRooks = whiteRooks;
-    }
-
-    public long getWhiteQueen() {
-        return this.details.whiteQueen;
-    }
-
-    public void setWhiteQueen(long whiteQueen) {
-        this.details.whiteQueen = whiteQueen;
-    }
-
-    public long getWhiteKing() {
-        return this.details.whiteKing;
-    }
-
-    public void setWhiteKing(long whiteKing) {
-        this.details.whiteKing = whiteKing;
-    }
-
-    public long getBlackPawns() {
-        return this.details.blackPawns;
-    }
-
-    public void setBlackPawns(long blackPawns) {
-        this.details.blackPawns = blackPawns;
-    }
-
-    public long getBlackKnights() {
-        return this.details.blackKnights;
-    }
-
-    public void setBlackKnights(long blackKnights) {
-        this.details.blackKnights = blackKnights;
-    }
-
-    public long getBlackBishops() {
-        return this.details.blackBishops;
-    }
-
-    public void setBlackBishops(long blackBishops) {
-        this.details.blackBishops = blackBishops;
-    }
-
-    public long getBlackRooks() {
-        return this.details.blackRooks;
-    }
-
-    public void setBlackRooks(long blackRooks) {
-        this.details.blackRooks = blackRooks;
-    }
-
-    public long getBlackQueen() {
-        return this.details.blackQueen;
-    }
-
-    public void setBlackQueen(long blackQueen) {
-        this.details.blackQueen = blackQueen;
-    }
-
-    public long getBlackKing() {
-        return this.details.blackKing;
-    }
-
-    public void setBlackKing(long blackKing) {
-        this.details.blackKing = blackKing;
-    }
-
-
-
-
-
-
-
-
-
-    private void makeBoardBasedOnFENSpecific(String fen){
-        parseFenStringSpecific(fen);
-
-        this.setWhiteTurn(isItWhitesTurnSpecific(fen));
-
-        boolean[] castlingRights = castlingRightsSpecific(fen);
-        this.setWhiteCanCastleK(castlingRights[0]);
-        this.setWhiteCanCastleQ(castlingRights[1]);
-        this.setBlackCanCastleK(castlingRights[2]);
-        this.setBlackCanCastleQ(castlingRights[3]);
-
-        if (isEPFlagSetSpecific(fen)){
-            epFlagSpecific(fen);
-        }
-    }
-
-
-    private static boolean totalMovesSpecific(String fen){
-        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
-
-        String epFlags = "";
-
-        if (m.find()){
-            epFlags = m.group(3);
-        }
-        if (epFlags.length() == 0){
-            throw new RuntimeException("Could not Parse board rep of fen string");
-        }
-
-        return !epFlags.equals("-");
-    }
-
-
-    private static boolean fiftyMovesSpecific(String fen){
-        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
-
-        String epFlags = "";
-
-        if (m.find()){
-            epFlags = m.group(3);
-        }
-        if (epFlags.length() == 0){
-            throw new RuntimeException("Could not Parse board rep of fen string");
-        }
-
-        return !epFlags.equals("-");
-    }
-
-    private void epFlagSpecific(String fen){
-        String boardPattern = " (.) (\\w+|-) (\\w|-)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
-
-        String epFlags = "";
-
-        if (m.find()){
-            epFlags = m.group(3);
-        }
-        if (epFlags.length() == 0){
-            throw new RuntimeException("Could not Parse board rep of fen string");
-        }
-
-        int epFlag;
-        switch (epFlags) {
-            case "a": {
-                epFlag = 1;
-                break;
-            }
-            case "b": {
-                epFlag = 2;
-                break;
-            }
-            case "c": {
-                epFlag = 3;
-                break;
-            }
-            case "d": {
-                epFlag = 4;
-                break;
-            }
-            case "e": {
-                epFlag = 5;
-                break;
-            }
-            case "f": {
-                epFlag = 6;
-                break;
-            }
-            case "g": {
-                epFlag = 7;
-                break;
-            }
-            case "h": {
-                epFlag = 8;
-                break;
-            }
-            default:
-                return;
-        }
-        final long item = buildStackData(0, this, 50, ENPASSANTVICTIM, epFlag);
-        this.moveStackArrayPush(item);
-    }
-
-    private static boolean isEPFlagSetSpecific(String fen){
-        String boardPattern = " (.) (\\w+|-) (\\w+|-)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
-
-        String epFlags = "";
-
-        if (m.find()){
-            epFlags = m.group(3);
-        }
-        if (epFlags.length() == 0){
-            throw new RuntimeException("Could not Parse board rep of fen string");
-        }
-
-        return !epFlags.equals("-");
-    }
-
-    private static boolean[] castlingRightsSpecific(String fen){
-        boolean[] castlingRights = {
-                false, false, false, false,
-        };
-        String boardPattern = " (.) (\\w+|-)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
-        String castleString = "";
-        if (m.find()){
-            castleString = m.group(2);
-        }
-        if (castleString.length() == 0){
-            throw new RuntimeException("Could not Parse board rep of fen string");
-        }
-
-        if (castleString.equals("-")){
-            return castlingRights;
-        }
-
-        if (castleString.contains("K")){
-            castlingRights[0] = true;
-        }
-        if (castleString.contains("Q")){
-            castlingRights[1] = true;
-        }
-        if (castleString.contains("k")){
-            castlingRights[2] = true;
-        }
-        if (castleString.contains("q")){
-            castlingRights[3] = true;
-        }
-
-        return castlingRights;
-    }
-
-    private boolean isItWhitesTurnSpecific(String fen){
-        String boardPattern = " (.)";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
-        String player = "";
-        if (m.find()){
-            player = m.group(1);
-        }
-        if (player.length() == 0){
-            throw new RuntimeException("Could not Parse board rep of fen string");
-        }
-        return player.equals("w");
-    }
-
-    private void parseFenStringSpecific (String fen){
-        String boardRepresentation = boardRepSpecific(fen);
-        int length = boardRepresentation.length();
-        int index = -1;
-        int square = 63;
-        while (true){
-            index++;
-            if (index >= length){
-                break;
-            }
-            if (square < 0){
-                break;
-            }
-            String entry = Character.toString(boardRepresentation.charAt(index));
-            if (entry.equals("/")){
+        for (int i = 0; i < c.length; i++) {
+            if (c[i] == ' ') {
+                phase++;
                 continue;
             }
-            try {
-                int i = Integer.parseInt(entry);
-                square -= (i);
+            if (c[i] == '-') {
                 continue;
             }
-            catch (NumberFormatException ignored){
+            switch (phase) {
+                case 1: //board
+                    switch (c[i]) {
+                        case 'P':
+                            whichPiece = WHITE_PAWN;
+                            break;
+                        case 'N':
+                            whichPiece = WHITE_KNIGHT;
+                            break;
+                        case 'B':
+                            whichPiece = WHITE_BISHOP;
+                            break;
+                        case 'R':
+                            whichPiece = WHITE_ROOK;
+                            break;
+                        case 'Q':
+                            whichPiece = WHITE_QUEEN;
+                            break;
+                        case 'K':
+                            whichPiece = WHITE_KING;
+                            break;
+
+                        case 'p':
+                            whichPiece = BLACK_PAWN;
+                            break;
+                        case 'n':
+                            whichPiece = BLACK_KNIGHT;
+                            break;
+                        case 'b':
+                            whichPiece = BLACK_BISHOP;
+                            break;
+                        case 'r':
+                            whichPiece = BLACK_ROOK;
+                            break;
+                        case 'q':
+                            whichPiece = BLACK_QUEEN;
+                            break;
+                        case 'k':
+                            whichPiece = BLACK_KING;
+                            break;
+                        case '/':
+                            continue;
+                        default:
+                            square -= (c[i] - 48);
+                            continue;
+                    }
+                    square--;
+
+                    this.pieces[whichPiece / 7][whichPiece < 7 ? whichPiece : whichPiece - 6] |= newPieceOnSquare(square);
+                    pieces[whichPiece / 7][ALL_COLOUR_PIECES] |= newPieceOnSquare(square);
+                    pieceSquareTable[square] = whichPiece;
+
+                    break;
+
+                case 2: //player
+                    if (c[i] == 'b') {
+                        turn = BLACK;
+                    }
+                    else{
+                        turn = WHITE;
+                    }
+                    break;
+
+                case 3: //castle
+                    switch (c[i]) {
+                        case 'K':
+                            castlingRights |= castlingRightsOn[WHITE][K];
+                            break;
+                        case 'Q':
+                            castlingRights |= castlingRightsOn[WHITE][Q];
+                            break;
+                        case 'q':
+                            castlingRights |= castlingRightsOn[BLACK][Q];
+                            break;
+                        case 'k':
+                            castlingRights |= castlingRightsOn[BLACK][K];
+                            break;
+                    }
+                    break;
+
+                case 4: //ep
+                    final long item = buildStackDataBetter(0, turn, fiftyMoveCounter,
+                            castlingRights, ENPASSANTVICTIM, (int) c[i] - 96);
+                    moveStackArrayPush(item);
+                    phase++;
+                    break;
+
+                case 5:
+                    fiftyMoveCounter = c[i];
+                    phase++;
+                    break;
+
+                case 6:
+                    fullMoveCounter = c[i];
+                    phase++;
+                    break;
             }
-            long pieceFromFen = BitOperations.newPieceOnSquare(square);
-            square--;
-            switch (entry) {
-                case "P":
-                    this.setWhitePawns(this.getWhitePawns() | pieceFromFen);
-                    break;
-                case "N":
-                    this.setWhiteKnights(this.getWhiteKnights() | pieceFromFen);
-                    break;
-                case "B":
-                    this.setWhiteBishops(this.getWhiteBishops() | pieceFromFen);
-                    break;
-                case "R":
-                    this.setWhiteRooks(this.getWhiteRooks() | pieceFromFen);
-                    break;
-                case "Q":
-                    this.setWhiteQueen(this.getWhiteQueen() | pieceFromFen);
-                    break;
-                case "K":
-                    this.setWhiteKing(this.getWhiteKing() | pieceFromFen);
-                    break;
-
-                case "p":
-                    this.setBlackPawns(this.getBlackPawns() | pieceFromFen);
-                    break;
-                case "n":
-                    this.setBlackKnights(this.getBlackKnights() | pieceFromFen);
-                    break;
-                case "b":
-                    this.setBlackBishops(this.getBlackBishops() | pieceFromFen);
-                    break;
-                case "r":
-                    this.setBlackRooks(this.getBlackRooks() | pieceFromFen);
-                    break;
-                case "q":
-                    this.setBlackQueen(this.getBlackQueen() | pieceFromFen);
-                    break;
-                case "k":
-                    this.setBlackKing(this.getBlackKing() | pieceFromFen);
-                    break;
-                default:
-                    throw new RuntimeException("Could not parse fen string");
-            }
         }
-    }
-
-    private static String boardRepSpecific(String fen){
-        String boardPattern = "^[\\w*/]*";
-        Pattern r = Pattern.compile(boardPattern);
-        Matcher m = r.matcher(fen);
-        String boardRepresentation = "";
-        if (m.find()){
-            boardRepresentation = m.group();
-        }
-        if (boardRepresentation.length() == 0){
-            throw new RuntimeException("Could not Parse board rep of fen string");
-        }
-
-        return boardRepresentation;
+        zobristHash = boardToHash();
+        Setup.init(false);
     }
 
 
-    public ChessboardDetails getDetails() {
-        return details;
-    }
-
-    public void setDetails(ChessboardDetails details) {
-        this.details = details;
-    }
-
-    public long getBoardHash() {
-        return zobristHash;
-    }
-
-    public long getZobrist() {
-        return zobristHash;
-    }
-
-    public void setBoardHash(long zobristHash) {
-        this.zobristHash = zobristHash;
-    }
-
-    void zobristStackArrayPush(long l){
-        zobristHashStack[zobristIndex] = l;
-
-        zobristIndex++;
-    }
-
-    void zobristStackArrayPop(){
-        if (zobristIndex < 1){
-            throw new RuntimeException("popping an empty zobrist array");
-        }
-        
-        zobristIndex--;
-        zobristHash = zobristHashStack[zobristIndex];
-        zobristHashStack[zobristIndex] = 0;
-        
-    }
-
-    long zobristStackArrayPeek(){
-        if (zobristIndex < 1){
-            throw new RuntimeException("peeking at empty zobrist array");
-        }
-        return zobristHashStack[zobristIndex-1];
-    }
-
-    private int checkIndex = 0;
-    void checkStackArrayPush(){
-        checkStack[checkIndex] = this.inCheckRecorder;
-        this.inCheckRecorder = false;
-        checkIndex++;
-    }
-
-    void checkStackArrayPop(){
-        if (checkIndex < 1){
-            throw new RuntimeException("popping an empty array");
-        }       
-        checkIndex--; 
-        inCheckRecorder = checkStack[checkIndex];
-        checkStack[checkIndex] = false;
-    }
-    
-
-    private int pinIndex = 0;
-    void pinStackArrayPush(){
-        pinnedPiecesArray[pinIndex] = this.pinnedPieces;
-        this.pinnedPieces = 0;
-        pinIndex++;
-    }
-
-    void pinStackArrayPop(){
-        if (pinIndex < 1){
-            throw new RuntimeException("popping an empty array");
-        } 
-        pinIndex--;  
-        pinnedPieces = pinnedPiecesArray[pinIndex];
-        pinnedPiecesArray[pinIndex] = 0;
-    }
-    
-    
-    
-    void moveStackArrayPush(long l){
-        moveStackArray[index] = l;
-
-        index++;
-    }
-
-    void moveStackArrayPop(){
-        if (index < 1){
-            throw new RuntimeException("popping an empty array");
-        }
-        moveStackArray[index] = 0;
-        index--;
-        moveStackData = moveStackArray[index];
-    }
-
-    long moveStackArrayPeek(){
-        if (index < 1){
-            throw new RuntimeException("peeking at empty array");
-        }
-        return moveStackArray[index-1];
-    }
-    
-    boolean hasPreviousMove(){
-        return index > 0 && moveStackArray[index - 1] != 0;
-    }
-
-    public long[] getZobristHashStack() {
-        return zobristHashStack;
-    }
 }

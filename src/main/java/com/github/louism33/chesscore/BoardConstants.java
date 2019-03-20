@@ -1,12 +1,69 @@
 package com.github.louism33.chesscore;
 
-public class BitboardResources {
+public final class BoardConstants {
 
-    public static final int WHITE = 1, BLACK = 0;
+    public static final int NO_PIECE = 0;
 
-    public static long[][] inBetweenSquares = new long[64][64];
+    public static final int ALL_COLOUR_PIECES = 0;
+
+    public static final int WHITE = 0;
+    public static final int BLACK = 1;
+
+    public static final int BOTH = 2;
+
+    public static final int PAWN = 1;
+    public static final int KNIGHT = 2;
+    public static final int BISHOP = 3;
+    public static final int ROOK = 4;
+    public static final int QUEEN = 5;
+    public static final int KING = 6;
+
+    public static final int WHITE_PAWN = 1;
+    public static final int WHITE_KNIGHT = 2;
+    public static final int WHITE_BISHOP = 3;
+    public static final int WHITE_ROOK = 4;
+    public static final int WHITE_QUEEN = 5;
+    public static final int WHITE_KING = 6;
+
+    public static final int BLACK_PAWN = 7;
+    public static final int BLACK_KNIGHT = 8;
+    public static final int BLACK_BISHOP = 9;
+    public static final int BLACK_ROOK = 10;
+    public static final int BLACK_QUEEN = 11;
+    public static final int BLACK_KING = 12;
+
+    public static final int[][] PIECE = new int[2][7];
+    static{
+        PIECE[WHITE][PAWN] = WHITE_PAWN;
+        PIECE[WHITE][KNIGHT] = WHITE_KNIGHT;
+        PIECE[WHITE][BISHOP] = WHITE_BISHOP;
+        PIECE[WHITE][ROOK] = WHITE_ROOK;
+        PIECE[WHITE][QUEEN] = WHITE_QUEEN;
+        PIECE[WHITE][KING] = WHITE_KING;
+
+        PIECE[BLACK][PAWN] = BLACK_PAWN;
+        PIECE[BLACK][KNIGHT] = BLACK_KNIGHT;
+        PIECE[BLACK][BISHOP] = BLACK_BISHOP;
+        PIECE[BLACK][ROOK] = BLACK_ROOK;
+        PIECE[BLACK][QUEEN] = BLACK_QUEEN;
+        PIECE[BLACK][KING] = BLACK_KING;
+    }
+
+    public static final int
+            H1 = 0, G1 = 1, F1 = 2, E1 = 3, D1 = 4, C1 = 5, B1 = 6, A1 = 7,
+            H2 = 8, G2 = 9, F2 = 10, E2 = 11, D2 = 12, C2 = 13, B2 = 14, A2 = 15,
+            H3 = 16, G3 = 17, F3 = 18, E3 = 19, D3 = 20, C3 = 21, B3 = 22, A3 = 23,
+            H4 = 24, G4 = 25, F4 = 26, E4 = 27, D4 = 28, C4 = 29, B4 = 30, A4 = 31,
+            H5 = 32, G5 = 33, F5 = 34, E5 = 35, D5 = 36, C5 = 37, B5 = 38, A5 = 39,
+            H6 = 40, G6 = 41, F6 = 42, E6 = 43, D6 = 44, C6 = 45, B6 = 46, A6 = 47,
+            H7 = 48, G7 = 49, F7 = 50, E7 = 51, D7 = 52, C7 = 53, B7 = 54, A7 = 55,
+            H8 = 56, G8 = 57, F8 = 58, E8 = 59, D8 = 60, C8 = 61, B8 = 62, A8 = 63;
+
+    public static final long[][] inBetweenSquares = new long[64][64];
 
     public static final long UNIVERSE = 0xffffffffffffffffL;
+
+    public static final long INITIAL_WHITE_PIECES = 0x000000000000FFFFL;
 
     public static final long INITIAL_WHITE_PAWNS = 0x000000000000FF00L;
     public static final long INITIAL_WHITE_KNIGHTS = 0x0000000000000042L;
@@ -15,16 +72,65 @@ public class BitboardResources {
     public static final long INITIAL_WHITE_QUEEN = 0x0000000000000010L;
     public static final long INITIAL_WHITE_KING = 0x0000000000000008L;
 
+    public static final long INITIAL_BLACK_PIECES = 0xFFFF000000000000L;
+
     public static final long INITIAL_BLACK_PAWNS = 0x00FF000000000000L;
     public static final long INITIAL_BLACK_KNIGHTS = 0x4200000000000000L;
     public static final long INITIAL_BLACK_BISHOPS = 0x2400000000000000L;
     public static final long INITIAL_BLACK_ROOKS = 0x8100000000000000L;
     public static final long INITIAL_BLACK_QUEEN = 0x1000000000000000L;
     public static final long INITIAL_BLACK_KING = 0x0800000000000000L;
+    public static final long[][] INITIAL_PIECES = new long[2][7];
+    public static final int[] INITIAL_PIECE_SQUARES = new int[64];
+
+    static {
+        INITIAL_PIECES[WHITE][PAWN] = INITIAL_WHITE_PAWNS;
+        INITIAL_PIECES[WHITE][KNIGHT] = INITIAL_WHITE_KNIGHTS;
+        INITIAL_PIECES[WHITE][BISHOP] = INITIAL_WHITE_BISHOPS;
+        INITIAL_PIECES[WHITE][ROOK] = INITIAL_WHITE_ROOKS;
+        INITIAL_PIECES[WHITE][QUEEN] = INITIAL_WHITE_QUEEN;
+        INITIAL_PIECES[WHITE][KING] = INITIAL_WHITE_KING;
+
+        INITIAL_PIECES[WHITE][ALL_COLOUR_PIECES] = INITIAL_WHITE_PIECES;
+
+        INITIAL_PIECES[BLACK][PAWN] = INITIAL_BLACK_PAWNS;
+        INITIAL_PIECES[BLACK][KNIGHT] = INITIAL_BLACK_KNIGHTS;
+        INITIAL_PIECES[BLACK][BISHOP] = INITIAL_BLACK_BISHOPS;
+        INITIAL_PIECES[BLACK][ROOK] = INITIAL_BLACK_ROOKS;
+        INITIAL_PIECES[BLACK][QUEEN] = INITIAL_BLACK_QUEEN;
+        INITIAL_PIECES[BLACK][KING] = INITIAL_BLACK_KING;
+
+        INITIAL_PIECES[BLACK][ALL_COLOUR_PIECES] = INITIAL_BLACK_PIECES;
+
+
+        for (int i = 0; i < 8; i++) {
+            INITIAL_PIECE_SQUARES[i + 8] = WHITE_PAWN;
+            INITIAL_PIECE_SQUARES[i + 64-16] = BLACK_PAWN;
+        }
+        INITIAL_PIECE_SQUARES[0] = WHITE_ROOK;
+        INITIAL_PIECE_SQUARES[1] = WHITE_KNIGHT;
+        INITIAL_PIECE_SQUARES[2] = WHITE_BISHOP;
+        INITIAL_PIECE_SQUARES[3] = WHITE_KING;
+        INITIAL_PIECE_SQUARES[4] = WHITE_QUEEN;
+        INITIAL_PIECE_SQUARES[5] = WHITE_BISHOP;
+        INITIAL_PIECE_SQUARES[6] = WHITE_KNIGHT;
+        INITIAL_PIECE_SQUARES[7] = WHITE_ROOK;
+
+        INITIAL_PIECE_SQUARES[56] = BLACK_ROOK;
+        INITIAL_PIECE_SQUARES[57] = BLACK_KNIGHT;
+        INITIAL_PIECE_SQUARES[58] = BLACK_BISHOP;
+        INITIAL_PIECE_SQUARES[59] = BLACK_KING;
+        INITIAL_PIECE_SQUARES[60] = BLACK_QUEEN;
+        INITIAL_PIECE_SQUARES[61] = BLACK_BISHOP;
+        INITIAL_PIECE_SQUARES[62] = BLACK_KNIGHT;
+        INITIAL_PIECE_SQUARES[63] = BLACK_ROOK;
+    }
 
     public static final long WHITE_COLOURED_SQUARES = 0x5555555555555555L;
     public static final long BLACK_COLOURED_SQUARES = 0xAAAAAAAAAAAAAAAAL;
 
+    public static final long CASTLE_KING_DESTINATIONS = 0x2200000000000022L;
+    
     static long CASTLE_WHITE_KING_SQUARES = 0x0000000000000006L;
     static long CASTLE_WHITE_QUEEN_SQUARES = 0x0000000000000070L;
     static long CASTLE_BLACK_KING_SQUARES = 0x0600000000000000L;
@@ -38,6 +144,17 @@ public class BitboardResources {
     public static final long RANK_SIX = 0x0000FF0000000000L;
     public static final long RANK_SEVEN = 0x00FF000000000000L;
     public static final long RANK_EIGHT = 0xFF00000000000000L;
+
+    public static final long[] RANKS = new long[]{
+            0x00000000000000FFL,
+            0x000000000000FF00L,
+            0x0000000000FF0000L,
+            0x00000000FF000000L,
+            0x000000FF00000000L,
+            0x0000FF0000000000L,
+            0x00FF000000000000L,
+            0xFF00000000000000L,
+    };
 
     public static final long FILE_H = 0x0101010101010101L;
     public static final long FILE_G = 0x0202020202020202L;
@@ -58,6 +175,25 @@ public class BitboardResources {
             0x4040404040404040L,
             0x8080808080808080L,
     };
+
+    public static final long[] PENULTIMATE_RANKS = new long[2];
+    public static final long[] FINAL_RANKS = new long[2];
+    public static final long[] INTERMEDIATE_RANKS = new long[2];
+    public static final long[] ENPASSANT_RANK = new long[2];
+
+    static {
+        PENULTIMATE_RANKS[WHITE] = RANK_SEVEN;
+        PENULTIMATE_RANKS[BLACK] = RANK_TWO;
+
+        FINAL_RANKS[WHITE] = RANK_EIGHT;
+        FINAL_RANKS[BLACK] = RANK_ONE;
+
+        INTERMEDIATE_RANKS[WHITE] = RANK_THREE;
+        INTERMEDIATE_RANKS[BLACK] = RANK_SIX;
+
+        ENPASSANT_RANK[WHITE] = RANK_FOUR;
+        ENPASSANT_RANK[BLACK] = RANK_FIVE;
+    }
 
     public static final long[] ROWS = new long[]{
             0x00000000000000FFL,
@@ -102,6 +238,39 @@ public class BitboardResources {
     public static final long whiteCastleQueenUnthreateneds = 0x0000000000000030L;
     public static final long blackCastleQueenUnthreateneds = 0x3000000000000000L;
 
+    public static final long[] castleQueenNoThreat = new long[2];
+    public static final long[][] castleEmpties = new long[2][2];
+
+    public static final int[][] castlingRightsOn = new int[2][2];
+
+    public static final int[][] castlingRightsMask = new int[2][3];
+
+    public static final int KQ = 2, K = 1, Q = 0;
+    static{
+        castleQueenNoThreat[WHITE] = whiteCastleQueenUnthreateneds;
+        castleQueenNoThreat[BLACK] = blackCastleQueenUnthreateneds;
+
+        castleEmpties[WHITE][Q] = whiteCastleQueenEmpties;
+        castleEmpties[WHITE][K] = whiteCastleKingEmpties;
+
+        castleEmpties[BLACK][Q] = blackCastleQueenEmpties;
+        castleEmpties[BLACK][K] = blackCastleKingEmpties;
+
+        castlingRightsOn[WHITE][Q] = 0b0001;
+        castlingRightsOn[WHITE][K] = 0b0010;
+
+        castlingRightsOn[BLACK][Q] = 0b0100;
+        castlingRightsOn[BLACK][K] = 0b1000;
+
+        castlingRightsMask[WHITE][Q] = 0b1110;
+        castlingRightsMask[WHITE][K] = 0b1101;
+        castlingRightsMask[WHITE][KQ] = castlingRightsMask[WHITE][K] ^ castlingRightsMask[WHITE][Q];
+
+        castlingRightsMask[BLACK][Q] = 0b1011;
+        castlingRightsMask[BLACK][K] = 0b0111;
+        castlingRightsMask[BLACK][KQ] = castlingRightsMask[BLACK][K] ^ castlingRightsMask[BLACK][Q];
+    }
+
     public final static long[] immediateAdjacentSquares = {
             0x0000000000000302L, 0x0000000000000705L, 0x0000000000000e0aL, 0x0000000000001c14L, 0x0000000000003828L, 0x0000000000007050L, 0x000000000000e0a0L, 0x000000000000c040L,
             0x0000000000030203L, 0x0000000000070507L, 0x00000000000e0a0eL, 0x00000000001c141cL, 0x0000000000382838L, 0x0000000000705070L, 0x0000000000e0a0e0L, 0x0000000000c040c0L,
@@ -135,6 +304,7 @@ public class BitboardResources {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
     };
 
+
     public final static long[] whitePawnKillZone = {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
             3L, 7L, 14L, 28L, 56L, 112L, 224L, 192L,
@@ -146,6 +316,12 @@ public class BitboardResources {
             847723465015296L, 1978021418369024L, 3956042836738048L, 7912085673476096L, 15824171346952192L, 31648342693904384L, 63296685387808768L, 54254301760978944L,
     };
 
+    public final static long[][] pawnKillZone = new long[2][64];
+    static {
+        pawnKillZone[WHITE] = whitePawnKillZone;
+        pawnKillZone[BLACK] = blackPawnKillZone;
+    }
+    
     public final static long[] fileForwardBlack = {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
             1L, 2L, 4L, 8L, 16L, 32L, 64L, 128L,
@@ -168,6 +344,13 @@ public class BitboardResources {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
     };
     
+    public final static long[][] fileForward = new long[2][64];
+
+    static {
+        fileForward[WHITE] = fileForwardWhite;
+        fileForward[BLACK] = fileForwardBlack;
+    }
+    
     public final static long[] antiDiagonal = {
             1L, 258L, 66052L, 16909320L, 4328785936L, 1108169199648L, 283691315109952L, 72624976668147840L, 145249953336295424L, 290499906672525312L, 580999813328273408L, 1161999622361579520L, 2323998145211531264L, 4647714815446351872L, -9223372036854775808L,
     };
@@ -175,6 +358,35 @@ public class BitboardResources {
     public final static long[] diagonal = {
             128L, 32832L, 8405024L, 2151686160L, 550831656968L, 141012904183812L, 36099303471055874L, -9205322385119247871L, 4620710844295151872L, 2310355422147575808L, 1155177711073755136L, 577588855528488960L, 288794425616760832L, 144396663052566528L, 72057594037927936L,
     };
+
+    public static final long[] PAWN_PUSH_MASK_BLACK = {
+            0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
+            2L, 4L, 8L, 16L, 32L, 64L, 128L, 256L,
+            512L, 1024L, 2048L, 4096L, 8192L, 16384L, 32768L, 65536L,
+            131072L, 262144L, 524288L, 1048576L, 2097152L, 4194304L, 8388608L, 16777216L,
+            33554432L, 67108864L, 134217728L, 268435456L, 536870912L, 1073741824L, 2147483648L, 4294967296L,
+            8589934592L, 17179869184L, 34359738368L, 68719476736L, 137438953472L, 274877906944L, 549755813888L, 1103806595072L,
+            2207613190144L, 4415226380288L, 8830452760576L, 17660905521152L, 35321811042304L, 70643622084608L, 141287244169216L, 0L,
+            0L, 0L, 0L, 0L, 0L, 0L, 0L
+    };
+
+
+    public static final long[] PAWN_PUSH_MASK_WHITE = {
+            0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 16842752L,
+            33685504L, 67371008L, 134742016L, 269484032L, 538968064L, 1077936128L, 2155872256L, 16777216L,
+            33554432L, 67108864L, 134217728L, 268435456L, 536870912L, 1073741824L, 2147483648L, 4294967296L,
+            8589934592L, 17179869184L, 34359738368L, 68719476736L, 137438953472L, 274877906944L, 549755813888L, 1099511627776L,
+            2199023255552L, 4398046511104L, 8796093022208L, 17592186044416L, 35184372088832L, 70368744177664L, 140737488355328L, 281474976710656L,
+            562949953421312L, 1125899906842624L, 2251799813685248L, 4503599627370496L, 9007199254740992L, 18014398509481984L, 36028797018963968L, 72057594037927936L,
+            144115188075855872L, 288230376151711744L, 576460752303423488L, 1152921504606846976L, 2305843009213693952L, 4611686018427387904L, -9223372036854775808L, 0L,
+            0L, 0L, 0L, 0L, 0L, 0L, 0L,
+    };
+
+    public static final long[][] PAWN_PUSH_TABLE = new long[2][PAWN_PUSH_MASK_WHITE.length];
+    static {
+        PAWN_PUSH_TABLE[WHITE] = PAWN_PUSH_MASK_WHITE;
+        PAWN_PUSH_TABLE[BLACK] = PAWN_PUSH_MASK_BLACK;
+    }
 
     public static final long[] PAWN_CAPTURE_TABLE_WHITE = {
             0x200L, 0x500L, 0xa00L, 0x1400L, 0x2800L, 0x5000L, 0xa000L, 0x4000L,
@@ -198,9 +410,14 @@ public class BitboardResources {
             0x2000000000000L, 0x5000000000000L, 0xa000000000000L, 0x14000000000000L, 0x28000000000000L, 0x50000000000000L, 0xa0000000000000L, 0x40000000000000L,
     };
 
+    public static final long[][] PAWN_CAPTURE_TABLE = new long[2][PAWN_CAPTURE_TABLE_WHITE.length];
+    static{
+        PAWN_CAPTURE_TABLE[WHITE] = PAWN_CAPTURE_TABLE_WHITE;
+        PAWN_CAPTURE_TABLE[BLACK] = PAWN_CAPTURE_TABLE_BLACK;
+    }
 
-    public static long[][] rookDatabase = new long[64][];
-    public static long[][] bishopDatabase = new long[64][];
+    public static final long[][] rookDatabase = new long[64][];
+    public static final long[][] bishopDatabase = new long[64][];
 
     public static final int[] rookShiftAmounts = new int[]{
             12, 11, 11, 11, 11, 11, 11, 12,
@@ -255,7 +472,7 @@ public class BitboardResources {
             28429419358454808L,3417840619225600L,4611721409604096000L,4611976293897077282L,3534219749380719108L,1125969163305216L,4521200508731920L,18023473842520080L
     };
 
-    static final long[] KNIGHT_MOVE_TABLE = {
+    public static final long[] KNIGHT_MOVE_TABLE = {
             0x20400L, 0x50800L, 0xa1100L, 0x142200L, 0x284400L, 0x508800L, 0xa01000L, 0x402000L,
             0x2040004L, 0x5080008L, 0xa110011L, 0x14220022L, 0x28440044L, 0x50880088L, 0xa0100010L, 0x40200020L,
             0x204000402L, 0x508000805L, 0xa1100110aL, 0x1422002214L, 0x2844004428L, 0x5088008850L, 0xa0100010a0L, 0x4020002040L,
@@ -266,7 +483,7 @@ public class BitboardResources {
             0x4020000000000L, 0x8050000000000L, 0x110a0000000000L, 0x22140000000000L, 0x44280000000000L, 0x88500000000000L, 0x10a00000000000L, 0x20400000000000L,
     };
 
-    static final long[] KING_MOVE_TABLE = {
+    public static final long[] KING_MOVE_TABLE = {
             0x302L, 0x705L, 0xe0aL, 0x1c14L, 0x3828L, 0x7050L, 0xe0a0L, 0xc040L,
             0x30203L, 0x70507L, 0xe0a0eL, 0x1c141cL, 0x382838L, 0x705070L, 0xe0a0e0L, 0xc040c0L,
             0x3020300L, 0x7050700L, 0xe0a0e00L, 0x1c141c00L, 0x38283800L, 0x70507000L, 0xe0a0e000L, 0xc040c000L,

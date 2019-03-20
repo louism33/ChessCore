@@ -1,9 +1,13 @@
 package com.github.louism33.chesscore;
 
+import com.github.louism33.utils.NPSTest;
+import com.github.louism33.utils.Perft;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-class PerftTest {
+import java.util.Arrays;
+
+public class PerftTest {
 
     /*
     Many thanks to:
@@ -19,118 +23,105 @@ class PerftTest {
      */
 
     @Test
+    void npsTest(){
+        NPSTest.npsTest(new Chessboard(), 6);
+//        NPSTest.npsTest(new Chessboard(), 7);
+//        NPSTest.npsTest(new Chessboard(), 8);
+    }
+
+
+    @Test
     void regularBoard() {
-        Assert.assertEquals(
-                Perft.perftTest(5, new Chessboard(), 4865609),
-                4865609);
-
-
-        Assert.assertEquals(
-                Perft.perftTest(6, new Chessboard(), 119060324),
-                119060324);
-
-
-//        Assert.assertEquals(
-//                Perft.perftTest(7, new Chessboard(), 3195901860L),
-//                3195901860L);
-
-
-//        Assert.assertEquals(
-//                Perft.perftTest(8, new Chessboard(), 84998978956L),
-//                84998978956L);
-
-
-//        Assert.assertEquals(
-//                Perft.runPerftTestWithBoardLong(9, new Chessboard(), 2439530234167L),
-//                2439530234167L);
-//
-//        Assert.assertEquals(
-//                Perft.runPerftTestWithBoardLong(10, new Chessboard(), 69352859712417L),
-//                69352859712417L);
+        Assert.assertEquals(4865609, Perft.perftTest(new Chessboard(), 5));
+        System.out.println("regular board depth " + 5 + " correct.");
+//        Assert.assertEquals(119060324, Perft.perftTest(new Chessboard(), 6));
+//        System.out.println("regular board depth " + 6 + " correct.");
+//        Assert.assertEquals(3195901860L, Perft.perftTest(new Chessboard(), 7));
+//        System.out.println("regular board depth " + 7 + " correct.");
+//        Assert.assertEquals(84998978956L, Perft.perftTest(new Chessboard(), 8));
+//        System.out.println("regular board depth " + 8 + " correct.");
     }
 
 
     @Test
     void test1() {
-        Assert.assertEquals(
-                Perft.perftTest(6, new Chessboard("3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1"), 1134888),
-                1134888);
+        String fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
+        Assert.assertEquals(1134888, Perft.perftTest(new Chessboard(fen), 6));
+        System.out.println(fen+"\ndepth " + 6 + " correct.");
     }
 
     @Test
     void test2() {
-        Assert.assertEquals(
-                Perft.perftTest(6, new Chessboard("8/8/4k3/8/2p5/8/B2P2K1/8 w - - 0 1"), 1015133),
-                1015133);
+        String fen = "8/8/4k3/8/2p5/8/B2P2K1/8 w - - 0 1";
+        Assert.assertEquals(1015133, Perft.perftTest(new Chessboard(fen), 6));
+        System.out.println(fen+"\ndepth " + 6 + " correct.");
     }
 
     @Test
     void test3() {
-        Assert.assertEquals(
-                Perft.perftTest(6, new Chessboard("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"), 1440467),
-                1440467);
+        String fen = "8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1";
+        Assert.assertEquals(1440467, Perft.perftTest(new Chessboard(fen), 6));
+        System.out.println(fen+"\ndepth " + 6 + " correct.");
     }
 
     @Test
     void test4() {
-        Assert.assertEquals(
-                Perft.perftTest(6, new Chessboard("5k2/8/8/8/8/8/8/4K2R w K - 0 1"), 661072),
-                661072);
-
+        String fen = "5k2/8/8/8/8/8/8/4K2R w K - 0 1";
+        Assert.assertEquals(661072, Perft.perftTest(new Chessboard(fen), 6));
+        System.out.println(fen+"\ndepth " + 6 + " correct.");
     }
 
     @Test
     void test5() {
-        Assert.assertEquals(
-                Perft.perftTest(6, new Chessboard("3k4/8/8/8/8/8/8/R3K3 w Q - 0 1"), 803711),
-                803711);
+
+        String fen = "3k4/8/8/8/8/8/8/R3K3 w Q - 0 1";
+        Assert.assertEquals(803711, Perft.perftTest(new Chessboard(fen), 6));
+        System.out.println(fen+"\ndepth " + 6 + " correct.");
 
     }
 
 
     @Test
     void test6() {
-        Assert.assertEquals(
-                Perft.perftTest(4, new Chessboard("r3k2r/1b4bq/8/8/8/8/7B/R3K2R w KQkq - 0 1"), 1274206),
-                1274206);
+        String fen = "r3k2r/1b4bq/8/8/8/8/7B/R3K2R w KQkq - 0 1";
+        Assert.assertEquals(1274206, Perft.perftTest(new Chessboard(fen), 4));
+        System.out.println(fen+"\ndepth " + 4 + " correct.");
     }
 
 
     @Test
     void test7() {
-        Assert.assertEquals(
-                Perft.perftTest(4, new Chessboard("r3k2r/8/3Q4/8/8/5q2/8/R3K2R b KQkq - 0 1"), 1720476),
-                1720476);
-
+        String fen = "r3k2r/8/3Q4/8/8/5q2/8/R3K2R b KQkq - 0 1";
+        Assert.assertEquals(1720476, Perft.perftTest(new Chessboard(fen), 4));
+        System.out.println(fen+"\ndepth " + 4 + " correct.");
     }
 
     @Test
     void test8() {
-        Assert.assertEquals(
-                Perft.perftTest(6, new Chessboard("2K2r2/4P3/8/8/8/8/8/3k4 w - - 0 1"), 3821001),
-                3821001);
+        String fen = "2K2r2/4P3/8/8/8/8/8/3k4 w - - 0 1";
+        Assert.assertEquals(3821001, Perft.perftTest(new Chessboard(fen), 6));
+        System.out.println(fen+"\ndepth " + 6 + " correct.");
     }
 
     @Test
     void test9() {
-
-        Assert.assertEquals(
-                Perft.perftTest(5, new Chessboard("8/8/1P2K3/8/2n5/1q6/8/5k2 b - - 0 1"), 1004658),
-                1004658);
+        String fen = "8/8/1P2K3/8/2n5/1q6/8/5k2 b - - 0 1";
+        Assert.assertEquals(1004658, Perft.perftTest(new Chessboard(fen), 5));
+        System.out.println(fen+"\ndepth " + 5 + " correct.");
     }
 
     @Test
     void test10() {
-        Assert.assertEquals(
-                Perft.perftTest(6, new Chessboard("4k3/1P6/8/8/8/8/K7/8 w - - 0 1"), 217342),
-                217342);
+        String fen = "4k3/1P6/8/8/8/8/K7/8 w - - 0 1";
+        Assert.assertEquals(217342, Perft.perftTest(new Chessboard(fen), 6));
+        System.out.println(fen+"\ndepth " + 6 + " correct.");
     }
 
     @Test
     void test11() {
-        Assert.assertEquals(
-                Perft.perftTest(6, new Chessboard("8/P1k5/K7/8/8/8/8/8 w - - 0 1"), 92683),
-                92683);
+        String fen = "8/P1k5/K7/8/8/8/8/8 w - - 0 1";
+        Assert.assertEquals(92683, Perft.perftTest(new Chessboard(fen), 6));
+        System.out.println(fen+"\ndepth " + 6 + " correct.");
 
     }
 
