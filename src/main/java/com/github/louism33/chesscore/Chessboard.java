@@ -25,6 +25,8 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 public class Chessboard {
 
+//    public final long[][] pieceMoveTable = new long[2][16];
+    
     public final long[][] pieces = new long[2][7];
 
     public final int[] pieceSquareTable = new int[64];
@@ -56,6 +58,7 @@ public class Chessboard {
     public long checkingPieces;
 
     public long pinnedPieces;
+    public long pinningPieces;
     private final long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
     private final boolean[] checkStack = new boolean[maxDepthAndArrayLength];
 
@@ -115,6 +118,7 @@ public class Chessboard {
         this.moveStackData = board.moveStackData;
         this.inCheckRecorder = board.inCheckRecorder;
         this.pinnedPieces = board.pinnedPieces;
+        this.pinningPieces = board.pinningPieces;
         this.legalMoveStackIndex = board.legalMoveStackIndex;
         this.masterIndex = board.masterIndex;
         this.moveStackIndex = board.moveStackIndex;
@@ -147,6 +151,10 @@ public class Chessboard {
         if (this.legalMoveStack[legalMoveStackIndex][0] != 0) {
             Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
         }
+        
+        
+//        PieceMoveTable.master(this);
+        
 
         int[] moves = this.legalMoveStack[legalMoveStackIndex];
 
@@ -176,7 +184,6 @@ public class Chessboard {
 
         final long allPieces = friends | enemies;
 
-
         final long checkingPieces = bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, 0,
                 allPieces, 2);
@@ -195,11 +202,12 @@ public class Chessboard {
             return this.legalMoveStack[legalMoveStackIndex];
         }
 
-        final long currentPinnedPieces = whichPiecesArePinned(myKing,
+        final long currentPinnedPieces = whichPiecesArePinned(this, myKing,
                 enemyBishops, enemyRooks, enemyQueens,
                 friends, allPieces);
 
         pinnedPieces = currentPinnedPieces;
+        
 
         final boolean hasPreviousMove = hasPreviousMove();
         if (numberOfCheckers == 1) {
@@ -956,6 +964,7 @@ public class Chessboard {
 
         pinnedPiecesArray[masterIndex] = this.pinnedPieces;
         pinnedPieces = 0;
+        pinningPieces = 0;
 
         zobristHashStack[masterIndex] = zobristHash;
         rotateMasterIndexUp();
