@@ -37,7 +37,7 @@ public class Chessboard {
      */
     private int castlingRights = 0xf;
 
-    public int fiftyMoveCounter = 0, fullMoveCounter = 0;
+    public int quietHalfMoveCounter = 0, fullMoveCounter = 0;
 
     public long zobristHash;
 
@@ -86,14 +86,6 @@ public class Chessboard {
         return hash;
     }
 
-    private int getFiftyMoveCounter() {
-        return fiftyMoveCounter;
-    }
-
-
-    /**
-     * A new Chessboard in the starting position, white to play.
-     */
     public Chessboard() {
         Setup.init(false);
 
@@ -107,14 +99,10 @@ public class Chessboard {
         zobristHash = boardToHash();
     }
 
-    /**
-     * Copy Constructor
-     * @param board the chessboard you want an exact copy of
-     */
     public Chessboard(Chessboard board) {
         this.turn = board.turn;
         this.castlingRights = board.castlingRights;
-        this.fiftyMoveCounter = board.fiftyMoveCounter;
+        this.quietHalfMoveCounter = board.quietHalfMoveCounter;
         this.zobristHash = board.zobristHash;
         this.moveStackData = board.moveStackData;
         this.inCheckRecorder = board.inCheckRecorder;
@@ -141,11 +129,7 @@ public class Chessboard {
         Setup.init(false);
     }
 
-    /**
-     * legal chess move generation
-     * @return an array of length 128 populated with fully legal chess moves, and 0s.
-     * Use @see com.github.louism33.chesscore.MoveParser.class for methods to interpret the move object
-     */
+
     public final int[] generateLegalMoves() {
         Assert.assertNotNull(this.legalMoveStack[legalMoveStackIndex]);
         // only clean array of moves if it has something in it
@@ -153,10 +137,6 @@ public class Chessboard {
             Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
         }
         
-        
-//        PieceMoveTable.master(this);
-        
-
         int[] moves = this.legalMoveStack[legalMoveStackIndex];
 
         final long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
@@ -391,10 +371,6 @@ public class Chessboard {
         return this.legalMoveStack[legalMoveStackIndex];
     }
 
-    /**
-     * Updates the board with the move you want.
-     * @param move the non-0 move you want to make of this board.
-     */
     public final void makeMoveAndFlipTurn(final int move) {
         this.rotateMoveIndexUp();
         Assert.assertNotEquals(move, 0);
@@ -420,16 +396,17 @@ public class Chessboard {
         if (hasPreviousMove()){
             zobristHash = updateWithEPFlags(moveStackArrayPeek(), zobristHash);
         }
-
-        if (move == 0) {
-            moveStackArrayPush(buildStackDataBetter(0, turn, fiftyMoveCounter, castlingRights, NULL_MOVE));
-            return;
-        }
         
         fullMoveCounter++;
 
-        boolean resetFifty = true;
-
+        if (move == 0) {
+            moveStackArrayPush(buildStackDataBetter(0, turn, quietHalfMoveCounter, castlingRights, NULL_MOVE));
+            quietHalfMoveCounter++;
+            return;
+        }
+        
+        boolean resetFifty = false;
+        
         if (isSpecialMove(move)) {
             switch (move & SPECIAL_MOVE_MASK) {
                 case CASTLING_MASK:
@@ -458,22 +435,28 @@ public class Chessboard {
                     zobristHash ^= zobristHashPieces[originalRookIndex][myRook];
                     zobristHash ^= zobristHashPieces[newRookIndex][myRook];
 
-                    moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, CASTLING));
+                    moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, CASTLING));
                     castlingRights = makeCastlingMove(castlingRights, pieces, pieceSquareTable, move);
                     break;
 
                 case ENPASSANT_MASK:
+
+                    resetFifty = true;
+                    
                     final long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
                     final int victimPawnIndex = numberOfTrailingZeros(victimPawn);
                     zobristHash ^= zobristHashPieces
                             [victimPawnIndex]
                             [pieceSquareTable[victimPawnIndex] - 1];
 
-                    moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, ENPASSANTCAPTURE));
+                    moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, ENPASSANTCAPTURE));
                     makeEnPassantMove(pieces, pieceSquareTable, turn, move);
                     break;
 
                 case PROMOTION_MASK:
+
+                    resetFifty = true;
+                    
                     int whichPromotingPiece = 0;
 
                     switch (move & WHICH_PROMOTION){
@@ -500,28 +483,31 @@ public class Chessboard {
                     long promotionZH = zobristHashPieces[destinationIndex][whichPromotingPiece - 1];
                     zobristHash ^= promotionZH;
 
-                    moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, PROMOTION));
+                    moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, PROMOTION));
                     makePromotingMove(pieces, pieceSquareTable, turn, move);
                     break;
             }
         } else {
             if (captureMove) {
-                moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICCAPTURE));
+                resetFifty = true;
+                moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, BASICCAPTURE));
             } 
             else if (enPassantPossibility(turn, pieces[turn][PAWN], newPieceOnSquare(sourceIndex), destinationPiece)) {
+                resetFifty = true;
                 final int whichFile = 8 - sourceIndex % 8;
-                moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, ENPASSANTVICTIM, whichFile));
+                moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, ENPASSANTVICTIM, whichFile));
             } 
             else {
                 switch (pieceSquareTable[sourceIndex]) {
                     case WHITE_PAWN:
                     case BLACK_PAWN:
-                        moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICLOUDPUSH));
+                        resetFifty = true;
+                        moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, BASICLOUDPUSH));
                         break;
                     default:
                         // increment 50 move rule
                         resetFifty = false;
-                        moveStackArrayPush(buildStackDataBetter(move, turn, fiftyMoveCounter, castlingRights, BASICQUIETPUSH));
+                        moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, BASICQUIETPUSH));
                 }
 
             }
@@ -529,13 +515,12 @@ public class Chessboard {
             makeRegularMove(pieces, pieceSquareTable, move);
         }
 
-        // todo update unmake move to compensate
-//        if (resetFifty) {
-//            setFiftyMoveCounter(0);
-//        }
-//        else {
-//            setFiftyMoveCounter(getFiftyMoveCounter() + 1);
-//        }
+        if (resetFifty) {
+            quietHalfMoveCounter = 0;
+        }
+        else {
+            quietHalfMoveCounter++;
+        }
 
 
         if (castlingRights != 0) {
@@ -612,9 +597,6 @@ public class Chessboard {
         this.legalMoveStackIndex = (this.legalMoveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
     }
 
-    /**
-     * Completely undoes the last made move, and changes the side to play
-     */
     public void unMakeMoveAndFlipTurn() {
         this.rotateMoveIndexDown();
 
@@ -623,6 +605,8 @@ public class Chessboard {
         masterStackPop();
 
         long pop = moveStackData;
+
+        quietHalfMoveCounter = StackDataUtil.getQuietHalfmoveCounter(pop);
 
         if (StackDataUtil.getMove(pop) == 0) {
             turn = StackDataUtil.getTurn(pop);
@@ -732,10 +716,8 @@ public class Chessboard {
         togglePiecesFrom(pieces, pieceSquareTable, destinationPiece, getMovingPieceInt(move));
     }
 
-    /**
-     * Makes a null move on the board. Make sure to unmake it afterwards
-     */
     public void makeNullMoveAndFlipTurn() {
+        quietHalfMoveCounter++;
         this.rotateMoveIndexUp();
         masterStackPush();
 
@@ -743,19 +725,16 @@ public class Chessboard {
             zobristHash = (updateWithEPFlags(moveStackArrayPeek(), zobristHash));
         }
 
-        moveStackArrayPush(buildStackDataBetter(0, turn, fiftyMoveCounter, castlingRights, NULL_MOVE));
+        moveStackArrayPush(buildStackDataBetter(0, turn, quietHalfMoveCounter, castlingRights, NULL_MOVE));
 
         zobristHash = zobristFlipTurn(zobristHash);
 
         this.turn = 1 - this.turn;
     }
 
-
-    /**
-     * Unmakes a null move on the board.
-     */
     public void unMakeNullMoveAndFlipTurn() {
-//        wwwwwww
+        Assert.assertTrue(quietHalfMoveCounter > 0);
+        quietHalfMoveCounter--;
         this.rotateMoveIndexDown();
         Assert.assertTrue(hasPreviousMove());
         masterStackPop();
@@ -766,12 +745,7 @@ public class Chessboard {
         return this.turn == WHITE;
     }
 
-    /**
-     * Tells you if the specified player is in check
-     *
-     * @param white true if white to play
-     * @return true if in check, otherwise false
-     */
+    
     public boolean inCheck(boolean white) {
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
         if (white) {
@@ -815,8 +789,33 @@ public class Chessboard {
         return false;
     }
 
-    private boolean isDrawByInsufficientMaterial(boolean white) {
-        return CheckHelper.isDrawByInsufficientMaterial(this);
+    public boolean isDrawByInsufficientMaterial() {
+        boolean drawByMaterial = false;
+        
+        getPieces();
+        long friends = this.pieces[turn][ALL_COLOUR_PIECES];
+        long enemies = this.pieces[1 - turn][ALL_COLOUR_PIECES];
+        
+        int totalPieces = populationCount(friends | enemies);
+
+        switch (totalPieces){
+            case 2:
+                drawByMaterial = true;
+                break;
+            case 3:
+                if (populationCount(pieces[BLACK][BISHOP])
+                        + populationCount(pieces[WHITE][BISHOP])
+                        + populationCount(pieces[BLACK][KNIGHT])
+                        + populationCount(pieces[WHITE][KNIGHT]) != 0) {
+
+                    drawByMaterial = true;
+                }
+                break;
+            case 4:
+                break;
+        }
+
+        return drawByMaterial;
     }
 
     private boolean colourHasInsufficientMaterialToMate(boolean white) {
@@ -911,7 +910,7 @@ public class Chessboard {
         that.blackPieces();
         return turn == that.turn &&
                 castlingRights == that.castlingRights &&
-                fiftyMoveCounter == that.fiftyMoveCounter &&
+                quietHalfMoveCounter == that.quietHalfMoveCounter &&
                 zobristHash == that.zobristHash &&
                 masterIndex == that.masterIndex &&
                 Arrays.deepEquals(pieces, that.pieces) &&
@@ -1095,7 +1094,7 @@ public class Chessboard {
                     break;
 
                 case 4: //ep
-                    final long item = buildStackDataBetter(0, turn, fiftyMoveCounter,
+                    final long item = buildStackDataBetter(0, turn, quietHalfMoveCounter,
                             castlingRights, ENPASSANTVICTIM, (int) c[i] - 96);
                     moveStackArrayPush(item);
 
@@ -1107,28 +1106,18 @@ public class Chessboard {
                     break;
 
                 case 5:
-                    // if fen has best move for some reason
-                    if (c[i] < 48 || c[i] > 57) {
-                        phase++;
-                        continue;
-                    }
                     String fifty = "";
-                    while (i < c.length && c[i] != ' ' && c[i] >= 48 && c[i] <= 57) {
+                    while (i < c.length && c[i] != ' ') {
                         fifty = fifty + c[i];
                         i++;
                     }
-                    fiftyMoveCounter = Integer.valueOf(fifty);
+                    quietHalfMoveCounter = Integer.valueOf(fifty);
                     phase++;
                     break;
 
                 case 6:
-                    // if fen has best move for some reason
-                    if (c[i] < 48 || c[i] > 57) {
-                        phase++;
-                        continue;
-                    }
                     String full = "";
-                    while (i < c.length && c[i] != ' ' && c[i] >= 48 && c[i] <= 57) {
+                    while (i < c.length && c[i] != ' ') {
                         full = full + c[i];
                         i++;
                     }

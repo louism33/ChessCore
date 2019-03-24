@@ -71,30 +71,6 @@ final class CheckHelper {
         return threats;
     }
 
-    static boolean isDrawByInsufficientMaterial(Chessboard board){
-        boolean drawByMaterial = false;
-        int totalPieces = populationCount(board.allPieces());
-
-        switch (totalPieces){
-            case 2:
-                drawByMaterial = true;
-                break;
-            case 3:
-                if (populationCount(board.pieces[BLACK][BISHOP])
-                        + populationCount(board.pieces[WHITE][BISHOP])
-                        + populationCount(board.pieces[BLACK][KNIGHT])
-                        + populationCount(board.pieces[WHITE][KNIGHT]) != 0) {
-
-                    drawByMaterial = true;
-                }
-                break;
-            case 4:
-                break;
-        }
-
-        return drawByMaterial;
-    }
-
     static boolean colourHasInsufficientMaterialToMate(Chessboard board, boolean white){
         boolean drawByMaterial = false;
         int totalPieces = populationCount(board.allPieces());

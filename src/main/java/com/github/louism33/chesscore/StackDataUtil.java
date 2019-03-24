@@ -14,7 +14,7 @@ final class StackDataUtil {
         return (int) (stackMoveData & SMD_MOVE_MASK);
     }
     
-    public static int getFiftyPiece(long stackMoveData){
+    public static int getQuietHalfmoveCounter(long stackMoveData){
         return (int) ((stackMoveData & SMD_FIFTY_MOVES) >> smdFiftyPieceOffset);
     }
 
