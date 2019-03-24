@@ -60,4 +60,12 @@ public class CounterFenTest {
         Assert.assertEquals( 0, board.fiftyMoveCounter);
         Assert.assertEquals(3, board.fullMoveCounter);
     }
+
+    @Test
+    void weirdFenTest(){
+        String fen = "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - - bm Rxb2; id \"WAC.002\"";
+        Chessboard board = new Chessboard(fen);
+        Assert.assertEquals( 0, board.fiftyMoveCounter);
+        Assert.assertEquals(0, board.fullMoveCounter);
+    }
 }

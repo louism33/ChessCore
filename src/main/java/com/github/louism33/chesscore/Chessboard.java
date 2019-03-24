@@ -1107,8 +1107,13 @@ public class Chessboard {
                     break;
 
                 case 5:
+                    // if fen has best move for some reason
+                    if (c[i] < 48 || c[i] > 57) {
+                        phase++;
+                        continue;
+                    }
                     String fifty = "";
-                    while (i < c.length && c[i] != ' ') {
+                    while (i < c.length && c[i] != ' ' && c[i] >= 48 && c[i] <= 57) {
                         fifty = fifty + c[i];
                         i++;
                     }
@@ -1117,8 +1122,13 @@ public class Chessboard {
                     break;
 
                 case 6:
+                    // if fen has best move for some reason
+                    if (c[i] < 48 || c[i] > 57) {
+                        phase++;
+                        continue;
+                    }
                     String full = "";
-                    while (i < c.length && c[i] != ' ') {
+                    while (i < c.length && c[i] != ' ' && c[i] >= 48 && c[i] <= 57) {
                         full = full + c[i];
                         i++;
                     }
