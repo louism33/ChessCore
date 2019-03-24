@@ -33,10 +33,17 @@ public final class MoveParser {
      */
 
     public static int numberOfRealMoves(int[] moves){
+        if (moves == null) {
+            return 0;
+        }
         return moves[moves.length - 1];
     }
     
     public static void printMove(int[] moves){
+        if (moves == null) {
+            System.out.println("no moves");
+            return;
+        }
         System.out.println(Arrays.toString(MoveParser.toString(moves)) + ", total: " + moves[moves.length - 1]);
     }
 

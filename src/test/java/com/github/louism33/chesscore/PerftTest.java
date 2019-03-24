@@ -24,8 +24,8 @@ public class PerftTest {
 
     @Test
     void npsTest(){
-        NPSTest.npsTest(new Chessboard(), 6);
-//        NPSTest.npsTest(new Chessboard(), 7);
+//        NPSTest.npsTest(new Chessboard(), 6);
+        NPSTest.npsTest(new Chessboard(), 7);
 //        NPSTest.npsTest(new Chessboard(), 8);
     }
 
@@ -73,7 +73,6 @@ public class PerftTest {
 
     @Test
     void test5() {
-
         String fen = "3k4/8/8/8/8/8/8/R3K3 w Q - 0 1";
         Assert.assertEquals(803711, Perft.perftTest(new Chessboard(fen), 6));
         System.out.println(fen+"\ndepth " + 6 + " correct.");

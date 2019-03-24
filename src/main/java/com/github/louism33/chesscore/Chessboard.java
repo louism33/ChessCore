@@ -37,12 +37,12 @@ public class Chessboard {
      */
     private int castlingRights = 0xf;
 
-    private int fiftyMoveCounter = 0, fullMoveCounter = 0;
+    public int fiftyMoveCounter = 0, fullMoveCounter = 0;
 
     public long zobristHash;
 
     private long moveStackData;
-    private static final int maxDepthAndArrayLength = 64;
+    public static final int maxDepthAndArrayLength = 64;
 
     private static final int maxNumberOfMovesInAnyPosition = 128;
     final int[] moves = new int[maxNumberOfMovesInAnyPosition];
@@ -95,7 +95,6 @@ public class Chessboard {
      * A new Chessboard in the starting position, white to play.
      */
     public Chessboard() {
-        boardToHash();
         Setup.init(false);
 
         System.arraycopy(INITIAL_PIECES[BLACK], 0, this.pieces[BLACK], 0, INITIAL_PIECES[BLACK].length);
@@ -104,6 +103,8 @@ public class Chessboard {
         System.arraycopy(INITIAL_PIECE_SQUARES, 0, pieceSquareTable, 0, pieceSquareTable.length);
 
         turn = WHITE;
+        
+        zobristHash = boardToHash();
     }
 
     /**
@@ -424,6 +425,8 @@ public class Chessboard {
             moveStackArrayPush(buildStackDataBetter(0, turn, fiftyMoveCounter, castlingRights, NULL_MOVE));
             return;
         }
+        
+        fullMoveCounter++;
 
         boolean resetFifty = true;
 
@@ -625,6 +628,8 @@ public class Chessboard {
             turn = StackDataUtil.getTurn(pop);
             return;
         }
+        
+        fullMoveCounter--;
 
         int pieceToMoveBackIndex = getDestinationIndex(StackDataUtil.getMove(pop));
         int squareToMoveBackTo = getSourceIndex(StackDataUtil.getMove(pop));
@@ -799,33 +804,25 @@ public class Chessboard {
 
     }
 
-    /**
-     * @param white the player
-     * @return true if it is a draw by repetition
-     */
-    public boolean drawByRepetition(boolean white) {
-        return isDrawByRepetition(this);
+    public boolean isDrawByRepetition() {
+        int limit = 25;
+        long currentZob = zobristHash;
+        for (int i = 0; i < limit; i++) {
+            if (zobristHashStack[i] == currentZob){
+                return true;
+            }
+        }
+        return false;
     }
 
-    /**
-     * @param white the player
-     * @return true if draw by repetition
-     */
-    private boolean drawByInsufficientMaterial(boolean white) {
-        return isDrawByInsufficientMaterial(this);
+    private boolean isDrawByInsufficientMaterial(boolean white) {
+        return CheckHelper.isDrawByInsufficientMaterial(this);
     }
 
-    /**
-     * @param white the player
-     * @return true if this side does not have enough pieces to ever win the game
-     */
     private boolean colourHasInsufficientMaterialToMate(boolean white) {
         return CheckHelper.colourHasInsufficientMaterialToMate(this, white);
     }
 
-    /**
-     * @return true if in checkmate
-     */
     public boolean inCheckmate() {
         if (!this.inCheck(isWhiteTurn())) {
             return false;
@@ -833,9 +830,6 @@ public class Chessboard {
         return this.generateLegalMoves().length == 0;
     }
 
-    /**
-     * @return true if in stalemate
-     */
     public boolean inStalemate() {
         if (this.inCheck(isWhiteTurn())) {
             return false;
@@ -1019,6 +1013,7 @@ public class Chessboard {
             if (c[i] == '-') {
                 continue;
             }
+
             switch (phase) {
                 case 1: //board
                     switch (c[i]) {
@@ -1103,16 +1098,31 @@ public class Chessboard {
                     final long item = buildStackDataBetter(0, turn, fiftyMoveCounter,
                             castlingRights, ENPASSANTVICTIM, (int) c[i] - 96);
                     moveStackArrayPush(item);
+
+                    // ignore number following epFile
+                    while (i < c.length && c[i] != ' ') {
+                        i++;
+                    }
                     phase++;
                     break;
 
                 case 5:
-                    fiftyMoveCounter = c[i];
+                    String fifty = "";
+                    while (i < c.length && c[i] != ' ') {
+                        fifty = fifty + c[i];
+                        i++;
+                    }
+                    fiftyMoveCounter = Integer.valueOf(fifty);
                     phase++;
                     break;
 
                 case 6:
-                    fullMoveCounter = c[i];
+                    String full = "";
+                    while (i < c.length && c[i] != ' ') {
+                        full = full + c[i];
+                        i++;
+                    }
+                    fullMoveCounter = Integer.valueOf(full);
                     phase++;
                     break;
             }
