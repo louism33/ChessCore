@@ -25,8 +25,8 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 public class Chessboard {
 
-//    public final long[][] pieceMoveTable = new long[2][16];
-    
+    public static final int MAX_DEPTH_AND_ARRAY_LENGTH = 128;
+
     public final long[][] pieces = new long[2][7];
 
     public final int[] pieceSquareTable = new int[64];
@@ -42,16 +42,15 @@ public class Chessboard {
     public long zobristHash;
 
     private long moveStackData;
-    public static final int maxDepthAndArrayLength = 64;
 
     private static final int maxNumberOfMovesInAnyPosition = 128;
     final int[] moves = new int[maxNumberOfMovesInAnyPosition];
 
-    private final int[][] legalMoveStack = new int[maxDepthAndArrayLength][maxNumberOfMovesInAnyPosition];
+    private final int[][] legalMoveStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH][maxNumberOfMovesInAnyPosition];
 
-    final long[] zobristHashStack = new long[maxDepthAndArrayLength];
+    final long[] zobristHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
 
-    private final long[] pastMoveStackArray = new long[maxDepthAndArrayLength];
+    private final long[] pastMoveStackArray = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
     public boolean inCheckRecorder;
 
     // todo needs array
@@ -59,8 +58,8 @@ public class Chessboard {
 
     public long pinnedPieces;
     public long pinningPieces;
-    private final long[] pinnedPiecesArray = new long[maxDepthAndArrayLength];
-    private final boolean[] checkStack = new boolean[maxDepthAndArrayLength];
+    private final long[] pinnedPiecesArray = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+    private final boolean[] checkStack = new boolean[MAX_DEPTH_AND_ARRAY_LENGTH];
 
 
     private long boardToHash(){
@@ -95,7 +94,7 @@ public class Chessboard {
         System.arraycopy(INITIAL_PIECE_SQUARES, 0, pieceSquareTable, 0, pieceSquareTable.length);
 
         turn = WHITE;
-        
+
         zobristHash = boardToHash();
     }
 
@@ -136,7 +135,7 @@ public class Chessboard {
         if (this.legalMoveStack[legalMoveStackIndex][0] != 0) {
             Arrays.fill(this.legalMoveStack[legalMoveStackIndex], 0);
         }
-        
+
         int[] moves = this.legalMoveStack[legalMoveStackIndex];
 
         final long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
@@ -188,7 +187,7 @@ public class Chessboard {
                 friends, allPieces);
 
         pinnedPieces = currentPinnedPieces;
-        
+
 
         final boolean hasPreviousMove = hasPreviousMove();
         if (numberOfCheckers == 1) {
@@ -280,9 +279,9 @@ public class Chessboard {
                         final long captureTable = singlePawnCaptures(pinnedPiece, turn, pinningPiece);
                         if (captureTable != 0) {
                             final int destinationIndex = numberOfTrailingZeros(captureTable);
-                            moves[moves[moves.length - 1]++] = 
+                            moves[moves[moves.length - 1]++] =
                                     buildMove(numberOfTrailingZeros(pinnedPiece), PIECE[turn][PAWN],
-                                    destinationIndex, pieceSquareTable[destinationIndex]);
+                                            destinationIndex, pieceSquareTable[destinationIndex]);
                         }
 
                         final long quietMask = singlePawnPushes(pinnedPiece, turn, pushMask, allPieces);
@@ -396,7 +395,7 @@ public class Chessboard {
         if (hasPreviousMove()){
             zobristHash = updateWithEPFlags(moveStackArrayPeek(), zobristHash);
         }
-        
+
         fullMoveCounter++;
 
         if (move == 0) {
@@ -404,9 +403,9 @@ public class Chessboard {
             quietHalfMoveCounter++;
             return;
         }
-        
+
         boolean resetFifty = false;
-        
+
         if (isSpecialMove(move)) {
             switch (move & SPECIAL_MOVE_MASK) {
                 case CASTLING_MASK:
@@ -442,7 +441,7 @@ public class Chessboard {
                 case ENPASSANT_MASK:
 
                     resetFifty = true;
-                    
+
                     final long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
                     final int victimPawnIndex = numberOfTrailingZeros(victimPawn);
                     zobristHash ^= zobristHashPieces
@@ -456,7 +455,7 @@ public class Chessboard {
                 case PROMOTION_MASK:
 
                     resetFifty = true;
-                    
+
                     int whichPromotingPiece = 0;
 
                     switch (move & WHICH_PROMOTION){
@@ -491,12 +490,12 @@ public class Chessboard {
             if (captureMove) {
                 resetFifty = true;
                 moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, BASICCAPTURE));
-            } 
+            }
             else if (enPassantPossibility(turn, pieces[turn][PAWN], newPieceOnSquare(sourceIndex), destinationPiece)) {
                 resetFifty = true;
                 final int whichFile = 8 - sourceIndex % 8;
                 moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, ENPASSANTVICTIM, whichFile));
-            } 
+            }
             else {
                 switch (pieceSquareTable[sourceIndex]) {
                     case WHITE_PAWN:
@@ -524,7 +523,7 @@ public class Chessboard {
 
 
         if (castlingRights != 0) {
-            castleFlagManager(sourceIndex, destinationIndex);   
+            castleFlagManager(sourceIndex, destinationIndex);
         }
 
         Assert.assertTrue(hasPreviousMove());
@@ -589,12 +588,12 @@ public class Chessboard {
     }
 
     private void rotateMoveIndexUp() {
-        this.legalMoveStackIndex = (this.legalMoveStackIndex + 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
+        this.legalMoveStackIndex = (this.legalMoveStackIndex + 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
 
 
     private void rotateMoveIndexDown() {
-        this.legalMoveStackIndex = (this.legalMoveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
+        this.legalMoveStackIndex = (this.legalMoveStackIndex - 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
 
     public void unMakeMoveAndFlipTurn() {
@@ -612,7 +611,7 @@ public class Chessboard {
             turn = StackDataUtil.getTurn(pop);
             return;
         }
-        
+
         fullMoveCounter--;
 
         int pieceToMoveBackIndex = getDestinationIndex(StackDataUtil.getMove(pop));
@@ -745,7 +744,7 @@ public class Chessboard {
         return this.turn == WHITE;
     }
 
-    
+
     public boolean inCheck(boolean white) {
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
         if (white) {
@@ -779,10 +778,23 @@ public class Chessboard {
     }
 
     public boolean isDrawByRepetition() {
-        int limit = 25;
+        int limit = quietHalfMoveCounter < MAX_DEPTH_AND_ARRAY_LENGTH ? quietHalfMoveCounter : MAX_DEPTH_AND_ARRAY_LENGTH;
+
         long currentZob = zobristHash;
-        for (int i = 0; i < limit; i++) {
-            if (zobristHashStack[i] == currentZob){
+        int j = 0;
+        // only check odd numbers, as they are the ones on my turn
+        for (int i = simulateMasterIndexDown2(masterIndex); i >= -1; i = simulateMasterIndexDown2(i)) {
+            j += 2;
+            if (j > limit) {
+                return false;
+            }
+
+            long stackZob = zobristHashStack[i];
+
+            if (stackZob == 0) {
+                break;
+            }
+            if (stackZob == currentZob){
                 return true;
             }
         }
@@ -791,11 +803,11 @@ public class Chessboard {
 
     public boolean isDrawByInsufficientMaterial() {
         boolean drawByMaterial = false;
-        
+
         getPieces();
         long friends = this.pieces[turn][ALL_COLOUR_PIECES];
         long enemies = this.pieces[1 - turn][ALL_COLOUR_PIECES];
-        
+
         int totalPieces = populationCount(friends | enemies);
 
         switch (totalPieces){
@@ -843,7 +855,7 @@ public class Chessboard {
         long peek = moveStackArrayPeek();
         return moveIsPawnPushSix(1 - StackDataUtil.getTurn(peek), StackDataUtil.getMove(peek));
     }
-    
+
     public boolean previousMoveWasPawnPushToSeven() {
         if (!hasPreviousMove()) {
             return false;
@@ -861,7 +873,7 @@ public class Chessboard {
         if (StackDataUtil.getMove(peek) == 0) {
             return false;
         }
-        
+
         int previousMoveDestinationIndex = getDestinationIndex(StackDataUtil.getMove(peek));
         return (getDestinationIndex(move) == previousMoveDestinationIndex);
     }
@@ -929,26 +941,34 @@ public class Chessboard {
     }
 
     private int legalMoveStackIndex = 0;
-    private int masterIndex = 0;
+    int masterIndex = 0;
     private int moveStackIndex = 0;
 
+
+    private int simulateMasterIndexUp2(int masterIndex) {
+        return (masterIndex + 2 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
+    }    
+    
+    private int simulateMasterIndexDown2(int masterIndex) {
+        return (masterIndex - 2 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
+    }
+    
     private void rotateMasterIndexUp() {
-        this.masterIndex = (this.masterIndex + 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
+        this.masterIndex = (this.masterIndex + 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
     private void rotateMasterIndexDown() {
-        this.masterIndex = (this.masterIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
+        this.masterIndex = (this.masterIndex - 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
 
     private void rotateMoveStackIndexUp() {
-        this.moveStackIndex = (this.moveStackIndex + 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
+        this.moveStackIndex = (this.moveStackIndex + 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
     private void rotateMoveStackIndexDown() {
-        this.moveStackIndex = (this.moveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength;
+        this.moveStackIndex = (this.moveStackIndex - 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
 
-    //todo can this return incorrectly after 64 moves have been made / simulated
     private boolean hasPreviousMove() {
-        return pastMoveStackArray[(this.moveStackIndex - 1 + maxDepthAndArrayLength) % maxDepthAndArrayLength] != 0;
+        return pastMoveStackArray[(this.moveStackIndex - 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH] != 0;
     }
 
     private void masterStackPush() {
@@ -964,7 +984,6 @@ public class Chessboard {
     }
 
     private void masterStackPop() {
-//        masterIndex--;
         rotateMasterIndexDown();
         inCheckRecorder = checkStack[masterIndex];
         checkStack[masterIndex] = false;
@@ -989,10 +1008,6 @@ public class Chessboard {
         return moveStackIndex > 0 ? pastMoveStackArray[moveStackIndex - 1] : 0;
     }
 
-    /**
-     * New Chessboard based on a FEN string
-     * @param fen the String of pieces turn and castling rights and ep square and counters to make a board from
-     */
     public Chessboard(String fen) {
         char[] c = fen.toCharArray();
         int phase = 1;
