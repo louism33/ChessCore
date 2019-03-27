@@ -1,6 +1,5 @@
 package com.github.louism33.utils;
 
-import com.github.louism33.chesscore.Art;
 import com.github.louism33.chesscore.Chessboard;
 import com.github.louism33.chesscore.MoveParser;
 import org.junit.Assert;

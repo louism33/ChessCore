@@ -4,7 +4,8 @@ import com.github.louism33.utils.MoveParserFromAN;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import static com.github.louism33.chesscore.BoardConstants.*;
+import static com.github.louism33.chesscore.BoardConstants.BLACK_PAWN;
+import static com.github.louism33.chesscore.BoardConstants.WHITE_PAWN;
 import static com.github.louism33.chesscore.MoveParser.getMovingPieceInt;
 
 public class ChessboardTest {

@@ -4,8 +4,6 @@ import com.github.louism33.utils.MoveParserFromAN;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 public class CheckHelperTest {
 
     @Test

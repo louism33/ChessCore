@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.MoveConstants.FIRST_FREE_BIT;
 
 public class PinningPiecesTest {
 
