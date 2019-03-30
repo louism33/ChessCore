@@ -219,7 +219,6 @@ public final class BoardConstants {
     public static final long centreFourSquares = (RANK_FOUR | RANK_FIVE) & (FILE_D | FILE_E);
     public static final long centreNineSquares = (RANK_THREE | RANK_FOUR | RANK_FIVE | RANK_SIX) &
             (FILE_C |FILE_D | FILE_E | FILE_F);
-    public static final long centreRingSquares = centreNineSquares ^ centreFourSquares;
 
     public static final long noMansLand = (RANK_THREE | RANK_FOUR | RANK_FIVE | RANK_SIX);
     public static final long eastWestHighway = (RANK_FOUR | RANK_FIVE);

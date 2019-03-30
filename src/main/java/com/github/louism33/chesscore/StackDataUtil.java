@@ -15,7 +15,7 @@ final class StackDataUtil {
     }
     
     public static int getQuietHalfmoveCounter(long stackMoveData){
-        return (int) ((stackMoveData & SMD_FIFTY_MOVES) >> smdFiftyPieceOffset);
+        return (int) ((stackMoveData & SMD_QUIET_MOVES) >> smdQuietPieceOffset);
     }
 
     static int getTurn(long stackMoveData){
@@ -42,7 +42,7 @@ final class StackDataUtil {
         long stackData = 0;
 
         stackData |= ((long) move & SMD_MOVE_MASK);
-        stackData |= ((long) fiftyCounter << smdFiftyPieceOffset);
+        stackData |= ((long) fiftyCounter << smdQuietPieceOffset);
         stackData |= ((long) (1 - turn) << smdTurnOffset);
         stackData |= (typeOfSpecialMove << smdSpecialOffset);
         stackData |= ((long) castlingRights << smdCastleOffset);

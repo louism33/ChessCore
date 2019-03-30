@@ -6,8 +6,7 @@ import java.util.Arrays;
 
 import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
-import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
+import static com.github.louism33.chesscore.CheckHelper.*;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveConstants.*;
@@ -42,7 +41,7 @@ public class Chessboard {
 
     public long zobristHash;
 
-    private long moveStackData;
+    public long moveStackData;
 
     private static final int maxNumberOfMovesInAnyPosition = 128;
     final int[] moves = new int[maxNumberOfMovesInAnyPosition];
@@ -103,6 +102,7 @@ public class Chessboard {
         this.turn = board.turn;
         this.castlingRights = board.castlingRights;
         this.quietHalfMoveCounter = board.quietHalfMoveCounter;
+        this.fullMoveCounter = board.fullMoveCounter;
         this.zobristHash = board.zobristHash;
         this.moveStackData = board.moveStackData;
         this.inCheckRecorder = board.inCheckRecorder;
@@ -111,6 +111,7 @@ public class Chessboard {
         this.legalMoveStackIndex = board.legalMoveStackIndex;
         this.masterIndex = board.masterIndex;
         this.moveStackIndex = board.moveStackIndex;
+        
         System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
         System.arraycopy(board.moves, 0, this.moves, 0, board.moves.length);
@@ -505,7 +506,6 @@ public class Chessboard {
                         moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, BASICLOUDPUSH));
                         break;
                     default:
-                        // increment 50 move rule
                         resetFifty = false;
                         moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, BASICQUIETPUSH));
                 }
@@ -778,30 +778,42 @@ public class Chessboard {
 
     }
 
-    public boolean isDrawByRepetition() {
-        int limit = quietHalfMoveCounter < MAX_DEPTH_AND_ARRAY_LENGTH ? quietHalfMoveCounter : MAX_DEPTH_AND_ARRAY_LENGTH;
 
-        long currentZob = zobristHash;
-        int j = 0;
-        // only check odd numbers, as they are the ones on my turn
+    public boolean isDrawByRepetition(int stopAt) {
+        int l = quietHalfMoveCounter < MAX_DEPTH_AND_ARRAY_LENGTH ? quietHalfMoveCounter : MAX_DEPTH_AND_ARRAY_LENGTH;
+        int numberOfReps = 0;
+        if (quietHalfMoveCounter < 2) {
+            return false;
+        }
+
+        int c = 0;
+
         for (int i = simulateMasterIndexDown2(masterIndex); i >= -1; i = simulateMasterIndexDown2(i)) {
-            j += 2;
-            if (j > limit) {
-                return false;
+            long h = zobristHashStack[i];
+            if (zobristHash == h) {
+                numberOfReps++;
             }
 
-            long stackZob = zobristHashStack[i];
-
-            if (stackZob == 0) {
-                break;
-            }
-            if (stackZob == currentZob){
+            if (numberOfReps >= stopAt) {
                 return true;
+            }
+
+            c += 2;
+            if (c >= l) {
+                break;
             }
         }
         return false;
     }
 
+    private int simulateMasterIndexUp2(int masterIndex) {
+        return (masterIndex + 2 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
+    }
+
+    private int simulateMasterIndexDown2(int masterIndex) {
+        return (masterIndex - 2 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
+    }
+    
     public boolean isDrawByInsufficientMaterial() {
         boolean drawByMaterial = false;
 
@@ -942,18 +954,9 @@ public class Chessboard {
     }
 
     private int legalMoveStackIndex = 0;
-    int masterIndex = 0;
+    public int masterIndex = 0;
     private int moveStackIndex = 0;
 
-
-    private int simulateMasterIndexUp2(int masterIndex) {
-        return (masterIndex + 2 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
-    }    
-    
-    private int simulateMasterIndexDown2(int masterIndex) {
-        return (masterIndex - 2 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
-    }
-    
     private void rotateMasterIndexUp() {
         this.masterIndex = (this.masterIndex + 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
