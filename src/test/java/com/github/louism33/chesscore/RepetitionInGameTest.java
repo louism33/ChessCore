@@ -325,6 +325,93 @@ public class RepetitionInGameTest {
                 "48. Rf5" +
                 "";
         
+        String pgn17 = "" +
+                "1. e4 {book} e6 {book} 2. d4 {0.70s} d5 {0.95s} 3. e5 {0.69s} c5 {0.93s}\n" +
+                "4. Nf3 {0.67s} cxd4 {0.91s} 5. Nxd4 {0.66s} Bc5 {0.90s} 6. Nb3 {0.65s}\n" +
+                "Bb6 {0.88s} 7. Bb5+ {0.63s} Nd7 {0.86s} 8. O-O {0.62s} Ne7 {0.85s}\n" +
+                "9. Bxd7+ {0.61s} Bxd7 {0.83s} 10. a4 {0.59s} Ng6 {0.81s} 11. a5 {0.58s}\n" +
+                "Bc7 {0.80s} 12. f4 {0.57s} f6 {0.78s} 13. exf6 {0.56s} Qxf6 {0.77s}\n" +
+                "14. g3 {0.55s} O-O {0.75s} 15. Nc3 {0.54s} b6 {0.74s} 16. Be3 {0.53s}\n" +
+                "bxa5 {0.72s} 17. Nxa5 {0.52s} Bb6 {0.71s} 18. Bxb6 {0.51s} axb6 {0.70s} 19. Nb3\n" +
+                "Ne7 {0.68s} 20. Qd3 Nc6 {0.67s} 21. Qd2 Qe7 {0.66s} 22. Rxa8 Rxa8 {0.65s} 23. f5\n" +
+                "d4 {0.64s} 24. Nb5 e5 {0.62s} 25. Nc7 Ra2 {0.61s} 26. Nc1 Rxb2 {0.60s} 27. Nd3\n" +
+                "Ra2 {0.59s} 28. Nd5 Qd8 {0.58s} 29. f6 Bh3 {0.57s} 30. f7+ Kf8 {0.56s} 31. N5b4\n" +
+                "Bxf1 {0.55s} 32. Nxc6 Qd6 {0.54s} 33. Kxf1 Ra1+ {0.53s} 34. Ke2 Rh1 {0.52s}\n" +
+                "35. Qb4 Rxh2+ {0.51s} 36. Kf3 Qxb4 37. Ncxb4 Kxf7 38. Nxe5+ Ke6 39. Nec6 Kd6\n" +
+                "40. Nxd4 Kc5 {1.5s} 41. c3 {1.1s} Kc4 {1.5s} 42. Ne2 {1.1s} Rh6 {1.5s}\n" +
+                "43. Nc2 {1.1s} Rf6+ {1.4s} 44. Ke3 {1.1s} Rf8 {1.4s} 45. Kd2 {1.0s} Kd5 {1.4s}\n" +
+                "46. Kd3 {1.0s} Rf3+ {1.4s} 47. Ne3+ {0.99s} Ke5 {1.3s} 48. g4 {0.97s} Rf6 {1.3s}\n" +
+                "49. Nc4+ {0.95s} Kd5 {1.3s} 50. Nd4 {0.93s} h6 {1.3s} 51. Ne3+ {0.91s}\n" +
+                "Ke5 {1.2s} 52. c4 {0.90s} Rf7 {1.2s} 53. Nc6+ {0.88s} Kd6 {1.2s} 54. Nb4 {0.86s}\n" +
+                "Ke5 {1.2s} 55. Nbd5 {0.84s} Rd7 {1.1s} 56. Kc3 {0.83s} Rd6 {1.1s}\n" +
+                "57. Kb4 {0.81s} Ke4 {1.1s} 58. Kb5 {0.79s} Rg6 {1.1s} 59. Ka4 {0.78s} Rc6 {1.1s}\n" +
+                "60. Kb3 {0.76s} Re6 {1.0s} 61. Kc3 {0.75s} Rg6 {1.0s} 62. Kd2 {0.73s}\n" +
+                "Rc6 {0.99s} 63. Nc3+ {0.72s} Ke5 {0.97s} 64. Kd3 {0.70s} Rf6 {0.95s}\n" +
+                "65. Ncd5 {0.69s} Rg6 {0.94s} 66. Nc7 {0.68s} Rd6+ {0.92s} 67. Ke2 {0.66s}\n" +
+                "Ke4 {0.90s} 68. Ncd5 {0.65s} Re6 {0.88s} 69. Nb4 {0.64s} g6 {0.87s}\n" +
+                "70. Nbd5 {0.62s} Kd4 {0.85s} 71. Kd2 {0.61s} Re4 {0.83s} 72. Nb4 {0.60s}\n" +
+                "Rf4 {0.82s} 73. Ke2 {0.59s} Rf8 {0.80s} 74. Nc6+ {0.57s} Kc5 {0.79s}\n" +
+                "75. Ne5 {0.56s} Kd4 {0.77s} 76. Nf3+ {0.55s} Ke4 {0.76s} 77. Nd2+ {0.54s}\n" +
+                "Kd4 {0.74s} 78. Nd5 {0.53s} Re8+ {0.73s} 79. Kd1 {0.52s} Re6 {0.71s}\n" +
+                "80. Kc2 {0.51s} Rd6 {1.8s} 81. Nc3 {1.3s} Rc6 {1.7s} 82. Nf3+ {1.3s} Ke3 {1.7s}\n" +
+                "83. Nd2 {1.2s} Kd4 {1.7s} 84. Nf3+ {1.2s} Ke3 {1.6s} 85. Nd2 {1.2s}\n" +
+                "Kd4" +
+                "";
+        
+        String pgn18 = "" +
+                "1. e4 {book} e5 {book} 2. Nf3 {book} Nc6 {book} 3. Bb5 {book} Bb4 {book}\n" +
+                "4. a3 {0.97s} Bc5 {0.68s} 5. O-O {0.94s} Nf6 {0.66s} 6. Nc3 {0.92s} O-O {0.64s}\n" +
+                "7. Nxe5 {0.89s} Bd4 {0.63s} 8. Nf3 {0.87s} Bxc3 {0.61s} 9. dxc3 {0.85s}\n" +
+                "Nxe4 {0.59s} 10. c4 {0.82s} d6 {0.57s} 11. Qe2 {0.80s} Re8 {0.56s}\n" +
+                "12. Be3 {0.78s} Bd7 {0.54s} 13. Rfd1 {0.76s} a6 {0.53s} 14. Bxc6 {0.74s}\n" +
+                "bxc6 {0.51s} 15. Nd2 {0.72s} Qf6 16. Qf3 {0.70s} Qxf3 17. Nxf3 {0.68s} c5\n" +
+                "18. b4 {0.66s} cxb4 19. axb4 {0.65s} Rab8 20. Rdb1 {0.63s} Be6 21. Rxa6 {0.61s}\n" +
+                "Nc3 22. Re1 {0.59s} Rxb4 23. c5 {0.58s} Ne2+ 24. Kh1 {0.56s} dxc5\n" +
+                "25. Rxe6 {0.55s} Rxe6 26. Rxe2 {0.54s} Rb1+ 27. Re1 {0.52s} Rxe1+\n" +
+                "28. Nxe1 {0.51s} c4 29. Kg1 Ra6 30. Kf1 Kf8 31. Bc5+ Kg8 32. Nf3 Ra2 33. c3 f6\n" +
+                "34. Be3 Kf7 35. Nd4 Rb2 36. Ke1 Ke7 37. Nf5+ Kf7 38. Bf4 Rb5 39. Nd4 Rb1+\n" +
+                "40. Kd2 c5 {1.0s} 41. Nf5 {1.4s} g5 {1.0s} 42. Bg3 {1.4s} Ke6 {0.98s}\n" +
+                "43. Ne3 {1.4s} f5 {0.96s} 44. Bc7 {1.3s} Rb7 {0.93s} 45. Ba5 {1.3s} Rb2+ {0.91s}\n" +
+                "46. Ke1 {1.2s} Rb1+ {0.88s} 47. Ke2 {1.2s} Rb2+ {0.86s} 48. Kf3 {1.2s}\n" +
+                "Ra2 {0.83s} 49. Bd8 {1.1s} f4 {0.81s} 50. Nxc4 {1.1s} g4+ {0.79s} 51. Ke4 {1.1s}\n" +
+                "Rxf2 {0.77s} 52. Bc7 {1.1s} Re2+ {0.74s} 53. Kxf4 {1.0s} Rxg2 {0.72s}\n" +
+                "54. Ke4 {1.0s} Rc2 {0.70s} 55. Kd3 {0.97s} Ra2 {0.69s} 56. Ne3 {0.95s}\n" +
+                "h5 {0.67s} 57. Kc4 {0.92s} h4 {0.65s} 58. Kb3 {0.90s} Ra7 {0.63s}\n" +
+                "59. Bd8 {0.88s} g3 {0.61s} 60. h3 {0.85s} Rb7+ {0.59s} 61. Ka3 {0.83s}\n" +
+                "Rf7 {0.58s} 62. Bxh4 {0.81s} Rf2 {0.56s} 63. Kb3 {0.79s} Re2 {0.55s}\n" +
+                "64. Bg5 {0.77s} g2 {0.53s} 65. Nxg2 {0.74s} Rxg2 {0.52s} 66. Be3 {0.72s}\n" +
+                "Kd5 {0.50s} 67. c4+ {0.70s} Kc6 68. Kc3 {0.69s} Rg3 69. Kd3 {0.67s} Rxh3\n" +
+                "70. Ke4 {0.65s} Rh2 71. Bg5 {0.63s} Rg2 72. Bf4 {0.62s} Rb2 73. Bh6 {0.60s} Rb4\n" +
+                "74. Kd3 {0.58s} Rb3+ 75. Kd2 {0.57s} Rb7 76. Kc3 {0.55s} Rh7 77. Be3 {0.54s} Rh3\n" +
+                "78. Kd3 {0.52s} Rh4 79. Kc3 {0.51s} Rh7 80. Kd3 Rf7 {1.1s} 81. Ke4 {1.5s}\n" +
+                "Re7+ {1.1s} 82. Kf3 {1.5s} Rd7 {1.1s} 83. Ke2 {1.5s} Rd6 {1.0s} 84. Bf2 {1.4s}\n" +
+                "Rd8 {1.0s} 85. Be3 {1.4s} Rd7 {0.99s} 86. Bf2 {1.4s} Re7+ {0.96s} 87. Be3 {1.3s}\n" +
+                "Ra7 {0.94s} 88. Kd3 {1.3s} Ra3+ {0.91s} 89. Kd2 {1.2s} Ra2+ {0.89s}\n" +
+                "90. Kd3 {1.2s} Ra8 {0.86s} 91. Ke4 {1.2s} Rd8 {0.84s} 92. Bg1 {1.2s}\n" +
+                "Re8+ {0.81s} 93. Kd3 {1.1s} Rf8 {0.79s} 94. Be3 {1.1s} Rf6 {0.77s}\n" +
+                "95. Ke4 {1.1s} Rd6 {0.75s} 96. Bg1 {1.0s} Rd7 {0.73s} 97. Be3 {1.0s} Rd8 {0.71s}\n" +
+                "98. Bg1 {0.98s} Rd2 {0.69s} 99. Be3 {0.95s} Rd1 {0.67s} 100. Bf2 {0.93s}\n" +
+                "Rd7 {0.65s} 101. Be3 {0.90s} Rd8" +
+                "";
+        
+        String pgn19 = "" +
+                "1. e4 {book} e5 {book} 2. Nf3 {book} Nc6 {book} 3. Bc4 {book} Bc5 {book}\n" +
+                "4. O-O {0.97s} Nf6 {0.68s} 5. Nc3 {0.94s} O-O {0.66s} 6. d3 {0.92s} d6 {0.64s}\n" +
+                "7. Bg5 {0.89s} Be6 {0.63s} 8. Nd5 {0.87s} Bxd5 {0.61s} 9. exd5 {0.85s}\n" +
+                "Na5 {0.59s} 10. Bb3 {0.82s} Nxb3 {0.57s} 11. axb3 {0.80s} a6 {0.56s}\n" +
+                "12. Qd2 {0.78s} h6 {0.54s} 13. Bxf6 {0.76s} Qxf6 {0.53s} 14. b4 {0.74s}\n" +
+                "Bb6 {0.51s} 15. Rfe1 {0.72s} g5 16. Qe2 {0.70s} a5 17. bxa5 {0.68s} Bxa5\n" +
+                "18. Nd2 {0.66s} c6 19. dxc6 {0.65s} bxc6 20. Red1 {0.63s} d5 21. Qe3 {0.61s}\n" +
+                "Bxd2 22. Qxd2 {0.60s} d4 23. c4 {0.58s} c5 24. Qe2 {0.56s} Rfe8 25. Rxa8 {0.55s}\n" +
+                "Rxa8 26. Re1 {0.53s} Re8 27. Qe4 {0.52s} Qb6 28. Qd5 {0.51s} Qxb2 29. g3 Qc3\n" +
+                "30. Rxe5 Rxe5 31. Qxe5 Qxd3 32. Qe8+ Kg7 33. Qe5+ Kg6 34. Qd6+ f6 35. Qxc5 Qb1+\n" +
+                "36. Kg2 Qe4+ 37. Kf1 g4 38. Qc8 d3 39. Qg8+ Kf5 40. Qh7+ Ke5 {1.0s}\n" +
+                "41. Qe7+ {1.4s} Kd4 {1.0s} 42. Qa7+ {1.4s} Kxc4 {0.99s} 43. Qa4+ {1.4s}\n" +
+                "Kd5 {0.96s} 44. Qa8+ {1.3s} Ke5 {0.94s} 45. Qe8+ {1.3s} Kf5 {0.91s}\n" +
+                "46. Qh5+ {1.3s} Ke6 47. Qe8+ {1.2s} Kf5 {0.86s} 48. Qh5+ {1.2s} Ke6\n" +
+                "49. Qe8+ {1.2s} Kf5" +
+                "";
+        
         List<String> pgns = new ArrayList<>();
         pgns.add(pgn);
         pgns.add(pgn2);
@@ -342,6 +429,9 @@ public class RepetitionInGameTest {
         pgns.add(pgn14);
         pgns.add(pgn15);
         pgns.add(pgn16);
+        pgns.add(pgn17);
+        pgns.add(pgn18);
+        pgns.add(pgn19);
 
 
         for (int p = 0; p < pgns.size(); p++) {

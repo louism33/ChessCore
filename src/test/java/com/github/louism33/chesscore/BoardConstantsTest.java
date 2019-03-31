@@ -3,6 +3,7 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
+import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
 
 class BoardConstantsTest {
@@ -32,5 +33,12 @@ class BoardConstantsTest {
         Assert.assertEquals(INITIAL_PIECE_SQUARES[61], BLACK_BISHOP);
         Assert.assertEquals(INITIAL_PIECE_SQUARES[62], BLACK_KNIGHT);
         Assert.assertEquals(INITIAL_PIECE_SQUARES[63], BLACK_ROOK);
+    }
+    
+    @Test
+    void colourTest() {
+        Assert.assertEquals(0, (WHITE_COLOURED_SQUARES & BLACK_COLOURED_SQUARES));
+        Assert.assertEquals(32, populationCount(WHITE_COLOURED_SQUARES));
+        Assert.assertEquals(32, populationCount(BLACK_COLOURED_SQUARES));
     }
 }

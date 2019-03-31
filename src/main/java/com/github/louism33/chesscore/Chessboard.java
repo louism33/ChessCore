@@ -35,7 +35,7 @@ public class Chessboard {
     castling rights bits:
     BK BA WK WQ
      */
-    private int castlingRights = 0xf;
+    public int castlingRights = 0xf;
 
     public int quietHalfMoveCounter = 0, fullMoveCounter = 0;
 
@@ -778,6 +778,10 @@ public class Chessboard {
 
     }
 
+    
+    public boolean isDrawByFiftyMoveRule() {
+        return quietHalfMoveCounter >= 100;
+    }
 
     public boolean isDrawByRepetition(int stopAt) {
         int l = quietHalfMoveCounter < MAX_DEPTH_AND_ARRAY_LENGTH ? quietHalfMoveCounter : MAX_DEPTH_AND_ARRAY_LENGTH;
