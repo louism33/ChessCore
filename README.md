@@ -8,7 +8,7 @@ Through Maven:
 
 <repository>
     <id>com.github.louism33</id>
-    <url>https://oss.sonatype.org/content/repositories/releases/com/github/louism33/chesscore/1.4</url>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/com/github/louism33/chesscore/</url>
 </repository>
 ```
 ```
@@ -16,6 +16,6 @@ Through Maven:
 <dependency>
   <groupId>com.github.louism33</groupId>
   <artifactId>chesscore</artifactId>
-  <version>1.4</version>
+  <version>1.37</version>
 </dependency>
 ```
