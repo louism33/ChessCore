@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PGNParser {
+public final class PGNParser {
 
 
     public static List<String> parsePGN(String pgn){

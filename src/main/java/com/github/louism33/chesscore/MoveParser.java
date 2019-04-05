@@ -219,6 +219,15 @@ public final class MoveParser {
         return realMoves;
     }
 
+    public static String toPVString(int[] moves){
+        int number = moves[moves.length - 1];
+        StringBuilder realMoves = new StringBuilder();
+        for (int i = 0; i < number; i ++){
+            realMoves.append(prettyMove(moves[i])).append(" ");
+        }
+        return realMoves.toString();
+    }
+    
     public static String toString(int move){
         return move == 0 ? "0000" : prettyMove(move);
     }

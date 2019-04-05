@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ScoredMoves {
+public final class ScoredMoves {
 
     private static final Pattern splitter = Pattern.compile(", ");
     private List<ScoredMove> scoredMoves;
