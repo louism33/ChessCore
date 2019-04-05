@@ -2,31 +2,33 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.louism33</groupId>
     <artifactId>chesscore</artifactId>
-    <version>1.8</version>
+    <version>1.37-SNAPSHOT</version>
     <name>ChessCore</name>
     <description>Legal Chess Move Generation in Java</description>
     <url>https://github.com/louism33/ChessCore</url>
+
+
     <issueManagement>
         <url>https://github.com/louism33/ChessCore/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
-    
     <distributionManagement>
-        <repository>
-            <uniqueVersion>true</uniqueVersion>
+        <!--<repository>-->
+        <!--<uniqueVersion>true</uniqueVersion>-->
+        <!--<id>ossrh</id>-->
+        <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+        <!--&lt;!&ndash;<url>https://oss.sonatype.org/content/repositories/releases</url>&ndash;&gt;-->
+        <!--&lt;!&ndash;<url>https://repo1.maven.org:443/content/repositories/releases/</url>&ndash;&gt;-->
+
+        <!--</repository>-->
+
+
+        <snapshotRepository>
             <id>ossrh</id>
             <url>
-                https://oss.sonatype.org/content/repositories/releases
+                https://oss.sonatype.org/content/repositories/snapshots
             </url>
-            <layout>default</layout>
-        </repository>
-        
-        <!--<snapshotRepository>-->
-            <!--<id>ossrh</id>-->
-            <!--<url>-->
-                <!--https://oss.sonatype.org/content/repositories/snapshots-->
-            <!--</url>-->
-        <!--</snapshotRepository>-->
+        </snapshotRepository>
     </distributionManagement>
     <licenses>
         <license>
@@ -39,8 +41,8 @@
         <connection>scm:git:git@github.com:louism33/ChessCore.git</connection>
         <developerConnection>scm:git:git@github.com:louism33/ChessCore.git</developerConnection>
         <url>https://github.com/louism33/ChessCore/tree/master</url>
-      <tag>v1.8</tag>
-  </scm>
+        <tag>v1.8</tag>
+    </scm>
     <developers>
         <developer>
             <email>louis.mackenziesmith.code@gmail.com</email>
@@ -62,6 +64,7 @@
                     <configuration>
                         <tagNameFormat>v@{project.version}</tagNameFormat>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>releases</releaseProfiles>
                     </configuration>
                 </plugin>
@@ -92,7 +95,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.5</version>
+                    <version>1.6</version>
                     <executions>
                         <execution>
                             <id>sign-artifacts</id>
@@ -229,9 +232,19 @@
                             <manifest>
                                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                 <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                                <mainClass>com.github.louism33.chesscore.Setup</mainClass>
                             </manifest>
                         </archive>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>default-jar</id>
+                            <!--<phase>verify</phase>-->
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -255,6 +268,41 @@
                         </execution>
                     </executions>
                 </plugin>
+
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.1.1</version>
+
+                    <executions>
+                        <execution>
+                            <id>make-assembly</id>
+                            <!--<phase>package</phase>-->
+                            <phase>install</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <mainClass>com.github.louism33.chesscore.Setup</mainClass>
+                            </manifest>
+                        </archive>
+                        <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                        </descriptorRefs>
+                    </configuration>
+
+
+
+                </plugin>
+
+
             </plugins>
         </pluginManagement>
     </build>

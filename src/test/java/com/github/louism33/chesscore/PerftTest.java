@@ -5,8 +5,6 @@ import com.github.louism33.utils.Perft;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 public class PerftTest {
 
     /*
@@ -73,7 +71,6 @@ public class PerftTest {
 
     @Test
     void test5() {
-
         String fen = "3k4/8/8/8/8/8/8/R3K3 w Q - 0 1";
         Assert.assertEquals(803711, Perft.perftTest(new Chessboard(fen), 6));
         System.out.println(fen+"\ndepth " + 6 + " correct.");

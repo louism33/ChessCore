@@ -1,10 +1,13 @@
 package com.github.louism33.utils;
 
+import com.github.louism33.chesscore.Chessboard;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ScoredMoves {
+public final class ScoredMoves {
 
     private static final Pattern splitter = Pattern.compile(", ");
     private List<ScoredMove> scoredMoves;
@@ -13,28 +16,27 @@ public class ScoredMoves {
         this.scoredMoves = scoredMoves;
     }
 
-    static ScoredMoves parseComment(String comment){
-        System.out.println("*************************************");
-        System.out.println(comment);
+    static ScoredMoves parseComment(Chessboard board, String comment){
+        try {
+            final String[] s = splitter.split(comment);
 
-        final String[] s = splitter.split(comment);
+            List<ScoredMove> scoredMoveList = new ArrayList<>();
 
-        System.out.println(Arrays.toString(s));
+            for (int i = 0; i < s.length; i++) {
+                final String[] split = s[i].split("=");
+                if (split.length < 2) {
+                    return null;
+                }
+                final String move = split[0];
+                final String score = split[1];
 
-
-        for (int i = 0; i < s.length; i++) {
-            final String[] split = s[i].split("=");
-            if (split.length < 2) {
-                return null;
+                scoredMoveList.add(new ScoredMove(MoveParserFromAN.buildMoveFromANWithOO(board, move), Integer.parseInt(score)));
             }
-            final String move = split[0];
-            System.out.println("move is " + move);
-            final String score = split[1];
-            System.out.println("score is "+ score);
+
+            return new ScoredMoves(scoredMoveList);
+        } catch (Exception e) {
+            return null;
         }
-        
-        System.out.println("*************************************");
-        return null;
     }
     
     
@@ -46,7 +48,7 @@ public class ScoredMoves {
         this.scoredMoves = scoredMoves;
     }
 
-    public class ScoredMove {
+    public static class ScoredMove {
         private int move;
         private int score;
 
@@ -70,8 +72,14 @@ public class ScoredMoves {
         public void setScore(int score) {
             this.score = score;
         }
-        
-        
+
+        @Override
+        public String toString() {
+            return "ScoredMove{" +
+                    "move=" + move +
+                    ", score=" + score +
+                    '}';
+        }
     }
 
 }

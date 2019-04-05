@@ -126,8 +126,8 @@ public final class BoardConstants {
         INITIAL_PIECE_SQUARES[63] = BLACK_ROOK;
     }
 
-    public static final long WHITE_COLOURED_SQUARES = 0x5555555555555555L;
-    public static final long BLACK_COLOURED_SQUARES = 0xAAAAAAAAAAAAAAAAL;
+    public static final long WHITE_COLOURED_SQUARES = 0xaa55aa55aa55aa55L;
+    public static final long BLACK_COLOURED_SQUARES = 0x55aa55aa55aa55aaL;
 
     public static final long CASTLE_KING_DESTINATIONS = 0x2200000000000022L;
     

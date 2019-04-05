@@ -36,24 +36,6 @@ public final class MoveConstants {
     final static int BLACK_QUEEN_MASK = 0x0000000b;
     final static int BLACK_KING_MASK = 0x0000000c;
 
-    public static void main(String[] args) {
-        int i = DESTINATION_MASK;
-        i |= SOURCE_MASK;
-        i |= SPECIAL_MOVE_MASK;
-        i |= QUEEN_PROMOTION_MASK;
-        i |= SOURCE_PIECE_MASK;
-        i |= VICTIM_PIECE_MASK;
-
-        i |= CAPTURE_MOVE_MASK;
-        i |= CHECKING_MOVE_MASK;
-        
-        Art.printLong(i);
-        
-        Art.printLong(MOVE_SCORE_MASK);
-        Art.printLong(MOVE_MASK_WITH_CHECK);
-        Art.printLong(MOVE_MASK_WITHOUT_CHECK);
-    }
-
     public final static int DESTINATION_MASK = 0x0000003f;
     
     public final static int SOURCE_OFFSET = 6;

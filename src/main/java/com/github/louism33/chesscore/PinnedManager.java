@@ -3,34 +3,40 @@ package com.github.louism33.chesscore;
 import static com.github.louism33.chesscore.BitOperations.extractRayFromTwoPieces;
 import static com.github.louism33.chesscore.PieceMove.xrayBishopAttacks;
 import static com.github.louism33.chesscore.PieceMove.xrayRookAttacks;
+import static java.lang.Long.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
 public final class PinnedManager {
 
-    public static long whichPiecesArePinned(long squareOfInterest,
+    public static long whichPiecesArePinned(Chessboard board, long squareOfInterest,
                                             long enemyBishops, long enemyRooks, long enemyQueens,
                                             long friends, long allPieces){
         if (squareOfInterest == 0) {
             return 0;
         }
-        return pinsToSquare(squareOfInterest,
+        return pinsToSquare(board, squareOfInterest,
                 enemyBishops, enemyRooks, enemyQueens,
                 friends, allPieces);
     }
     
-    private static long pinsToSquare(long squareOfInterest,
+    private static long pinsToSquare(Chessboard board, long squareOfInterest,
                                      long enemyBishops, long enemyRooks, long enemyQueens,
                                      long friends, long allPieces) {
 
         long pinnedPieces = 0;
 
+        // todo, add pinning here + state (?)
         long pinners = xrayBishopAttacks(allPieces, friends, squareOfInterest);
         long pinningPieces = pinners & (enemyBishops | enemyQueens);
 
         while (pinningPieces != 0){
             final int indexOfPinningPiece = numberOfTrailingZeros(pinningPieces);
             final long ray = extractRayFromTwoPieces(indexOfPinningPiece, numberOfTrailingZeros(squareOfInterest));
-            pinnedPieces |= (ray & friends);
+            final long p = ray & friends;
+            if (p != 0) {
+                pinnedPieces |= p;
+                board.pinningPieces |= lowestOneBit(pinningPieces);
+            }
             pinningPieces &= pinningPieces - 1;
         }
 
@@ -40,7 +46,11 @@ public final class PinnedManager {
         while (pinningPieces != 0){
             final int indexOfPinningPiece = numberOfTrailingZeros(pinningPieces);
             final long ray = extractRayFromTwoPieces(indexOfPinningPiece, numberOfTrailingZeros(squareOfInterest));
-            pinnedPieces |= (ray & friends);
+            final long p = ray & friends;
+            if (p != 0) {
+                pinnedPieces |= p;
+                board.pinningPieces |= lowestOneBit(pinningPieces);
+            }
             pinningPieces &= pinningPieces - 1;
         }
 

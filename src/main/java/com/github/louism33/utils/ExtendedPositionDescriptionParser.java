@@ -4,6 +4,7 @@ import com.github.louism33.chesscore.Chessboard;
 import com.github.louism33.chesscore.MoveParser;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,8 +13,8 @@ public final class ExtendedPositionDescriptionParser {
     private static final Pattern boardPattern = Pattern.compile("([/|\\w]* [wb] [-|\\w]* [-|\\w])");
     private static final Pattern bestMovePattern = Pattern.compile("bm ([\\w\\s+]+)");
     private static final Pattern avoidMovePattern = Pattern.compile("am ([\\w|+]+)");
-    private static final Pattern idPattern = Pattern.compile("id \"(\\S*)\"");
-    private static final Pattern commentPattern = Pattern.compile(" c0 \"(.*)\";");
+    private static final Pattern idPattern = Pattern.compile("id \"([^;]*)\"");
+    private static final Pattern commentPattern = Pattern.compile(" c0 \"([^;]*)\";");
     private static final Matcher boardMatcher = boardPattern.matcher("");
     private static final Matcher bmMatcher = bestMovePattern.matcher("");
     private static final Matcher amMatcher = avoidMovePattern.matcher("");
@@ -21,8 +22,6 @@ public final class ExtendedPositionDescriptionParser {
     private static final Matcher commentMatcher = commentPattern.matcher("");
 
     public static EPDObject parseEDPPosition(String edpPosition){
-        System.out.println(edpPosition);
-        
         boardMatcher.reset(edpPosition);
         bmMatcher.reset(edpPosition);
         amMatcher.reset(edpPosition);
@@ -41,7 +40,7 @@ public final class ExtendedPositionDescriptionParser {
             String[] bms = bmMatcher.group(1).split(" ");
             int length = bms.length;
             for (int i = 0; i < length; i++) {
-                goodMoves[i] = (MoveParserFromAN.buildMoveFromAN(board, bms[i]));
+                goodMoves[i] = (MoveParserFromAN.buildMoveFromANWithOO(board, bms[i]));
             }
             goodMoves[goodMoves.length - 1] += length;
         }
@@ -51,7 +50,7 @@ public final class ExtendedPositionDescriptionParser {
             String[] ams = amMatcher.group(1).split(" ");
             int length = ams.length;
             for (int i = 0; i < length; i++) {
-                badMoves[i] = (MoveParserFromAN.buildMoveFromAN(board, ams[i]));
+                badMoves[i] = (MoveParserFromAN.buildMoveFromANWithOO(board, ams[i]));
             }
             badMoves[badMoves.length - 1] += length;
         }
@@ -63,8 +62,7 @@ public final class ExtendedPositionDescriptionParser {
         
         ScoredMoves scoredMoves = null;
         if (commentMatcher.find()) {
-            System.out.println(commentMatcher.group());
-            scoredMoves = ScoredMoves.parseComment(commentMatcher.group(1));
+            scoredMoves = ScoredMoves.parseComment(board, commentMatcher.group(1));
         }
 
         return new EPDObject(board, goodMoves, id, fen, badMoves, edpPosition, scoredMoves);
@@ -73,6 +71,7 @@ public final class ExtendedPositionDescriptionParser {
     public static class EPDObject {
         private final Chessboard board;
         private final int[] bestMoves;
+        private int[] bestMovesFromComments;
         private final int[] avoidMoves;
         private final String id;
         private final String boardFen;
@@ -88,6 +87,20 @@ public final class ExtendedPositionDescriptionParser {
             this.avoidMoves = avoidMoves;
             this.fullString = fullString;
             this.scoredMoves = scoredMoves;
+            if (scoredMoves != null) {
+                this.bestMovesFromComments = getCommentMoves();
+            }
+        }
+
+        private int[] getCommentMoves() {
+            final List<ScoredMoves.ScoredMove> scoredMoves = this.scoredMoves.getScoredMoves();
+            final int total = scoredMoves.size();
+            bestMovesFromComments = new int[total + 1];
+            for (int i = 0; i < scoredMoves.size(); i++) {
+                bestMovesFromComments[i] = scoredMoves.get(i).getMove();
+            }
+            bestMovesFromComments[total] = total;
+            return bestMovesFromComments;
         }
 
         public Chessboard getBoard() {
@@ -116,6 +129,14 @@ public final class ExtendedPositionDescriptionParser {
 
         public String getFullString() {
             return fullString;
+        }
+
+        public int[] getBestMovesFromComments() {
+            return bestMovesFromComments;
+        }
+
+        public ScoredMoves getScoredMoves() {
+            return scoredMoves;
         }
 
         @Override
