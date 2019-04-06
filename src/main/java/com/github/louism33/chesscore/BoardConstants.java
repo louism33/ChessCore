@@ -1,5 +1,8 @@
 package com.github.louism33.chesscore;
 
+import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
+import static java.lang.Long.numberOfTrailingZeros;
+
 public final class BoardConstants {
 
     public static final int NO_PIECE = 0;
@@ -130,7 +133,7 @@ public final class BoardConstants {
     public static final long BLACK_COLOURED_SQUARES = 0x55aa55aa55aa55aaL;
 
     public static final long CASTLE_KING_DESTINATIONS = 0x2200000000000022L;
-    
+
     static long CASTLE_WHITE_KING_SQUARES = 0x0000000000000006L;
     static long CASTLE_WHITE_QUEEN_SQUARES = 0x0000000000000070L;
     static long CASTLE_BLACK_KING_SQUARES = 0x0600000000000000L;
@@ -321,7 +324,7 @@ public final class BoardConstants {
         pawnKillZone[WHITE] = whitePawnKillZone;
         pawnKillZone[BLACK] = blackPawnKillZone;
     }
-    
+
     public final static long[] fileForwardBlack = {
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
             1L, 2L, 4L, 8L, 16L, 32L, 64L, 128L,
@@ -343,14 +346,14 @@ public final class BoardConstants {
             72057594037927936L, 144115188075855872L, 288230376151711744L, 576460752303423488L, 1152921504606846976L, 2305843009213693952L, 4611686018427387904L, -9223372036854775808L,
             0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
     };
-    
+
     public final static long[][] fileForward = new long[2][64];
 
     static {
         fileForward[WHITE] = fileForwardWhite;
         fileForward[BLACK] = fileForwardBlack;
     }
-    
+
     public final static long[] antiDiagonal = {
             1L, 258L, 66052L, 16909320L, 4328785936L, 1108169199648L, 283691315109952L, 72624976668147840L, 145249953336295424L, 290499906672525312L, 580999813328273408L, 1161999622361579520L, 2323998145211531264L, 4647714815446351872L, -9223372036854775808L,
     };
@@ -414,6 +417,51 @@ public final class BoardConstants {
     static{
         PAWN_CAPTURE_TABLE[WHITE] = PAWN_CAPTURE_TABLE_WHITE;
         PAWN_CAPTURE_TABLE[BLACK] = PAWN_CAPTURE_TABLE_BLACK;
+    }
+
+    public final static long[][] pawnAttackSpans = new long[2][64];
+
+    static {
+        for (int turn = WHITE; turn <= BLACK; turn++) {
+            for (int i = 0; i < 64; i++) {
+                final long p = BitOperations.newPieceOnSquare(i);
+                long captureTable = PAWN_CAPTURE_TABLE[turn][numberOfTrailingZeros(p)];
+                while (captureTable != 0) {
+                    pawnAttackSpans[turn][i] |= fileForward[turn][numberOfTrailingZeros(captureTable)];
+                    captureTable &= captureTable - 1;
+                }
+            }
+        }
+    }
+
+    public final static long[] horizontalAdjacentSquares = new long[64];
+
+    static {
+        for (int i = 0; i < 64; i++) {
+            final long p = BitOperations.newPieceOnSquare(i);
+            long adj = 0;
+            if (i >= 8) {
+                adj |= PAWN_CAPTURE_TABLE[WHITE][numberOfTrailingZeros(p >>> 8)];
+            }
+            if (i < 64 - 8) {
+                adj |= PAWN_CAPTURE_TABLE[BLACK][numberOfTrailingZeros(p << 8)];
+            }
+            horizontalAdjacentSquares[i] = adj;
+        }
+    }
+
+    public final static long[] adjacentFiles = new long[64];
+
+    static {
+        for (int i = 0; i < 64; i++) {
+            long adj = 0, s = horizontalAdjacentSquares[i];
+            while (s != 0) {
+                final int index = numberOfTrailingZeros(s);
+                adj |= FILES[index % 8];
+                s &= s - 1;
+            }
+            adjacentFiles[i] = adj;
+        }
     }
 
     public static final long[][] rookDatabase = new long[64][];

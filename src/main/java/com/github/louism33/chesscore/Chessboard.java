@@ -40,6 +40,7 @@ public class Chessboard {
     public int quietHalfMoveCounter = 0, fullMoveCounter = 0;
 
     public long zobristHash;
+    public long zobristPawnHash;
 
     public long moveStackData;
 
@@ -49,11 +50,11 @@ public class Chessboard {
     private final int[][] legalMoveStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH][maxNumberOfMovesInAnyPosition];
 
     final long[] zobristHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+    final long[] zobristPawnHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
 
     private final long[] pastMoveStackArray = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
     public boolean inCheckRecorder;
 
-    // todo needs array
     public long checkingPieces;
 
     public long pinnedPieces;
@@ -70,6 +71,7 @@ public class Chessboard {
             if (pieceIndex != -1) {
                 hash ^= zobristHashPieces[sq][pieceIndex];
             }
+
         }
 
         hash ^= zobristHashCastlingRights[castlingRights];
@@ -80,6 +82,19 @@ public class Chessboard {
 
         if (hasPreviousMove()){
             hash = updateWithEPFlags(moveStackArrayPeek(), hash);
+        }
+
+        return hash;
+    }
+
+    private long makePawnHash(){
+        long hash = 0;
+        for (int sq = 0; sq < 64; sq++) {
+            long pieceOnSquare = newPieceOnSquare(sq);
+            int pieceIndex = pieceSquareTable[numberOfTrailingZeros(pieceOnSquare)] - 1;
+            if (pieceIndex == WHITE_PAWN || pieceIndex == BLACK_PAWN) {
+                hash ^= zobristHashPieces[sq][pieceIndex];
+            }
         }
 
         return hash;
@@ -96,6 +111,7 @@ public class Chessboard {
         turn = WHITE;
 
         zobristHash = boardToHash();
+        zobristPawnHash = makePawnHash();
     }
 
     public Chessboard(Chessboard board) {
@@ -104,6 +120,7 @@ public class Chessboard {
         this.quietHalfMoveCounter = board.quietHalfMoveCounter;
         this.fullMoveCounter = board.fullMoveCounter;
         this.zobristHash = board.zobristHash;
+        this.zobristPawnHash = board.zobristPawnHash;
         this.moveStackData = board.moveStackData;
         this.inCheckRecorder = board.inCheckRecorder;
         this.pinnedPieces = board.pinnedPieces;
@@ -121,6 +138,7 @@ public class Chessboard {
         }
 
         System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
+        System.arraycopy(board.zobristPawnHashStack, 0, this.zobristPawnHashStack, 0, board.zobristPawnHashStack.length);
         System.arraycopy(board.pastMoveStackArray, 0, this.pastMoveStackArray, 0, board.pastMoveStackArray.length);
         System.arraycopy(board.pinnedPiecesArray, 0, this.pinnedPiecesArray, 0, board.pinnedPiecesArray.length);
         System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
@@ -387,8 +405,20 @@ public class Chessboard {
         zobristHash ^= zobristHashPieces[sourceIndex][sourcePieceIdentifier];
         zobristHash ^= destinationZH;
 
+        // +1 because zobrist has offset array index
+        if (sourcePieceIdentifier+1 == WHITE_PAWN || sourcePieceIdentifier+1 == BLACK_PAWN) {
+            zobristPawnHash ^= zobristHashPieces[sourceIndex][sourcePieceIdentifier];
+            zobristPawnHash ^= destinationZH;
+        }
+        
+        
         if (captureMove){
-            zobristHash ^= zobristHashPieces[destinationIndex][pieceSquareTable[destinationIndex] - 1];
+            final int victim = pieceSquareTable[destinationIndex];
+            final long victimHash = zobristHashPieces[destinationIndex][victim - 1];
+            this.zobristHash ^= victimHash;
+            if (victim == WHITE_PAWN || victim == BLACK_PAWN) {
+                zobristPawnHash ^= victimHash;
+            }
         }
 
         /* 
@@ -446,9 +476,11 @@ public class Chessboard {
 
                     final long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
                     final int victimPawnIndex = numberOfTrailingZeros(victimPawn);
-                    zobristHash ^= zobristHashPieces
+                    final long zobristHashVictim = zobristHashPieces
                             [victimPawnIndex]
                             [pieceSquareTable[victimPawnIndex] - 1];
+                    this.zobristHash ^= zobristHashVictim;
+                    this.zobristPawnHash ^= zobristHashVictim;
 
                     moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, ENPASSANTCAPTURE));
                     makeEnPassantMove(pieces, pieceSquareTable, turn, move);
@@ -478,11 +510,12 @@ public class Chessboard {
                     /*
                     remove my pawn from zh
                      */
-                    zobristHash ^= destinationZH;
+                    this.zobristHash ^= destinationZH;
+                    this.zobristPawnHash ^= destinationZH;
 
                     Assert.assertTrue(whichPromotingPiece != 0);
                     long promotionZH = zobristHashPieces[destinationIndex][whichPromotingPiece - 1];
-                    zobristHash ^= promotionZH;
+                    this.zobristHash ^= promotionZH;
 
                     moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, PROMOTION));
                     makePromotingMove(pieces, pieceSquareTable, turn, move);
@@ -941,9 +974,11 @@ public class Chessboard {
                 castlingRights == that.castlingRights &&
                 quietHalfMoveCounter == that.quietHalfMoveCounter &&
                 zobristHash == that.zobristHash &&
+                zobristPawnHash == that.zobristPawnHash &&
                 masterIndex == that.masterIndex &&
                 Arrays.deepEquals(pieces, that.pieces) &&
                 Arrays.equals(zobristHashStack, that.zobristHashStack) &&
+                Arrays.equals(zobristPawnHashStack, that.zobristPawnHashStack) &&
                 Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray) &&
                 Arrays.equals(checkStack, that.checkStack) &&
                 Arrays.equals(pieceSquareTable, that.pieceSquareTable)
@@ -988,6 +1023,7 @@ public class Chessboard {
         pinningPieces = 0;
 
         zobristHashStack[masterIndex] = zobristHash;
+        zobristPawnHashStack[masterIndex] = zobristPawnHash;
         rotateMasterIndexUp();
     }
 
@@ -1001,6 +1037,9 @@ public class Chessboard {
 
         zobristHash = zobristHashStack[masterIndex];
         zobristHashStack[masterIndex] = 0;
+
+        zobristPawnHash = zobristPawnHashStack[masterIndex];
+        zobristPawnHashStack[masterIndex] = 0;
 
         pastMoveStackArray[moveStackIndex] = 0;
         rotateMoveStackIndexDown();
@@ -1150,6 +1189,7 @@ public class Chessboard {
             }
         }
         zobristHash = boardToHash();
+        zobristPawnHash = makePawnHash();
         Setup.init(false);
     }
 
