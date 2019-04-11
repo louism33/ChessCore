@@ -2,7 +2,6 @@ package com.github.louism33.utils;
 
 import com.github.louism33.chesscore.Art;
 import com.github.louism33.chesscore.Chessboard;
-import com.github.louism33.chesscore.MoveParser;
 import org.junit.Assert;
 
 import java.util.regex.Matcher;
@@ -17,6 +16,7 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 public final class MoveParserFromAN {
 
+    
     private static final Pattern pattern = Pattern.compile(".?([abcdefgh][12345678])[-x]?([abcdefgh][12345678])(\\w)?");
     private static final Matcher matcher = pattern.matcher("");
 
@@ -80,7 +80,7 @@ public final class MoveParserFromAN {
 
     // is lower case b in first group necessary or safe?
     private static final Matcher anMatcher = Pattern.compile("([PNBRQKpnrqk])?([a-h])?([1-8])?([x])?([a-h])([1-8])([=]?)([QNRB]?)([+#]?)").matcher("");
-    
+
     public static int buildMoveFromANWithOO(Chessboard board, String an){
         anMatcher.reset(an);
 
@@ -180,7 +180,7 @@ public final class MoveParserFromAN {
         if ((sourceIndex != destinationIndex + 16)
                 && (sourceIndex != destinationIndex - 16)
                 && (sourceIndex != destinationIndex + 8)
-                && (sourceIndex != destinationIndex - 8)) {
+                && (sourceIndex != destinationIndex - 8)) { // not a push
             if (board.pieceSquareTable[sourceIndex] == PIECE[turn][PAWN]
                     && board.pieceSquareTable[destinationIndex] == NO_PIECE) {
                 basicMove |= ENPASSANT_MASK;
@@ -288,8 +288,6 @@ public final class MoveParserFromAN {
         }
         basicMove = buildMove(sourceIndex, movingPiece, destinationIndex, board.pieceSquareTable[destinationIndex]);
 
-
-
         if (movingPiece == INITIAL_PIECES[turn][KING] && board.pieceSquareTable[sourceIndex] == PIECE[turn][KING]){
             if ((destinationSquare & CASTLE_KING_DESTINATIONS) != 0){
                 basicMove |= CASTLING_MASK;
@@ -339,10 +337,10 @@ public final class MoveParserFromAN {
             case NO_PIECE:
                 throw new RuntimeException();
             case WHITE_PAWN:
-                candidateMovers = pawnFinder(allPieces, candidateMovers, WHITE, destinationIndex);
+                candidateMovers = pawnFinder(board, allPieces, candidateMovers, WHITE, destinationIndex);
                 break;
             case BLACK_PAWN:
-                candidateMovers = pawnFinder(allPieces, candidateMovers, BLACK, destinationIndex);
+                candidateMovers = pawnFinder(board, allPieces, candidateMovers, BLACK, destinationIndex);
                 break;
             case WHITE_KNIGHT:
             case BLACK_KNIGHT:
@@ -380,9 +378,11 @@ public final class MoveParserFromAN {
     }
     
     
-    private static long pawnFinder(long allPieces, long myPawns, int turn, int destinationIndex){
+    private static long pawnFinder(Chessboard board, long allPieces, long myPawns, int turn, int destinationIndex){
         long destinationSquare = newPieceOnSquare(destinationIndex);
-
+        long myPawns2 = myPawns;
+        final boolean quietOrEP = (destinationSquare & allPieces) == 0;
+        
         while (myPawns != 0){
             final long pawn = getFirstPiece(myPawns);
             
@@ -402,15 +402,28 @@ public final class MoveParserFromAN {
                 return pawn;
             }
 
-            long captureTable = singlePawnCaptures(pawn, turn, destinationSquare) & allPieces;
-
+            long captureTable = singlePawnCaptures(pawn, turn, destinationSquare);
+            
+            captureTable &= allPieces;
+            
             captureTable &= destinationSquare;
 
-            if (captureTable != 0) {
+            if (!quietOrEP && captureTable != 0) {
                 return pawn;
             }
             
             myPawns &= myPawns - 1;
+        }
+
+        while (myPawns2 != 0) {
+            final long pawn = getFirstPiece(myPawns2);
+            if (quietOrEP) {
+                long captureTable = singlePawnCaptures(pawn, turn, destinationSquare);
+                if ((captureTable & destinationSquare) != 0) {
+                    return pawn;
+                }
+            }
+            myPawns2 &= myPawns2 - 1;
         }
 
         throw new RuntimeException("couldn't find moving pawn");

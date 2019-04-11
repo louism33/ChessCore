@@ -1,6 +1,5 @@
 package com.github.louism33.chesscore;
 
-import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
 import static java.lang.Long.numberOfTrailingZeros;
 
 public final class BoardConstants {

@@ -6,7 +6,8 @@ import java.util.Arrays;
 
 import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.CheckHelper.*;
+import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
+import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveConstants.*;
@@ -23,7 +24,7 @@ import static com.github.louism33.chesscore.StackDataUtil.*;
 import static com.github.louism33.chesscore.ZobristHashUtil.*;
 import static java.lang.Long.numberOfTrailingZeros;
 
-public class Chessboard {
+public final class Chessboard {
 
     public static final int MAX_DEPTH_AND_ARRAY_LENGTH = 128;
 
@@ -128,7 +129,7 @@ public class Chessboard {
         this.legalMoveStackIndex = board.legalMoveStackIndex;
         this.masterIndex = board.masterIndex;
         this.moveStackIndex = board.moveStackIndex;
-        
+
         System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
         System.arraycopy(board.moves, 0, this.moves, 0, board.moves.length);
@@ -410,8 +411,8 @@ public class Chessboard {
             zobristPawnHash ^= zobristHashPieces[sourceIndex][sourcePieceIdentifier];
             zobristPawnHash ^= destinationZH;
         }
-        
-        
+
+
         if (captureMove){
             final int victim = pieceSquareTable[destinationIndex];
             final long victimHash = zobristHashPieces[destinationIndex][victim - 1];
@@ -811,7 +812,7 @@ public class Chessboard {
 
     }
 
-    
+
     public boolean isDrawByFiftyMoveRule() {
         return quietHalfMoveCounter >= 100;
     }
@@ -850,7 +851,7 @@ public class Chessboard {
     private int simulateMasterIndexDown2(int masterIndex) {
         return (masterIndex - 2 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
-    
+
     public boolean isDrawByInsufficientMaterial() {
         boolean drawByMaterial = false;
 
@@ -1191,6 +1192,118 @@ public class Chessboard {
         zobristHash = boardToHash();
         zobristPawnHash = makePawnHash();
         Setup.init(false);
+    }
+
+    public String toFenString() {
+        StringBuilder fen = new StringBuilder();
+        int c = 0;
+        for (int i = 63; i >= 0; i--) {
+            final int p = pieceSquareTable[i];
+            if (p == NO_PIECE) {
+                c++;
+            } else {
+                if (c > 0) {
+                    fen.append(c);
+                    c = 0;
+                }
+                switch (p) {
+                    case WHITE_PAWN:
+                        fen.append("P");
+                        break;
+                    case WHITE_KNIGHT:
+                        fen.append("N");
+                        break;
+                    case WHITE_BISHOP:
+                        fen.append("B");
+                        break;
+                    case WHITE_ROOK:
+                        fen.append("R");
+                        break;
+                    case WHITE_QUEEN:
+                        fen.append("Q");
+                        break;
+                    case WHITE_KING:
+                        fen.append("K");
+                        break;
+
+                    case BLACK_PAWN:
+                        fen.append("p");
+                        break;
+                    case BLACK_KNIGHT:
+                        fen.append("n");
+                        break;
+                    case BLACK_BISHOP:
+                        fen.append("b");
+                        break;
+                    case BLACK_ROOK:
+                        fen.append("r");
+                        break;
+                    case BLACK_QUEEN:
+                        fen.append("q");
+                        break;
+                    case BLACK_KING:
+                        fen.append("k");
+                        break;
+                }
+            }
+            if (i % 8 == 0 && i != 0) {
+                if (c > 0) {
+                    fen.append(c);
+                    c = 0;
+                }
+                fen.append("/");
+            }
+            if (i == 0 && c > 0) {
+                fen.append(c);
+                c = 0;
+            }
+        }
+
+        fen.append(" ");
+        if (turn == WHITE) {
+            fen.append("w");
+        } else {
+            fen.append("b");
+        }
+
+        fen.append(" ");
+
+        if (castlingRights == 0) {
+            fen.append("-");
+        }
+        else {
+            if ((castlingRights & castlingRightsOn[WHITE][K]) != 0) {
+                fen.append("K");
+            }
+
+            if ((castlingRights & castlingRightsOn[WHITE][Q]) != 0) {
+                fen.append("Q");
+            }
+
+            if ((castlingRights & castlingRightsOn[BLACK][K]) != 0) {
+                fen.append("k");
+            }
+
+            if ((castlingRights & castlingRightsOn[BLACK][Q]) != 0) {
+                fen.append("q");
+            }
+        }
+
+        fen.append(" ");
+
+        if (hasPreviousMove() && StackDataUtil.getSpecialMove(moveStackArrayPeek()) == ENPASSANTVICTIM){
+            long f = StackDataUtil.getEPMove(moveStackArrayPeek());
+            fen.append((char) (f + 96));
+        } else {
+            fen.append("-");
+        }
+
+        fen.append(" ");
+        fen.append(quietHalfMoveCounter);
+        fen.append(" ");
+        fen.append(fullMoveCounter);
+
+        return fen.toString();
     }
 
 

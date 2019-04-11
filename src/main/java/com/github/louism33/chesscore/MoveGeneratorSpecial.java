@@ -131,7 +131,7 @@ final class MoveGeneratorSpecial {
     }
 
 
-    private static long extractFileFromStack(int file){
+    static long extractFileFromStack(int file){
         if (file == 0){
             return 0;
         }

@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.louism33</groupId>
     <artifactId>chesscore</artifactId>
-    <version>1.40-SNAPSHOT</version>
+    <version>1.47-SNAPSHOT</version>
     <name>ChessCore</name>
     <description>Legal Chess Move Generation in Java</description>
     <url>https://github.com/louism33/ChessCore</url>

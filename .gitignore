@@ -17,6 +17,10 @@
 *.tar.gz
 *.rar
 
+# Chess stuff #
+*.pgn
+*.fen
+
 # Folders #
 .idea/
 idea/
