@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public final class ExtendedPositionDescriptionParser {
 
     private static final Pattern boardPattern = Pattern.compile("([/|\\w]* [wb] [-|\\w]* [-|\\w])");
-    private static final Pattern bestMovePattern = Pattern.compile("bm ([\\w\\s+]+)");
+    private static final Pattern bestMovePattern = Pattern.compile("bm ([\\w\\s+-]+)");
     private static final Pattern avoidMovePattern = Pattern.compile("am ([\\w|+]+)");
     private static final Pattern idPattern = Pattern.compile("id \"([^;]*)\"");
     private static final Pattern commentPattern = Pattern.compile(" c0 \"([^;]*)\";");

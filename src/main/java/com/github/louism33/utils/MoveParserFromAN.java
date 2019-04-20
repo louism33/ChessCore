@@ -1,8 +1,6 @@
 package com.github.louism33.utils;
 
-import com.github.louism33.chesscore.Art;
 import com.github.louism33.chesscore.Chessboard;
-import org.junit.Assert;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
