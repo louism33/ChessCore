@@ -93,7 +93,8 @@ public final class Chessboard {
         for (int sq = 0; sq < 64; sq++) {
             long pieceOnSquare = newPieceOnSquare(sq);
             int pieceIndex = pieceSquareTable[numberOfTrailingZeros(pieceOnSquare)] - 1;
-            if (pieceIndex == WHITE_PAWN || pieceIndex == BLACK_PAWN) {
+            // adding 1 because zobrist pieces indexed from 0 but pawn is == 1
+            if (pieceIndex + 1 == WHITE_PAWN || pieceIndex + 1 == BLACK_PAWN) { 
                 hash ^= zobristHashPieces[sq][pieceIndex];
             }
         }
