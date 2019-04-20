@@ -1,11 +1,7 @@
 package com.github.louism33.chesscore;
 
-import com.github.louism33.utils.MoveParserFromAN;
-import org.junit.Test;
-
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.PieceMove.*;
-import static java.lang.Long.lowestOneBit;
 
 public final class Utils {
 
