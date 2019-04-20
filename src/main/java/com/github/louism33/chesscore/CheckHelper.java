@@ -7,6 +7,22 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 final class CheckHelper {
 
+    @Deprecated
+    static boolean isCheckMove(Chessboard board, int move) {
+        int turn = board.turn;
+        if (MoveParser.isEnPassantMove(move) || MoveParser.isPromotionMove(move)) {
+            board.makeMoveAndFlipTurn(move);
+            boolean inCheck = boardInCheck(board.turn, board.pieces[turn][KING],
+                    board.pieces[1 - turn][PAWN], board.pieces[1 - turn][KNIGHT],
+                    board.pieces[1 - turn][BISHOP], board.pieces[1 - turn][ROOK], board.pieces[1 - turn][QUEEN],
+                    board.pieces[1 - turn][KING], board.pieces[turn][ALL_COLOUR_PIECES] | board.pieces[1 - turn][ALL_COLOUR_PIECES]);
+            board.unMakeMoveAndFlipTurn();
+            return inCheck;
+        }
+        throw new RuntimeException();
+    }
+    
+    
     static boolean boardInCheck(int turn, long myKing,
                                 long pawns, long knights, long bishops, long rooks, long queens, long king,
                                 long allPiece){

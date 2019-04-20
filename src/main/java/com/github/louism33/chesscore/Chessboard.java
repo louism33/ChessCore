@@ -813,6 +813,39 @@ public final class Chessboard {
 
     }
 
+    // todo
+    public boolean inCheck(boolean white, int move) {
+        long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
+        if (white) {
+            myKing = pieces[WHITE][KING];
+            enemyPawns = pieces[BLACK][PAWN];
+            enemyKnights = pieces[BLACK][KNIGHT];
+            enemyBishops = pieces[BLACK][BISHOP];
+            enemyRooks = pieces[BLACK][ROOK];
+            enemyQueen = pieces[BLACK][QUEEN];
+            enemyKing = pieces[BLACK][KING];
+
+            enemies = blackPieces();
+            friends = whitePieces();
+        } else {
+            myKing = pieces[BLACK][KING];
+            enemyPawns = pieces[WHITE][PAWN];
+            enemyKnights = pieces[WHITE][KNIGHT];
+            enemyBishops = pieces[WHITE][BISHOP];
+            enemyRooks = pieces[WHITE][ROOK];
+            enemyQueen = pieces[WHITE][QUEEN];
+            enemyKing = pieces[WHITE][KING];
+
+            enemies = whitePieces();
+            friends = blackPieces();
+        }
+
+        return boardInCheck(turn, myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
+                allPieces());
+
+    }
+
 
     public boolean isDrawByFiftyMoveRule() {
         return quietHalfMoveCounter >= 100;
