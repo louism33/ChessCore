@@ -435,7 +435,7 @@ public class RepetitionInGameTest {
 
 
         for (int p = 0; p < pgns.size(); p++) {
-            List<String> s = PGNParser.parsePGN(pgns.get(p));
+            List<String> s = PGNParser.parsePGNSimple(pgns.get(p));
 
             Chessboard board = new Chessboard();
             for (int i = 0; i < s.size(); i++) {

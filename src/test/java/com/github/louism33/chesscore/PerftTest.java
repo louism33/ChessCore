@@ -30,6 +30,7 @@ public class PerftTest {
 
     @Test
     void regularBoard() {
+        
         Assert.assertEquals(4865609, Perft.perftTest(new Chessboard(), 5));
         System.out.println("regular board depth " + 5 + " correct.");
 //        Assert.assertEquals(119060324, Perft.perftTest(new Chessboard(), 6));

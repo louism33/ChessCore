@@ -31,17 +31,17 @@ public final class PieceMove {
         return singleBishopTable(occupancy, pieceIndex, mask) | singleRookTable(occupancy, pieceIndex, mask);
     }
 
-    static long xrayQueenAttacks(long allPieces, long blockers, long queen){
+    public static long xrayQueenAttacks(long allPieces, long blockers, long queen){
         return xrayRookAttacks(allPieces, blockers, queen) | xrayBishopAttacks(allPieces, blockers, queen);
     }
 
-    static long xrayRookAttacks(long allPieces, long blockers, long rook){
+    public static long xrayRookAttacks(long allPieces, long blockers, long rook){
         final long rookMoves = singleRookTable(allPieces, rook, UNIVERSE);
         blockers &= rookMoves;
         return rookMoves ^ singleRookTable(allPieces ^ blockers, rook, UNIVERSE);
     }
 
-    static long xrayBishopAttacks(long allPieces, long blockers, long bishop){
+    public static long xrayBishopAttacks(long allPieces, long blockers, long bishop){
         final long bishopMoves = singleBishopTable(allPieces, bishop, UNIVERSE);
         blockers &= bishopMoves;
         return bishopMoves ^ singleBishopTable(allPieces ^ blockers, bishop, UNIVERSE);

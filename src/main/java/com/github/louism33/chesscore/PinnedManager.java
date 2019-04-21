@@ -3,7 +3,7 @@ package com.github.louism33.chesscore;
 import static com.github.louism33.chesscore.BitOperations.extractRayFromTwoPieces;
 import static com.github.louism33.chesscore.PieceMove.xrayBishopAttacks;
 import static com.github.louism33.chesscore.PieceMove.xrayRookAttacks;
-import static java.lang.Long.*;
+import static java.lang.Long.lowestOneBit;
 import static java.lang.Long.numberOfTrailingZeros;
 
 public final class PinnedManager {
