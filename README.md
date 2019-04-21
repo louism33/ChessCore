@@ -1,7 +1,7 @@
 # ChessCore
 Java Chess Engine Core
 
-Fully legal chess move generator and board representer for Java. Used in my Engine Axolotl. Many oportunities for speedup exist.
+Fully legal chess move generator for Java. Uses (magic) bitboards. Used in my Engine Axolotl.
 
 Through Maven:
 ```
@@ -16,6 +16,6 @@ Through Maven:
 <dependency>
   <groupId>com.github.louism33</groupId>
   <artifactId>chesscore</artifactId>
-  <version>1.37</version>
+  <version>1.51</version>
 </dependency>
 ```
