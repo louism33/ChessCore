@@ -11,6 +11,12 @@ import static com.github.louism33.chesscore.MoveParser.getMovingPieceInt;
 public class ChessboardTest {
 
     @Test
+    void wonkyFenTest() {
+        Chessboard board = new Chessboard("rnbqkbnr/pp1ppp1p/6p1/2p5/1P6/1QP5/P2PPPPP/RNB1KBNR b KQkq - 0 1;");
+        System.out.println(board);
+    }
+    
+    @Test
     void previousMoveWasPawnPushToSixTest(){
         String fen = "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -";
         Chessboard board = new Chessboard(fen);

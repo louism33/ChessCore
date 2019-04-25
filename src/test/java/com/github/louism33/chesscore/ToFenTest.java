@@ -45,6 +45,42 @@ public class ToFenTest {
 
     //arasan
     private static final String positions = "" +
+            "rnbqkbnr/p1pp1ppp/4p3/1p6/8/5NP1/PPPPPP1P/RNBQKBR1 b Qkq - 0 1;\n" +
+            "rnbqkbnr/ppp1ppp1/7p/3p4/8/N4N2/PPPPPPPP/1RBQKB1R b Kkq - 0 1;\n" +
+            "rnbqkbnr/pp1ppp1p/6p1/2p5/1P6/1QP5/P2PPPPP/RNB1KBNR b KQkq - 0 1;\n" +
+            "rnbqk1nr/pppp1ppp/4p3/2b5/2P5/6P1/PP1PPPBP/RNBQK1NR b KQkq - 0 1;\n" +
+            "rnbqkbnr/pp2pppp/8/2Pp4/2P5/8/P2PPPPP/RNBQKBNR b KQkq - 0 1;\n" +
+            "r1bqkbnr/pp1ppppp/n7/2p5/7P/2P2N2/PP1PPPP1/RNBQKB1R b KQkq - 0 1;\n" +
+            "r1bqkbnr/p1pppppp/n7/1p6/1P6/B6N/P1PPPPPP/RN1QKB1R b KQkq - 0 1;\n" +
+            "rnbqkb1r/pp1ppppp/7n/2p5/4Q3/2P5/PP1PPPPP/RNB1KBNR b KQkq - 0 1;\n" +
+            "rnbqk1nr/pppp1ppp/4p3/8/1b2P3/2N5/PPPPNPPP/R1BQKB1R b KQkq - 0 1;\n" +
+            "rnbqk1nr/pppp1ppp/3b4/4p3/P7/4P1P1/1PPP1P1P/RNBQKBNR b KQkq - 0 1;\n" +
+            "rn1qkbnr/pbpppppp/8/1p6/4P1P1/5N2/PPPP1P1P/RNBQKB1R b KQkq - 0 1;\n" +
+            "rnbqkbnr/ppp1ppp1/7p/3p4/8/3P1N2/PPPQPPPP/RNB1KB1R b KQkq - 0 1;\n" +
+            "rnbqk1nr/pppp1ppp/4p3/2b5/8/PPN5/2PPPPPP/R1BQKBNR b KQkq - 0 1;\n" +
+            "rnbqkbnr/p1p1pppp/8/1p1p4/8/N1P5/PP1PPPPP/1RBQKBNR b Kkq - 0 1;\n" +
+            "r1bqkbnr/pppppp1p/n5p1/4N3/8/8/PPPPPPPP/R1BQKBNR b KQkq - 0 1;\n" +
+            "rnbqkb1r/pppppppp/8/8/6n1/2P2P2/PPQPP1PP/RNB1KBNR b KQkq - 0 1;\n" +
+            "rnbqkbnr/pppp1p1p/4p1p1/8/7P/2N5/PPPPPPP1/1RBQKBNR b Kkq - 0 1;\n" +
+            "rnbqkbnr/p1ppppp1/7p/1p6/2P5/2NP4/PP2PPPP/R1BQKBNR b KQkq - 0 1;\n" +
+            "r1bqkbnr/pppppppp/8/4n3/8/3PB3/PPP1PPPP/RN1QKBNR b KQkq - 0 1;\n" +
+            "rnbqkbnr/1ppppppp/8/6B1/p5P1/3P4/PPP1PP1P/RN1QKBNR b KQkq - 0 1;\n" +
+            "rnbqkbnr/p2ppppp/1p6/2p5/2P5/1Q4P1/PP1PPP1P/RNB1KBNR b KQkq - 0 1;\n" +
+            "rnbqkbnr/p1p1pppp/1p1p4/8/1P6/4P3/P1PPBPPP/RNBQK1NR b KQkq - 0 1;\n" +
+            "r1bqkbnr/p1pppppp/1pn5/8/3P2P1/P7/1PP1PP1P/RNBQKBNR b KQkq - 0 1;\n" +
+            "rn1qkbnr/p1pppppp/b7/1p6/1PP5/2N5/P2PPPPP/R1BQKBNR b KQkq - 0 1;\n" +
+            "rnb1kbnr/pppp1ppp/8/4p1q1/P4P2/6P1/1PPPP2P/RNBQKBNR b KQkq - 0 1;\n" +
+            "rnbqkbnr/p1p1pppp/1p1p4/8/6P1/1QP5/PP1PPP1P/RNB1KBNR b KQkq - 0 1;\n" +
+            "rnbqk1nr/pppp1ppp/3b4/4p3/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 1;\n" +
+            "r1bqkbnr/ppp1pppp/n2p4/8/3P4/1P2P3/P1P2PPP/RNBQKBNR b KQkq - 0 1;\n" +
+            "rnbqkb1r/pppp1ppp/4pn2/8/3P1B2/2N5/PPP1PPPP/R2QKBNR b KQkq - 0 1;\n" +
+            "rn1qkbnr/ppp1pppp/3p4/5b2/2P5/1PN5/P2PPPPP/R1BQKBNR b KQkq - 0 1;\n" +
+            "rn1qkbnr/p1pppppp/bp6/8/8/1P4P1/P1PPPPBP/RNBQK1NR b KQkq - 0 1;\n" +
+            "r1bqkbnr/pppp1ppp/2n1p3/8/3P4/5N2/PPP1PPPP/R1BQKBNR b KQkq - 0 1;\n" +
+            "rnbqkbnr/1pp1pppp/8/p2p4/2P5/1P4P1/P2PPP1P/RNBQKBNR b KQkq - 0 1;\n" +
+            "rnbqkbnr/ppp1pp1p/8/3p2N1/8/4P3/PPPP1PPP/RNBQKB1R b KQkq - 0 1;\n" +
+            "rnbqkbnr/p1pp1ppp/1p6/4p3/7P/2P4N/PP1PPPP1/RNBQKB1R b KQkq - 0 1;\n" +
+            "rnbqkbnr/ppp1pp1p/3p4/6p1/1P6/B1P5/P2PPPPP/RN1QKBNR b KQkq - 0 1;" +
             "r1bq1r1k/p1pnbpp1/1p2p3/6p1/3PB3/5N2/PPPQ1PPP/2KR3R w - - bm g4; id \"arasan20.1\"; \n" +
             "r1b2rk1/1p1nbppp/pq1p4/3B4/P2NP3/2N1p3/1PP3PP/R2Q1R1K w - - bm Rxf7; id \"arasan20.2\";\n" +
             "r1q1k2r/1p1nbpp1/2p2np1/p1Pp4/3Pp3/P1N1P1P1/1P1B1P1P/R2QRBK1 b kq - bm Bxc5; id \"arasan20.3\";\n" +
@@ -245,9 +281,6 @@ public class ToFenTest {
             "b1r1r1k1/p2n1p2/1p5p/2qp1Rn1/2P3pN/6P1/P2N1P1P/Q3RBK1 b - - bm Qb4; id \"arasan20.198\";  \n" +
             "1q4rk/R1nbp3/1n1p3p/QP1P4/3pPp2/2N2P1P/1P1N3K/5B2 w - - bm Nb3; id \"arasan20.199\";  \n" +
             "4rrk1/1bq1pp2/p2p1n1Q/1pn2p1p/4P3/P1N2P2/BPP3PP/2KRR3 w - - bm g4; id \"arasan20.200\";  " +
-            "";
-    
-    private static final String positions1 = "" +
             "2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - - bm Qg6; id \"WAC.001\";\n" +
             "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - - bm Rxb2; id \"WAC.002\";\n" +
             "5rk1/1ppb3p/p1pb4/6q1/3P1p1r/2P1R2P/PP1BQ1P1/5RKN w - - bm Rg3; id \"WAC.003\";\n" +
