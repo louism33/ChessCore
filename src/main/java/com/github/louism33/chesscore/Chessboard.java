@@ -1091,6 +1091,9 @@ public final class Chessboard {
     }
 
     public Chessboard(String fen) {
+        if (fen.endsWith(";")) {
+            fen = fen.substring(0, fen.length() - 1);
+        }
         char[] c = fen.toCharArray();
         int phase = 1;
         int square = 64, whichPiece;
