@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.louism33.chesscore.MaterialHashUtil.*;
+
 public class InsufficientMaterialTest {
 
-
     @Test
-    void repetitionFromRealGamesTest() {
+    void insufficientMatFromRealGamesTest() {
 
         String pgn = "" +
                 "1. c4 {book} e5 {book} 2. Nc3 {book} Nf6 {book} 3. Nf3 {book} Nc6 {book}\n" +
@@ -198,31 +199,80 @@ public class InsufficientMaterialTest {
                 }
                 board.makeMoveAndFlipTurn(move1);
 
-                boolean dbr = board.isDrawByInsufficientMaterial();
+                boolean drawMat = board.isDrawByInsufficientMaterial();
 
                 if (i != s.size() - 1) {
-                    if (dbr) {
+                    if (drawMat) {
                         System.out.println(s);
                         System.out.println(board);
                         System.out.println("master index is: " + board.masterIndex);
                         System.out.println("qhmc is: " + board.quietHalfMoveCounter);
                         System.out.println(board.zobristHash);
                         System.out.println(Arrays.toString(board.zobristHashStack));
+                        board.isDrawByInsufficientMaterial();
                     }
-                    Assert.assertFalse(dbr);
+                    Assert.assertFalse(drawMat);
                 }
             }
 
             boolean dbr = board.isDrawByInsufficientMaterial();
-            if (!dbr) {
-                System.out.println(s);
-                System.out.println(board);
-                System.out.println("master index is: " + board.masterIndex);
-                System.out.println("qhmc is: " + board.quietHalfMoveCounter);
-                System.out.println(board.zobristHash);
-                System.out.println(Arrays.toString(board.zobristHashStack));
-            }
             Assert.assertTrue(dbr);
+
+            Assert.assertTrue(isBasicallyDrawn(board));
         }
+    }
+
+
+    @Test
+    void isKBBKTestSameSqBlack() {
+        Chessboard board = new Chessboard("5b1b/8/8/8/8/8/7k/K7");
+        Assert.assertTrue(board.isDrawByInsufficientMaterial());
+        Assert.assertTrue(isBasicallyDrawn(board));
+    }
+
+    @Test
+    void isKBBKTestSameSqWhite() {
+        Chessboard board = new Chessboard("5B1B/8/8/8/8/8/7k/K7");
+        Assert.assertTrue(board.isDrawByInsufficientMaterial());
+        Assert.assertTrue(isBasicallyDrawn(board));
+    }
+
+
+    @Test
+    void isKBBKTestDiffSqBlack() {
+        Chessboard board = new Chessboard("6bb/8/8/8/8/8/7k/K7");
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+    }
+
+    @Test
+    void isKBBKTestDiffSqWhite() {
+        Chessboard board = new Chessboard("6BB/8/8/8/8/8/7k/K7");
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+    }
+
+    @Test
+    void isKNKNTest() {
+        Chessboard board = new Chessboard("8/8/8/8/8/8/6nk/3NK3");
+        Assert.assertTrue(isBasicallyDrawn(board));
+    }
+
+    @Test
+    void isKBKBTestDifferentSq() {
+        Chessboard board = new Chessboard("6bB/8/8/8/8/8/7k/K7");
+        Assert.assertTrue(isBasicallyDrawn(board));
+    }
+
+    @Test
+    void isKBKBTestSameSqB() {
+        Chessboard board = new Chessboard("5b1B/8/8/8/8/8/7k/K7");
+        Assert.assertTrue(isBasicallyDrawn(board));
+    }
+
+    @Test
+    void isKBKBTestSameSqW() {
+        Chessboard board = new Chessboard("8/8/8/8/8/8/7k/K4b1B");
+        Assert.assertTrue(isBasicallyDrawn(board));
     }
 }

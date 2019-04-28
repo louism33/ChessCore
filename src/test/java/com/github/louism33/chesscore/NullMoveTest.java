@@ -101,7 +101,13 @@ public class NullMoveTest {
             board.makeMoveAndFlipTurn(move);
             Assert.assertEquals(board, new Chessboard(board));
 
+            long beforeHash = board.zobristHash;
+            long beforePawnHash = board.zobristPawnHash;
+            
             board.makeNullMoveAndFlipTurn();
+            
+            Assert.assertNotEquals(beforeHash, board.zobristHash);
+            Assert.assertEquals(beforePawnHash, board.zobristPawnHash);
 
             Assert.assertEquals(board, new Chessboard(board));
 
@@ -109,6 +115,8 @@ public class NullMoveTest {
             temp += movesAtDepth;
 
             board.unMakeNullMoveAndFlipTurn();
+            Assert.assertEquals(beforeHash, board.zobristHash);
+            Assert.assertEquals(beforePawnHash, board.zobristPawnHash);
             Assert.assertEquals(board, new Chessboard(board));
 
             board.unMakeMoveAndFlipTurn();

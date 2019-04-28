@@ -9,6 +9,8 @@ import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
 import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
+import static com.github.louism33.chesscore.MaterialHashUtil.*;
+import static com.github.louism33.chesscore.MaterialHashUtil.startingMaterialHash;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorCheck.addCheckEvasionMoves;
@@ -40,6 +42,7 @@ public final class Chessboard {
 
     public int quietHalfMoveCounter = 0, fullMoveCounter = 0;
 
+    public int materialHash;
     public long zobristHash;
     public long zobristPawnHash;
 
@@ -50,8 +53,9 @@ public final class Chessboard {
 
     private final int[][] legalMoveStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH][maxNumberOfMovesInAnyPosition];
 
-    final long[] zobristHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
-    final long[] zobristPawnHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+    public final int[] materialHashStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH];
+    public final long[] zobristHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+    public final long[] zobristPawnHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
 
     private final long[] pastMoveStackArray = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
     public boolean inCheckRecorder;
@@ -64,7 +68,7 @@ public final class Chessboard {
     private final boolean[] checkStack = new boolean[MAX_DEPTH_AND_ARRAY_LENGTH];
 
 
-    private long boardToHash(){
+    private long boardToHash() {
         long hash = 0;
         for (int sq = 0; sq < 64; sq++) {
             long pieceOnSquare = newPieceOnSquare(sq);
@@ -77,24 +81,24 @@ public final class Chessboard {
 
         hash ^= zobristHashCastlingRights[castlingRights];
 
-        if (!isWhiteTurn()){
+        if (!isWhiteTurn()) {
             hash = zobristFlipTurn(hash);
         }
 
-        if (hasPreviousMove()){
+        if (hasPreviousMove()) {
             hash = updateWithEPFlags(moveStackArrayPeek(), hash);
         }
 
         return hash;
     }
 
-    private long makePawnHash(){
+    private long makePawnHash() {
         long hash = 0;
         for (int sq = 0; sq < 64; sq++) {
             long pieceOnSquare = newPieceOnSquare(sq);
             int pieceIndex = pieceSquareTable[numberOfTrailingZeros(pieceOnSquare)] - 1;
             // adding 1 because zobrist pieces indexed from 0 but pawn is == 1
-            if (pieceIndex + 1 == WHITE_PAWN || pieceIndex + 1 == BLACK_PAWN) { 
+            if (pieceIndex + 1 == WHITE_PAWN || pieceIndex + 1 == BLACK_PAWN) {
                 hash ^= zobristHashPieces[sq][pieceIndex];
             }
         }
@@ -110,6 +114,8 @@ public final class Chessboard {
 
         System.arraycopy(INITIAL_PIECE_SQUARES, 0, pieceSquareTable, 0, pieceSquareTable.length);
 
+        materialHash = startingMaterialHash;
+        
         turn = WHITE;
 
         zobristHash = boardToHash();
@@ -130,6 +136,7 @@ public final class Chessboard {
         this.legalMoveStackIndex = board.legalMoveStackIndex;
         this.masterIndex = board.masterIndex;
         this.moveStackIndex = board.moveStackIndex;
+        this.materialHash = board.materialHash;
 
         System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
@@ -139,6 +146,7 @@ public final class Chessboard {
             System.arraycopy(board.legalMoveStack[i], 0, this.legalMoveStack[i], 0, board.legalMoveStack[i].length);
         }
 
+        System.arraycopy(board.materialHashStack, 0, this.materialHashStack, 0, board.materialHashStack.length);
         System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
         System.arraycopy(board.zobristPawnHashStack, 0, this.zobristPawnHashStack, 0, board.zobristPawnHashStack.length);
         System.arraycopy(board.pastMoveStackArray, 0, this.pastMoveStackArray, 0, board.pastMoveStackArray.length);
@@ -177,7 +185,6 @@ public final class Chessboard {
         enemyRooks = pieces[1 - turn][ROOK];
         enemyQueens = pieces[1 - turn][QUEEN];
         enemyKing = pieces[1 - turn][KING];
-
 
         getPieces();
         friends = this.pieces[turn][ALL_COLOUR_PIECES];
@@ -408,14 +415,14 @@ public final class Chessboard {
         zobristHash ^= destinationZH;
 
         // +1 because zobrist has offset array index
-        if (sourcePieceIdentifier+1 == WHITE_PAWN || sourcePieceIdentifier+1 == BLACK_PAWN) {
+        if (sourcePieceIdentifier + 1 == WHITE_PAWN || sourcePieceIdentifier + 1 == BLACK_PAWN) {
             zobristPawnHash ^= zobristHashPieces[sourceIndex][sourcePieceIdentifier];
             zobristPawnHash ^= destinationZH;
         }
 
-
-        if (captureMove){
+        if (captureMove) {
             final int victim = pieceSquareTable[destinationIndex];
+            materialHash = removePieceFromMaterialHash(materialHash, victim, destinationPiece);
             final long victimHash = zobristHashPieces[destinationIndex][victim - 1];
             this.zobristHash ^= victimHash;
             if (victim == WHITE_PAWN || victim == BLACK_PAWN) {
@@ -426,7 +433,7 @@ public final class Chessboard {
         /* 
         "positive" EP flag is set in updateHashPostMove, in updateHashPreMove we cancel a previous EP flag
         */
-        if (hasPreviousMove()){
+        if (hasPreviousMove()) {
             zobristHash = updateWithEPFlags(moveStackArrayPeek(), zobristHash);
         }
 
@@ -486,6 +493,7 @@ public final class Chessboard {
 
                     moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, ENPASSANTCAPTURE));
                     makeEnPassantMove(pieces, pieceSquareTable, turn, move);
+                    materialHash = removePieceFromMaterialHash(materialHash, turn == BLACK ? WHITE_PAWN : BLACK_PAWN, destinationPiece);
                     break;
 
                 case PROMOTION_MASK:
@@ -494,7 +502,7 @@ public final class Chessboard {
 
                     int whichPromotingPiece = 0;
 
-                    switch (move & WHICH_PROMOTION){
+                    switch (move & WHICH_PROMOTION) {
                         case KNIGHT_PROMOTION_MASK:
                             whichPromotingPiece = 2 + turn * 6;
                             break;
@@ -520,20 +528,23 @@ public final class Chessboard {
                     this.zobristHash ^= promotionZH;
 
                     moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, PROMOTION));
+
                     makePromotingMove(pieces, pieceSquareTable, turn, move);
+                    
+                    materialHash = removePieceFromMaterialHash(materialHash, turn == WHITE ? WHITE_PAWN : BLACK_PAWN, destinationPiece);
+                    materialHash = addPieceToMaterialHash(materialHash, whichPromotingPiece, destinationPiece);
+                    
                     break;
             }
         } else {
             if (captureMove) {
                 resetFifty = true;
                 moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, BASICCAPTURE));
-            }
-            else if (enPassantPossibility(turn, pieces[turn][PAWN], newPieceOnSquare(sourceIndex), destinationPiece)) {
+            } else if (enPassantPossibility(turn, pieces[turn][PAWN], newPieceOnSquare(sourceIndex), destinationPiece)) {
                 resetFifty = true;
                 final int whichFile = 8 - sourceIndex % 8;
                 moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, ENPASSANTVICTIM, whichFile));
-            }
-            else {
+            } else {
                 switch (pieceSquareTable[sourceIndex]) {
                     case WHITE_PAWN:
                     case BLACK_PAWN:
@@ -552,8 +563,7 @@ public final class Chessboard {
 
         if (resetFifty) {
             quietHalfMoveCounter = 0;
-        }
-        else {
+        } else {
             quietHalfMoveCounter++;
         }
 
@@ -643,6 +653,7 @@ public final class Chessboard {
 
         quietHalfMoveCounter = StackDataUtil.getQuietHalfmoveCounter(pop);
 
+        // todo, unmake null move here
         if (StackDataUtil.getMove(pop) == 0) {
             turn = StackDataUtil.getTurn(pop);
             return;
@@ -751,6 +762,7 @@ public final class Chessboard {
         togglePiecesFrom(pieces, pieceSquareTable, destinationPiece, getMovingPieceInt(move));
     }
 
+    // todo, research into whether to reset counter on null move or not
     public void makeNullMoveAndFlipTurn() {
         quietHalfMoveCounter++;
         this.rotateMoveIndexUp();
@@ -851,6 +863,8 @@ public final class Chessboard {
         return quietHalfMoveCounter >= 100;
     }
 
+    // todo, consider hashing instead of linear search
+    // todo, research into whether to reset counter on null move or not
     public boolean isDrawByRepetition(int stopAt) {
         int l = quietHalfMoveCounter < MAX_DEPTH_AND_ARRAY_LENGTH ? quietHalfMoveCounter : MAX_DEPTH_AND_ARRAY_LENGTH;
         int numberOfReps = 0;
@@ -886,29 +900,38 @@ public final class Chessboard {
         return (masterIndex - 2 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
 
+    // todo, add flag so no need to recalc? or only call after captures
     public boolean isDrawByInsufficientMaterial() {
         boolean drawByMaterial = false;
-
+        // todo, necessary?
         getPieces();
+
         long friends = this.pieces[turn][ALL_COLOUR_PIECES];
         long enemies = this.pieces[1 - turn][ALL_COLOUR_PIECES];
 
         int totalPieces = populationCount(friends | enemies);
-
-        switch (totalPieces){
-            case 2:
+        int nonKingPieces = totalPieces - 2;
+        switch (nonKingPieces) {
+            case 0:
                 drawByMaterial = true;
                 break;
-            case 3:
+            case 1:
                 if (populationCount(pieces[BLACK][BISHOP])
                         + populationCount(pieces[WHITE][BISHOP])
                         + populationCount(pieces[BLACK][KNIGHT])
-                        + populationCount(pieces[WHITE][KNIGHT]) != 0) {
+                        + populationCount(pieces[WHITE][KNIGHT]) == nonKingPieces) {
 
                     drawByMaterial = true;
                 }
                 break;
-            case 4:
+            case 2:
+                if (populationCount((pieces[BLACK][BISHOP] | pieces[WHITE][BISHOP]) & WHITE_COLOURED_SQUARES) == 2
+                        || populationCount((pieces[BLACK][BISHOP] | pieces[WHITE][BISHOP]) & BLACK_COLOURED_SQUARES) == 2
+                        || populationCount(pieces[BLACK][KNIGHT]) == 2
+                        || populationCount(pieces[WHITE][KNIGHT]) == 2
+                ) {
+                    drawByMaterial = true;
+                }
                 break;
         }
 
@@ -972,7 +995,7 @@ public final class Chessboard {
         return this.pieces[WHITE][ALL_COLOUR_PIECES];
     }
 
-    public void getPieces(){
+    public void getPieces() {
         long b = 0, w = 0;
         for (int i = PAWN; i <= KING; i++) {
             w |= this.pieces[WHITE][i];
@@ -1006,6 +1029,7 @@ public final class Chessboard {
         that.whitePieces();
         that.blackPieces();
         return turn == that.turn &&
+                materialHash == that.materialHash && 
                 castlingRights == that.castlingRights &&
                 quietHalfMoveCounter == that.quietHalfMoveCounter &&
                 zobristHash == that.zobristHash &&
@@ -1013,6 +1037,7 @@ public final class Chessboard {
                 masterIndex == that.masterIndex &&
                 Arrays.deepEquals(pieces, that.pieces) &&
                 Arrays.equals(zobristHashStack, that.zobristHashStack) &&
+                Arrays.equals(materialHashStack, that.materialHashStack) &&
                 Arrays.equals(zobristPawnHashStack, that.zobristPawnHashStack) &&
                 Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray) &&
                 Arrays.equals(checkStack, that.checkStack) &&
@@ -1034,6 +1059,7 @@ public final class Chessboard {
     private void rotateMasterIndexUp() {
         this.masterIndex = (this.masterIndex + 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
+
     private void rotateMasterIndexDown() {
         this.masterIndex = (this.masterIndex - 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
@@ -1041,6 +1067,7 @@ public final class Chessboard {
     private void rotateMoveStackIndexUp() {
         this.moveStackIndex = (this.moveStackIndex + 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
+
     private void rotateMoveStackIndexDown() {
         this.moveStackIndex = (this.moveStackIndex - 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH;
     }
@@ -1057,6 +1084,7 @@ public final class Chessboard {
         pinnedPieces = 0;
         pinningPieces = 0;
 
+        materialHashStack[masterIndex] = materialHash;
         zobristHashStack[masterIndex] = zobristHash;
         zobristPawnHashStack[masterIndex] = zobristPawnHash;
         rotateMasterIndexUp();
@@ -1070,6 +1098,9 @@ public final class Chessboard {
         pinnedPieces = pinnedPiecesArray[masterIndex];
         pinnedPiecesArray[masterIndex] = 0;
 
+        materialHash = materialHashStack[masterIndex];
+        materialHashStack[masterIndex] = 0;
+        
         zobristHash = zobristHashStack[masterIndex];
         zobristHashStack[masterIndex] = 0;
 
@@ -1170,8 +1201,7 @@ public final class Chessboard {
                 case 2: //player
                     if (c[i] == 'b') {
                         turn = BLACK;
-                    }
-                    else{
+                    } else {
                         turn = WHITE;
                     }
                     break;
@@ -1228,6 +1258,7 @@ public final class Chessboard {
         }
         zobristHash = boardToHash();
         zobristPawnHash = makePawnHash();
+        materialHash = makeMaterialHash(this);
         Setup.init(false);
     }
 
@@ -1307,8 +1338,7 @@ public final class Chessboard {
 
         if (castlingRights == 0) {
             fen.append("-");
-        }
-        else {
+        } else {
             if ((castlingRights & castlingRightsOn[WHITE][K]) != 0) {
                 fen.append("K");
             }
@@ -1328,7 +1358,7 @@ public final class Chessboard {
 
         fen.append(" ");
 
-        if (hasPreviousMove() && StackDataUtil.getSpecialMove(moveStackArrayPeek()) == ENPASSANTVICTIM){
+        if (hasPreviousMove() && StackDataUtil.getSpecialMove(moveStackArrayPeek()) == ENPASSANTVICTIM) {
             long f = StackDataUtil.getEPMove(moveStackArrayPeek());
             fen.append((char) (f + 96));
         } else {

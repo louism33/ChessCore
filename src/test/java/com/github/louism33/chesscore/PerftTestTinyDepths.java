@@ -7,6 +7,13 @@ import org.junit.jupiter.api.Test;
 public class PerftTestTinyDepths {
 
     @Test
+    void tiny() {
+        Assert.assertEquals(
+                Perft.perftTest(1, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"), 8),
+                8);
+    }
+
+    @Test
     void tinyDepths() {
         Assert.assertEquals(
                 Perft.perftTest(1, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"), 8),

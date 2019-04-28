@@ -73,7 +73,15 @@ public final class MoveParserFromAN {
             return basicMove;
         }
 
-        return buildMoveFromAN(board, an);
+        System.err.println("Could not parse " + an + " as long algebraic notation for board\n"+ board+"\nAttempting to parse as AN");
+        try {
+            return buildMoveFromAN(board, an);
+
+        } catch (Exception | Error e) {
+            System.err.println("error when parsing " + an + " as AN for board\n" + board);
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     // is lower case b in first group necessary or safe?
@@ -149,7 +157,7 @@ public final class MoveParserFromAN {
         int destinationIndex = numberOfTrailingZeros(destinationSquare);
 
         if (populationCount(destinationSquare) != 1) {
-            throw new RuntimeException();
+            throw new RuntimeException("Could not parse move: " + an + "\nfor board:\n"+board);
         }
 
         int sourceIndex;
@@ -269,7 +277,7 @@ public final class MoveParserFromAN {
         int destinationIndex = numberOfTrailingZeros(destinationSquare);
 
         if (populationCount(destinationSquare) != 1) {
-            throw new RuntimeException();
+            throw new RuntimeException("Could not parse move: " + an + "\nfor board:\n"+board);
         }
 
         int sourceIndex;

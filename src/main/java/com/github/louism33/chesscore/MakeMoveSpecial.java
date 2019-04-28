@@ -76,7 +76,8 @@ final class MakeMoveSpecial {
 
         pieces[turn][MoveParser.whichPromotion(move) + 2] |= destinationPiece;
         pieces[turn][ALL_COLOUR_PIECES] |= destinationPiece;
-        pieceSquareTable[getDestinationIndex(move)] = MoveParser.whichPromotion(move) + 2 + turn * 6;
+        final int promotionPiece = MoveParser.whichPromotion(move) + 2 + turn * 6;
+        pieceSquareTable[getDestinationIndex(move)] = promotionPiece;
     }
 
     static void makeEnPassantMove(long[][] pieces, int[] pieceSquareTable, int turn, int move){
