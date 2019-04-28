@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.github.louism33.chesscore.MaterialHashUtil.*;
 
-public class InsufficientMaterialTest {
+public class EndgameMaterialTest {
 
     @Test
     void insufficientMatFromRealGamesTest() {
@@ -219,6 +219,7 @@ public class InsufficientMaterialTest {
             Assert.assertTrue(dbr);
 
             Assert.assertTrue(isBasicallyDrawn(board));
+            Assert.assertEquals(typeOfEndgame(board), CERTAIN_DRAW);
         }
     }
 
@@ -228,6 +229,7 @@ public class InsufficientMaterialTest {
         Chessboard board = new Chessboard("5b1b/8/8/8/8/8/7k/K7");
         Assert.assertTrue(board.isDrawByInsufficientMaterial());
         Assert.assertTrue(isBasicallyDrawn(board));
+        Assert.assertEquals(typeOfEndgame(board), CERTAIN_DRAW);
     }
 
     @Test
@@ -235,14 +237,44 @@ public class InsufficientMaterialTest {
         Chessboard board = new Chessboard("5B1B/8/8/8/8/8/7k/K7");
         Assert.assertTrue(board.isDrawByInsufficientMaterial());
         Assert.assertTrue(isBasicallyDrawn(board));
+        Assert.assertEquals(typeOfEndgame(board), CERTAIN_DRAW);
     }
 
+
+    @Test
+    void isKNKNTest() {
+        Chessboard board = new Chessboard("8/8/8/8/8/8/6nk/3NK3");
+        Assert.assertTrue(isBasicallyDrawn(board));
+        Assert.assertEquals(typeOfEndgame(board), CERTAIN_DRAW);
+    }
+
+    @Test
+    void isKBKBTestDifferentSq() {
+        Chessboard board = new Chessboard("6bB/8/8/8/8/8/7k/K7");
+        Assert.assertTrue(isBasicallyDrawn(board));
+        Assert.assertEquals(typeOfEndgame(board), CERTAIN_DRAW);
+    }
+
+    @Test
+    void isKBKBTestSameSqB() {
+        Chessboard board = new Chessboard("5b1B/8/8/8/8/8/7k/K7");
+        Assert.assertTrue(isBasicallyDrawn(board));
+        Assert.assertEquals(typeOfEndgame(board), CERTAIN_DRAW);
+    }
+
+    @Test
+    void isKBKBTestSameSqW() {
+        Chessboard board = new Chessboard("8/8/8/8/8/8/7k/K4b1B");
+        Assert.assertTrue(isBasicallyDrawn(board));
+        Assert.assertEquals(typeOfEndgame(board), CERTAIN_DRAW);
+    }
 
     @Test
     void isKBBKTestDiffSqBlack() {
         Chessboard board = new Chessboard("6bb/8/8/8/8/8/7k/K7");
         Assert.assertFalse(board.isDrawByInsufficientMaterial());
         Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(-KBBK, typeOfEndgame(board));
     }
 
     @Test
@@ -250,29 +282,22 @@ public class InsufficientMaterialTest {
         Chessboard board = new Chessboard("6BB/8/8/8/8/8/7k/K7");
         Assert.assertFalse(board.isDrawByInsufficientMaterial());
         Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KBBK, typeOfEndgame(board));
     }
 
     @Test
-    void isKNKNTest() {
-        Chessboard board = new Chessboard("8/8/8/8/8/8/6nk/3NK3");
-        Assert.assertTrue(isBasicallyDrawn(board));
+    void isKQKb() {
+        Chessboard board = new Chessboard("7q/8/8/8/8/8/7k/K7");
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(-KQK, typeOfEndgame(board));
     }
 
     @Test
-    void isKBKBTestDifferentSq() {
-        Chessboard board = new Chessboard("6bB/8/8/8/8/8/7k/K7");
-        Assert.assertTrue(isBasicallyDrawn(board));
-    }
-
-    @Test
-    void isKBKBTestSameSqB() {
-        Chessboard board = new Chessboard("5b1B/8/8/8/8/8/7k/K7");
-        Assert.assertTrue(isBasicallyDrawn(board));
-    }
-
-    @Test
-    void isKBKBTestSameSqW() {
-        Chessboard board = new Chessboard("8/8/8/8/8/8/7k/K4b1B");
-        Assert.assertTrue(isBasicallyDrawn(board));
+    void isKQKw() {
+        Chessboard board = new Chessboard("7Q/8/8/8/8/8/7k/K7");
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KQK, typeOfEndgame(board));
     }
 }

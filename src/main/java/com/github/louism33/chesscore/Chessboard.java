@@ -10,7 +10,6 @@ import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLega
 import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
 import static com.github.louism33.chesscore.MakeMoveSpecial.*;
 import static com.github.louism33.chesscore.MaterialHashUtil.*;
-import static com.github.louism33.chesscore.MaterialHashUtil.startingMaterialHash;
 import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMaster;
 import static com.github.louism33.chesscore.MoveConstants.*;
 import static com.github.louism33.chesscore.MoveGeneratorCheck.addCheckEvasionMoves;
@@ -42,6 +41,9 @@ public final class Chessboard {
 
     public int quietHalfMoveCounter = 0, fullMoveCounter = 0;
 
+    public int typeOfGameIAmIn = 0; // flag to remember if in endgame
+    public int[] typeOfGameIAmInStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH]; 
+    
     public int materialHash;
     public long zobristHash;
     public long zobristPawnHash;
@@ -137,6 +139,7 @@ public final class Chessboard {
         this.masterIndex = board.masterIndex;
         this.moveStackIndex = board.moveStackIndex;
         this.materialHash = board.materialHash;
+        this.typeOfGameIAmIn = board.typeOfGameIAmIn;
 
         System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
@@ -146,6 +149,7 @@ public final class Chessboard {
             System.arraycopy(board.legalMoveStack[i], 0, this.legalMoveStack[i], 0, board.legalMoveStack[i].length);
         }
 
+        System.arraycopy(board.typeOfGameIAmInStack, 0, this.typeOfGameIAmInStack, 0, board.typeOfGameIAmInStack.length);
         System.arraycopy(board.materialHashStack, 0, this.materialHashStack, 0, board.materialHashStack.length);
         System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
         System.arraycopy(board.zobristPawnHashStack, 0, this.zobristPawnHashStack, 0, board.zobristPawnHashStack.length);
@@ -1083,7 +1087,8 @@ public final class Chessboard {
         pinnedPiecesArray[masterIndex] = this.pinnedPieces;
         pinnedPieces = 0;
         pinningPieces = 0;
-
+        
+        typeOfGameIAmInStack[masterIndex] = typeOfGameIAmIn;
         materialHashStack[masterIndex] = materialHash;
         zobristHashStack[masterIndex] = zobristHash;
         zobristPawnHashStack[masterIndex] = zobristPawnHash;
@@ -1098,6 +1103,9 @@ public final class Chessboard {
         pinnedPieces = pinnedPiecesArray[masterIndex];
         pinnedPiecesArray[masterIndex] = 0;
 
+        typeOfGameIAmIn = typeOfGameIAmInStack[masterIndex];
+        typeOfGameIAmInStack[masterIndex] = 0;
+        
         materialHash = materialHashStack[masterIndex];
         materialHashStack[masterIndex] = 0;
         

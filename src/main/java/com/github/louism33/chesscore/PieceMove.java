@@ -77,7 +77,7 @@ public final class PieceMove {
 
     static long singleBishopTable(long allPieces, long bishop, long legalMovesMask){
         Assert.assertTrue(ready);
-        Assert.assertEquals(populationCount(bishop), 1);
+        Assert.assertEquals(1, populationCount(bishop));
 
         final int bishopIndex = numberOfTrailingZeros(bishop);
         final long bishopMagicNumber = bishopMagicNumbers[bishopIndex];

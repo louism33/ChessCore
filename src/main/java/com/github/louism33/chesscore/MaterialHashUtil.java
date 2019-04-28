@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import static com.github.louism33.chesscore.BitOperations.newPieceOnSquare;
+import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
 
 public final class MaterialHashUtil {
@@ -28,7 +30,6 @@ public final class MaterialHashUtil {
      */
 
 
-
     public static final int whiteQueen = 0x8000000;
     public static final int blackQueen = 0x1000000;
     public static final int whiteRook = 0x400000;
@@ -55,9 +56,7 @@ public final class MaterialHashUtil {
                     + whiteRook * 2
                     + blackRook * 2
                     + whiteQueen
-                    + blackQueen
-            ;
-
+                    + blackQueen;
 
 
     public static final int whiteQueenMask = 0x38000000;
@@ -73,7 +72,6 @@ public final class MaterialHashUtil {
     public static final int blackKnightMask = 0x300;
     public static final int whitePawnMask = 0xf0;
     public static final int blackPawnMask = 0xf;
-
 
 
     public static final int[] basicallyDrawnPositions = {
@@ -101,14 +99,14 @@ public final class MaterialHashUtil {
             whiteWhiteBishop + blackBlackBishop,
             whiteBlackBishop + blackBlackBishop,
             whiteBlackBishop + blackWhiteBishop,
-            
-            
+
+
             // 3 piece
             // 2 minor pieces v 1 draw, apart from bishop pair
             blackKnight + blackKnight + whiteWhiteBishop,
             blackKnight + blackKnight + whiteBlackBishop,
             blackKnight + blackKnight + whiteKnight,
-            
+
             whiteKnight + whiteKnight + blackWhiteBishop,
             whiteKnight + whiteKnight + blackBlackBishop,
             whiteKnight + whiteKnight + blackKnight,
@@ -128,10 +126,10 @@ public final class MaterialHashUtil {
             blackBlackBishop + blackBlackBishop + whiteKnight,
     };
 
-    public static boolean isBasicallyDrawn(Chessboard board){
+    public static boolean isBasicallyDrawn(Chessboard board) {
         return contains(basicallyDrawnPositions, board.materialHash);
     }
-    
+
     public static int addPieceToMaterialHash(int hash, int piece, long destinationSquare) {
         switch (piece) {
             case WHITE_PAWN:
@@ -158,7 +156,7 @@ public final class MaterialHashUtil {
                 return hash;
         }
     }
-    
+
     public static int removePieceFromMaterialHash(int hash, int piece, long destinationSquare) {
         switch (piece) {
             case WHITE_PAWN:
@@ -192,12 +190,11 @@ public final class MaterialHashUtil {
         for (int i = 0; i < length; i++) {
             final int piece = board.pieceSquareTable[i];
             if (piece != NO_PIECE) {
-                hash = addPieceToMaterialHash(hash, piece, BitOperations.newPieceOnSquare(i));
+                hash = addPieceToMaterialHash(hash, piece, newPieceOnSquare(i));
             }
         }
         return hash;
     }
-
 
 
     public static boolean contains(int[] ints, int target) {
@@ -210,35 +207,59 @@ public final class MaterialHashUtil {
     }
 
 
-    public static void main(String[] args) {
-//        Art.printLong(whiteQueen);
-//        Art.printLong(blackQueen);
-//        Art.printLong(whiteRook);
-//        Art.printLong(blackRook);
-//        Art.printLong(whiteBlackBishop);
-//        Art.printLong(blackBlackBishop);
-//        Art.printLong(whiteWhiteBishop);
-//        Art.printLong(blackWhiteBishop);
-//        Art.printLong(whiteKnight);
-//        Art.printLong(blackKnight);
-        Art.printLong(whitePawn);
-        Art.printLong(addPieceToMaterialHash(0, WHITE_PAWN, 0));
-        Art.printLong(whitePawn+whitePawn);
-        Art.printLong(addPieceToMaterialHash(whitePawn, WHITE_PAWN, 0));
-//        Art.printLong(blackPawn);
-//
-//        Art.printLong(whiteQueenMask);
-//        Art.printLong(blackQueenMask);
-//        Art.printLong(whiteRookMask);
-//        Art.printLong(blackRookMask);
-//        Art.printLong(whiteBlackBishopMask);
-//        Art.printLong(blackBlackBishopMask);
-//        Art.printLong(whiteWhiteBishopMask);
-//        Art.printLong(blackWhiteBishopMask);
-//        Art.printLong(whiteKnightMask);
-//        Art.printLong(blackKnightMask);
-//        Art.printLong(whitePawnMask);
-//        Art.printLong(blackPawnMask);
-//        Perft.perftTest(6, new Chessboard(), 8);
+    public static final int UNKNOWN = 0, CERTAIN_DRAW = 1, KPK = 2, KRK = 3, KQK = 4, KNBK = 5, KBBK = 6;
+
+    /**
+     * return type of endgame, negative if black ahead
+     *
+     * @param board
+     * @return
+     */
+    // todo, allow to have more mat than necessary
+    public static int typeOfEndgame(Chessboard board) {
+        if (isBasicallyDrawn(board)) {
+            return CERTAIN_DRAW;
+        }
+
+        final long allPieces = board.allPieces();
+
+        final long hash = board.materialHash;
+
+        for (int turn = WHITE; turn <= BLACK; turn++) {
+            int c = 1 - 2 * turn;
+            final long myPieces = board.pieces[turn][ALL_COLOUR_PIECES];
+            // whether the enemy has pieces or not
+            switch (populationCount(board.pieces[1 - turn][ALL_COLOUR_PIECES])) {
+                case 1:
+                    switch (populationCount(myPieces)) {
+                        case 2:
+                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][PAWN])) {
+                                return KPK*c;
+                            }
+                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][ROOK])) {
+                                return KRK*c;
+                            }
+                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][QUEEN])) {
+                                return KQK*c;
+                            }
+                            return CERTAIN_DRAW;
+
+                        case 3:
+                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][BISHOP])) {
+                                return KBBK*c;
+                            }
+
+                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][KNIGHT] | board.pieces[turn][BISHOP])) {
+                                return KNBK*c;
+                            }
+                            return UNKNOWN;
+                    }
+                    break;
+
+            }
+
+
+        }
+        return UNKNOWN;
     }
 }
