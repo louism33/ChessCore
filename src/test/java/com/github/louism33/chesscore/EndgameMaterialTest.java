@@ -274,7 +274,7 @@ public class EndgameMaterialTest {
         Chessboard board = new Chessboard("6bb/8/8/8/8/8/7k/K7");
         Assert.assertFalse(board.isDrawByInsufficientMaterial());
         Assert.assertFalse(isBasicallyDrawn(board));
-        Assert.assertEquals(-KBBK, typeOfEndgame(board));
+        Assert.assertEquals(KBBK, typeOfEndgame(board));
     }
 
     @Test
@@ -290,7 +290,7 @@ public class EndgameMaterialTest {
         Chessboard board = new Chessboard("7q/8/8/8/8/8/7k/K7");
         Assert.assertFalse(board.isDrawByInsufficientMaterial());
         Assert.assertFalse(isBasicallyDrawn(board));
-        Assert.assertEquals(-KQK, typeOfEndgame(board));
+        Assert.assertEquals(KQK, typeOfEndgame(board));
     }
 
     @Test

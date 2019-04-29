@@ -209,12 +209,6 @@ public final class MaterialHashUtil {
 
     public static final int UNKNOWN = 0, CERTAIN_DRAW = 1, KPK = 2, KRK = 3, KQK = 4, KNBK = 5, KBBK = 6;
 
-    /**
-     * return type of endgame, negative if black ahead
-     *
-     * @param board
-     * @return
-     */
     // todo, allow to have more mat than necessary
     public static int typeOfEndgame(Chessboard board) {
         if (isBasicallyDrawn(board)) {
@@ -226,7 +220,6 @@ public final class MaterialHashUtil {
         final long hash = board.materialHash;
 
         for (int turn = WHITE; turn <= BLACK; turn++) {
-            int c = 1 - 2 * turn;
             final long myPieces = board.pieces[turn][ALL_COLOUR_PIECES];
             // whether the enemy has pieces or not
             switch (populationCount(board.pieces[1 - turn][ALL_COLOUR_PIECES])) {
@@ -234,23 +227,23 @@ public final class MaterialHashUtil {
                     switch (populationCount(myPieces)) {
                         case 2:
                             if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][PAWN])) {
-                                return KPK*c;
+                                return KPK;
                             }
                             if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][ROOK])) {
-                                return KRK*c;
+                                return KRK;
                             }
                             if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][QUEEN])) {
-                                return KQK*c;
+                                return KQK;
                             }
                             return CERTAIN_DRAW;
 
                         case 3:
                             if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][BISHOP])) {
-                                return KBBK*c;
+                                return KBBK;
                             }
 
                             if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][KNIGHT] | board.pieces[turn][BISHOP])) {
-                                return KNBK*c;
+                                return KNBK;
                             }
                             return UNKNOWN;
                     }
