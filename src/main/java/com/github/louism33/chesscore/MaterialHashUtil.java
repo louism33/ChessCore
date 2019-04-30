@@ -74,6 +74,7 @@ public final class MaterialHashUtil {
     public static final int blackPawnMask = 0xf;
 
 
+    // todo replace with hash
     public static final int[] basicallyDrawnPositions = {
             0,
             // 1 piece
@@ -124,6 +125,13 @@ public final class MaterialHashUtil {
             blackBlackBishop + blackBlackBishop + whiteBlackBishop,
             blackBlackBishop + blackBlackBishop + whiteWhiteBishop,
             blackBlackBishop + blackBlackBishop + whiteKnight,
+    };
+
+    public static final int[] kbbkbDifferentBishops = {
+            whiteWhiteBishop + whiteBlackBishop + blackBlackBishop,
+            whiteWhiteBishop + whiteBlackBishop + blackWhiteBishop,
+            blackBlackBishop + blackWhiteBishop + whiteBlackBishop,
+            blackBlackBishop + blackWhiteBishop + whiteWhiteBishop,
     };
 
     public static boolean isBasicallyDrawn(Chessboard board) {
@@ -207,7 +215,7 @@ public final class MaterialHashUtil {
     }
 
 
-    public static final int UNKNOWN = 0, CERTAIN_DRAW = 1, KPK = 2, KRK = 3, KQK = 4, KNBK = 5, KBBK = 6;
+    public static final int UNKNOWN = 0, CERTAIN_DRAW = 1, KPK = 2, KRK = 3, KQK = 4, KNBK = 5, KBBK = 6, KRRK = 7, KBBKB = 8;
 
     // todo, allow to have more mat than necessary
     public static int typeOfEndgame(Chessboard board) {
@@ -222,33 +230,51 @@ public final class MaterialHashUtil {
         for (int turn = WHITE; turn <= BLACK; turn++) {
             final long myPieces = board.pieces[turn][ALL_COLOUR_PIECES];
             // whether the enemy has pieces or not
+            final long myKing = board.pieces[turn][KING];
             switch (populationCount(board.pieces[1 - turn][ALL_COLOUR_PIECES])) {
                 case 1:
                     switch (populationCount(myPieces)) {
                         case 2:
-                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][PAWN])) {
+                            if (myPieces == (myKing | board.pieces[turn][PAWN])) {
                                 return KPK;
                             }
-                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][ROOK])) {
+                            if (myPieces == (myKing | board.pieces[turn][ROOK])) {
                                 return KRK;
                             }
-                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][QUEEN])) {
+                            if (myPieces == (myKing | board.pieces[turn][QUEEN])) {
                                 return KQK;
                             }
                             return CERTAIN_DRAW;
 
                         case 3:
-                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][BISHOP])) {
+                            if (myPieces == (myKing | board.pieces[turn][ROOK])) {
+                                return KRRK;
+                            }
+                            
+                            if (myPieces == (myKing | board.pieces[turn][BISHOP])) {
                                 return KBBK;
                             }
 
-                            if (myPieces == (board.pieces[turn][KING] | board.pieces[turn][KNIGHT] | board.pieces[turn][BISHOP])) {
+                            if (myPieces == (myKing | board.pieces[turn][KNIGHT] | board.pieces[turn][BISHOP])) {
                                 return KNBK;
                             }
                             return UNKNOWN;
                     }
                     break;
 
+                case 2: // enemy has king + 1
+                    switch (populationCount(myPieces)) {
+                        case 2:
+                            return UNKNOWN;
+
+                        case 3:
+                            if (contains(kbbkbDifferentBishops, board.materialHash)) {
+                                return KBBKB;
+                            }
+
+                            return UNKNOWN;
+                    }
+                    break;
             }
 
 

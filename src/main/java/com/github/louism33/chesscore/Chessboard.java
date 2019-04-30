@@ -404,6 +404,7 @@ public final class Chessboard {
     }
 
     public final void makeMoveAndFlipTurn(final int move) {
+        // todo, check if endgame here?
         this.rotateMoveIndexUp();
         Assert.assertNotEquals(move, 0);
         masterStackPush();
