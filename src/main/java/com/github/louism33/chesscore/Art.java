@@ -86,4 +86,22 @@ public final class Art {
         }
         return s.toString();
     }
+
+    public static void printPST(int[] values) {
+        if (values.length > 8) {
+            System.out.println(str(values));
+        }
+    }
+
+    public static String str(int[] values) {
+        StringBuilder s = new StringBuilder("\n");
+        for (int j = 0; j < values.length; j++) {
+            s.append(values[j]).append(", ");
+            if (j > 0 && j % 8 == 7) {
+                s.append("\n");
+            }
+        }
+        s.append("\n");
+        return s.toString();
+    }
 }

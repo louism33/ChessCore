@@ -92,4 +92,21 @@ public final class BitOperations {
     public static long getFile(long piece) {
         return FILES[numberOfTrailingZeros(piece) % 8];
     }
+
+    public static int chebyshevDistance(int index1, int index2) {
+        final int file1 = index1 & 7;
+        final int file2 = index2 & 7;
+        final int rank1 = index1 / 8;
+        final int rank2 = index2 / 8;
+        return Math.min(Math.abs(rank1 - rank2), Math.abs(file1 - file2)) + Math.abs(Math.abs(rank1 - rank2) - Math.abs(file1 - file2));
+    }
+
+
+    public static int manhattanDistance(int index1, int index2) {
+        final int file1 = index1 & 7;
+        final int file2 = index2 & 7;
+        final int rank1 = index1 / 8;
+        final int rank2 = index2 / 8;
+        return Math.abs(rank1 - rank2) + Math.abs(file1 - file2);
+    }
 }

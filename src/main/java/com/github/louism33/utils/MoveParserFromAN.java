@@ -1,6 +1,7 @@
 package com.github.louism33.utils;
 
 import com.github.louism33.chesscore.Chessboard;
+import com.github.louism33.chesscore.MoveParser;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -173,8 +174,6 @@ public final class MoveParserFromAN {
             movingPiece = board.pieceSquareTable[sourceIndex];
         }
         basicMove = buildMove(sourceIndex, movingPiece, destinationIndex, board.pieceSquareTable[destinationIndex]);
-
-
 
         if (movingPiece == INITIAL_PIECES[turn][KING] && board.pieceSquareTable[sourceIndex] == PIECE[turn][KING]){
             if ((destinationSquare & CASTLE_KING_DESTINATIONS) != 0){

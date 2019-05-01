@@ -540,4 +540,51 @@ public final class BoardConstants {
             0x302030000000000L, 0x705070000000000L, 0xe0a0e0000000000L, 0x1c141c0000000000L, 0x3828380000000000L, 0x7050700000000000L, 0xe0a0e00000000000L, 0xc040c00000000000L,
             0x203000000000000L, 0x507000000000000L, 0xa0e000000000000L, 0x141c000000000000L, 0x2838000000000000L, 0x5070000000000000L, 0xa0e0000000000000L, 0x40c0000000000000L,
     };
+
+    public static final int[] MIRRORED_LEFT_RIGHT = new int[64];
+
+    static {
+        for (int i = 0; i < 64; i++) {
+            MIRRORED_LEFT_RIGHT[i] = (i / 8) * 8 + 7 - (i & 7);
+        }
+    }
+
+    public static final int[] MIRRORED_UP_DOWN = new int[64];
+
+    static {
+        for (int i = 0; i < 64; i++) {
+            MIRRORED_UP_DOWN[i] = (7 - i / 8) * 8 + (i & 7);
+        }
+    }
+
+    public static final int[] SYMMETRIC_BL_TR = new int[64];
+    static {
+        for (int i = 0; i < 64; i++) {
+            SYMMETRIC_BL_TR[i] = indexOfRotateBLTR(i);
+        }
+    }
+
+    public static final int[] SYMMETRIC_TL_BR = new int[64];
+    static {
+        for (int i = 0; i < 64; i++) {
+            SYMMETRIC_TL_BR[i] = indexOfRotateTLBR(i);
+        }
+    }
+    
+    
+    public static int distanceFromPivotBLTR(int index) {
+        return 7 - (index / 8) - (index & 7);
+    }
+
+    public static int indexOfRotateBLTR(int index) {
+        int d = distanceFromPivotBLTR(index);
+        int indexOfPivot = 7 * (1 + index / 8);
+        return indexOfPivot + 8 * d;
+    }
+
+    public static int indexOfRotateTLBR(int index) {
+        int indexOfPivot = 9 * (index / 8);
+        int d = (index & 7) - (indexOfPivot & 7);
+        return indexOfPivot + 8 * d;
+    }
 }

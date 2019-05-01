@@ -567,6 +567,8 @@ public final class Chessboard {
         }
 
         if (resetFifty) {
+            // type of game can only change on loud moves
+            typeOfGameIAmIn = MaterialHashUtil.typeOfEndgame(this);
             quietHalfMoveCounter = 0;
         } else {
             quietHalfMoveCounter++;

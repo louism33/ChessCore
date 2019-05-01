@@ -286,6 +286,111 @@ public class EndgameMaterialTest {
     }
 
     @Test
+    void isKRRKTestDiffSqBlack() {
+        Chessboard board = new Chessboard("6rr/8/8/8/8/8/7k/K7");
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRRK, typeOfEndgame(board));
+    }
+
+    @Test
+    void isKRRKTestDiffSqWhite() {
+        Chessboard board = new Chessboard("6RR/8/8/8/8/8/7k/K7 b - -");
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRRK, typeOfEndgame(board));
+    }
+
+    @Test
+    void isKRRKTestDiffSqWhiteCap() {
+        Chessboard board = new Chessboard("6R1/8/8/8/8/7R/7k/K7 b - -");
+        System.out.println(board);
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRRK, typeOfEndgame(board));
+        board.makeMoveAndFlipTurn(MoveParserFromAN.buildMoveFromLAN(board, "h2h3"));
+        System.out.println(board);
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRK, typeOfEndgame(board));
+    }
+
+    @Test
+    void isKRRKTestDiffSqWhiteCap2() {
+        Chessboard board = new Chessboard("8/8/8/8/8/3k4/2R5/KR6 w - - 0 0");
+        System.out.println(board);
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRRK, typeOfEndgame(board));
+        
+        board = new Chessboard("8/8/8/8/8/2Rk4/8/KR6 b - - 1 1");
+        System.out.println(board);
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRRK, typeOfEndgame(board));
+        
+        
+        board = new Chessboard("8/8/8/8/8/2k5/8/KR6 w - - 0 2");
+        System.out.println(board);
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRK, typeOfEndgame(board));
+    }
+
+    @Test
+    void isKRRKTestDiffSqWhiteCap21() {
+        Chessboard board = new Chessboard("8/8/8/8/8/3k4/2R5/KR6 w - - 0 0");
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRRK, typeOfEndgame(board));
+
+        board.makeMoveAndFlipTurn(MoveParserFromAN.buildMoveFromLAN(board, "c2c3"));
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRRK, typeOfEndgame(board));
+
+
+        board.makeMoveAndFlipTurn(MoveParserFromAN.buildMoveFromLAN(board, "d3c3"));
+        Assert.assertFalse(board.isDrawByInsufficientMaterial());
+        Assert.assertFalse(isBasicallyDrawn(board));
+        Assert.assertEquals(KRK, typeOfEndgame(board));
+    }
+    
+    @Test
+    void krrkTest() {
+        String p = "" +
+                "8/8/8/8/8/3k4/2R5/KR6 w\n" +
+                "8/8/8/8/8/3k4/2R5/K5R1 w\n" +
+                "8/8/8/8/8/3k4/2R5/K6R w\n" +
+                "8/8/8/8/8/3k4/R1R5/K7 w\n" +
+                "8/8/8/8/8/3k4/1RR5/K7 w\n" +
+                "8/8/8/8/8/3k4/2R3R1/K7 w\n" +
+                "8/8/8/8/8/3k4/2R4R/K7 w\n" +
+                "8/8/7R/8/8/3k4/2R5/K7 w\n" +
+                "8/R7/8/8/8/3k4/2R5/K7 w\n" +
+                "8/1R6/8/8/8/3k4/2R5/K7 w" +
+                "" +
+                "7K/8/8/8/8/8/2R5/1Rk5 b\n" +
+                "K7/8/8/8/8/8/3R4/2Rk4 b\n" +
+                "K7/8/8/8/8/8/4R3/3k1R2 b\n" +
+                "7K/8/8/8/8/8/2R5/1R1k4 b\n" +
+                "7K/8/8/8/8/8/3R4/2Rk4 b\n" +
+                "7K/8/8/8/8/8/4R3/3k1R2 b\n" +
+                "8/8/1R6/8/8/2R5/1k6/7K b\n" +
+                "7K/8/8/8/8/8/1kR5/1R6 b\n" +
+                "7K/8/8/8/8/2R5/1k6/1R6 b\n" +
+                "7K/8/8/8/8/2R5/1k3R2/8 b" +
+                "";
+        String[] split = p.split("\n");
+        for (String s : split) {
+            Chessboard board = new Chessboard(s);
+            Assert.assertFalse(board.isDrawByInsufficientMaterial());
+            Assert.assertFalse(isBasicallyDrawn(board));
+            Assert.assertEquals(KRRK, typeOfEndgame(board));
+        }
+    }
+
+    @Test
     void isKQKb() {
         Chessboard board = new Chessboard("7q/8/8/8/8/8/7k/K7");
         Assert.assertFalse(board.isDrawByInsufficientMaterial());
