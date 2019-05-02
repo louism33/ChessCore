@@ -1,9 +1,11 @@
 package com.github.louism33.chesscore;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
+@Ignore
 public class ZobristHashUniquenessTest {
 
     @Test

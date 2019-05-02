@@ -3,6 +3,7 @@ package com.github.louism33.chesscore;
 import com.github.louism33.utils.MoveParserFromAN;
 import com.github.louism33.utils.PGNParser;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -404,5 +405,55 @@ public class EndgameMaterialTest {
         Assert.assertFalse(board.isDrawByInsufficientMaterial());
         Assert.assertFalse(isBasicallyDrawn(board));
         Assert.assertEquals(KQK, typeOfEndgame(board));
+    }
+
+    @Test
+    void comparePureEndgameToEndgamePlusMaterialKRRK() {
+        Assert.assertEquals(KRRK, typeOfEndgame(new Chessboard("rr6/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KRRK, typeOfEndgame(new Chessboard("rrr5/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KRRK, typeOfEndgame(new Chessboard("rr5/p7/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KRRK, typeOfEndgame(new Chessboard("rr5/8/8/nn/8/8/7K/k7 b")));
+        Assert.assertEquals(KRRK, typeOfEndgame(new Chessboard("rrr5/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KRRK, typeOfEndgame(new Chessboard("rrr5/8/8/8/bn6/8/7K/k7 b")));
+    }
+
+    @Test
+    void comparePureEndgameToEndgamePlusMaterialKQRK() {
+        Assert.assertEquals(KQRK, typeOfEndgame(new Chessboard("qr6/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQRK, typeOfEndgame(new Chessboard("rqr5/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQRK, typeOfEndgame(new Chessboard("rq5/p7/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQRK, typeOfEndgame(new Chessboard("rq5/8/8/nn/8/8/7K/k7 b")));
+        Assert.assertEquals(KQRK, typeOfEndgame(new Chessboard("rqr5/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQRK, typeOfEndgame(new Chessboard("rqr5/8/8/8/bn6/8/7K/k7 b")));
+    }
+    
+    @Test
+    void comparePureEndgameToEndgamePlusMaterialKQQK() {
+        Assert.assertEquals(KQQK, typeOfEndgame(new Chessboard("qq6/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQQK, typeOfEndgame(new Chessboard("qqr5/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQQK, typeOfEndgame(new Chessboard("qq5/p7/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQQK, typeOfEndgame(new Chessboard("qq5/8/8/nn/8/8/7K/k7 b")));
+        Assert.assertEquals(KQQK, typeOfEndgame(new Chessboard("qqr5/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQQK, typeOfEndgame(new Chessboard("qqr5/8/8/8/bn6/8/7K/k7 b")));
+    }
+
+    @Test
+    void comparePureEndgameToEndgamePlusMaterialKQK() {
+        Assert.assertEquals(KQK, typeOfEndgame(new Chessboard("qn6/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQK, typeOfEndgame(new Chessboard("q7/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQK, typeOfEndgame(new Chessboard("q6/p7/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KQK, typeOfEndgame(new Chessboard("qb5/8/8/nn/8/8/7K/k7 b")));
+        Assert.assertEquals(KQK, typeOfEndgame(new Chessboard("q7/8/8/p7/8/8/7K/k7 b")));
+        Assert.assertEquals(KQK, typeOfEndgame(new Chessboard("q7/8/8/8/bn6/8/7K/k7 b")));
+    }
+
+    @Test
+    void comparePureEndgameToEndgamePlusMaterialKRK() {
+        Assert.assertEquals(KRK, typeOfEndgame(new Chessboard("rn6/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KRK, typeOfEndgame(new Chessboard("r7/8/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KRK, typeOfEndgame(new Chessboard("r6/p7/8/8/8/8/7K/k7 b")));
+        Assert.assertEquals(KRK, typeOfEndgame(new Chessboard("rb5/8/8/nn/8/8/7K/k7 b")));
+        Assert.assertEquals(KRK, typeOfEndgame(new Chessboard("r7/8/8/p7/8/8/7K/k7 b")));
+        Assert.assertEquals(KRK, typeOfEndgame(new Chessboard("r7/8/8/8/bn6/8/7K/k7 b")));
     }
 }
