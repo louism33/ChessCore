@@ -422,6 +422,12 @@ public class EndgameMaterialTest {
         Assert.assertFalse(isBasicallyDrawn(board));
         Assert.assertEquals(KQK, typeOfEndgame(board));
     }
+    
+    @Test
+    void notEndgameTest() {
+        Chessboard board = new Chessboard("5rk1/1ppb3p/p1p5/8/3P3B/2P3NP/PP4PK/5q2 b - - 1 9");
+        Assert.assertTrue(!isBasicallyDrawn(board));
+    }
 
     @Test
     void comparePureEndgameToEndgamePlusMaterialKRRK() {

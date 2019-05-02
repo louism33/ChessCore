@@ -116,12 +116,14 @@ public class MaterialHashUtilTest {
     private static void verifyMaterialHashToDepth(int depth, Chessboard board) {
         final Chessboard initial = new Chessboard(board);
 
+        Assert.assertFalse(isBasicallyDrawn(board));
+        
         Assert.assertEquals(board, initial);
 
-        long ii = countFinalNodesAtDepthHelper(board, depth);
+        countFinalNodesAtDepthHelper(board, depth);
+        
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
-
     }
 
     private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){

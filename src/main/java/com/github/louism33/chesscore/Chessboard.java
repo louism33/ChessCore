@@ -41,7 +41,7 @@ public final class Chessboard {
 
     public int quietHalfMoveCounter = 0, fullMoveCounter = 0;
 
-    public int typeOfGameIAmIn = 0; // flag to remember if in endgame
+    public int typeOfGameIAmIn = UNKNOWN; // flag to remember if in endgame
     public int[] typeOfGameIAmInStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH]; 
     
     public int materialHash;
@@ -1270,6 +1270,7 @@ public final class Chessboard {
         zobristHash = boardToHash();
         zobristPawnHash = makePawnHash();
         materialHash = makeMaterialHash(this);
+        typeOfGameIAmIn = MaterialHashUtil.typeOfEndgame(this);
         Setup.init(false);
     }
 
