@@ -4,7 +4,7 @@ import com.github.louism33.utils.Perft;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-public class PerftTestTinyDepths {
+public class PerftTinyDepthsTest {
 
     @Test
     void tiny() {
