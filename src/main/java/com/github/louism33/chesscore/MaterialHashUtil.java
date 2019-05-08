@@ -250,13 +250,16 @@ public final class MaterialHashUtil {
                         if (populationCount(board.pieces[turn][ROOK]) >= 1) {
                             return KRK;
                         }
-                        if (populationCount(board.pieces[turn][BISHOP]) >= 2) {
+                        final int myBishops = populationCount(board.pieces[turn][BISHOP]);
+                        if (myBishops >= 2) {
                             return KBBK;
                         }
                         if (populationCount(board.pieces[turn][PAWN]) >= 1) {
                             return KPK;
                         }
-                        if (populationCount(board.pieces[turn][BISHOP] | board.pieces[turn][KNIGHT]) >= 2) {
+                        final int myKnights = populationCount(board.pieces[turn][KNIGHT]);
+                        if (myBishops >= 1 && myKnights >= 1
+                                && myBishops + myKnights >= 2){
                             return KBNK;
                         }
 

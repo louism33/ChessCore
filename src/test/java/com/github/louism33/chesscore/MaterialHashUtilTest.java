@@ -92,6 +92,7 @@ public class MaterialHashUtilTest {
     void bigDepth4() {
         verifyMaterialHashToDepth(5, new Chessboard("8/3K4/2p5/p2b2r1/5k2/8/8/1q6 b - - 1 67"));
     }
+    
     @Test
     void bigDepth5() {
         verifyMaterialHashToDepth(4, new Chessboard("rnbqkb1r/ppppp1pp/7n/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3"));

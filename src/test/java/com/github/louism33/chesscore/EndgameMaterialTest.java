@@ -478,4 +478,11 @@ public class EndgameMaterialTest {
         Assert.assertEquals(KRK, typeOfEndgame(new Chessboard("r7/8/8/p7/8/8/7K/k7 b")));
         Assert.assertEquals(KRK, typeOfEndgame(new Chessboard("r7/8/8/8/bn6/8/7K/k7 b")));
     }
+
+    @Test
+    void kbnkTest() {
+        Assert.assertTrue(isBasicallyDrawn((new Chessboard("8/1k1n4/8/5n2/8/8/6K1/8 w - - 0 154"))));
+//        Assert.assertTrue(isBasicallyDrawn((new Chessboard("8/1k1n4/8/5n2/8/8/6K1/5n2 w - - 0 154"))));
+    }
+    
 }
