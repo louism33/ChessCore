@@ -78,7 +78,7 @@ public final class MoveParserFromAN {
         try {
             return buildMoveFromAN(board, an);
 
-        } catch (Exception | Error e) {
+        } catch (Throwable e) {
             System.err.println("error when parsing " + an + " as AN for board\n" + board);
             e.printStackTrace();
         }

@@ -41,7 +41,7 @@ public class PgnParser2Test {
         try {
             int[] winningMoves = EPDObject.getBestMovesFromComments();
             int[] losingMoves = EPDObject.getAvoidMoves();
-        } catch (Exception | Error e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             Assert.fail();
         }

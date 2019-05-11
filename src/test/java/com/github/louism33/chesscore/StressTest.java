@@ -72,7 +72,7 @@ public class StressTest {
                     int move1 = 0;
                     try {
                         move1 = MoveParserFromAN.buildMoveFromANWithOO(board, move);
-                    } catch (Exception | Error e) {
+                    } catch (Throwable e) {
                         System.out.println(s);
                         System.out.println(board);
                         System.out.println(board.zobristHash);
@@ -84,7 +84,7 @@ public class StressTest {
                     board.makeMoveAndFlipTurn(move1);
                 }
             }
-        } catch (Exception | Error e) {
+        } catch (Throwable e) {
             throw new AssertionError("failed on stress test");
         }
 
@@ -142,7 +142,7 @@ public class StressTest {
                     int move1 = 0;
                     try {
                         move1 = MoveParserFromAN.buildMoveFromANWithOO(board, move);
-                    } catch (Exception | Error e) {
+                    } catch (Throwable e) {
                         System.out.println(s);
                         System.out.println(board);
                         System.out.println(board.zobristHash);
@@ -154,7 +154,7 @@ public class StressTest {
                     board.makeMoveAndFlipTurn(move1);
                 }
             }
-        } catch (Exception | Error e) {
+        } catch (Throwable e) {
             throw new AssertionError("failed on crash test");
         }
 

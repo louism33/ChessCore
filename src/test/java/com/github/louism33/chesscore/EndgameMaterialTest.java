@@ -189,7 +189,7 @@ public class EndgameMaterialTest {
                 int move1 = 0;
                 try {
                     move1 = MoveParserFromAN.buildMoveFromANWithOO(board, move);
-                } catch (Exception | Error e) {
+                } catch (Throwable e) {
                     System.out.println(s);
                     System.out.println(board);
                     System.out.println(board.zobristHash);
