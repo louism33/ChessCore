@@ -89,6 +89,8 @@ public final class ExtendedPositionDescriptionParser {
             this.scoredMoves = scoredMoves;
             if (scoredMoves != null) {
                 this.bestMovesFromComments = getCommentMoves();
+            } else {
+                this.bestMovesFromComments = bestMoves;
             }
         }
 
