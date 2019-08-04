@@ -1,12 +1,10 @@
 package com.github.louism33.chesscore;
 
-import com.github.louism33.utils.MoveParserFromAN;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import static com.github.louism33.chesscore.BitOperations.*;
-import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.Utils.*;
+import static com.github.louism33.chesscore.BitOperations.populationCount;
+import static com.github.louism33.chesscore.Utils.squareDirectlyAttackedBy;
 
 public class UtilTest {
     

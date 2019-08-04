@@ -1,6 +1,5 @@
 package utils;
 
-import com.github.louism33.chesscore.MoveParser;
 import com.github.louism33.utils.ExtendedPositionDescriptionParser;
 import org.junit.Assert;
 import org.junit.runner.RunWith;

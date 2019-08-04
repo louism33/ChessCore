@@ -2,7 +2,6 @@ package com.github.louism33.chesscore;
 
 import com.github.louism33.utils.MoveParserFromAN;
 import com.github.louism33.utils.PGNParser;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
