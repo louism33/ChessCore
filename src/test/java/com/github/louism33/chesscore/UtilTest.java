@@ -10,7 +10,6 @@ import static com.github.louism33.chesscore.Utils.*;
 
 public class UtilTest {
     
-    
     @Test
     public void squareAttackedBy() {
         Chessboard board = new Chessboard();

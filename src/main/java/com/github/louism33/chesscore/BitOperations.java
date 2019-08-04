@@ -42,15 +42,15 @@ public final class BitOperations {
         return bitCount(pieces);
     }
 
-    private static long[] getAllPiecesBetter(long pieces) {
-        long[] indexes = new long[BitOperations.populationCount(pieces)];
-        int index = 0;
-        while (pieces != 0) {
-            indexes[index] = getFirstPiece(pieces);
-            pieces &= pieces - 1;
-        }
-        return indexes;
-    }
+//    private static long[] getAllPiecesBetter(long pieces) {
+//        long[] indexes = new long[BitOperations.populationCount(pieces)];
+//        int index = 0;
+//        while (pieces != 0) {
+//            indexes[index] = getFirstPiece(pieces);
+//            pieces &= pieces - 1;
+//        }
+//        return indexes;
+//    }
 
     public static long getFirstPiece(long l) {
         return lowestOneBit(l);

@@ -349,7 +349,7 @@ final class Setup {
 
     private static long[] permuteBishopBetter(long[] pieces, int length){
         final int size = 1 << length;
-        long[] answers = new long[size];
+        long[] answers = new long[size]; // todo, low prio, move out
 
         for (int t = 0; t < size; t++){
             long mask = 0;

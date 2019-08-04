@@ -72,7 +72,7 @@ final class ZobristHashUtil {
      */
     private static long[][] initPieceHash(){
         Random r = new Random(initHashSeed);
-        long[][] zobristHash = new long[64][12];
+        long[][] zobristHash = new long[64][12]; // todo, move out, low prio
         for (int outer = 0; outer < 64; outer++){
             for (int inner = 0; inner < 12; inner++){
                 zobristHash[outer][inner] = r.nextLong();
@@ -85,7 +85,7 @@ final class ZobristHashUtil {
     create values for every possible combination of castling right
     */
     private static long[] initCastlingHash(){
-        Random r = new Random(initHashSeed + 1);
+        Random r = new Random(initHashSeed + 1); // todo, move out, low prio
         long[] zobristHash = new long[16];
         zobristHash[0] = 0;
         for (int cr = 1; cr < zobristHash.length; cr++){
