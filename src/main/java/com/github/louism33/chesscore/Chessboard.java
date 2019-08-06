@@ -41,9 +41,6 @@ public final class Chessboard {
 
     public int quietHalfMoveCounter = 0, fullMoveCounter = 0;
 
-    public int typeOfGameIAmIn = UNKNOWN; // flag to remember if in endgame
-    public int[] typeOfGameIAmInStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH];
-
     public int materialHash;
     public long zobristHash;
     public long zobristPawnHash;
@@ -54,20 +51,23 @@ public final class Chessboard {
     final int[] moves = new int[maxNumberOfMovesInAnyPosition];
 
     private final int[][] legalMoveStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH][maxNumberOfMovesInAnyPosition];
-
+    
+    public int typeOfGameIAmIn = UNKNOWN; // flag to remember if in endgame
+    public final int[] typeOfGameIAmInStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH];
+    
     public final int[] materialHashStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH];
     public final long[] zobristHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
     public final long[] zobristPawnHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
-
     private final long[] pastMoveStackArray = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+    
     public boolean inCheckRecorder;
-
     public long checkingPieces;
-
     public long pinnedPieces;
     public long pinningPieces;
-    private final long[] pinnedPiecesArray = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
-    private final boolean[] checkStack = new boolean[MAX_DEPTH_AND_ARRAY_LENGTH];
+    private final boolean[] inCheckStack = new boolean[MAX_DEPTH_AND_ARRAY_LENGTH];
+    private final long[] checkingPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+    private final long[] pinnedPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+    private final long[] pinningPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
 
 
     private long boardToHash() {
@@ -134,13 +134,14 @@ public final class Chessboard {
         this.moveStackData = board.moveStackData;
         this.inCheckRecorder = board.inCheckRecorder;
         this.pinnedPieces = board.pinnedPieces;
+        this.checkingPieces = board.checkingPieces;
         this.pinningPieces = board.pinningPieces;
         this.legalMoveStackIndex = board.legalMoveStackIndex;
         this.masterIndex = board.masterIndex;
         this.moveStackIndex = board.moveStackIndex;
         this.materialHash = board.materialHash;
         this.typeOfGameIAmIn = board.typeOfGameIAmIn;
-
+        
         System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
         System.arraycopy(board.moves, 0, this.moves, 0, board.moves.length);
@@ -149,13 +150,17 @@ public final class Chessboard {
             System.arraycopy(board.legalMoveStack[i], 0, this.legalMoveStack[i], 0, board.legalMoveStack[i].length);
         }
 
-        System.arraycopy(board.typeOfGameIAmInStack, 0, this.typeOfGameIAmInStack, 0, board.typeOfGameIAmInStack.length);
         System.arraycopy(board.materialHashStack, 0, this.materialHashStack, 0, board.materialHashStack.length);
         System.arraycopy(board.zobristHashStack, 0, this.zobristHashStack, 0, board.zobristHashStack.length);
         System.arraycopy(board.zobristPawnHashStack, 0, this.zobristPawnHashStack, 0, board.zobristPawnHashStack.length);
         System.arraycopy(board.pastMoveStackArray, 0, this.pastMoveStackArray, 0, board.pastMoveStackArray.length);
-        System.arraycopy(board.pinnedPiecesArray, 0, this.pinnedPiecesArray, 0, board.pinnedPiecesArray.length);
-        System.arraycopy(board.checkStack, 0, this.checkStack, 0, board.checkStack.length);
+
+        System.arraycopy(board.inCheckStack, 0, this.inCheckStack, 0, board.inCheckStack.length);
+        System.arraycopy(board.checkingPiecesStack, 0, this.checkingPiecesStack, 0, board.checkingPiecesStack.length);
+        System.arraycopy(board.pinnedPiecesStack, 0, this.pinnedPiecesStack, 0, board.pinnedPiecesStack.length);
+        System.arraycopy(board.pinningPiecesStack, 0, this.pinningPiecesStack, 0, board.pinningPiecesStack.length);
+        
+        System.arraycopy(board.typeOfGameIAmInStack, 0, this.typeOfGameIAmInStack, 0, board.typeOfGameIAmInStack.length);
 
         System.arraycopy(board.pieceSquareTable, 0, pieceSquareTable, 0, board.pieceSquareTable.length);
 
@@ -171,7 +176,7 @@ public final class Chessboard {
         return generateLegalMoves(true, checkingPieces);
     }
 
-    private int[] generateLegalMoves(boolean checkStateKnown, long checkingPieces) {
+    private int[] generateLegalMoves(boolean checkStateKnown, long checkingPieces) { // todo consider passing pinStateKnown
         Assert.assertNotNull(this.legalMoveStack[legalMoveStackIndex]);
         // only clean array of moves if it has something in it
         if (this.legalMoveStack[legalMoveStackIndex][0] != 0) {
@@ -202,7 +207,6 @@ public final class Chessboard {
         friends = this.pieces[turn][ALL_COLOUR_PIECES];
         enemies = this.pieces[1 - turn][ALL_COLOUR_PIECES];
 
-
         final long allPieces = friends | enemies;
 
         if (!checkStateKnown) {
@@ -231,8 +235,7 @@ public final class Chessboard {
                 friends, allPieces);
 
         pinnedPieces = currentPinnedPieces;
-
-
+        
         final boolean hasPreviousMove = hasPreviousMove();
         if (numberOfCheckers == 1) {
             inCheckRecorder = true;
@@ -845,7 +848,10 @@ public final class Chessboard {
         final long checkers = bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, 0,
                 friends | enemies, 2);
+        
         inCheckRecorder = checkers != 0;
+        checkingPieces = checkers;
+        
         return checkers;
     }
 
@@ -1171,11 +1177,13 @@ public final class Chessboard {
                 zobristPawnHash == that.zobristPawnHash &&
                 masterIndex == that.masterIndex &&
                 Arrays.deepEquals(pieces, that.pieces) &&
-                Arrays.equals(zobristHashStack, that.zobristHashStack) &&
                 Arrays.equals(materialHashStack, that.materialHashStack) &&
+                Arrays.equals(zobristHashStack, that.zobristHashStack) &&
                 Arrays.equals(zobristPawnHashStack, that.zobristPawnHashStack) &&
-                Arrays.equals(pinnedPiecesArray, that.pinnedPiecesArray) &&
-                Arrays.equals(checkStack, that.checkStack) &&
+                Arrays.equals(pinnedPiecesStack, that.pinnedPiecesStack) &&
+                Arrays.equals(pinningPiecesStack, that.pinningPiecesStack) &&
+                Arrays.equals(checkingPiecesStack, that.checkingPiecesStack) &&
+                Arrays.equals(inCheckStack, that.inCheckStack) &&
                 Arrays.equals(pieceSquareTable, that.pieceSquareTable)
                 ;
     }
@@ -1212,11 +1220,16 @@ public final class Chessboard {
     }
 
     private void masterStackPush() {
-        checkStack[masterIndex] = this.inCheckRecorder;
+        inCheckStack[masterIndex] = this.inCheckRecorder;
         inCheckRecorder = false;
 
-        pinnedPiecesArray[masterIndex] = this.pinnedPieces;
+        checkingPiecesStack[masterIndex] = this.checkingPieces;
+        checkingPieces = 0;
+        
+        pinnedPiecesStack[masterIndex] = this.pinnedPieces;
         pinnedPieces = 0;
+
+        pinningPiecesStack[masterIndex] = this.pinningPieces;
         pinningPieces = 0;
 
         typeOfGameIAmInStack[masterIndex] = typeOfGameIAmIn;
@@ -1226,13 +1239,20 @@ public final class Chessboard {
         rotateMasterIndexUp();
     }
 
-    private void masterStackPop() {
+    private void masterStackPop() { // todo, can we reuse any of these instead of setting to 0?
         rotateMasterIndexDown();
-        inCheckRecorder = checkStack[masterIndex];
-        checkStack[masterIndex] = false;
+        inCheckRecorder = inCheckStack[masterIndex];
+        inCheckStack[masterIndex] = false;
 
-        pinnedPieces = pinnedPiecesArray[masterIndex];
-        pinnedPiecesArray[masterIndex] = 0;
+        checkingPieces = checkingPiecesStack[masterIndex];
+        checkingPiecesStack[masterIndex] = 0;
+        
+        
+        pinnedPieces = pinnedPiecesStack[masterIndex];
+        pinnedPiecesStack[masterIndex] = 0;
+
+        pinningPieces = pinningPiecesStack[masterIndex];
+        pinningPiecesStack[masterIndex] = 0;
 
         typeOfGameIAmIn = typeOfGameIAmInStack[masterIndex];
         typeOfGameIAmInStack[masterIndex] = 0;

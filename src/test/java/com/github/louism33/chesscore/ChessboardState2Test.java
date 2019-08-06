@@ -3,7 +3,13 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-class ChessboardStateTest {
+import static com.github.louism33.chesscore.BitOperations.populationCount;
+import static com.github.louism33.chesscore.BoardConstants.*;
+import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
+import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMovesOnly;
+import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
+
+class ChessboardState2Test {
 
     @Test
     void test1() {
@@ -78,6 +84,7 @@ class ChessboardStateTest {
     void bigDepth4() {
         verifyStateToDepth(5, new Chessboard("8/3K4/2p5/p2b2r1/5k2/8/8/1q6 b - - 1 67"));
     }
+
     @Test
     void bigDepth5() {
         verifyStateToDepth(4, new Chessboard("rnbqkb1r/ppppp1pp/7n/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3"));
@@ -110,21 +117,58 @@ class ChessboardStateTest {
 
     }
 
-    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth){
+    private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) {
         long temp = 0;
-        if (depth == 0){
+        if (depth == 0) {
             return 1;
         }
         int[] moves = board.generateLegalMoves();
 
+        final int turn = board.turn;
+        final long myPawns, myKnights, myBishops, myRooks, myQueens, myKing;
+        final long enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing;
+        final long friends, enemies;
+
+        myPawns = board.pieces[turn][PAWN];
+        myKnights = board.pieces[turn][KNIGHT];
+        myBishops = board.pieces[turn][BISHOP];
+        myRooks = board.pieces[turn][ROOK];
+        myQueens = board.pieces[turn][QUEEN];
+        myKing = board.pieces[turn][KING];
+
+        enemyPawns = board.pieces[1 - turn][PAWN];
+        enemyKnights = board.pieces[1 - turn][KNIGHT];
+        enemyBishops = board.pieces[1 - turn][BISHOP];
+        enemyRooks = board.pieces[1 - turn][ROOK];
+        enemyQueens = board.pieces[1 - turn][QUEEN];
+        enemyKing = board.pieces[1 - turn][KING];
+
+        board.getPieces();
+        friends = board.pieces[turn][ALL_COLOUR_PIECES];
+        enemies = board.pieces[1 - turn][ALL_COLOUR_PIECES];
+
+        final long allPieces = friends | enemies;
+
+        final long currentPinnedPieces = whichPiecesArePinned(board, myKing,
+                enemyBishops, enemyRooks, enemyQueens,
+                friends, allPieces);
+
+        Assert.assertEquals(board.pinnedPieces, currentPinnedPieces);
+
+        if (board.pinnedPieces != 0) {
+            Assert.assertTrue(board.pinningPieces != 0);
+        }else {
+            Assert.assertEquals(0, board.pinningPieces);
+        }
+        
         Assert.assertEquals(board.inCheckRecorder, board.inCheck());
         Assert.assertEquals(board.inCheckRecorder, new Chessboard(board).inCheck());
 
-        if (depth == 1){
+        if (depth == 1) {
             return moves[moves.length - 1];
         }
         for (int move : moves) {
-            if (move == 0){
+            if (move == 0) {
                 break;
             }
 

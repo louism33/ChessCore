@@ -25,7 +25,6 @@ public final class PinnedManager {
 
         long pinnedPieces = 0;
 
-        // todo, add pinning here + state (?)
         long pinners = xrayBishopAttacks(allPieces, friends, squareOfInterest);
         long pinningPieces = pinners & (enemyBishops | enemyQueens);
 
