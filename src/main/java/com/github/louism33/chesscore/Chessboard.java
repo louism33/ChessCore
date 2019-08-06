@@ -42,8 +42,8 @@ public final class Chessboard {
     public int quietHalfMoveCounter = 0, fullMoveCounter = 0;
 
     public int typeOfGameIAmIn = UNKNOWN; // flag to remember if in endgame
-    public int[] typeOfGameIAmInStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH]; 
-    
+    public int[] typeOfGameIAmInStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH];
+
     public int materialHash;
     public long zobristHash;
     public long zobristPawnHash;
@@ -117,7 +117,7 @@ public final class Chessboard {
         System.arraycopy(INITIAL_PIECE_SQUARES, 0, pieceSquareTable, 0, pieceSquareTable.length);
 
         materialHash = startingMaterialHash;
-        
+
         turn = WHITE;
 
         zobristHash = boardToHash();
@@ -164,6 +164,14 @@ public final class Chessboard {
 
 
     public final int[] generateLegalMoves() {
+        return generateLegalMoves(false, 0);
+    }
+
+    public final int[] generateLegalMoves(long checkingPieces) {
+        return generateLegalMoves(true, checkingPieces);
+    }
+
+    private int[] generateLegalMoves(boolean checkStateKnown, long checkingPieces) {
         Assert.assertNotNull(this.legalMoveStack[legalMoveStackIndex]);
         // only clean array of moves if it has something in it
         if (this.legalMoveStack[legalMoveStackIndex][0] != 0) {
@@ -197,9 +205,11 @@ public final class Chessboard {
 
         final long allPieces = friends | enemies;
 
-        final long checkingPieces = bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, 0,
-                allPieces, 2);
+        if (!checkStateKnown) {
+            checkingPieces = bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, 0,
+                    allPieces, 2);
+        }
 
         this.checkingPieces = checkingPieces;
 
@@ -212,6 +222,7 @@ public final class Chessboard {
                     myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     friends, allPieces);
+
             return this.legalMoveStack[legalMoveStackIndex];
         }
 
@@ -248,21 +259,11 @@ public final class Chessboard {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 allPieces);
 
-        addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, this.pieces, pieceSquareTable, //todo, see if king moves can be added last (helps with move order later)
-                myKing,
-                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                friends, allPieces);
-
         if (pinnedPieces == 0) {
             addPromotionMoves
                     (this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable, 0, emptySquares, enemies,
                             myPawns,
                             enemies, allPieces);
-
-            addAllMovesWithoutKing
-                    (this.legalMoveStack[legalMoveStackIndex], this.pieces, turn, pieceSquareTable, promotablePawns, emptySquares, enemies,
-                            myKnights, myBishops, myRooks, myQueens,
-                            allPieces);
 
             if (hasPreviousMove) {
                 addEnPassantMoves
@@ -271,16 +272,18 @@ public final class Chessboard {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
                         );
             }
+
+            addAllMovesWithoutKing
+                    (this.legalMoveStack[legalMoveStackIndex], this.pieces, turn, pieceSquareTable, promotablePawns, emptySquares, enemies,
+                            myKnights, myBishops, myRooks, myQueens,
+                            allPieces);
+
+
         } else {
             addPromotionMoves
                     (this.legalMoveStack[legalMoveStackIndex], turn, pieceSquareTable, pinnedPieces, emptySquares, enemies,
                             myPawns,
                             enemies, allPieces);
-
-            addAllMovesWithoutKing
-                    (this.legalMoveStack[legalMoveStackIndex], this.pieces, turn, pieceSquareTable, pinnedPiecesAndPromotingPawns, ~allPieces, enemies,
-                            myKnights, myBishops, myRooks, myQueens,
-                            allPieces);
 
             if (hasPreviousMove) {
                 addEnPassantMoves
@@ -289,6 +292,12 @@ public final class Chessboard {
                                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
                         );
             }
+
+            addAllMovesWithoutKing
+                    (this.legalMoveStack[legalMoveStackIndex], this.pieces, turn, pieceSquareTable, pinnedPiecesAndPromotingPawns, ~allPieces, enemies,
+                            myKnights, myBishops, myRooks, myQueens,
+                            allPieces);
+
 
             // pinned pieces moves
             while (pinnedPieces != 0) {
@@ -400,10 +409,18 @@ public final class Chessboard {
             }
         }
 
+        addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, this.pieces, pieceSquareTable,
+                myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+                friends, allPieces);
+
         return this.legalMoveStack[legalMoveStackIndex];
     }
 
-    public final void makeMoveAndFlipTurn(final int move) { // todo, add boolean argument to pass checking move, save time
+    public final void makeMoveAndFlipTurn(final int move) {
+        // todo, add boolean argument to pass checking move, save time
+        // todo, add checkers bitboard field (and stack if necessary), update this on flag. 
+        // todo, MAINLY useful if you know you are NOT making a checking move, so i guess we save on inCheck() call later?
         // todo, check if endgame here?
         this.rotateMoveIndexUp();
         Assert.assertNotEquals(move, 0);
@@ -535,10 +552,10 @@ public final class Chessboard {
                     moveStackArrayPush(buildStackDataBetter(move, turn, quietHalfMoveCounter, castlingRights, PROMOTION));
 
                     makePromotingMove(pieces, pieceSquareTable, turn, move);
-                    
+
                     materialHash = removePieceFromMaterialHash(materialHash, turn == WHITE ? WHITE_PAWN : BLACK_PAWN, destinationPiece);
                     materialHash = addPieceToMaterialHash(materialHash, whichPromotingPiece, destinationPiece);
-                    
+
                     break;
             }
         } else {
@@ -799,10 +816,42 @@ public final class Chessboard {
         return this.turn == WHITE;
     }
 
-
-    public boolean inCheck(boolean white) {
+    public long getCheckers() {
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
-        if (white) {
+        if (turn == WHITE) {
+            myKing = pieces[WHITE][KING];
+            enemyPawns = pieces[BLACK][PAWN];
+            enemyKnights = pieces[BLACK][KNIGHT];
+            enemyBishops = pieces[BLACK][BISHOP];
+            enemyRooks = pieces[BLACK][ROOK];
+            enemyQueen = pieces[BLACK][QUEEN];
+            enemyKing = pieces[BLACK][KING];
+
+            enemies = blackPieces();
+            friends = whitePieces();
+        } else {
+            myKing = pieces[BLACK][KING];
+            enemyPawns = pieces[WHITE][PAWN];
+            enemyKnights = pieces[WHITE][KNIGHT];
+            enemyBishops = pieces[WHITE][BISHOP];
+            enemyRooks = pieces[WHITE][ROOK];
+            enemyQueen = pieces[WHITE][QUEEN];
+            enemyKing = pieces[WHITE][KING];
+
+            enemies = whitePieces();
+            friends = blackPieces();
+        }
+
+        final long checkers = bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
+                enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, 0,
+                friends | enemies, 2);
+        inCheckRecorder = checkers != 0;
+        return checkers;
+    }
+
+    public boolean inCheck() {
+        long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
+        if (turn == WHITE) {
             myKing = pieces[WHITE][KING];
             enemyPawns = pieces[BLACK][PAWN];
             enemyKnights = pieces[BLACK][KNIGHT];
@@ -828,14 +877,93 @@ public final class Chessboard {
 
         return boardInCheck(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                allPieces());
+                friends | enemies);
 
     }
 
     // todo
-    public boolean inCheck(boolean white, int move) {
+    public boolean moveGivesCheck(int move) {
+        
+        /*
+        
+        
+        // only determines if quiet moves are checking moves
+        Assert.assertTrue(!isCaptureMove(move));
+        Assert.assertTrue(!isEnPassantMove(move));
+        Assert.assertTrue(!isPromotionMove(move));
+
+        final long sourceLong = getSourceLong(move);
+        final long destinationLong = getDestinationLong(move);
+        final int movingPiece = getMovingPieceInt(move);
+
+        final boolean possibleDisco = (sourceLong & enemyKingStar) != 0;
+        boolean possibleCheck = false;
+
+        final long kingMoves = KING_MOVE_TABLE[enemyKingIndex];
+        if (!possibleDisco) {
+            switch (movingPiece) {
+                case WHITE_KING:
+                case BLACK_KING:
+                    return false;
+                    
+                case WHITE_QUEEN:
+                case BLACK_QUEEN:
+                    if ((destinationLong & kingMoves) != 0) {
+                        Assert.assertTrue((destinationLong & enemyKingStar) != 0);
+                        return true;
+                    }
+                    possibleCheck = (destinationLong & enemyKingStar) != 0;
+                    break;
+
+                case WHITE_ROOK:
+                case BLACK_ROOK:
+                    if ((destinationLong & kingMoves & enemyKingCross) != 0) {
+                        return true;
+                    }
+                    possibleCheck = (destinationLong & enemyKingCross) != 0;
+                    break;
+
+                case WHITE_BISHOP:
+                case BLACK_BISHOP:
+                    if ((destinationLong & kingMoves & enemyKingX) != 0) {
+                        return true;
+                    }
+                    possibleCheck = (destinationLong & enemyKingX) != 0;
+                    break;
+
+                case WHITE_PAWN:
+                case BLACK_PAWN:
+                    return (PAWN_CAPTURE_TABLE[1 - board.turn][enemyKingIndex] & destinationLong) != 0;
+
+                case WHITE_KNIGHT:
+                case BLACK_KNIGHT:
+                    final long enemyKingLong = newPieceOnSquare(enemyKingIndex);
+                    final long enemyKingSquares = (enemyKingLong & WHITE_COLOURED_SQUARES) == 0
+                            ? BLACK_COLOURED_SQUARES : WHITE_COLOURED_SQUARES;
+                    if ((sourceLong & enemyKingSquares) == 0) {
+                        return false;
+                    }
+                    return ((destinationLong & KNIGHT_MOVE_TABLE[enemyKingIndex]) != 0);
+            }
+        }
+
+        boolean checkingMove = false;
+
+        if (possibleDisco || possibleCheck) {
+            if (MASTER_DEBUG) {
+                Assert.assertTrue(move != 0);
+            }
+
+            board.makeMoveAndFlipTurn(move);
+            checkingMove = board.inCheck(board.isWhiteTurn());
+            board.unMakeMoveAndFlipTurn();
+        }
+
+        return checkingMove;
+        
+         */
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
-        if (white) {
+        if (this.turn == WHITE) {
             myKing = pieces[WHITE][KING];
             enemyPawns = pieces[BLACK][PAWN];
             enemyKnights = pieces[BLACK][KNIGHT];
@@ -861,7 +989,7 @@ public final class Chessboard {
 
         return boardInCheck(turn, myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
-                allPieces());
+                friends | enemies);
 
     }
 
@@ -950,14 +1078,14 @@ public final class Chessboard {
     }
 
     public boolean inCheckmate() {
-        if (!this.inCheck(isWhiteTurn())) {
+        if (!this.inCheck()) {
             return false;
         }
         return this.generateLegalMoves().length == 0;
     }
 
     public boolean inStalemate() {
-        if (this.inCheck(isWhiteTurn())) {
+        if (this.inCheck()) {
             return false;
         }
         return this.generateLegalMoves().length == 0;
@@ -1036,7 +1164,7 @@ public final class Chessboard {
         that.whitePieces();
         that.blackPieces();
         return turn == that.turn &&
-                materialHash == that.materialHash && 
+                materialHash == that.materialHash &&
                 castlingRights == that.castlingRights &&
                 quietHalfMoveCounter == that.quietHalfMoveCounter &&
                 zobristHash == that.zobristHash &&
@@ -1090,7 +1218,7 @@ public final class Chessboard {
         pinnedPiecesArray[masterIndex] = this.pinnedPieces;
         pinnedPieces = 0;
         pinningPieces = 0;
-        
+
         typeOfGameIAmInStack[masterIndex] = typeOfGameIAmIn;
         materialHashStack[masterIndex] = materialHash;
         zobristHashStack[masterIndex] = zobristHash;
@@ -1108,10 +1236,10 @@ public final class Chessboard {
 
         typeOfGameIAmIn = typeOfGameIAmInStack[masterIndex];
         typeOfGameIAmInStack[masterIndex] = 0;
-        
+
         materialHash = materialHashStack[masterIndex];
         materialHashStack[masterIndex] = 0;
-        
+
         zobristHash = zobristHashStack[masterIndex];
         zobristHashStack[masterIndex] = 0;
 

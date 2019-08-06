@@ -224,7 +224,7 @@ public final class MaterialHashUtil {
             return CERTAIN_DRAW;
         }
 
-        final long allPieces = board.allPieces();
+//        final long allPieces = board.allPieces();
 
         final long hash = board.materialHash;
 

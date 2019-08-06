@@ -172,6 +172,7 @@ public final class MoveParser {
                 & (getDestinationLong(move) & INTERMEDIATE_RANKS[1 - turn]) != 0;
     }
     
+    // todo
     public static boolean verifyMoveCheap(Chessboard board, int move){
         long sourceLong = getSourceLong(move);
         if ((sourceLong & board.allPieces()) == 0){

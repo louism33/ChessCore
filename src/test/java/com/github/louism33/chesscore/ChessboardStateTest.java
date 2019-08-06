@@ -117,8 +117,8 @@ class ChessboardStateTest {
         }
         int[] moves = board.generateLegalMoves();
 
-        Assert.assertEquals(board.inCheckRecorder, board.inCheck(board.isWhiteTurn()));
-        Assert.assertEquals(board.inCheckRecorder, new Chessboard(board).inCheck(board.isWhiteTurn()));
+        Assert.assertEquals(board.inCheckRecorder, board.inCheck());
+        Assert.assertEquals(board.inCheckRecorder, new Chessboard(board).inCheck());
 
 
 

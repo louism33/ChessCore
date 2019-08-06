@@ -83,7 +83,8 @@ public final class Perft {
         if (depth == 0){
             return 1;
         }
-        int[] moves = board.generateLegalMoves();
+//        int[] moves = board.generateLegalMoves();
+        int[] moves = board.generateLegalMoves(board.getCheckers());
 
         if (depth == 1){
             final int size = moves[moves.length - 1];

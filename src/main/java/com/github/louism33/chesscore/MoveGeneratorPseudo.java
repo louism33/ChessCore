@@ -11,6 +11,9 @@ import static java.lang.Long.numberOfTrailingZeros;
 
 final class MoveGeneratorPseudo {
 
+    /**
+     * An attempt is made here to add moves approximately in order of desirability for an engine, although both captures and quiets are added
+     */
     final static void addAllMovesWithoutKing(final int[] moves, final long[][] pieces, final int turn, final int[] pieceSquareTable,
                                        final long ignoreThesePieces, final long legalPushes, final long legalCaptures,
                                        long myKnights, long myBishops, long myRooks, long myQueens,
@@ -100,100 +103,6 @@ final class MoveGeneratorPseudo {
             }
             myBishops &= (myBishops - 1);
         }
-        while (myRooks != 0){
-            final long rook = getFirstPiece(myRooks);
-            if ((rook & ignoreThesePieces) == 0) {
-                final int rookIndex = numberOfTrailingZeros(rook);
-                final long slides = singleRookTable(allPieces, rookIndex, mask);
-                if (slides != 0) {
-                    long captureTable = slides & allPieces;
-                    if (captureTable != 0) {
-                        final int i1 = populationCount(captureTable);
-                        final int startIndex = moves[moves.length - 1];
-                        int i = 0;
-                        while (captureTable != 0){
-                            final int destinationIndex = numberOfTrailingZeros(captureTable);
-                            moves[startIndex + i] = buildMove(rookIndex, PIECE[turn][ROOK],
-                                    destinationIndex, pieceSquareTable[destinationIndex]);
-                            i++;
-                            captureTable &= captureTable - 1;
-                        }
-                        moves[moves.length - 1] += i1;
-                        
-                    }
-                    long quietTable = slides & ~allPieces;
-                    if (quietTable != 0) {
-                        final int i1 = populationCount(quietTable);
-                        final int startIndex = moves[moves.length - 1];
-                        int i = 0;
-                        while (quietTable != 0){
-                            final int destinationIndex = numberOfTrailingZeros(quietTable);
-
-                            if (startIndex + i > 120) {
-                                System.out.println(startIndex);
-                                MoveParser.printMove(moves);
-                                Assert.assertTrue(startIndex < 120);
-                            }
-                            
-                            
-                            moves[startIndex + i] = buildMove(rookIndex, PIECE[turn][ROOK],
-                                    destinationIndex);
-                            i++;
-                            quietTable &= quietTable - 1;
-                        }
-                        moves[moves.length - 1] += i1;
-                    }
-                }
-            }
-            myRooks &= (myRooks - 1);
-        }
-        while (myQueens != 0){
-            final long queen = getFirstPiece(myQueens);
-            if ((queen & ignoreThesePieces) == 0) {
-                final int queenIndex = numberOfTrailingZeros(queen);
-                final long slides = singleQueenTable(allPieces, queenIndex, mask);
-                if (slides != 0) {
-                    long captureTable = slides & allPieces;
-                    if (captureTable != 0) {
-                        final int i1 = populationCount(captureTable);
-                        final int startIndex = moves[moves.length - 1];
-                        int i = 0;
-                        while (captureTable != 0){
-                            final int destinationIndex = numberOfTrailingZeros(captureTable);
-
-                            moves[startIndex + i] = buildMove(queenIndex, PIECE[turn][QUEEN],
-                                    destinationIndex, pieceSquareTable[destinationIndex]);
-                            i++;
-                            captureTable &= captureTable - 1;
-                        }
-                        moves[moves.length - 1] += i1;
-                        
-                    }
-                    long quietTable = slides & ~allPieces;
-                    if (quietTable != 0) {
-                        final int i1 = populationCount(quietTable);
-                        final int startIndex = moves[moves.length - 1];
-                        int i = 0;
-                        while (quietTable != 0){
-                            final int destinationIndex = numberOfTrailingZeros(quietTable);
-                            
-                            if (startIndex + i > 120) {
-                                System.out.println(startIndex);
-                                MoveParser.printMove(moves);
-                                Assert.assertTrue(startIndex < 120);
-                            }
-                            
-                            moves[startIndex + i] = buildMove(queenIndex, PIECE[turn][QUEEN],
-                                    destinationIndex);
-                            i++;
-                            quietTable &= quietTable - 1;
-                        }
-                        moves[moves.length - 1] += i1;
-                    }
-                }
-            }
-            myQueens &= (myQueens - 1);
-        }
 
         //pawn moves
         long myPawns = pieces[turn][PAWN] & ~ignoreThesePieces;
@@ -240,6 +149,102 @@ final class MoveGeneratorPseudo {
             }
             
             myPawns &= myPawns - 1;
+        }
+
+
+        while (myRooks != 0){
+            final long rook = getFirstPiece(myRooks);
+            if ((rook & ignoreThesePieces) == 0) {
+                final int rookIndex = numberOfTrailingZeros(rook);
+                final long slides = singleRookTable(allPieces, rookIndex, mask);
+                if (slides != 0) {
+                    long captureTable = slides & allPieces;
+                    if (captureTable != 0) {
+                        final int i1 = populationCount(captureTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (captureTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(captureTable);
+                            moves[startIndex + i] = buildMove(rookIndex, PIECE[turn][ROOK],
+                                    destinationIndex, pieceSquareTable[destinationIndex]);
+                            i++;
+                            captureTable &= captureTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
+
+                    }
+                    long quietTable = slides & ~allPieces;
+                    if (quietTable != 0) {
+                        final int i1 = populationCount(quietTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (quietTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(quietTable);
+
+                            if (startIndex + i > 120) {
+                                System.out.println(startIndex);
+                                MoveParser.printMove(moves);
+                                Assert.assertTrue(startIndex < 120);
+                            }
+
+
+                            moves[startIndex + i] = buildMove(rookIndex, PIECE[turn][ROOK],
+                                    destinationIndex);
+                            i++;
+                            quietTable &= quietTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
+                    }
+                }
+            }
+            myRooks &= (myRooks - 1);
+        }
+        while (myQueens != 0){
+            final long queen = getFirstPiece(myQueens);
+            if ((queen & ignoreThesePieces) == 0) {
+                final int queenIndex = numberOfTrailingZeros(queen);
+                final long slides = singleQueenTable(allPieces, queenIndex, mask);
+                if (slides != 0) {
+                    long captureTable = slides & allPieces;
+                    if (captureTable != 0) {
+                        final int i1 = populationCount(captureTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (captureTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(captureTable);
+
+                            moves[startIndex + i] = buildMove(queenIndex, PIECE[turn][QUEEN],
+                                    destinationIndex, pieceSquareTable[destinationIndex]);
+                            i++;
+                            captureTable &= captureTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
+
+                    }
+                    long quietTable = slides & ~allPieces;
+                    if (quietTable != 0) {
+                        final int i1 = populationCount(quietTable);
+                        final int startIndex = moves[moves.length - 1];
+                        int i = 0;
+                        while (quietTable != 0){
+                            final int destinationIndex = numberOfTrailingZeros(quietTable);
+
+                            if (startIndex + i > 120) {
+                                System.out.println(startIndex);
+                                MoveParser.printMove(moves);
+                                Assert.assertTrue(startIndex < 120);
+                            }
+
+                            moves[startIndex + i] = buildMove(queenIndex, PIECE[turn][QUEEN],
+                                    destinationIndex);
+                            i++;
+                            quietTable &= quietTable - 1;
+                        }
+                        moves[moves.length - 1] += i1;
+                    }
+                }
+            }
+            myQueens &= (myQueens - 1);
         }
     }
 

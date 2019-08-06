@@ -41,26 +41,23 @@ final class MoveGeneratorCheck {
                 myPawns,
                 enemies,
                 allPieces);
-
+        
+        if (hasPreviousMove) {
+            addEnPassantMoves(moves, peek, turn, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPiece,
+                    myPawns, myKing,
+                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
+            );
+        }
+        
         addAllMovesWithoutKing (moves, pieces, turn, pieceSquareTable, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPiece,
                 myKnights, myBishops, myRooks, myQueens,
                 allPieces);
-
 
         addKingLegalMovesOnly(moves, turn, pieces, pieceSquareTable,
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 friends,
                 allPieces);
-
-        if (hasPreviousMove) {
-            addEnPassantMoves(moves, peek, turn, piecesToIgnoreAndPromotingPawns, blockingSquaresMask, checkingPiece,
-                    myPawns, myKing,
-                    enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing, allPieces
-            );
-
-        }
     }
-
 
 }
