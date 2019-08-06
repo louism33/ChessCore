@@ -4,6 +4,8 @@ import com.github.louism33.utils.Perft;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
+import static com.github.louism33.chesscore.BoardConstants.*;
+
 public class PerftTinyDepthsTest {
 
     @Test

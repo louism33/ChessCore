@@ -1,5 +1,7 @@
 package com.github.louism33.chesscore;
 
+import static com.github.louism33.chesscore.PieceMove.singleBishopTable;
+import static com.github.louism33.chesscore.PieceMove.singleRookTable;
 import static java.lang.Long.numberOfTrailingZeros;
 
 public final class BoardConstants {
@@ -587,4 +589,25 @@ public final class BoardConstants {
         int d = (index & 7) - (indexOfPivot & 7);
         return indexOfPivot + 8 * d;
     }
+
+    public static final long[] CROSSES = new long[64];
+    
+    public static final long[] SMALL_CROSSES = new long[64];
+
+    public static final long[] EXES = new long[64];
+    
+    public static final long[] STAR = new long[64];
+    
+    static {
+        Setup.init(false);
+        
+        for (int index = 0; index < 64; index++) {
+            CROSSES[index] |= singleRookTable(0, index, UNIVERSE);
+            EXES[index] |= singleBishopTable(0, index, UNIVERSE);
+            STAR[index] |= CROSSES[index] | EXES[index];
+            SMALL_CROSSES[index] |= PAWN_CAPTURE_TABLE_WHITE[index] | PAWN_CAPTURE_TABLE_BLACK[index];
+        }
+
+    }
+    
 }

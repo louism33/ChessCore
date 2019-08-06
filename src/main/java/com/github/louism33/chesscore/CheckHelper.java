@@ -72,7 +72,7 @@ final class CheckHelper {
                 return threats;
             }
         }
-        if (queens != 0) {
+        if (queens != 0) { // todo, combine with rook n bishop?
             threats |= singleQueenTable(allPieces, square, queens);
         }
         if (stopAt != 0){

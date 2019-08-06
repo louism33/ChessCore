@@ -248,7 +248,7 @@ public final class Chessboard {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 allPieces);
 
-        addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, this.pieces, pieceSquareTable,
+        addKingLegalMovesOnly(this.legalMoveStack[legalMoveStackIndex], turn, this.pieces, pieceSquareTable, //todo, see if king moves can be added last (helps with move order later)
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 friends, allPieces);
@@ -403,7 +403,7 @@ public final class Chessboard {
         return this.legalMoveStack[legalMoveStackIndex];
     }
 
-    public final void makeMoveAndFlipTurn(final int move) {
+    public final void makeMoveAndFlipTurn(final int move) { // todo, add boolean argument to pass checking move, save time
         // todo, check if endgame here?
         this.rotateMoveIndexUp();
         Assert.assertNotEquals(move, 0);
