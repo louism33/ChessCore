@@ -8,14 +8,14 @@ import static com.github.louism33.chesscore.MoveConstants.FIRST_FREE_BIT;
 public class MoveTest {
 
     @Test
-    void regularBoard() {
+    void regularBoardTest() {
         verifyHashToDepth(3, new Chessboard());
 
         verifyHashToDepth(4, new Chessboard());
     }
 
     @Test
-    void AvoidIllegalEPCapture() {
+    void AvoidIllegalEPCaptureTest() {
         verifyHashToDepth(5, new Chessboard("8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"));
 
         verifyHashToDepth(5, new Chessboard("8/8/1k6/8/2pP4/8/5BK1/8 b - d3 0 1"));
@@ -23,7 +23,7 @@ public class MoveTest {
 
 
     @Test
-    void EPCaptureChecksOpponent() {
+    void EPCaptureChecksOpponentTest() {
         verifyHashToDepth(5, new Chessboard("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"));
 
         verifyHashToDepth(5, new Chessboard("8/5k2/8/2Pp4/2B5/1K6/8/8 w - d6 0 1"));

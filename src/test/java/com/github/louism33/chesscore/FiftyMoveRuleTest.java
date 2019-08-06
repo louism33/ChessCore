@@ -15,7 +15,7 @@ import static com.github.louism33.chesscore.Chessboard.MAX_DEPTH_AND_ARRAY_LENGT
 public class FiftyMoveRuleTest {
 
     @Test
-    void repetitionFromRealGamesTest() {
+    void repetitionFromRealGamesTestTest() {
 
         String pgn = "" +
                 "1. e4 {book} e5 {book} 2. Nf3 {book} Nc6 {book} 3. Bc4 {book} Bc5 {book}\n" +

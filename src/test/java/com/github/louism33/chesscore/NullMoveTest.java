@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class NullMoveTest {
 
     @Test
-    void tinyDepths() {
+    void tinyDepthsTest() {
         verifyHashToDepth(1, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"));
 
         verifyHashToDepth(1, new Chessboard("8/8/8/2k5/2pP4/8/B7/4K3 b - d3 5 3"));
@@ -28,24 +28,24 @@ public class NullMoveTest {
     }
 
     @Test
-    void bigDepth11() {
+    void bigDepth11Test() {
         verifyHashToDepth(6, new Chessboard("8/5p2/8/2k3P1/p3K3/8/1P6/8 b - -"));
     }
 
     @Test
-    void bigDepth12() {
+    void bigDepth12Test() {
         verifyHashToDepth(4, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
     }
 
     @Test
-    void regularBoard() {
+    void regularBoardTest() {
         verifyHashToDepth(3, new Chessboard());
 
         verifyHashToDepth(4, new Chessboard());
     }
 
     @Test
-    void AvoidIllegalEPCapture() {
+    void AvoidIllegalEPCaptureTest() {
         verifyHashToDepth(5, new Chessboard("8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"));
 
         verifyHashToDepth(5, new Chessboard("8/8/1k6/8/2pP4/8/5BK1/8 b - d3 0 1"));
@@ -53,7 +53,7 @@ public class NullMoveTest {
 
 
     @Test
-    void EPCaptureChecksOpponent() {
+    void EPCaptureChecksOpponentTest() {
         verifyHashToDepth(5, new Chessboard("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"));
 
         verifyHashToDepth(5, new Chessboard("8/5k2/8/2Pp4/2B5/1K6/8/8 w - d6 0 1"));

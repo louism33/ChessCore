@@ -9,14 +9,14 @@ import static com.github.louism33.chesscore.BoardConstants.*;
 public class PerftTinyDepthsTest {
 
     @Test
-    void tiny() {
+    void tinyTest() {
         Assert.assertEquals(
                 Perft.perftTest(1, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"), 8),
                 8);
     }
 
     @Test
-    void tinyDepths() {
+    void tinyDepthsTest() {
         Assert.assertEquals(
                 Perft.perftTest(1, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"), 8),
                 8);

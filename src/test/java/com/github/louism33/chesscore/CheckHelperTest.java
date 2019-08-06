@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class CheckHelperTest {
 
     @Test
-    void repetitionTest1() {
+    void repetitionTest1Test() {
         Chessboard board = new Chessboard();
 
         Assert.assertFalse(board.isDrawByRepetition(1));
@@ -30,7 +30,7 @@ public class CheckHelperTest {
     }
 
     @Test
-    void repetitionTest2() {
+    void repetitionTest2Test() {
         Chessboard board = new Chessboard();
         Chessboard init = new Chessboard();
 
@@ -55,7 +55,7 @@ public class CheckHelperTest {
 
 
     @Test
-    void repetitionTest3() {
+    void repetitionTest3Test() {
         Chessboard board = new Chessboard();
         Chessboard init = new Chessboard();
 
@@ -93,7 +93,7 @@ public class CheckHelperTest {
     }
 
     @Test
-    void repetitionTest4() {
+    void repetitionTest4Test() {
         Chessboard board = new Chessboard();
 
         Assert.assertFalse(board.isDrawByRepetition(1));
@@ -132,7 +132,7 @@ public class CheckHelperTest {
 
 
     @Test
-    void repetitionTest5() {
+    void repetitionTest5Test() {
         Chessboard board = new Chessboard();
 
         Assert.assertFalse(board.isDrawByRepetition(1));
@@ -174,7 +174,7 @@ public class CheckHelperTest {
 
 
     @Test
-    void repetitionTest6() {
+    void repetitionTest6Test() {
         Chessboard board = new Chessboard();
 
         for (int i = 0; i < Chessboard.MAX_DEPTH_AND_ARRAY_LENGTH; i++) {

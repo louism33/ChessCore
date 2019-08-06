@@ -19,6 +19,7 @@ public final class PinnedManager {
                 friends, allPieces);
     }
     
+    // todo, if possible combine with inCheck()
     private static long pinsToSquare(Chessboard board, long squareOfInterest,
                                      long enemyBishops, long enemyRooks, long enemyQueens,
                                      long friends, long allPieces) {

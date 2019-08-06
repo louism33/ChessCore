@@ -85,7 +85,7 @@ public class PerftDetailTest {
 
 
     @Test
-    void detailTest3() {
+    void detailTest3Test() {
         Assert.assertEquals(
                 Perft.perftTest(1, new Chessboard("8/3K4/2p5/p2b2r1/5k2/8/8/1q6 b - 1 67"), 50),
                 50);
@@ -119,7 +119,7 @@ public class PerftDetailTest {
     }
 
     @Test
-    void detailTest4() {
+    void detailTest4Test() {
         Assert.assertEquals(
                 Perft.perftTest(1, new Chessboard("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1"), 14),
                 14);
@@ -153,7 +153,7 @@ public class PerftDetailTest {
 
 
     @Test
-    void detailTest5() {
+    void detailTest5Test() {
         Assert.assertEquals(
                 Perft.perftTest(5, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R b KQkq -"), 26957954),
                 26957954);

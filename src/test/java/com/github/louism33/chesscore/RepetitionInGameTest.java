@@ -16,7 +16,7 @@ public class RepetitionInGameTest {
 
 
     @Test
-    void repetitionFromRealGamesTest() {
+    void repetitionFromRealGamesTestTest() {
 
         String pgn = "1. e4 {book} c5 {book} 2. Nf3 {book} d6 {book} 3. d4 {book} cxd4 {book}\n" +
                 "4. Nxd4 {book} Nf6 {book} 5. Nc3 {book} g6 {book} 6. Bg5 {0.97s} Bg7 {0.68s}\n" +

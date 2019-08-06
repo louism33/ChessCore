@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test;
 public class ZobristHashUniquenessTest {
 
     @Test
-    void test1() {
+    void test1Test() {
         verifyHashToDepth(6, new Chessboard("3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1"));
     }
 
     @Test
-    void tinyDepths() {
+    void tinyDepthsTest() {
         verifyHashToDepth(1, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"));
 
         verifyHashToDepth(1, new Chessboard("8/8/8/2k5/2pP4/8/B7/4K3 b - d3 5 3"));
@@ -36,14 +36,14 @@ public class ZobristHashUniquenessTest {
     }
 
     @Test
-    void regularBoard() {
+    void regularBoardTest() {
         verifyHashToDepth(5, new Chessboard());
 
         verifyHashToDepth(6, new Chessboard());
     }
 
     @Test
-    void AvoidIllegalEPCapture() {
+    void AvoidIllegalEPCaptureTest() {
         verifyHashToDepth(6, new Chessboard("8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"));
 
         verifyHashToDepth(6, new Chessboard("8/8/1k6/8/2pP4/8/5BK1/8 b - d3 0 1"));
@@ -51,7 +51,7 @@ public class ZobristHashUniquenessTest {
 
 
     @Test
-    void EPCaptureChecksOpponent() {
+    void EPCaptureChecksOpponentTest() {
         verifyHashToDepth(6, new Chessboard("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"));
 
         verifyHashToDepth(6, new Chessboard("8/5k2/8/2Pp4/2B5/1K6/8/8 w - d6 0 1"));
@@ -59,46 +59,46 @@ public class ZobristHashUniquenessTest {
 
 
     @Test
-    void shortCastlingGivesCheck() {
+    void shortCastlingGivesCheckTest() {
         verifyHashToDepth(6, new Chessboard("5k2/8/8/8/8/8/8/4K2R w K - 0 1"));
 
         verifyHashToDepth(6, new Chessboard("4k2r/8/8/8/8/8/8/5K2 b k - 0 1"));
     }
 
     @Test
-    void longCastlingGivesCheck() {
+    void longCastlingGivesCheckTest() {
         verifyHashToDepth(6, new Chessboard("3k4/8/8/8/8/8/8/R3K3 w Q - 0 1"));
 
         verifyHashToDepth(6, new Chessboard("r3k3/8/8/8/8/8/8/3K4 b q - 0 1"));
     }
 
     @Test
-    void bigDepth3() {
+    void bigDepth3Test() {
         verifyHashToDepth(5, new Chessboard("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28"));
     }
 
     @Test
-    void bigDepth4() {
+    void bigDepth4Test() {
         verifyHashToDepth(6, new Chessboard("8/3K4/2p5/p2b2r1/5k2/8/8/1q6 b - - 1 67"));
     }
     @Test
-    void bigDepth5() {
+    void bigDepth5Test() {
         verifyHashToDepth(6, new Chessboard("rnbqkb1r/ppppp1pp/7n/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3"));
     }
 
     @Test
-    void bigDepth10() {
+    void bigDepth10Test() {
         verifyHashToDepth(6, new Chessboard("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -"));
     }
 
 
     @Test
-    void bigDepth11() {
+    void bigDepth11Test() {
         verifyHashToDepth(6, new Chessboard("8/5p2/8/2k3P1/p3K3/8/1P6/8 b - -"));
     }
 
     @Test
-    void bigDepth12() {
+    void bigDepth12Test() {
         verifyHashToDepth(4, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
     }
     
