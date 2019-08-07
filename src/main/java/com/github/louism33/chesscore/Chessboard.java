@@ -143,6 +143,7 @@ public final class Chessboard {
         this.moveStackIndex = board.moveStackIndex;
         this.materialHash = board.materialHash;
         this.typeOfGameIAmIn = board.typeOfGameIAmIn;
+        this.currentCheckStateKnown = board.currentCheckStateKnown;
 
         System.arraycopy(board.pieces[WHITE], 0, this.pieces[WHITE], 0, 7);
         System.arraycopy(board.pieces[BLACK], 0, this.pieces[BLACK], 0, 7);
