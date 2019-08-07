@@ -18,16 +18,16 @@ class ChessboardCheckStateTest {
     @Test
     void testMoreTest() {
         verifyStateToDepth(2, new Chessboard("1R1K4/7k/8/8/8/8/8/8 w - - 1 1"));
-//        verifyStateToDepth(4, new Chessboard("1R1K2k1/8/8/8/8/8/8/8 b"));
-//        verifyStateToDepth(3, new Chessboard("R2K2k1/8/8/8/8/8/8/8 b"));
-//        verifyStateToDepth(3, new Chessboard("Q2K2k1/8/8/8/8/8/8/8 b"));
-//        verifyStateToDepth(3, new Chessboard("8/Q2K2k1/8/8/8/8/8/8 b"));
-//        verifyStateToDepth(3, new Chessboard("8/1Q1K2k1/8/8/8/8/8/8 b"));
-//        verifyStateToDepth(2, new Chessboard("7k/8/8/8/8/8/1P6/B6K w"));
-//        verifyStateToDepth(2, new Chessboard("8/8/8/4k3/8/6P1/1P5B/B6K w"));
-//        verifyStateToDepth(4, new Chessboard("8/8/8/4k3/8/6P1/1P5R/B6K w"));
-//        verifyStateToDepth(4, new Chessboard("8/2p5/1P1p4/K5kr/1R3p2/6P1/4P3/8 b - - 0 3"));
-//        verifyStateToDepth(4, new Chessboard("2Rnr3/2P2k2/pB5p/6p1/8/5P1P/2P3P1/7K w - - 1 2"));
+        verifyStateToDepth(4, new Chessboard("1R1K2k1/8/8/8/8/8/8/8 b"));
+        verifyStateToDepth(3, new Chessboard("R2K2k1/8/8/8/8/8/8/8 b"));
+        verifyStateToDepth(3, new Chessboard("Q2K2k1/8/8/8/8/8/8/8 b"));
+        verifyStateToDepth(3, new Chessboard("8/Q2K2k1/8/8/8/8/8/8 b"));
+        verifyStateToDepth(3, new Chessboard("8/1Q1K2k1/8/8/8/8/8/8 b"));
+        verifyStateToDepth(2, new Chessboard("7k/8/8/8/8/8/1P6/B6K w"));
+        verifyStateToDepth(2, new Chessboard("8/8/8/4k3/8/6P1/1P5B/B6K w"));
+        verifyStateToDepth(4, new Chessboard("8/8/8/4k3/8/6P1/1P5R/B6K w"));
+        verifyStateToDepth(4, new Chessboard("8/2p5/1P1p4/K5kr/1R3p2/6P1/4P3/8 b - - 0 3"));
+        verifyStateToDepth(4, new Chessboard("2Rnr3/2P2k2/pB5p/6p1/8/5P1P/2P3P1/7K w - - 1 2"));
     }
 
 

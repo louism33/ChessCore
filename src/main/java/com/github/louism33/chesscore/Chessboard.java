@@ -851,7 +851,7 @@ public final class Chessboard {
     }
 
     public long getCheckers() {
-        long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing, enemies, friends;
+        long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemies, friends;
         if (turn == WHITE) {
             myKing = pieces[WHITE][KING];
             enemyPawns = pieces[BLACK][PAWN];
@@ -859,7 +859,6 @@ public final class Chessboard {
             enemyBishops = pieces[BLACK][BISHOP];
             enemyRooks = pieces[BLACK][ROOK];
             enemyQueen = pieces[BLACK][QUEEN];
-            enemyKing = pieces[BLACK][KING];
 
             enemies = blackPieces();
             friends = whitePieces();
@@ -870,7 +869,6 @@ public final class Chessboard {
             enemyBishops = pieces[WHITE][BISHOP];
             enemyRooks = pieces[WHITE][ROOK];
             enemyQueen = pieces[WHITE][QUEEN];
-            enemyKing = pieces[WHITE][KING];
 
             enemies = whitePieces();
             friends = blackPieces();
@@ -1036,9 +1034,9 @@ public final class Chessboard {
             }
 
             final long rookTableAfter = singleRookTable(newAllPieces, enemyKingIndex, UNIVERSE);
-            if ((rookTableAfter & (pieces[turn][ROOK] | myQueen)) != 0) {
-                return true;
-            }
+            
+            return (rookTableAfter & (pieces[turn][ROOK] | myQueen)) != 0;
+            
         } else if ((sourceLong & queenTable) != 0) {
             final long newAllPieces = (allPieces ^ sourceLong) | destinationLong;
             final long bishopTableAfter = singleBishopTable(newAllPieces, enemyKingIndex, UNIVERSE);
@@ -1050,9 +1048,7 @@ public final class Chessboard {
 
             final long rookTableAfter = singleRookTable(newAllPieces, enemyKingIndex, UNIVERSE);
 
-            if ((rookTableAfter & (pieces[turn][ROOK] | myQueen)) != 0) {
-                return true;
-            }
+            return (rookTableAfter & (pieces[turn][ROOK] | myQueen)) != 0;
         }
 
         return false;
