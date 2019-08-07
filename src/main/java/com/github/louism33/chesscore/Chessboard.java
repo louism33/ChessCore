@@ -881,6 +881,7 @@ public final class Chessboard {
 
         inCheckRecorder = checkers != 0;
         checkingPieces = checkers;
+        currentCheckStateKnown = true;
 
         return checkers;
     }
