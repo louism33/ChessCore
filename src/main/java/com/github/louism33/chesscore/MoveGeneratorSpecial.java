@@ -113,7 +113,8 @@ final class MoveGeneratorSpecial {
                     allPiecesAreAwesome ^= pawn;
                     allPiecesAreAwesome ^= pawnEnPassantCaptureSpecific;
 
-                    boolean enPassantWouldLeadToCheck = boardInCheck(turn, myKing,
+                    // todo, make cheaper by checking star of king, and by checking if EP would be direct check
+                    final boolean enPassantWouldLeadToCheck = boardInCheck(turn, myKing,
                             enemyPawnsAreAwesome, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                             allPiecesAreAwesome);
 

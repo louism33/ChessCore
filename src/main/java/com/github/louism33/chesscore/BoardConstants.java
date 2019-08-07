@@ -214,11 +214,15 @@ public final class BoardConstants {
     public static final long NORTH_EAST = FILE_H | RANK_EIGHT;
     public static final long SOUTH_WEST = FILE_A | RANK_ONE;
     public static final long SOUTH_EAST = FILE_H | RANK_ONE;
+    public static final long UP_DOWN_BORDERS = RANK_ONE | RANK_EIGHT;
+    public static final long LEFT_RIGHT_BORDERS = FILE_A | FILE_H;
+    public static final long BORDERS = UP_DOWN_BORDERS | LEFT_RIGHT_BORDERS;
 
     public static final long NORTH_WEST_CORNER = FILE_A & RANK_EIGHT;
     public static final long NORTH_EAST_CORNER = FILE_H & RANK_EIGHT;
     public static final long SOUTH_WEST_CORNER = FILE_A & RANK_ONE;
     public static final long SOUTH_EAST_CORNER = FILE_H & RANK_ONE;
+    public static final long CORNERS = NORTH_WEST_CORNER | NORTH_EAST_CORNER | SOUTH_WEST_CORNER | SOUTH_EAST_CORNER;
 
     public static final long centreFourSquares = (RANK_FOUR | RANK_FIVE) & (FILE_D | FILE_E);
     public static final long centreNineSquares = (RANK_THREE | RANK_FOUR | RANK_FIVE | RANK_SIX) &
