@@ -4,9 +4,12 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import static com.github.louism33.chesscore.BitOperations.populationCount;
+import static com.github.louism33.chesscore.BoardConstants.BLACK;
+import static com.github.louism33.chesscore.BoardConstants.ROOK;
 import static com.github.louism33.chesscore.Utils.squareDirectlyAttackedBy;
 
 public class UtilTest {
+
     
     @Test
     public void squareAttackedBy() {

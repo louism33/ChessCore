@@ -1,7 +1,6 @@
 package com.github.louism33.chesscore;
 
-import static com.github.louism33.chesscore.BitOperations.getFirstPiece;
-import static com.github.louism33.chesscore.BitOperations.populationCount;
+import static com.github.louism33.chesscore.BitOperations.*;
 import static com.github.louism33.chesscore.BoardConstants.*;
 import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
 import static com.github.louism33.chesscore.CheckHelper.boardInCheck;
@@ -9,8 +8,8 @@ import static com.github.louism33.chesscore.MoveAdder.addMovesFromAttackTableMas
 import static com.github.louism33.chesscore.MoveConstants.CASTLING_MASK;
 import static com.github.louism33.chesscore.MoveConstants.ENPASSANT_MASK;
 import static com.github.louism33.chesscore.MoveParser.buildMove;
-import static com.github.louism33.chesscore.PieceMove.singlePawnCaptures;
-import static com.github.louism33.chesscore.PieceMove.singlePawnPushes;
+import static com.github.louism33.chesscore.PieceMove.*;
+import static com.github.louism33.chesscore.PieceMove.singleRookTable;
 import static com.github.louism33.chesscore.StackDataUtil.ENPASSANTVICTIM;
 import static java.lang.Long.numberOfTrailingZeros;
 
@@ -50,7 +49,7 @@ final class MoveGeneratorSpecial {
                                   long enemyPawns, long enemyKnights, long enemyBishops, long enemyRooks,
                                   long enemyQueens, long enemyKing, long allPieces) {
 
-        long enPassantTakingRank = ENPASSANT_RANK[1 - turn];
+        final long enPassantTakingRank = ENPASSANT_RANK[1 - turn];
 
         long myPawnsInPosition = myPawns & enPassantTakingRank;
         if (myPawnsInPosition == 0) {
@@ -66,16 +65,16 @@ final class MoveGeneratorSpecial {
             return;
         }
 
-        long FILE = extractFileFromStack(StackDataUtil.getEPMove(previousMove));
+        final long FILE = extractFileFromStack(StackDataUtil.getEPMove(previousMove));
 
         long enemyTakingSpots = 0;
 
         while (enemyPawnsInPosition != 0){
-            long enemyPawn = BitOperations.getFirstPiece(enemyPawnsInPosition);
+            final long enemyPawn = BitOperations.getFirstPiece(enemyPawnsInPosition);
 
             if ((enemyPawn & ignoreThesePieces) == 0){
-                long takingSpot = turn == WHITE ? enemyPawn << 8 : enemyPawn >>> 8;
-                long potentialTakingSpot = takingSpot & FILE;
+                final long takingSpot = turn == WHITE ? enemyPawn << 8 : enemyPawn >>> 8;
+                final long potentialTakingSpot = takingSpot & FILE;
 
                 if ((potentialTakingSpot & allPieces) != 0){
                     enemyPawnsInPosition &= enemyPawnsInPosition - 1;
@@ -95,44 +94,48 @@ final class MoveGeneratorSpecial {
             return;
         }
 
-        long allPiecesAreAwesome, enemyPawnsAreAwesome;
-
         while (myPawnsInPosition != 0){
             final long pawn = getFirstPiece(myPawnsInPosition);
             if ((pawn & ignoreThesePieces) == 0) {
                 long pawnEnPassantCapture = singlePawnCaptures(pawn, turn, enemyTakingSpots);
 
                 while (pawnEnPassantCapture != 0) {
-                    long pawnEnPassantCaptureSpecific = getFirstPiece(pawnEnPassantCapture);
-                    allPiecesAreAwesome = allPieces;
-                    enemyPawnsAreAwesome = enemyPawns;
+                    final long destinationPiece = getFirstPiece(pawnEnPassantCapture);
 
-                    long token = turn == WHITE ? pawnEnPassantCaptureSpecific >>> 8 : pawnEnPassantCaptureSpecific << 8;
-                    allPiecesAreAwesome ^= token;
-                    enemyPawnsAreAwesome ^= token;
-                    allPiecesAreAwesome ^= pawn;
-                    allPiecesAreAwesome ^= pawnEnPassantCaptureSpecific;
+                    boolean enPassantWouldLeadToCheck = false;
 
-                    // todo, make cheaper by checking star of king, and by checking if EP would be direct check
-                    final boolean enPassantWouldLeadToCheck = boardInCheck(turn, myKing,
-                            enemyPawnsAreAwesome, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
-                            allPiecesAreAwesome);
+                    final long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
 
+                    final int myKingIndex = Long.numberOfTrailingZeros(myKing);
+                    
+                    final long newAllPieces = (allPieces ^ (pawn | victimPawn)) | destinationPiece;
+                    final long bishopTableAfter = singleBishopTable(newAllPieces, myKingIndex, UNIVERSE);
+
+                    if ((bishopTableAfter & (enemyBishops | enemyQueens)) != 0) {
+                        enPassantWouldLeadToCheck = true;
+                    }
+
+                    final long rookTableAfter = singleRookTable(newAllPieces, myKingIndex, UNIVERSE);
+                    if ((rookTableAfter & (enemyRooks | enemyQueens)) != 0) {
+                        enPassantWouldLeadToCheck = true;
+                    }
+                    
                     if (!enPassantWouldLeadToCheck) {
                         moves[moves[moves.length - 1]++] = buildMove(
                                 numberOfTrailingZeros(pawn),
                                 PIECE[turn][PAWN],
-                                numberOfTrailingZeros(pawnEnPassantCaptureSpecific)) | ENPASSANT_MASK;
+                                numberOfTrailingZeros(destinationPiece)) | ENPASSANT_MASK;
                     }
                     pawnEnPassantCapture &= pawnEnPassantCapture - 1;
                 }
             }
             myPawnsInPosition &= myPawnsInPosition - 1;
-        }
+        }     
+        
     }
 
 
-    static long extractFileFromStack(int file){
+    private static long extractFileFromStack(int file){
         if (file == 0){
             return 0;
         }

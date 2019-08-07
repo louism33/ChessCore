@@ -17,11 +17,17 @@ class ChessboardCheckStateTest {
 
     @Test
     void testMoreTest() {
-        verifyStateToDepth(3, new Chessboard("1R1K2k1/8/8/8/8/8/8/8 b"));
-        verifyStateToDepth(3, new Chessboard("R2K2k1/8/8/8/8/8/8/8 b"));
-        verifyStateToDepth(3, new Chessboard("Q2K2k1/8/8/8/8/8/8/8 b"));
-        verifyStateToDepth(3, new Chessboard("8/Q2K2k1/8/8/8/8/8/8 b"));
-        verifyStateToDepth(3, new Chessboard("8/1Q1K2k1/8/8/8/8/8/8 b"));
+        verifyStateToDepth(2, new Chessboard("1R1K4/7k/8/8/8/8/8/8 w - - 1 1"));
+//        verifyStateToDepth(4, new Chessboard("1R1K2k1/8/8/8/8/8/8/8 b"));
+//        verifyStateToDepth(3, new Chessboard("R2K2k1/8/8/8/8/8/8/8 b"));
+//        verifyStateToDepth(3, new Chessboard("Q2K2k1/8/8/8/8/8/8/8 b"));
+//        verifyStateToDepth(3, new Chessboard("8/Q2K2k1/8/8/8/8/8/8 b"));
+//        verifyStateToDepth(3, new Chessboard("8/1Q1K2k1/8/8/8/8/8/8 b"));
+//        verifyStateToDepth(2, new Chessboard("7k/8/8/8/8/8/1P6/B6K w"));
+//        verifyStateToDepth(2, new Chessboard("8/8/8/4k3/8/6P1/1P5B/B6K w"));
+//        verifyStateToDepth(4, new Chessboard("8/8/8/4k3/8/6P1/1P5R/B6K w"));
+//        verifyStateToDepth(4, new Chessboard("8/2p5/1P1p4/K5kr/1R3p2/6P1/4P3/8 b - - 0 3"));
+//        verifyStateToDepth(4, new Chessboard("2Rnr3/2P2k2/pB5p/6p1/8/5P1P/2P3P1/7K w - - 1 2"));
     }
 
 
@@ -29,23 +35,24 @@ class ChessboardCheckStateTest {
     void test1Test() {
         verifyStateToDepth(6, new Chessboard("3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1"));
         verifyStateToDepth(4, new Chessboard("3K4/PPPPPPP1/8/8/8/8/ppppppp1/3k4 b - - 0 1"));
+        verifyStateToDepth(5, new Chessboard("8/pppppppp/8/R1P3k1/8/8/8/3K4 b - - 0 1"));
     }
 
     @Test
     void tinyDepthsTest() {
-        verifyStateToDepth(1, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"));
+        verifyStateToDepth(3, new Chessboard("r6r/1b2k1bq/8/8/7B/8/8/R3K2R b QK - 3 2"));
 
-        verifyStateToDepth(1, new Chessboard("8/8/8/2k5/2pP4/8/B7/4K3 b - d3 5 3"));
+        verifyStateToDepth(3, new Chessboard("8/8/8/2k5/2pP4/8/B7/4K3 b - d3 5 3"));
 
-        verifyStateToDepth(1, new Chessboard("r1bqkbnr/pppppppp/n7/8/8/P7/1PPPPPPP/RNBQKBNR w QqKk - 2 2"));
+        verifyStateToDepth(3, new Chessboard("r1bqkbnr/pppppppp/n7/8/8/P7/1PPPPPPP/RNBQKBNR w QqKk - 2 2"));
 
-        verifyStateToDepth(1, new Chessboard("r3k2r/p1pp1pb1/bn2Qnp1/2qPN3/1p2P3/2N5/PPPBBPPP/R3K2R b QqKk - 3 2"));
+        verifyStateToDepth(3, new Chessboard("r3k2r/p1pp1pb1/bn2Qnp1/2qPN3/1p2P3/2N5/PPPBBPPP/R3K2R b QqKk - 3 2"));
 
-        verifyStateToDepth(1, new Chessboard("2kr3r/p1ppqpb1/bn2Qnp1/3PN3/1p2P3/2N5/PPPBBPPP/R3K2R b QK - 3 2"));
+        verifyStateToDepth(3, new Chessboard("2kr3r/p1ppqpb1/bn2Qnp1/3PN3/1p2P3/2N5/PPPBBPPP/R3K2R b QK - 3 2"));
 
-        verifyStateToDepth(1, new Chessboard("rnb2k1r/pp1Pbppp/2p5/q7/2B5/8/PPPQNnPP/RNB1K2R w QK - 3 9"));
+        verifyStateToDepth(3, new Chessboard("rnb2k1r/pp1Pbppp/2p5/q7/2B5/8/PPPQNnPP/RNB1K2R w QK - 3 9"));
 
-        verifyStateToDepth(1, new Chessboard("2r5/3pk3/8/2P5/8/2K5/8/8 w - - 5 4"));
+        verifyStateToDepth(3, new Chessboard("2r5/3pk3/8/2P5/8/2K5/8/8 w - - 5 4"));
 
         verifyStateToDepth(3, new Chessboard("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8"));
 
@@ -65,6 +72,8 @@ class ChessboardCheckStateTest {
         verifyStateToDepth(5, new Chessboard("8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"));
 
         verifyStateToDepth(5, new Chessboard("8/8/1k6/8/2pP4/8/5BK1/8 b - d3 0 1"));
+
+        verifyStateToDepth(5, new Chessboard("8/RP4k1/8/8/K7/8/8/8 w - d3 0 1"));
     }
 
 
@@ -129,14 +138,6 @@ class ChessboardCheckStateTest {
         long ii = countFinalNodesAtDepthHelper(board, depth);
         Assert.assertEquals(board, new Chessboard(board));
         Assert.assertEquals(board, initial);
-
-        System.out.println("****************");
-        System.out.println(Chessboard.fullCheck);
-        System.out.println(Chessboard.totalCheck);
-        System.out.println((double) Chessboard.fullCheck / (double) Chessboard.totalCheck);
-        System.out.println();
-        System.out.println("******************");
-
     }
 
     private static long countFinalNodesAtDepthHelper(Chessboard board, int depth) {
@@ -201,18 +202,33 @@ class ChessboardCheckStateTest {
 
             final boolean givesCheckMove = board.moveGivesCheck(move);
 
+            boolean pwintMEEEEE = false;
             board.makeMoveAndFlipTurn(move);
-            Assert.assertEquals(givesCheckMove, board.inCheck());
-            
-            if (givesCheckMove) {
-                Assert.assertTrue(board.getCheckers() != 0);
-            } else {
-                Assert.assertTrue(board.getCheckers() == 0);
+            final boolean incheck = board.inCheck();
+            if (givesCheckMove != incheck) {
+                System.out.println(board);
+                MoveParser.printMove(move);
+                System.out.println("givesCheckMove: " + givesCheckMove);
+                System.out.println("incheck       : " + incheck);
+                pwintMEEEEE = true;
             }
+//            Assert.assertEquals(givesCheckMove, board.inCheck());
+//            if (givesCheckMove) {
+//                Assert.assertTrue(board.getCheckers() != 0);
+//            } else {
+//                Assert.assertTrue(board.getCheckers() == 0);
+//            }
 
-            Assert.assertTrue(board.currentCheckStateKnown);
+//            Assert.assertTrue(board.currentCheckStateKnown);
             
             board.unMakeMoveAndFlipTurn();
+
+            if (pwintMEEEEE) {
+                System.out.println("board before:");
+                System.out.println(board);
+                System.out.println(board.toFenString());
+                Assert.fail();
+            }
             
             board.makeMoveAndFlipTurn(move);
 

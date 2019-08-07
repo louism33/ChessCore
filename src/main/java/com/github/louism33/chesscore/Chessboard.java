@@ -64,7 +64,8 @@ public final class Chessboard {
     public boolean currentCheckStateKnown;
     public long checkingPieces;
     public long pinnedPieces;
-    public long pinningPieces;
+    public long pinningPieces; // todo, consider one long for each side
+    // todo, blockers array
     private final boolean[] inCheckStack = new boolean[MAX_DEPTH_AND_ARRAY_LENGTH];
     private final long[] checkingPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
     private final long[] pinnedPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
@@ -920,30 +921,26 @@ public final class Chessboard {
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemyKing,
                 friends | enemies);
     }
-    
-    
-    public static int fullCheck = 0;
-    public static int totalCheck = 0;
+
 
     public boolean moveGivesCheck(int move) {
-        return moveGivesCheck(move, false);    
+        return moveGivesCheck(move, false);
     }
-    
-    public boolean moveGivesCheck(int move, boolean force) {
-        totalCheck++;
-        
-        boolean possibleCheck = false;
-        boolean possibleDisco = false;
 
-        final long sourceLong = getSourceLong(move);
+    public boolean moveGivesCheck(int move, boolean force) {
+        // todo, consider getting actual checkers from here, if possible and efficent
+        long allPieces;
+        if (force) {
+            allPieces = allPieces();
+        } else {
+            allPieces = this.pieces[WHITE][ALL_COLOUR_PIECES] |
+                    this.pieces[BLACK][ALL_COLOUR_PIECES];
+        }
+        
         final long enemyKing = pieces[1 - turn][KING];
         final int enemyKingIndex = Long.numberOfTrailingZeros(enemyKing);
-        final long enemyKingStar = STAR[enemyKingIndex];
-        final long enemyKingCross = CROSSES[enemyKingIndex];
-        
-        final long enemyKingFile = FILES[enemyKingIndex & 7];
-        final long enemyKingRow = ROWS[enemyKingIndex / 8];
         final int destinationIndex = getDestinationIndex(move);
+        final long rookTable = singleRookTable(allPieces, enemyKingIndex, UNIVERSE); // todo, get from movegen
 
         if (isCastlingMove(move)) {
             int newRookIndex = 0;
@@ -961,107 +958,104 @@ public final class Chessboard {
                     newRookIndex = destinationIndex - 1;
                     break;
             }
-            possibleCheck = (newPieceOnSquare(newRookIndex) & enemyKingCross) != 0;
-            // no need to consider disco checks while castling
+            return (newPieceOnSquare(newRookIndex) & rookTable) != 0;
         }
 
         // todo, this could also be done in movegen
         // todo, maintain a long of spots that would check king, possibly two, one Cross one X
 
-        if (!possibleCheck && (sourceLong & enemyKingStar) != 0) {
+        final long sourceLong = getSourceLong(move);
+        final long destinationLong = getDestinationLong(move);
+        final long bishopTable = singleBishopTable(allPieces, enemyKingIndex, UNIVERSE); // todo get this from movegen
+        final long queenTable = rookTable | bishopTable;
 
-            if ((sourceLong & BORDERS) == 0) {
-                possibleDisco = true;
-            }
+        int movingPiece = getMovingPieceInt(move);
 
-            if ((sourceLong & CORNERS) == 0) {
-                if ((sourceLong & LEFT_RIGHT_BORDERS) != 0) {
-                    if ((sourceLong & enemyKingRow) == 0) {
-                        possibleDisco = true;
-                    }
-                } else {
-                    if ((sourceLong & enemyKingFile) == 0) {
-                        possibleDisco = true;
-                    }
-                }
-            }
+        final boolean promotionMove = isPromotionMove(move);
+        if (promotionMove) {
+            movingPiece = MoveParser.whichPromotion(move) + 2 + turn * 6;
         }
 
-        if (!possibleCheck && !possibleDisco && isEnPassantMove(move)) {
+        switch (movingPiece) { 
+            case WHITE_KING:
+            case BLACK_KING:
+                break;
+
+            case WHITE_QUEEN:
+            case BLACK_QUEEN:
+                if ((destinationLong & queenTable) != 0) {
+                    return true;
+                }
+                break;
+
+            case WHITE_ROOK:
+            case BLACK_ROOK:
+                if ((destinationLong & rookTable) != 0) {
+                    return true;
+                }
+                break;
+
+            case WHITE_BISHOP:
+            case BLACK_BISHOP:
+                if ((destinationLong & bishopTable) != 0) {
+                    return true;
+                }
+                break;
+
+            case WHITE_PAWN:
+            case BLACK_PAWN:
+                if ((PAWN_CAPTURE_TABLE[1 - turn][enemyKingIndex] & destinationLong) != 0) {
+                    return true;
+                }
+                break;
+
+            case WHITE_KNIGHT:
+            case BLACK_KNIGHT:
+                final long enemyKingSquares = (enemyKing & WHITE_COLOURED_SQUARES) == 0
+                        ? BLACK_COLOURED_SQUARES : WHITE_COLOURED_SQUARES;
+                if (!promotionMove && (sourceLong & enemyKingSquares) == 0) {
+                    break;
+                }
+                if ((destinationLong & KNIGHT_MOVE_TABLE[enemyKingIndex]) != 0) {
+                    return true;
+                }
+                break;
+        }
+
+
+        if (isEnPassantMove(move)) {
             final long destinationPiece = newPieceOnSquare(destinationIndex);
             final long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
-            possibleDisco = (victimPawn & enemyKingStar) != 0;
-        }
 
-        if (!possibleCheck && !possibleDisco) {
-            final long destinationLong = getDestinationLong(move);
-            int movingPiece = getMovingPieceInt(move);
+            final long newAllPieces = (allPieces ^ (sourceLong | victimPawn)) | destinationLong;
+            final long bishopTableAfter = singleBishopTable(newAllPieces, enemyKingIndex, UNIVERSE);
 
-            final long kingMoves = KING_MOVE_TABLE[enemyKingIndex];
-
-            if (isPromotionMove(move)) {
-                movingPiece = MoveParser.whichPromotion(move) + 2 + turn * 6;
+            final long myQueen = pieces[turn][QUEEN];
+            if ((bishopTableAfter & (pieces[turn][BISHOP] | myQueen)) != 0) {
+                return true;
             }
 
-            switch (movingPiece) {
-                case WHITE_KING:
-                case BLACK_KING:
-                    return false;
+            final long rookTableAfter = singleRookTable(newAllPieces, enemyKingIndex, UNIVERSE);
+            if ((rookTableAfter & (pieces[turn][ROOK] | myQueen)) != 0) {
+                return true;
+            }
+        } else if ((sourceLong & queenTable) != 0) {
+            final long newAllPieces = (allPieces ^ sourceLong) | destinationLong;
+            final long bishopTableAfter = singleBishopTable(newAllPieces, enemyKingIndex, UNIVERSE);
 
-                case WHITE_QUEEN:
-                case BLACK_QUEEN:
-                    if ((destinationLong & kingMoves) != 0) {
-                        Assert.assertTrue((destinationLong & enemyKingStar) != 0);
-                        return true;
-                    }
-                    possibleCheck = (destinationLong & enemyKingStar) != 0;
-                    break;
+            final long myQueen = pieces[turn][QUEEN];
+            if ((bishopTableAfter & (pieces[turn][BISHOP] | myQueen)) != 0) {
+                return true;
+            }
 
-                case WHITE_ROOK:
-                case BLACK_ROOK:
-                    if ((destinationLong & kingMoves & enemyKingCross) != 0) {
-                        return true;
-                    }
-                    possibleCheck = (destinationLong & enemyKingCross) != 0;
-                    break;
+            final long rookTableAfter = singleRookTable(newAllPieces, enemyKingIndex, UNIVERSE);
 
-                case WHITE_BISHOP:
-                case BLACK_BISHOP:
-                    final long enemyKingX = EXES[enemyKingIndex];
-                    if ((destinationLong & kingMoves & enemyKingX) != 0) {
-                        return true;
-                    }
-                    possibleCheck = (destinationLong & enemyKingX) != 0;
-                    break;
-
-                case WHITE_PAWN:
-                case BLACK_PAWN:
-                    return (PAWN_CAPTURE_TABLE[1 - turn][enemyKingIndex] & destinationLong) != 0;
-
-                case WHITE_KNIGHT:
-                case BLACK_KNIGHT:
-                    final long enemyKingLong = newPieceOnSquare(enemyKingIndex);
-                    final long enemyKingSquares = (enemyKingLong & WHITE_COLOURED_SQUARES) == 0
-                            ? BLACK_COLOURED_SQUARES : WHITE_COLOURED_SQUARES;
-                    if ((sourceLong & enemyKingSquares) == 0) {
-                        return false;
-                    }
-                    return ((destinationLong & KNIGHT_MOVE_TABLE[enemyKingIndex]) != 0);
+            if ((rookTableAfter & (pieces[turn][ROOK] | myQueen)) != 0) {
+                return true;
             }
         }
 
-        boolean checkingMove = false;
-
-        if (possibleDisco || possibleCheck) { // todo, completely remove
-            this.makeMoveAndFlipTurn(move);
-
-            fullCheck++;
-            checkingMove = this.inCheck();
-
-            this.unMakeMoveAndFlipTurn();
-        }
-
-        return checkingMove;
+        return false;
     }
 
 
