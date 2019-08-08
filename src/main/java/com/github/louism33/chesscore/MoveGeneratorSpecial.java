@@ -107,7 +107,7 @@ final class MoveGeneratorSpecial {
                     final long victimPawn = turn == WHITE ? destinationPiece >>> 8 : destinationPiece << 8;
 
                     final int myKingIndex = Long.numberOfTrailingZeros(myKing);
-                    
+
                     final long newAllPieces = (allPieces ^ (pawn | victimPawn)) | destinationPiece;
                     final long bishopTableAfter = singleBishopTable(newAllPieces, myKingIndex, UNIVERSE);
 
@@ -119,7 +119,7 @@ final class MoveGeneratorSpecial {
                     if ((rookTableAfter & (enemyRooks | enemyQueens)) != 0) {
                         enPassantWouldLeadToCheck = true;
                     }
-                    
+
                     if (!enPassantWouldLeadToCheck) {
                         moves[moves[moves.length - 1]++] = buildMove(
                                 numberOfTrailingZeros(pawn),
@@ -132,6 +132,39 @@ final class MoveGeneratorSpecial {
             myPawnsInPosition &= myPawnsInPosition - 1;
         }     
         
+//        long allPiecesAreAwesome, enemyPawnsAreAwesome;
+//        while (myPawnsInPosition != 0){
+//            final long pawn = getFirstPiece(myPawnsInPosition);
+//            if ((pawn & ignoreThesePieces) == 0) {
+//                long pawnEnPassantCapture = singlePawnCaptures(pawn, turn, enemyTakingSpots);
+//
+//                while (pawnEnPassantCapture != 0) {
+//                    long pawnEnPassantCaptureSpecific = getFirstPiece(pawnEnPassantCapture);
+//                    allPiecesAreAwesome = allPieces;
+//                    enemyPawnsAreAwesome = enemyPawns;
+//
+//                    long token = turn == WHITE ? pawnEnPassantCaptureSpecific >>> 8 : pawnEnPassantCaptureSpecific << 8;
+//                    allPiecesAreAwesome ^= token;
+//                    enemyPawnsAreAwesome ^= token;
+//                    allPiecesAreAwesome ^= pawn;
+//                    allPiecesAreAwesome ^= pawnEnPassantCaptureSpecific;
+//
+//                    // todo, make cheaper by checking star of king, and by checking if EP would be direct check
+//                    final boolean enPassantWouldLeadToCheck = boardInCheck(turn, myKing,
+//                            enemyPawnsAreAwesome, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
+//                            allPiecesAreAwesome);
+//
+//                    if (!enPassantWouldLeadToCheck) {
+//                        moves[moves[moves.length - 1]++] = buildMove(
+//                                numberOfTrailingZeros(pawn),
+//                                PIECE[turn][PAWN],
+//                                numberOfTrailingZeros(pawnEnPassantCaptureSpecific)) | ENPASSANT_MASK;
+//                    }
+//                    pawnEnPassantCapture &= pawnEnPassantCapture - 1;
+//                }
+//            }
+//            myPawnsInPosition &= myPawnsInPosition - 1;
+//        }
     }
 
 

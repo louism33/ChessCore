@@ -60,24 +60,24 @@ public class PinningPiecesTest {
         }
         int[] moves = board.generateLegalMoves();
 
-        final boolean pinning = board.pinningPieces != 0;
-        final boolean pinned = board.pinnedPieces != 0;
+        final boolean pinning = board.pinningPieces[board.turn] != 0;
+        final boolean pinned = board.pinnedPieces[board.turn] != 0;
 
         final int turn = board.turn;
         final int et = 1 - turn;
-        long pp = board.pinnedPieces;
+        long pp = board.pinnedPieces[board.turn];
         while (pp != 0) {
             long p = Long.lowestOneBit(pp);
             final long threatenPinnedPiece = CheckHelper.bitboardOfPiecesThatLegalThreatenSquare(turn, p,
                     board.pieces[et][PAWN], board.pieces[et][KNIGHT], board.pieces[et][BISHOP], board.pieces[et][ROOK],
                     board.pieces[et][QUEEN], board.pieces[et][KING], board.allPieces(), 32);
 
-            Assert.assertTrue((threatenPinnedPiece & board.pinningPieces) != 0);
+            Assert.assertTrue((threatenPinnedPiece & board.pinningPieces[board.turn]) != 0);
 
             pp &= pp - 1;
         }
 
-        pp = board.pinnedPieces;
+        pp = board.pinnedPieces[board.turn];
 
         while (pp != 0) {
             long p = Long.lowestOneBit(pp);
@@ -86,7 +86,7 @@ public class PinningPiecesTest {
                     board.pieces[et][PAWN], board.pieces[et][KNIGHT], board.pieces[et][BISHOP], board.pieces[et][ROOK],
                     board.pieces[et][QUEEN], board.pieces[et][KING], board.allPieces() ^ p, 32);
 
-            Assert.assertTrue((threatenKingWithoutPinnedPiece & board.pinningPieces) != 0);
+            Assert.assertTrue((threatenKingWithoutPinnedPiece & board.pinningPieces[board.turn]) != 0);
 
             pp &= pp - 1;
         }

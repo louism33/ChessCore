@@ -65,6 +65,8 @@ public final class PieceMove {
 
     public static long singleRookTable(long occupancy, int rookIndex, long legalMovesMask){
         Assert.assertTrue(ready);
+        Assert.assertTrue(rookIndex >= 0);
+        Assert.assertTrue(rookIndex < 64);
         final long rookMagicNumber = rookMagicNumbers[rookIndex];
 
         final int index = (int) (((occupancy & rookBlankBoardAttackMasks[rookIndex]) * rookMagicNumber)

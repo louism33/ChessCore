@@ -54,9 +54,11 @@ public class NullMoveTest {
 
     @Test
     void EPCaptureChecksOpponentTest() {
-        verifyHashToDepth(5, new Chessboard("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"));
+        verifyHashToDepth(3, new Chessboard("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"));
+        
+//        verifyHashToDepth(5, new Chessboard("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"));
 
-        verifyHashToDepth(5, new Chessboard("8/5k2/8/2Pp4/2B5/1K6/8/8 w - d6 0 1"));
+//        verifyHashToDepth(5, new Chessboard("8/5k2/8/2Pp4/2B5/1K6/8/8 w - d6 0 1"));
     }
 
 
@@ -86,7 +88,15 @@ public class NullMoveTest {
         if (depth == 0){
             return 1;
         }
+
         int[] moves = board.generateLegalMoves();
+
+        Assert.assertEquals(board.inCheckRecorder, board.inCheck());
+        Assert.assertEquals(board.inCheckRecorder, board.getCheckers() != 0);
+//        System.out.println(board);
+//        System.out.println(board.inCheckRecorder);
+//        MoveParser.printMove(moves);
+        
         if (depth == 1){
             return moves[moves.length - 1];
         }
@@ -94,32 +104,54 @@ public class NullMoveTest {
             if (move == 0){
                 break;
             }
-
+            final boolean checkingMove = board.moveGivesCheck(move);
+            boolean makeNullMove = !checkingMove;
             int[] copies = new int[moves.length];
             System.arraycopy(moves, 0, copies, 0, moves.length);
-            
-            board.makeMoveAndFlipTurn(move);
-            Assert.assertEquals(board, new Chessboard(board));
 
             long beforeHash = board.zobristHash;
             long beforePawnHash = board.zobristPawnHash;
             
-            board.makeNullMoveAndFlipTurn();
+            if (makeNullMove) {
+                board.makeNullMoveAndFlipTurn();
+                
+                Assert.assertNotEquals(beforeHash, board.zobristHash);
+                Assert.assertEquals(beforePawnHash, board.zobristPawnHash);
+                Assert.assertEquals(board, new Chessboard(board));
+                
+                board.unMakeNullMoveAndFlipTurn();
+            }
             
-            Assert.assertNotEquals(beforeHash, board.zobristHash);
-            Assert.assertEquals(beforePawnHash, board.zobristPawnHash);
 
+            board.makeMoveAndFlipTurn(move);
+            
             Assert.assertEquals(board, new Chessboard(board));
+            Assert.assertEquals(checkingMove, board.inCheck());
+            Assert.assertEquals(checkingMove, board.getCheckers() != 0);
+            
+            if (makeNullMove) {
+                board.makeNullMoveAndFlipTurn();
+                
+                Assert.assertNotEquals(beforeHash, board.zobristHash);
+                Assert.assertEquals(board, new Chessboard(board));
+            }
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
             temp += movesAtDepth;
 
-            board.unMakeNullMoveAndFlipTurn();
+            if (makeNullMove) {
+                board.unMakeNullMoveAndFlipTurn();
+            }
+            
+            
+    
+            board.unMakeMoveAndFlipTurn();
+
             Assert.assertEquals(beforeHash, board.zobristHash);
             Assert.assertEquals(beforePawnHash, board.zobristPawnHash);
             Assert.assertEquals(board, new Chessboard(board));
 
-            board.unMakeMoveAndFlipTurn();
+
             Assert.assertEquals(board, new Chessboard(board));
             
             Assert.assertArrayEquals(moves, copies);

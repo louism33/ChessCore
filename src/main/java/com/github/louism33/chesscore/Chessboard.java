@@ -41,12 +41,6 @@ public final class Chessboard {
 
     public int quietHalfMoveCounter = 0, fullMoveCounter = 0;
 
-    public int materialHash;
-    public long zobristHash;
-    public long zobristPawnHash;
-
-    public long moveStackData;
-
     private static final int maxNumberOfMovesInAnyPosition = 128;
     final int[] moves = new int[maxNumberOfMovesInAnyPosition];
 
@@ -55,21 +49,38 @@ public final class Chessboard {
     public int typeOfGameIAmIn = UNKNOWN; // flag to remember if in endgame
     public final int[] typeOfGameIAmInStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH];
 
+    public int materialHash;
     public final int[] materialHashStack = new int[MAX_DEPTH_AND_ARRAY_LENGTH];
+
+    public long zobristHash;
     public final long[] zobristHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+
+    public long zobristPawnHash;
     public final long[] zobristPawnHashStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+
+    public long moveStackData;
     private final long[] pastMoveStackArray = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
 
+    // todo, disco pieces array
+
     public boolean inCheckRecorder;
-    public boolean currentCheckStateKnown; // todo, array for this
-    public long checkingPieces;
-    public long pinnedPieces;
-    public long pinningPieces; // todo, consider one long for each side
-    // todo, blockers array
     private final boolean[] inCheckStack = new boolean[MAX_DEPTH_AND_ARRAY_LENGTH];
+
+    public boolean currentCheckStateKnown;
+    private final boolean[] currentCheckStateKnownStack = new boolean[MAX_DEPTH_AND_ARRAY_LENGTH];
+
+    public long checkingPieces;
     private final long[] checkingPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
-    private final long[] pinnedPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
-    private final long[] pinningPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+
+    public long[] pinnedPieces = new long[2];
+    private final long[] pinnedPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 2];
+
+    public long[] pinningPieces = new long[2];
+    private final long[] pinningPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 2];
+
+    public static final int KING_VISION_BISHOP = 0, KING_VISION_ROOK = 1;
+    public long[] kingVision = new long[4];
+    private final long[] kingVisionStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 4];
 
 
     private long boardToHash() {
@@ -135,9 +146,7 @@ public final class Chessboard {
         this.zobristPawnHash = board.zobristPawnHash;
         this.moveStackData = board.moveStackData;
         this.inCheckRecorder = board.inCheckRecorder;
-        this.pinnedPieces = board.pinnedPieces;
         this.checkingPieces = board.checkingPieces;
-        this.pinningPieces = board.pinningPieces;
         this.legalMoveStackIndex = board.legalMoveStackIndex;
         this.masterIndex = board.masterIndex;
         this.moveStackIndex = board.moveStackIndex;
@@ -159,6 +168,7 @@ public final class Chessboard {
         System.arraycopy(board.pastMoveStackArray, 0, this.pastMoveStackArray, 0, board.pastMoveStackArray.length);
 
         System.arraycopy(board.inCheckStack, 0, this.inCheckStack, 0, board.inCheckStack.length);
+        System.arraycopy(board.currentCheckStateKnownStack, 0, this.currentCheckStateKnownStack, 0, board.currentCheckStateKnownStack.length);
         System.arraycopy(board.checkingPiecesStack, 0, this.checkingPiecesStack, 0, board.checkingPiecesStack.length);
         System.arraycopy(board.pinnedPiecesStack, 0, this.pinnedPiecesStack, 0, board.pinnedPiecesStack.length);
         System.arraycopy(board.pinningPiecesStack, 0, this.pinningPiecesStack, 0, board.pinningPiecesStack.length);
@@ -166,6 +176,13 @@ public final class Chessboard {
         System.arraycopy(board.typeOfGameIAmInStack, 0, this.typeOfGameIAmInStack, 0, board.typeOfGameIAmInStack.length);
 
         System.arraycopy(board.pieceSquareTable, 0, pieceSquareTable, 0, board.pieceSquareTable.length);
+
+        System.arraycopy(board.pinningPieces, 0, pinningPieces, 0, board.pinningPieces.length);
+        System.arraycopy(board.pinnedPieces, 0, pinnedPieces, 0, board.pinnedPieces.length);
+
+        System.arraycopy(board.kingVision, 0, kingVision, 0, board.kingVision.length);
+        System.arraycopy(board.kingVisionStack, 0, kingVisionStack, 0, board.kingVisionStack.length);
+
 
         Setup.init(false);
     }
@@ -188,6 +205,7 @@ public final class Chessboard {
 
         /**
          * todo, entering into a board we know by chance
+         * if (thisHash == stackHash) ...
          */
 
         int[] moves = this.legalMoveStack[legalMoveStackIndex];
@@ -210,13 +228,15 @@ public final class Chessboard {
         enemyQueens = pieces[1 - turn][QUEEN];
         enemyKing = pieces[1 - turn][KING];
 
+        Assert.assertTrue(enemyKing != 0 && myKing != 0);
+
         getPieces();
         friends = this.pieces[turn][ALL_COLOUR_PIECES];
         enemies = this.pieces[1 - turn][ALL_COLOUR_PIECES];
 
         final long allPieces = friends | enemies;
 
-        // Currently we can have checkStateKnown without knowing who is checking us, so we check.
+        // Currently we can have checkStateKnown without knowing who is checking us, so we must verify.
         // However, if we know we are not in check, we can save an inCheck() call
         if (!checkStateKnown || (this.inCheckRecorder && checkingPieces == 0)) {
             checkingPieces = bitboardOfPiecesThatLegalThreatenSquare(turn, myKing,
@@ -224,11 +244,15 @@ public final class Chessboard {
                     allPieces, 2);
         }
 
+
         this.currentCheckStateKnown = true;
         this.checkingPieces = checkingPieces;
 
         final int numberOfCheckers = populationCount(checkingPieces);
 
+        final int enemyKingIndex = numberOfTrailingZeros(enemyKing);
+        kingVision[(1 - turn) * 2 + KING_VISION_ROOK] = singleRookTable(allPieces, enemyKingIndex, UNIVERSE);
+        kingVision[(1 - turn) * 2 + KING_VISION_BISHOP] = singleBishopTable(allPieces, enemyKingIndex, UNIVERSE);
 
         if (numberOfCheckers > 1) {
             inCheckRecorder = true;
@@ -238,14 +262,16 @@ public final class Chessboard {
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     friends, allPieces);
 
+//            kingVision[(turn) * 2 + KING_VISION_ROOK] = singleRookTable(allPieces, numberOfTrailingZeros(myKing), UNIVERSE);
+//            kingVision[(turn) * 2 + KING_VISION_BISHOP] = singleBishopTable(allPieces, numberOfTrailingZeros(myKing), UNIVERSE);
+
+
             return this.legalMoveStack[legalMoveStackIndex];
         }
 
-        final long currentPinnedPieces = whichPiecesArePinned(this, myKing,
-                enemyBishops, enemyRooks, enemyQueens,
-                friends, allPieces);
-
-        pinnedPieces = currentPinnedPieces;
+        final long currentPinnedPieces = whichPiecesArePinned(this, turn,
+                myKing, enemyBishops, enemyRooks,
+                enemyQueens, friends, allPieces);
 
         final boolean hasPreviousMove = hasPreviousMove();
         if (numberOfCheckers == 1) {
@@ -427,6 +453,9 @@ public final class Chessboard {
                 myKing,
                 enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                 friends, allPieces);
+
+        Assert.assertTrue(kingVision[turn * 2 + KING_VISION_ROOK] != 0);
+        Assert.assertTrue(kingVision[turn * 2 + KING_VISION_BISHOP] != 0);
 
         return this.legalMoveStack[legalMoveStackIndex];
     }
@@ -926,20 +955,34 @@ public final class Chessboard {
         return moveGivesCheck(move, false);
     }
 
+    /**
+     * call generate moves first, or use force
+     *
+     * @param move
+     * @param force
+     * @return
+     */
     public boolean moveGivesCheck(int move, boolean force) {
         // todo, consider getting actual checkers from here, if possible and efficent
         long allPieces;
+
+        final long enemyKing = pieces[1 - turn][KING];
+        final int enemyKingIndex = Long.numberOfTrailingZeros(enemyKing);
         if (force) {
             allPieces = allPieces();
+            kingVision[(1 - turn) * 2 + KING_VISION_ROOK] = singleRookTable(allPieces, enemyKingIndex, UNIVERSE);
+            kingVision[(1 - turn) * 2 + KING_VISION_BISHOP] = singleBishopTable(allPieces, enemyKingIndex, UNIVERSE);
         } else {
             allPieces = this.pieces[WHITE][ALL_COLOUR_PIECES] |
                     this.pieces[BLACK][ALL_COLOUR_PIECES];
+
+            Assert.assertTrue(kingVision[(1 - turn) * 2 + KING_VISION_ROOK] != 0);
+            Assert.assertTrue(kingVision[(1 - turn) * 2 + KING_VISION_BISHOP] != 0);
         }
-        
-        final long enemyKing = pieces[1 - turn][KING];
-        final int enemyKingIndex = Long.numberOfTrailingZeros(enemyKing);
+
+
         final int destinationIndex = getDestinationIndex(move);
-        final long rookTable = singleRookTable(allPieces, enemyKingIndex, UNIVERSE); // todo, get from movegen
+        final long rookTable = kingVision[(1 - turn) * 2 + KING_VISION_ROOK];
 
         if (isCastlingMove(move)) {
             int newRookIndex = 0;
@@ -960,12 +1003,10 @@ public final class Chessboard {
             return (newPieceOnSquare(newRookIndex) & rookTable) != 0;
         }
 
-        // todo, this could also be done in movegen
-        // todo, maintain a long of spots that would check king, possibly two, one Cross one X
-
         final long sourceLong = getSourceLong(move);
         final long destinationLong = getDestinationLong(move);
-        final long bishopTable = singleBishopTable(allPieces, enemyKingIndex, UNIVERSE); // todo get this from movegen
+        final long bishopTable = kingVision[(1 - turn) * 2 + KING_VISION_BISHOP];
+
         final long queenTable = rookTable | bishopTable;
 
         int movingPiece = getMovingPieceInt(move);
@@ -975,7 +1016,7 @@ public final class Chessboard {
             movingPiece = MoveParser.whichPromotion(move) + 2 + turn * 6;
         }
 
-        switch (movingPiece) { 
+        switch (movingPiece) {
             case WHITE_KING:
             case BLACK_KING:
                 break;
@@ -1035,9 +1076,9 @@ public final class Chessboard {
             }
 
             final long rookTableAfter = singleRookTable(newAllPieces, enemyKingIndex, UNIVERSE);
-            
+
             return (rookTableAfter & (pieces[turn][ROOK] | myQueen)) != 0;
-            
+
         } else if ((sourceLong & queenTable) != 0) {
             final long newAllPieces = (allPieces ^ sourceLong) | destinationLong;
             final long bishopTableAfter = singleBishopTable(newAllPieces, enemyKingIndex, UNIVERSE);
@@ -1242,8 +1283,16 @@ public final class Chessboard {
                 Arrays.equals(zobristPawnHashStack, 0, masterIndex, that.zobristPawnHashStack, 0, masterIndex) &&
                 Arrays.equals(pinnedPiecesStack, 0, masterIndex, that.pinnedPiecesStack, 0, masterIndex) &&
                 Arrays.equals(pinningPiecesStack, 0, masterIndex, that.pinningPiecesStack, 0, masterIndex) &&
+
+
+                Arrays.equals(kingVision, this.kingVision) &&
+
+                Arrays.equals(kingVisionStack, 0, masterIndex, that.kingVisionStack, 0, masterIndex) &&
+
+
                 Arrays.equals(checkingPiecesStack, 0, masterIndex, that.checkingPiecesStack, 0, masterIndex) &&
-                Arrays.equals(inCheckStack, 0, masterIndex, that.inCheckStack, 0, masterIndex)
+                Arrays.equals(inCheckStack, 0, masterIndex, that.inCheckStack, 0, masterIndex) &&
+                Arrays.equals(currentCheckStateKnownStack, 0, masterIndex, that.currentCheckStateKnownStack, 0, masterIndex)
                 ;
     }
 
@@ -1278,18 +1327,25 @@ public final class Chessboard {
         return pastMoveStackArray[(this.moveStackIndex - 1 + MAX_DEPTH_AND_ARRAY_LENGTH) % MAX_DEPTH_AND_ARRAY_LENGTH] != 0;
     }
 
+    @SuppressWarnings("PointlessArithmeticExpression")
     private void masterStackPush() {
         inCheckStack[masterIndex] = this.inCheckRecorder;
-        inCheckRecorder = false;
+//        inCheckRecorder = false;
+
+        currentCheckStateKnownStack[masterIndex] = this.currentCheckStateKnown;
+//        currentCheckStateKnown = false;
 
         checkingPiecesStack[masterIndex] = this.checkingPieces;
         checkingPieces = 0;
 
-        pinnedPiecesStack[masterIndex] = this.pinnedPieces;
-        pinnedPieces = 0;
+        System.arraycopy(this.pinnedPieces, 0, pinnedPiecesStack, masterIndex * 2, 2);
+        Arrays.fill(pinnedPieces, 0);
 
-        pinningPiecesStack[masterIndex] = this.pinningPieces;
-        pinningPieces = 0;
+        System.arraycopy(this.pinningPieces, 0, pinningPiecesStack, masterIndex * 2, 2);
+        Arrays.fill(pinningPieces, 0);
+
+        System.arraycopy(this.kingVision, 0, kingVisionStack, masterIndex * 4, 4);
+        Arrays.fill(kingVision, 0);
 
         typeOfGameIAmInStack[masterIndex] = typeOfGameIAmIn;
         materialHashStack[masterIndex] = materialHash;
@@ -1300,17 +1356,25 @@ public final class Chessboard {
 
     private void masterStackPop() { // todo, can we reuse any of these instead of setting to 0?
         rotateMasterIndexDown();
+        currentCheckStateKnown = currentCheckStateKnownStack[masterIndex];
+//        currentCheckStateKnown = false;
+
         inCheckRecorder = inCheckStack[masterIndex];
 //        inCheckStack[masterIndex] = false;
 
         checkingPieces = checkingPiecesStack[masterIndex];
 //        checkingPiecesStack[masterIndex] = 0;
 
-        pinnedPieces = pinnedPiecesStack[masterIndex];
+        pinnedPieces[WHITE] = pinnedPiecesStack[masterIndex * 2 + WHITE];
+        pinnedPieces[BLACK] = pinnedPiecesStack[masterIndex * 2 + BLACK];
 //        pinnedPiecesStack[masterIndex] = 0;
 
-        pinningPieces = pinningPiecesStack[masterIndex];
+        pinningPieces[WHITE] = pinningPiecesStack[masterIndex * 2 + WHITE];
+        pinningPieces[BLACK] = pinningPiecesStack[masterIndex * 2 + BLACK];
 //        pinningPiecesStack[masterIndex] = 0;
+
+        System.arraycopy(kingVisionStack, masterIndex * 4, kingVision, 0, 4);
+
 
         typeOfGameIAmIn = typeOfGameIAmInStack[masterIndex];
 //        typeOfGameIAmInStack[masterIndex] = 0;

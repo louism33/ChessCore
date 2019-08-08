@@ -102,6 +102,9 @@ class ChessboardCheckStateTest {
     @Test
     void bigDepth3() {
         verifyStateToDepth(5, new Chessboard("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28"));
+        verifyStateToDepth(2, new Chessboard("8/7p/p5p1/8/P1pkn3/4b3/P2B2PP/1r3RK1 w - - 2 31"));
+        final Chessboard board = new Chessboard("8/7K/QQ6/6k1/7r/7r/8/8 w - - 2 31");
+        verifyStateToDepth(5, board);
     }
 
     @Test
@@ -112,6 +115,7 @@ class ChessboardCheckStateTest {
     @Test
     void bigDepth5() {
         verifyStateToDepth(4, new Chessboard("rnbqkb1r/ppppp1pp/7n/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3"));
+        verifyStateToDepth(2, new Chessboard("rnbqkb1r/ppppp1pp/5P2/8/6n1/8/PPPP1PPP/RNBQKBNR w KQkq - 1 5"));
     }
 
     @Test
@@ -173,16 +177,16 @@ class ChessboardCheckStateTest {
 
         final long allPieces = friends | enemies;
 
-        final long currentPinnedPieces = whichPiecesArePinned(board, myKing,
-                enemyBishops, enemyRooks, enemyQueens,
-                friends, allPieces);
+        final long currentPinnedPieces = whichPiecesArePinned(board, board.turn,
+                myKing, enemyBishops, enemyRooks,
+                enemyQueens, friends, allPieces);
 
-        Assert.assertEquals(board.pinnedPieces, currentPinnedPieces);
+        Assert.assertEquals(board.pinnedPieces[turn], currentPinnedPieces);
 
-        if (board.pinnedPieces != 0) {
-            Assert.assertTrue(board.pinningPieces != 0);
+        if (board.pinnedPieces[board.turn] != 0) {
+            Assert.assertTrue(board.pinningPieces[board.turn] != 0);
         }else {
-            Assert.assertEquals(0, board.pinningPieces);
+            Assert.assertEquals(0, board.pinningPieces[turn]);
         }
         
         Assert.assertEquals(board.inCheckRecorder, board.inCheck());
@@ -195,16 +199,17 @@ class ChessboardCheckStateTest {
             if (move == 0) {
                 break;
             }
-
+            
             long biggestMoveBit = 0x02000000L;
 
             Assert.assertTrue(move < biggestMoveBit);
 
-            final boolean givesCheckMove = board.moveGivesCheck(move);
+            final boolean givesCheckMove = board.moveGivesCheck(move, false);
 
             boolean pwintMEEEEE = false;
             board.makeMoveAndFlipTurn(move);
             final boolean incheck = board.inCheck();
+            
             if (givesCheckMove != incheck) {
                 System.out.println(board);
                 MoveParser.printMove(move);
@@ -212,14 +217,14 @@ class ChessboardCheckStateTest {
                 System.out.println("incheck       : " + incheck);
                 pwintMEEEEE = true;
             }
-//            Assert.assertEquals(givesCheckMove, board.inCheck());
-//            if (givesCheckMove) {
-//                Assert.assertTrue(board.getCheckers() != 0);
-//            } else {
-//                Assert.assertTrue(board.getCheckers() == 0);
-//            }
+            Assert.assertEquals(givesCheckMove, board.inCheck());
+            if (givesCheckMove) {
+                Assert.assertTrue(board.getCheckers() != 0);
+            } else {
+                Assert.assertTrue(board.getCheckers() == 0);
+            }
 
-//            Assert.assertTrue(board.currentCheckStateKnown);
+            Assert.assertTrue(board.currentCheckStateKnown);
             
             board.unMakeMoveAndFlipTurn();
 

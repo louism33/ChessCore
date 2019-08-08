@@ -371,7 +371,7 @@ public final class MoveParserFromAN {
         if (populationCount(candidateMovers) != 1) {
             board.generateLegalMoves();
             
-            long candidateMoversWithoutPins = ~board.pinnedPieces & candidateMovers;
+            long candidateMoversWithoutPins = ~board.pinnedPieces[board.turn] & candidateMovers;
             if (populationCount(candidateMoversWithoutPins) != 1) {
                 throw new RuntimeException();
             }

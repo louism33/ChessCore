@@ -3,13 +3,10 @@ package com.github.louism33.chesscore;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import static com.github.louism33.chesscore.BitOperations.populationCount;
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.CheckHelper.bitboardOfPiecesThatLegalThreatenSquare;
-import static com.github.louism33.chesscore.MoveGeneratorRegular.addKingLegalMovesOnly;
 import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
 
-class ChessboardState2Test {
+class ChessboardStatePinsTest {
 
     @Test
     void test1() {
@@ -149,21 +146,48 @@ class ChessboardState2Test {
 
         final long allPieces = friends | enemies;
 
-        final long currentPinnedPieces = whichPiecesArePinned(board, myKing,
-                enemyBishops, enemyRooks, enemyQueens,
-                friends, allPieces);
+        final long currentPinnedPieces = whichPiecesArePinned(board, board.turn,
+                myKing, enemyBishops, enemyRooks,
+                enemyQueens, friends, allPieces);
 
-        Assert.assertEquals(board.pinnedPieces, currentPinnedPieces);
+        Assert.assertEquals(board.pinnedPieces[board.turn], currentPinnedPieces);
 
-        if (board.pinnedPieces != 0) {
-            Assert.assertTrue(board.pinningPieces != 0);
+        if (board.pinnedPieces[board.turn] != 0) {
+            Assert.assertTrue(board.pinningPieces[board.turn] != 0);
         }else {
-            Assert.assertEquals(0, board.pinningPieces);
+            Assert.assertEquals(0, board.pinningPieces[board.turn]);
         }
         
         Assert.assertEquals(board.inCheckRecorder, board.inCheck());
         Assert.assertEquals(board.inCheckRecorder, new Chessboard(board).inCheck());
 
+
+        if (!board.inCheckRecorder) {
+            board.turn = 1 - board.turn;
+            
+            final long currentPinnedPiecesFlipped = whichPiecesArePinned(board, board.turn,
+                    enemyKing, myBishops, myRooks,
+                    myQueens, enemies, allPieces);
+
+            if (!(board.pinnedPieces[board.turn] == currentPinnedPiecesFlipped)) {
+                System.out.println(board);
+                Art.printLong(board.pinnedPieces[board.turn]);
+                Art.printLong(currentPinnedPiecesFlipped);
+            }
+            
+            Assert.assertEquals(board.pinnedPieces[board.turn], currentPinnedPiecesFlipped);
+
+            if (board.pinnedPieces[board.turn] != 0) {
+                Assert.assertTrue(board.pinningPieces[board.turn] != 0);
+            }else {
+                Assert.assertEquals(0, board.pinningPieces[board.turn]);
+            }
+
+            board.turn = 1 - board.turn;
+        }
+        
+        
+        
         if (depth == 1) {
             return moves[moves.length - 1];
         }

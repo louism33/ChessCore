@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import static com.github.louism33.chesscore.BoardConstants.*;
-import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
 
 class ChessboardState4Test {
 
@@ -147,10 +146,10 @@ class ChessboardState4Test {
 
         final long allPieces = friends | enemies;
 
-        if (board.pinnedPieces != 0) {
-            Assert.assertTrue(board.pinningPieces != 0);
+        if (board.pinnedPieces[board.turn] != 0) {
+            Assert.assertTrue(board.pinningPieces[board.turn] != 0);
         }else {
-            Assert.assertEquals(0, board.pinningPieces);
+            Assert.assertEquals(0, board.pinningPieces[board.turn]);
         }
         
         Assert.assertEquals(board.inCheckRecorder, board.inCheck());
