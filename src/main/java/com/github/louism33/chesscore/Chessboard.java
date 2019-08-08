@@ -61,7 +61,7 @@ public final class Chessboard {
     private final long[] pastMoveStackArray = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
 
     public boolean inCheckRecorder;
-    public boolean currentCheckStateKnown;
+    public boolean currentCheckStateKnown; // todo, array for this
     public long checkingPieces;
     public long pinnedPieces;
     public long pinningPieces; // todo, consider one long for each side
