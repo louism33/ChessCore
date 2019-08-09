@@ -100,8 +100,9 @@ public class NullMoveTest {
         if (depth == 1){
             return moves[moves.length - 1];
         }
-        for (int move : moves) {
-            if (move == 0){
+        for (int i = 0; i < moves.length; i++) {
+            int move = moves[i];
+            if (move == 0) {
                 break;
             }
             final boolean checkingMove = board.moveGivesCheck(move);
@@ -111,27 +112,27 @@ public class NullMoveTest {
 
             long beforeHash = board.zobristHash;
             long beforePawnHash = board.zobristPawnHash;
-            
+
             if (makeNullMove) {
                 board.makeNullMoveAndFlipTurn();
-                
+
                 Assert.assertNotEquals(beforeHash, board.zobristHash);
                 Assert.assertEquals(beforePawnHash, board.zobristPawnHash);
                 Assert.assertEquals(board, new Chessboard(board));
-                
+
                 board.unMakeNullMoveAndFlipTurn();
             }
-            
+
 
             board.makeMoveAndFlipTurn(move);
-            
+
             Assert.assertEquals(board, new Chessboard(board));
             Assert.assertEquals(checkingMove, board.inCheck());
             Assert.assertEquals(checkingMove, board.getCheckers() != 0);
-            
+
             if (makeNullMove) {
                 board.makeNullMoveAndFlipTurn();
-                
+
                 Assert.assertNotEquals(beforeHash, board.zobristHash);
                 Assert.assertEquals(board, new Chessboard(board));
             }
@@ -142,9 +143,8 @@ public class NullMoveTest {
             if (makeNullMove) {
                 board.unMakeNullMoveAndFlipTurn();
             }
-            
-            
-    
+
+
             board.unMakeMoveAndFlipTurn();
 
             Assert.assertEquals(beforeHash, board.zobristHash);
@@ -153,7 +153,7 @@ public class NullMoveTest {
 
 
             Assert.assertEquals(board, new Chessboard(board));
-            
+
             Assert.assertArrayEquals(moves, copies);
 
         }

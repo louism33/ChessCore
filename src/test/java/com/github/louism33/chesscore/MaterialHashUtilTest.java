@@ -137,8 +137,9 @@ public class MaterialHashUtilTest {
         if (depth == 1){
             return moves[moves.length - 1];
         }
-        for (int move : moves) {
-            if (move == 0){
+        for (int i = 0; i < moves.length; i++) {
+            int move = moves[i];
+            if (move == 0) {
                 break;
             }
 
@@ -146,7 +147,7 @@ public class MaterialHashUtilTest {
 
             if (board.materialHash == 0) {
                 Assert.assertEquals(BitOperations.populationCount(board.allPieces()), 2);
-                Assert.assertTrue(MaterialHashUtil.isBasicallyDrawn(board));
+                Assert.assertTrue(isBasicallyDrawn(board));
             }
 
             Assert.assertEquals(makeMaterialHash(board), board.materialHash);

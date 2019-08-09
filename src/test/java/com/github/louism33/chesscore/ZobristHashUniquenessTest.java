@@ -148,28 +148,28 @@ public class ZobristHashUniquenessTest {
         if (depth == 1){
             return moves[moves.length - 1];
         }
-        for (int move : moves) {
-            if (move == 0){
+        for (int i = 0; i < moves.length; i++) {
+            int move = moves[i];
+            if (move == 0) {
                 break;
             }
             board.makeMoveAndFlipTurn(move);
 
-            int index = (int) (board.zobristHash >>> (64-shift));
+            int index = (int) (board.zobristHash >>> (64 - shift));
             long entry = hashesSeen[index];
             numberOfHashChecks++;
-            if (entry == 0){
+            if (entry == 0) {
                 hashesSeen[index] = board.zobristHash;
                 size++;
-            } else{
-                
-                if (entry == board.zobristHash){
+            } else {
+
+                if (entry == board.zobristHash) {
                     checkSuccess++;
-                }
-                else {
+                } else {
                     checkFail++;
                 }
-                
-                if (hashesSeen[index] == board.zobristHash){
+
+                if (hashesSeen[index] == board.zobristHash) {
                     sameEntry++;
                 } else {
                     differentEntry++;
