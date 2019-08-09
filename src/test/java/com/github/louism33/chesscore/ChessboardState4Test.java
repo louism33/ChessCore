@@ -153,18 +153,21 @@ class ChessboardState4Test {
         }
         
         Assert.assertEquals(board.inCheckRecorder, board.inCheck());
+        Assert.assertEquals(board.inCheckRecorder, board.inCheck(true));
+        Assert.assertEquals(board.inCheckRecorder, board.getCheckers() != 0);
         Assert.assertEquals(board.inCheckRecorder, new Chessboard(board).inCheck());
 
         if (depth == 1) {
             return moves[moves.length - 1];
         }
-        for (int move : moves) {
+        for (int i = 0; i < moves.length; i++) {
+            int move = moves[i];
             if (move == 0) {
                 break;
             }
-            
+
             board.makeMoveAndFlipTurn(move);
-            boolean checkingMove = board.inCheck();
+            boolean checkingMove = board.inCheck(true);
             board.unMakeMoveAndFlipTurn();
 
             board.makeMoveAndFlipTurn(move);

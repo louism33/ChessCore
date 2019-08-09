@@ -195,7 +195,8 @@ class ChessboardStatePinsTest {
         if (depth == 1) {
             return moves[moves.length - 1];
         }
-        for (int move : moves) {
+        for (int i = 0; i < moves.length; i++) {
+            int move = moves[i];
             if (move == 0) {
                 break;
             }

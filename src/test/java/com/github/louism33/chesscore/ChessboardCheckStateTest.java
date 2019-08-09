@@ -202,11 +202,12 @@ class ChessboardCheckStateTest {
         if (depth == 1) {
             return moves[moves.length - 1];
         }
-        for (int move : moves) {
+        for (int i = 0; i < moves.length; i++) {
+            int move = moves[i];
             if (move == 0) {
                 break;
             }
-            
+
             long biggestMoveBit = 0x02000000L;
 
             Assert.assertTrue(move < biggestMoveBit);
@@ -216,7 +217,7 @@ class ChessboardCheckStateTest {
             boolean pwintMEEEEE = false;
             board.makeMoveAndFlipTurn(move);
             final boolean incheck = board.inCheck();
-            
+
             if (givesCheckMove != incheck) {
                 System.out.println(board);
                 MoveParser.printMove(move);
@@ -232,7 +233,7 @@ class ChessboardCheckStateTest {
             }
 
             Assert.assertTrue(board.currentCheckStateKnown);
-            
+
             board.unMakeMoveAndFlipTurn();
 
             if (pwintMEEEEE) {
@@ -241,7 +242,7 @@ class ChessboardCheckStateTest {
                 System.out.println(board.toFenString());
                 Assert.fail();
             }
-            
+
             board.makeMoveAndFlipTurn(move);
 
             long movesAtDepth = countFinalNodesAtDepthHelper(board, depth - 1);
