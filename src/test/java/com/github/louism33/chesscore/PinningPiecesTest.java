@@ -9,10 +9,12 @@ public class PinningPiecesTest {
 
     @Test
     void regularBoardTest() {
-//        verifyHashToDepth(1, new Chessboard());
-//        verifyHashToDepth(2, new Chessboard());
-//        verifyHashToDepth(3, new Chessboard());
         verifyHashToDepth(4, new Chessboard());
+    }
+
+    @Test
+    void moreTest() {
+        verifyHashToDepth(4, new Chessboard("6k1/1ppb3p/p1pb4/6q1/3P1r1r/2P1R2P/PP1BQ1P1/6KN w - - 0 2"));
     }
 
     @Test
@@ -91,6 +93,8 @@ public class PinningPiecesTest {
             pp &= pp - 1;
         }
         
+        Assert.assertTrue((board.pinnedPieces[turn] & board.pinnedPieces[1-turn]) == 0);
+        Assert.assertTrue((board.pinningPieces[turn] & board.pinningPieces[1-turn]) == 0);
 
         Assert.assertEquals(pinning, pinned);
         

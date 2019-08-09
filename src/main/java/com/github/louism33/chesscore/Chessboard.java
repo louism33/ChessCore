@@ -72,14 +72,14 @@ public final class Chessboard {
     public long checkingPieces;
     private final long[] checkingPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
 
-    public long[] pinnedPieces = new long[2];
+    public long[] pinnedPieces = new long[2]; // todo, consider replacing with only one long, as these two should always be disjoint
     private final long[] pinnedPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 2];
 
     public long[] pinningPieces = new long[2];
     private final long[] pinningPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 2];
 
     public static final int KING_VISION_BISHOP = 0, KING_VISION_ROOK = 1;
-    public long[] kingVision = new long[4];
+    public long[] kingVision = new long[4]; // todo, maybe unnecessary generation of this
     private final long[] kingVisionStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 4];
 
 
@@ -1060,6 +1060,40 @@ public final class Chessboard {
                     return true;
                 }
                 break;
+        }
+
+        // ugly code for determining if a promoting piece on the same file / diag as the enemy king checks it
+        if (promotionMove && movingPiece != BLACK_KNIGHT && movingPiece != WHITE_KNIGHT && (sourceLong & queenTable) != 0) {
+            
+            final long newRookTable = singleRookTable(allPieces ^ (sourceLong),
+                    enemyKingIndex, UNIVERSE);
+            final long newBishopTable = singleBishopTable(allPieces ^ (sourceLong),
+                    enemyKingIndex, UNIVERSE);
+            final long newQueenTable = newRookTable | newBishopTable;
+
+            switch (movingPiece) {
+                case WHITE_QUEEN:
+                case BLACK_QUEEN:
+                    if ((destinationLong & newQueenTable) != 0) {
+                        return true;
+                    }
+                    break;
+
+                case WHITE_ROOK:
+                case BLACK_ROOK:
+                    if ((destinationLong & newRookTable) != 0) {
+                        return true;
+                    }
+                    break;
+
+                case WHITE_BISHOP:
+                case BLACK_BISHOP:
+                    if ((destinationLong & newBishopTable) != 0) {
+                        return true;
+                    }
+                    break;
+            }
+
         }
 
 

@@ -177,6 +177,10 @@ class ChessboardStatePinsTest {
             
             Assert.assertEquals(board.pinnedPieces[board.turn], currentPinnedPiecesFlipped);
 
+            Assert.assertTrue((board.pinnedPieces[turn] & board.pinnedPieces[1-turn]) == 0);
+            Assert.assertTrue((board.pinningPieces[turn] & board.pinningPieces[1-turn]) == 0);
+
+            
             if (board.pinnedPieces[board.turn] != 0) {
                 Assert.assertTrue(board.pinningPieces[board.turn] != 0);
             }else {

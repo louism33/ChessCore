@@ -129,6 +129,13 @@ class ChessboardCheckStateTest {
         verifyStateToDepth(5, new Chessboard("8/5p2/8/2k3P1/p3K3/8/1P6/8 b - -"));
     }
 
+
+    @Test
+    void bigDepth111() {
+        verifyStateToDepth(5, new Chessboard("6k1/p1P5/5p2/5K2/3pN3/3P3P/5p1P/8 b - - 0 20"));
+        verifyStateToDepth(5, new Chessboard("6k1/p1P5/5p2/8/3pN3/3P3P/5pKP/8 b - - 0 20"));
+    }
+    
     @Test
     void bigDepth12() {
         verifyStateToDepth(4, new Chessboard("r3k2r/pb3p2/5npp/n2p4/1p1PPB2/6P1/P2N1PBP/R3K2R w KQkq -"));
