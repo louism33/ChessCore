@@ -61,8 +61,6 @@ public final class Chessboard {
     public long moveStackData;
     private final long[] pastMoveStackArray = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
 
-    // todo, disco pieces array
-
     public boolean inCheckRecorder;
     private final boolean[] inCheckStack = new boolean[MAX_DEPTH_AND_ARRAY_LENGTH];
 
@@ -71,6 +69,10 @@ public final class Chessboard {
 
     public long checkingPieces;
     private final long[] checkingPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH];
+
+    // todo, enemy pieces that have a slider behind them
+//    public long[] discoCheckPieces = new long[2]; // todo, consider replacing with only one long, as these two should always be disjoint
+//    private final long[] discoCheckPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 2];
 
     public long[] pinnedPieces = new long[2]; // todo, consider replacing with only one long, as these two should always be disjoint
     private final long[] pinnedPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 2];
@@ -236,6 +238,8 @@ public final class Chessboard {
 
         final long allPieces = friends | enemies;
 
+        Assert.assertTrue(!currentCheckStateKnown || inCheckRecorder || checkingPieces == 0);
+        
         // Currently we can have checkStateKnown without knowing who is checking us, so we must verify.
         // However, if we know we are not in check, we can save an inCheck() call
         if (!checkStateKnown || (this.inCheckRecorder && checkingPieces == 0)) {
@@ -261,10 +265,6 @@ public final class Chessboard {
                     myKing,
                     enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueens, enemyKing,
                     friends, allPieces);
-
-//            kingVision[(turn) * 2 + KING_VISION_ROOK] = singleRookTable(allPieces, numberOfTrailingZeros(myKing), UNIVERSE);
-//            kingVision[(turn) * 2 + KING_VISION_BISHOP] = singleBishopTable(allPieces, numberOfTrailingZeros(myKing), UNIVERSE);
-
 
             return this.legalMoveStack[legalMoveStackIndex];
         }
@@ -881,6 +881,18 @@ public final class Chessboard {
     }
 
     public long getCheckers() {
+        //todo, test this:
+        if (currentCheckStateKnown) {
+            if (!inCheckRecorder) {
+                return 0;
+            } else {
+                if (checkingPieces != 0) {
+                    return checkingPieces;
+                }
+            }
+        }
+        
+        
         long myKing, enemyPawns, enemyKnights, enemyBishops, enemyRooks, enemyQueen, enemies, friends;
         if (turn == WHITE) {
             myKing = pieces[WHITE][KING];
@@ -916,7 +928,11 @@ public final class Chessboard {
     }
 
     public boolean inCheck() {
-        if (currentCheckStateKnown) {
+        return inCheck(false);
+    }
+    
+    public boolean inCheck(boolean force) {
+        if (!force && currentCheckStateKnown) {
             return inCheckRecorder;
         }
 
