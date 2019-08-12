@@ -13,7 +13,12 @@ public class ChessboardTest {
     @Test
     void wonkyFenTest() {
         Chessboard board = new Chessboard("rnbqkbnr/pp1ppp1p/6p1/2p5/1P6/1QP5/P2PPPPP/RNB1KBNR b KQkq - 0 1;");
-        System.out.println(board);
+    }
+       
+    @Test
+    void castleIntoCheckTest() {
+        Chessboard board = new Chessboard("1K2k2r/4np1p/2b2r2/4p3/2P5/8/PP2PPPP/R4B1R b k - 2 30");
+        Assert.assertTrue(board.moveGivesCheck(MoveParserFromAN.buildMoveFromLAN(board, "e8g8"), true));
     }
     
     @Test

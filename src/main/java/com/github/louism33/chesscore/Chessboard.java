@@ -24,6 +24,7 @@ import static com.github.louism33.chesscore.PinnedManager.whichPiecesArePinned;
 import static com.github.louism33.chesscore.StackDataUtil.*;
 import static com.github.louism33.chesscore.ZobristHashUtil.*;
 import static java.lang.Long.numberOfTrailingZeros;
+import static java.lang.Long.parseLong;
 
 public final class Chessboard {
 
@@ -1003,31 +1004,41 @@ public final class Chessboard {
             Assert.assertTrue(kingVision[(1 - turn) * 2 + KING_VISION_BISHOP] != 0);
         }
 
-
         final int destinationIndex = getDestinationIndex(move);
         final long rookTable = kingVision[(1 - turn) * 2 + KING_VISION_ROOK];
-
+        final long destinationLong = getDestinationLong(move);
+        
         if (isCastlingMove(move)) {
             int newRookIndex = 0;
+            int oldRookIndex = 0;
             switch (destinationIndex) {
                 case 1:
+                    oldRookIndex = 0;
                     newRookIndex = destinationIndex + 1;
                     break;
                 case 5:
+                    oldRookIndex = 7;
                     newRookIndex = destinationIndex - 1;
                     break;
                 case 57:
+                    oldRookIndex = 56;
                     newRookIndex = destinationIndex + 1;
                     break;
                 case 61:
+                    oldRookIndex = 63;
                     newRookIndex = destinationIndex - 1;
                     break;
             }
-            return (newPieceOnSquare(newRookIndex) & rookTable) != 0;
+            // we recalculate because the castling changes the king rook vision when on same rank as castling player
+            final long newRook = newPieceOnSquare(newRookIndex);
+            long rookTableAfter = singleRookTable(
+                    (allPieces ^ (pieces[turn][KING] | newPieceOnSquare(oldRookIndex) | newRook | destinationLong)),
+                    enemyKingIndex, UNIVERSE);
+            return (newRook & rookTableAfter) != 0;
         }
 
         final long sourceLong = getSourceLong(move);
-        final long destinationLong = getDestinationLong(move);
+       
         final long bishopTable = kingVision[(1 - turn) * 2 + KING_VISION_BISHOP];
 
         final long queenTable = rookTable | bishopTable;
