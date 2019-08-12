@@ -81,6 +81,8 @@ public final class Chessboard {
     private final long[] pinningPiecesStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 2];
 
     public static final int KING_VISION_BISHOP = 0, KING_VISION_ROOK = 1;
+    
+    // todo, avoid regeneration of this, if has been previously generated from for example givesCheckMove(true)
     public long[] kingVision = new long[4]; // todo, maybe unnecessary generation of this
     private final long[] kingVisionStack = new long[MAX_DEPTH_AND_ARRAY_LENGTH * 4];
 
@@ -470,6 +472,8 @@ public final class Chessboard {
 
     public final void makeMoveAndFlipTurn(final int move, boolean checkStateKnown, boolean checkingMove) {
         /*
+        
+        // todo, consider getting destination square / disco state from checkingmvoe flag. In many cases could avoid getCheckers(), or at least slim it down, as at least one would be known
         
             public boolean inCheckRecorder;
     public long checkingPieces;
@@ -989,6 +993,7 @@ public final class Chessboard {
             kingVision[(1 - turn) * 2 + KING_VISION_ROOK] = singleRookTable(allPieces, enemyKingIndex, UNIVERSE);
             kingVision[(1 - turn) * 2 + KING_VISION_BISHOP] = singleBishopTable(allPieces, enemyKingIndex, UNIVERSE);
         } else {
+            // todo add condition to auto recal this stuff if called without force
             allPieces = this.pieces[WHITE][ALL_COLOUR_PIECES] |
                     this.pieces[BLACK][ALL_COLOUR_PIECES];
 
