@@ -984,6 +984,7 @@ public final class Chessboard {
      * @return
      */
     public boolean moveGivesCheck(int move, boolean force) {
+        // todo consider setting givesCheckFlag
         // todo, consider getting actual checkers from here, if possible and efficent
         long allPieces;
 
