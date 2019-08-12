@@ -885,6 +885,7 @@ public final class Chessboard {
     }
 
     public long getCheckers() {
+        // todo add int to track how many savings
         //todo, test this:
         if (currentCheckStateKnown) {
             if (!inCheckRecorder) {
