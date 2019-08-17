@@ -77,7 +77,7 @@ public final class MoveAdder {
             final int move = buildMove(source, movingPiece,
                     numberOfTrailingZeros(destination)) | PROMOTION_MASK;
 
-            moves[index] = move | KNIGHT_PROMOTION_MASK;
+            moves[index] = move | KNIGHT_PROMOTION_MASK; // todo, change order, because queen is always more interesting. Q N R B
             moves[index+1] = move | BISHOP_PROMOTION_MASK;
             moves[index+2] = move | ROOK_PROMOTION_MASK;
             moves[index+3] = move | QUEEN_PROMOTION_MASK;
