@@ -10,6 +10,7 @@ import static com.github.louism33.chesscore.MoveConstants.*;
 
 public final class MoveParser {
 
+    // todo, add a bit for checkingStateKnown
     /*
     free: 
     11111100
